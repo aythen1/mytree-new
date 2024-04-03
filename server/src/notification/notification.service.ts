@@ -77,4 +77,40 @@ export class NotificationService {
 
     await this.notificationRepository.remove(notification);
   }
+
+  async findInfoRelation(notifId: number, relations: string[]): Promise<any> {
+    const validRelations = this.validateRelations(relations);
+
+    // Verificar si hay al menos una relación válida
+    if (validRelations.length === 0) {
+      throw new Error('No se han proporcionado relaciones válidas.');
+    }
+
+    // Construir objeto de opciones para la consulta
+    const options: any = { where: { id: notifId }, relations: validRelations };
+console.log("options es", options)
+    // Realizar la consulta del post con las relaciones especificadas
+    const notif = await this.notificationRepository.findOne(options);
+
+    if (!notif) {
+      throw new NotFoundException(`No se encontró ningún post con el ID ${notifId}.`);
+    }
+
+    return notif;
+  }
+
+  private validateRelations(relations: string[]): string[] {
+    const validRelations: string[] = [];
+
+    // Definir relaciones válidas permitidas en la entidad Post
+    const allowedRelations = ['user'];  
+    // Filtrar relaciones válidas
+    relations.forEach(relation => {
+      if (allowedRelations.includes(relation)) {
+        validRelations.push(relation);
+      }
+    });
+
+    return validRelations;
+  }
 }
