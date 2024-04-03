@@ -21,7 +21,7 @@ import { Comment } from './comments/entities/comment.entity';
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: '12341234',
+      password: 'postgres1234',
       database: 'mytree',
       entities: [User , Post,Notification,History,Comment],
       synchronize: true,
