@@ -83,7 +83,7 @@ const App = () => {
   useEffect(() => {
     loadApp()
   }, [])
-
+// hola
   return (
     <Provider store={store}>
       <NavigationContainer>
