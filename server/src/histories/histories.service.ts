@@ -76,4 +76,40 @@ export class HistoriesService {
     await this.historyRepository.remove(history);
     return `History with ID ${id} has been removed`;
   }
+
+  async findInfoRelation(historieId: number, relations: string[]): Promise<any> {
+    const validRelations = this.validateRelations(relations);
+
+    // Verificar si hay al menos una relación válida
+    if (validRelations.length === 0) {
+      throw new Error('No se han proporcionado relaciones válidas.');
+    }
+
+    // Construir objeto de opciones para la consulta
+    const options: any = { where: { id: historieId }, relations: validRelations };
+console.log("options es", options)
+    // Realizar la consulta del post con las relaciones especificadas
+    const historie = await this.historyRepository.findOne(options);
+
+    if (!historie) {
+      throw new NotFoundException(`No se encontró ningún post con el ID ${historieId}.`);
+    }
+
+    return historie;
+  }
+
+  private validateRelations(relations: string[]): string[] {
+    const validRelations: string[] = [];
+
+    // Definir relaciones válidas permitidas en la entidad Post
+    const allowedRelations = ['user' , 'etiquets'];  
+    // Filtrar relaciones válidas
+    relations.forEach(relation => {
+      if (allowedRelations.includes(relation)) {
+        validRelations.push(relation);
+      }
+    });
+
+    return validRelations;
+  }
 }

@@ -417,5 +417,40 @@ async getUserFriends(userId: number): Promise<User[]> {
       }
     }
     
+    async findInfoRelation(userId: number, relations: string[]): Promise<any> {
+      const validRelations = this.validateRelations(relations);
+  
+      // Verificar si hay al menos una relación válida
+      if (validRelations.length === 0) {
+        throw new Error('No se han proporcionado relaciones válidas.');
+      }
+  
+      // Construir objeto de opciones para la consulta
+      const options: any = { where: { id: userId }, relations: validRelations };
+  console.log("options es", options)
+      // Realizar la consulta del post con las relaciones especificadas
+      const user = await this.userRepository.findOne(options);
+  
+      if (!user) {
+        throw new NotFoundException(`No se encontró ningún post con el ID ${userId}.`);
+      }
+  
+      return user;
+    }
+  
+    private validateRelations(relations: string[]): string[] {
+      const validRelations: string[] = [];
+  
+      // Definir relaciones válidas permitidas en la entidad Post
+      const allowedRelations = ['likedPosts', 'favorites', 'comments', 'histories', 'posts', 'notifications', 'friends'];  
+      // Filtrar relaciones válidas
+      relations.forEach(relation => {
+        if (allowedRelations.includes(relation)) {
+          validRelations.push(relation);
+        }
+      });
+  
+      return validRelations;
+    }
   
 }
