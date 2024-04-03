@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "mytreev2",
+    "slug": "my-tree",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/image-9.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.crisper1988.aythenmytree"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2dcc64f8-32aa-454a-974e-9dd1a2f3afc9"
+      }
+    },
+    "plugins": ["expo-font"]
+  }
+}
