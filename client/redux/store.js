@@ -9,6 +9,7 @@ import familySlices from './slices/family.slices'
 import newspapersPublishedSlices from './slices/newspapersPublished.slices'
 import chatsSlices from './slices/chats.slices'
 import myContactsSlices from './slices/myContacts.slices'
+import userSlices from './slices/user.slices'
 
 export const store = configureStore({
   reducer: {
@@ -21,6 +22,7 @@ export const store = configureStore({
     family: familySlices,
     papers: newspapersPublishedSlices,
     chats: chatsSlices,
-    contacts: myContactsSlices
+    contacts: myContactsSlices,
+    users: userSlices
   }
 })

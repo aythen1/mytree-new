@@ -20,6 +20,31 @@ const Register = () => {
 
   const [nextField, setNextField] = useState(1)
 
+  const [name, setsetName] = useState('')
+  const [text, setText] = useState('')
+  const [mail, setMail] = useState('')
+  const [birthDate, setBIrthDate] = useState('')
+
+  const handleChangeText = (input) => {
+    const filteredInput = input.replace(/[^0-9/]/g, '')
+    let formattedInput = filteredInput
+    if (filteredInput.length === 2 && filteredInput[2] !== '/') {
+      formattedInput = filteredInput.slice(0, 2) + '/' + filteredInput.slice(2)
+    }
+    if (filteredInput.length === 5 && filteredInput[5] !== '/') {
+      formattedInput = filteredInput.slice(0, 5) + '/' + filteredInput.slice(5)
+    }
+    setText(formattedInput)
+  }
+
+  const handleNombreChange = (text) => {
+    setsetName(text)
+  }
+
+  const handleMailChange = (text) => {
+    setMail(text)
+  }
+
   const next = () => {
     if (nextField < 3) {
       setNextField((prev) => prev + 1)
@@ -140,7 +165,9 @@ const Register = () => {
         </View>
 
         <View>
-          {nextField === 1 && <NameRegister />}
+          {nextField === 1 &&
+            <NameRegister 
+              name={name} setsetName={setsetName} birthDate={birthDate} handleChangeText={handleChangeText} handleMailChange={handleMailChange} handleNombreChange={handleNombreChange} mail={mail} setBIrthDate={setBIrthDate} setMail={setMail} setText={setText} text={text} />}
           {nextField === 2 && <AcceptRegister />}
           {nextField === 3 && <CheckRegister />}
         </View>

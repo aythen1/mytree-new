@@ -18,11 +18,29 @@ import {
   Padding
 } from '../../GlobalStyles'
 import Checkbox from 'expo-checkbox'
+import axios from 'axios'
+import { BACKURL } from '../../apiBackend'
 
 const LOGIN = () => {
   const navigation = useNavigation()
 
   const [checked, setChecked] = useState(false)
+  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('')
+
+
+
+
+  const handle = (text) => {
+    setPassword(text)
+  }
+  const handle2 = (text) => {
+    setEmail(text)
+  }
+  const submit = async ()=> {console.log({password,email});
+  const {data} = await axios.post(`${BACKURL}/user/login `,{email,password})
+  console.log(data)
+}
 
   return (
     <ScrollView
@@ -75,7 +93,7 @@ const LOGIN = () => {
                 contentFit="cover"
                 source={require('../../assets/icons--envelope-simple.png')}
               />
-              <TextInput placeholder="|" style={styles.input} />
+              <TextInput placeholder="correo" onChangeText={handle2} value={email} style={styles.input} />
             </View>
           </View>
         </View>
@@ -94,7 +112,7 @@ const LOGIN = () => {
                 contentFit="cover"
                 source={require('../../assets/frame-1.png')}
               />
-              <TextInput placeholder="••••••••" style={styles.input2} />
+              <TextInput value={password} onChangeText={handle}  placeholder="••••••••" style={styles.input2} />
             </View>
           </View>
         </View>
@@ -114,7 +132,7 @@ const LOGIN = () => {
           locations={[0, 1]}
           colors={['#dee274', '#7ec18c']}
         >
-          <Pressable onPress={() => navigation.navigate('Muro')}>
+          <Pressable onPress={submit}>
             <Text style={[styles.signIn, styles.signInLayout]}>Ingresar</Text>
           </Pressable>
         </LinearGradient>
