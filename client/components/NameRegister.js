@@ -4,30 +4,8 @@ import { StyleSheet, View, Text, TextInput } from 'react-native'
 
 import { Color, FontFamily, FontSize, Border } from '../GlobalStyles'
 
-const NameRegister = () => {
-  const [name, setsetName] = useState('')
-  const [text, setText] = useState('')
-  const [mail, setMail] = useState('')
+const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDate, setBIrthDate, handleChangeText, handleNombreChange ,handleMailChange}) => {
 
-  const handleChangeText = (input) => {
-    const filteredInput = input.replace(/[^0-9/]/g, '')
-    let formattedInput = filteredInput
-    if (filteredInput.length === 2 && filteredInput[2] !== '/') {
-      formattedInput = filteredInput.slice(0, 2) + '/' + filteredInput.slice(2)
-    }
-    if (filteredInput.length === 5 && filteredInput[5] !== '/') {
-      formattedInput = filteredInput.slice(0, 5) + '/' + filteredInput.slice(5)
-    }
-    setText(formattedInput)
-  }
-
-  const handleNombreChange = (text) => {
-    setsetName(text)
-  }
-
-  const handleMailChange = (text) => {
-    setMail(text)
-  }
 
   return (
     <View>
