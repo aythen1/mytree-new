@@ -20,27 +20,63 @@ import {
 import Checkbox from 'expo-checkbox'
 import axios from 'axios'
 import { BACKURL } from '../../apiBackend'
+import { useDispatch } from 'react-redux';
+import { login } from '../../redux/slices/user.slices'; // Importa la acción de inicio de sesión desde el slice de Redux
 
 const LOGIN = () => {
   const navigation = useNavigation()
-
   const [checked, setChecked] = useState(false)
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
+  
+  const dispatch = useDispatch();
 
 
+  const handlePasswordChange = (text) => {
+    console.log("Nuevo valor de contraseña:", text);
+    setPassword(text);
+    console.log("esto es",password)
+  };
 
+  const handleEmailChange = (text) => {
+    console.log("Nuevo valor de email:", text);
 
-  const handle = (text) => {
-    setPassword(text)
-  }
-  const handle2 = (text) => {
-    setEmail(text)
-  }
-  const submit = async ()=> {console.log({password,email});
-  const {data} = await axios.post(`${BACKURL}/user/login `,{email,password})
-  console.log(data)
-}
+    setEmail(text);
+    console.log("esto es",email)
+
+  };
+
+  const handleSubmit = async () => {
+    try {
+      // Verificar que tanto email como password estén presentes
+      if (!email || !password) {
+        console.error('Por favor ingresa tanto email como contraseña');
+        return;
+      }
+  
+      console.log("Enviando credenciales:", { email, password });
+  
+      // Despachar la acción login con las credenciales como argumento
+      const result = await dispatch(login({ email, password }));
+  
+      console.log("Resultado de la acción login:", result);
+  
+      if (!result.payload.error) {
+        // Inicio de sesión exitoso, redirige a la pantalla "Muro"
+        navigation.navigate('Muro');
+      } else {
+        // Inicio de sesión fallido, muestra un mensaje de error
+        console.log("Inicio de sesión fallido:", result.payload.error);
+        // Puedes mostrar un mensaje de error al usuario aquí
+      }
+    } catch (error) {
+      // Error al despachar la acción de inicio de sesión
+      console.error('Error al iniciar sesión:', error);
+      // Puedes mostrar un mensaje de error al usuario aquí
+    }
+  };
+  
+  
 
   return (
     <ScrollView
@@ -93,7 +129,7 @@ const LOGIN = () => {
                 contentFit="cover"
                 source={require('../../assets/icons--envelope-simple.png')}
               />
-              <TextInput placeholder="correo" onChangeText={handle2} value={email} style={styles.input} />
+              <TextInput placeholder="correo" value={email} onChangeText={handleEmailChange}  style={styles.input}  editable={true} />
             </View>
           </View>
         </View>
@@ -112,7 +148,7 @@ const LOGIN = () => {
                 contentFit="cover"
                 source={require('../../assets/frame-1.png')}
               />
-              <TextInput value={password} onChangeText={handle}  placeholder="••••••••" style={styles.input2} />
+              <TextInput value={password} onChangeText={handlePasswordChange}  placeholder="••••••••" style={styles.input2}  editable={true}/>
             </View>
           </View>
         </View>
@@ -132,7 +168,7 @@ const LOGIN = () => {
           locations={[0, 1]}
           colors={['#dee274', '#7ec18c']}
         >
-          <Pressable onPress={submit}>
+          <Pressable onPress={handleSubmit}>
             <Text style={[styles.signIn, styles.signInLayout]}>Ingresar</Text>
           </Pressable>
         </LinearGradient>

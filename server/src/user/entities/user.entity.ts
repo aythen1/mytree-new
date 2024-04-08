@@ -33,6 +33,12 @@ export class User {
     @Column({ nullable: true })
     oldPassword: string; // Para cambio de contraseña, almacenar la clave vieja
 
+    @Column({ nullable: true })
+    city: string;
+
+    @Column({ nullable: true })
+    achievements: string;
+
     @ManyToMany(() => User)
     @JoinTable()
     friends: User[];
@@ -42,6 +48,12 @@ export class User {
 
     @Column('simple-array', { nullable: true })
     recentSearches: string[];
+
+    @Column('simple-array', { nullable: true })
+    wishList: string[];
+
+    @Column('simple-array', { nullable: true })
+    redes: string[];
 
     @OneToMany(() => Post, post => post.user)
     posts: Post[];
