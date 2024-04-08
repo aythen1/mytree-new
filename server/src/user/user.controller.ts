@@ -86,9 +86,7 @@ export class UserController {
         statusCode: HttpStatus.OK,
         message: 'Login successful',
         data: {
-          id,
-          username,
-          email,
+          user
         },
       };
     } catch (error) {
