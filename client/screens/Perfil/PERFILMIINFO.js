@@ -5,7 +5,7 @@ import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
 import { FontFamily, Color, Border, FontSize } from '../../GlobalStyles'
 
-const PERFILMIINFO = ({ setSelectedComponent }) => {
+const PERFILMIINFO = ({ setSelectedComponent ,usuario}) => {
   const navigation = useNavigation()
 
   return (
@@ -124,7 +124,7 @@ const PERFILMIINFO = ({ setSelectedComponent }) => {
                 Nombre y apellido
               </Text>
               <Text style={[styles.brunoPham1, styles.quEsLoTypo1]}>
-                Bruno Pham
+              {usuario.username} {usuario.apellido}
               </Text>
             </View>
           </View>
@@ -134,7 +134,7 @@ const PERFILMIINFO = ({ setSelectedComponent }) => {
                 Fecha y Lugar de Nacimiento
               </Text>
               <Text style={[styles.brunoPham1, styles.quEsLoTypo1]}>
-                10/2/80 - Da Nang, Vietnam
+                {usuario.birthDate} - {usuario.address}
               </Text>
             </View>
           </View>
@@ -144,7 +144,7 @@ const PERFILMIINFO = ({ setSelectedComponent }) => {
                 Ciudad actual de residencia
               </Text>
               <Text style={[styles.brunoPham1, styles.quEsLoTypo1]}>
-                Barcelona
+              {usuario.city}
               </Text>
             </View>
           </View>

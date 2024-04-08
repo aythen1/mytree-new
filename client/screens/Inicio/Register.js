@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   StyleSheet,
   View,
@@ -14,7 +14,9 @@ import { Path, Svg } from 'react-native-svg'
 import NameRegister from '../../components/NameRegister'
 import CheckRegister from '../../components/CheckRegister'
 import AcceptRegister from '../../components/AcceptRegister'
-
+import axios from 'axios';
+import { BACKURL } from '../../apiBackend'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Register = () => {
   const navigation = useNavigation()
 
@@ -25,6 +27,22 @@ const Register = () => {
   const [mail, setMail] = useState('')
   const [birthDate, setBIrthDate] = useState('')
 
+  const [data, setData] = useState(null)
+
+  
+  const [dataToSend, setDataToSend] = useState({
+    username: '',
+    apellido: '',
+    birthDate: '',
+    city: '',
+    address: '',
+    phone: '',
+    email: '',
+    password: ''
+  })
+useEffect(()=>{
+console.log(dataToSend,"dataToSend")
+},[dataToSend])
   const handleChangeText = (input) => {
     const filteredInput = input.replace(/[^0-9/]/g, '')
     let formattedInput = filteredInput
@@ -45,11 +63,20 @@ const Register = () => {
     setMail(text)
   }
 
-  const next = () => {
+  const next = async () => {
     if (nextField < 3) {
       setNextField((prev) => prev + 1)
     } else {
-      navigation.navigate('Muro')
+     try {
+      const res = await axios.post(`${BACKURL}/user`,dataToSend)
+      console.log(res.data,"usuario nuevo")
+      if(res.data){
+        await AsyncStorage.setItem('user', JSON.stringify(res.data));
+        navigation.navigate('Muro')
+      }
+     } catch (error) {
+      console.log(error)
+     }
     }
   }
 
@@ -165,9 +192,20 @@ const Register = () => {
         </View>
 
         <View>
-          {nextField === 1 &&
-            <NameRegister 
-              name={name} setsetName={setsetName} birthDate={birthDate} handleChangeText={handleChangeText} handleMailChange={handleMailChange} handleNombreChange={handleNombreChange} mail={mail} setBIrthDate={setBIrthDate} setMail={setMail} setText={setText} text={text} />}
+          {nextField === 1 && (
+            <NameRegister
+              name={name}
+              setsetName={setsetName}
+              birthDate={birthDate}
+              mail={mail}
+              setBIrthDate={setBIrthDate}
+              setMail={setMail}
+              setText={setText}
+              text={text}
+              setDataToSend={setDataToSend}
+              dataToSend={dataToSend}
+            />
+          )}
           {nextField === 2 && <AcceptRegister />}
           {nextField === 3 && <CheckRegister />}
         </View>
@@ -264,7 +302,6 @@ const styles = StyleSheet.create({
   },
   labelled1: {
     alignSelf: 'center',
-    marginTop: 30
   },
   frameGroup: {
     marginTop: 10,
@@ -273,10 +310,11 @@ const styles = StyleSheet.create({
   },
   registroNombre: {
     backgroundColor: Color.white
+    ,flex:1
   },
   scrollViewContent: {
     flexGrow: 1,
-    paddingBottom: 100
+    paddingBottom: 220
   },
   back: {
     height: 50,

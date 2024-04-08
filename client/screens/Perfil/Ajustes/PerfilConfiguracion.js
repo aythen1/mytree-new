@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
   Text,
   StyleSheet,
@@ -24,13 +24,37 @@ import HeaderIcons from '../../../components/HeaderIcons'
 import CalendarMuroSVG from '../../../components/svgs/CalendarMuroSVG'
 import BookSVG from '../../../components/svgs/BookSVG'
 import NotificationsMuroSVG from '../../../components/svgs/NotificationsMuroSVG'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { BACKURL } from '../../../apiBackend'
 
 const PerfilConfiguracion = () => {
+
+  const [usuario, setUsuario] = useState('')
+
+  useEffect(()=>{
+    const getUser= async()=>{
+    const usuario = await AsyncStorage.getItem('user');
+    console.log(JSON.parse(usuario),"este es")
+    setUsuario(JSON.parse(usuario));
+    return JSON.parse(usuario);
+    }
+    getUser()
+  },[])
+
+
   const navigation = useNavigation()
   const nombreInputRef = useRef(null)
 
   const [modalCreate, setModalCreate] = useState(false)
+
+  
   const [input, setInput] = useState(null)
+  const [dataToSend, setDataToSend] = useState({
+    username:"",
+    birthDate: "",
+    address: "",
+  })
 
   const handleInputFocus = () => {
     if (nombreInputRef.current) {
@@ -42,6 +66,17 @@ const PerfilConfiguracion = () => {
     setModalCreate(false)
   }
 
+  const handleSubmit = async ()=>{
+  
+ try {
+  const res =  await axios.patch(`${BACKURL}/user/${usuario.id}`,dataToSend)
+  if(res.data){
+    setModalCreate(true)
+  }
+ } catch (error) {
+  console.log(error)
+ }
+  }
   return (
     <ScrollView style={styles.frameParent} showsVerticalScrollIndicator={false}>
       <View style={styles.viewContainer}>
@@ -100,8 +135,10 @@ const PerfilConfiguracion = () => {
               <TextInput
                 style={[styles.brunoPham, styles.brunoPhamTypo]}
                 ref={nombreInputRef}
-                placeholder="Bruno Pham"
+                placeholder={usuario.username}
                 editable={input === 'Nombre' ? true : false}
+                onChangeText={(text)=> setDataToSend({...dataToSend,["username"]: text})}
+                value={dataToSend.username}
               />
             </View>
             <Pressable
@@ -125,8 +162,10 @@ const PerfilConfiguracion = () => {
               <TextInput
                 style={[styles.brunoPham, styles.brunoPhamTypo]}
                 ref={nombreInputRef}
-                placeholder="02/12/1997"
+                placeholder={usuario.birthDate}
                 editable={input === 'Fecha' ? true : false}
+                onChangeText={(text)=> setDataToSend({...dataToSend,["birthDate"]: text})}
+                value={dataToSend.birthDate}
               />
             </View>
             <Pressable
@@ -150,8 +189,10 @@ const PerfilConfiguracion = () => {
               <TextInput
                 style={[styles.brunoPham, styles.brunoPhamTypo]}
                 ref={nombreInputRef}
-                placeholder="Da Nang, Vietnam"
+                placeholder={usuario.address}
                 editable={input === 'Ubicacion' ? true : false}
+                onChangeText={(text)=> setDataToSend({...dataToSend,["address"]: text})}
+                value={dataToSend.address}
               />
             </View>
             <Pressable
@@ -322,7 +363,7 @@ const PerfilConfiguracion = () => {
         >
           <Pressable
             style={[styles.pressable, styles.pressableFlexBox]}
-            onPress={() => setModalCreate(true)}
+            onPress={() => handleSubmit()}
           >
             <Text style={styles.signIn}>Guardar</Text>
           </Pressable>

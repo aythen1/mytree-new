@@ -22,25 +22,28 @@ import axios from 'axios'
 import { BACKURL } from '../../apiBackend'
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/slices/user.slices'; // Importa la acción de inicio de sesión desde el slice de Redux
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LOGIN = () => {
   const navigation = useNavigation()
   const [checked, setChecked] = useState(false)
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
-  
+  const [error,setError] = useState()
   const dispatch = useDispatch();
 
 
   const handlePasswordChange = (text) => {
     console.log("Nuevo valor de contraseña:", text);
     setPassword(text);
+    setError("")
     console.log("esto es",password)
   };
 
   const handleEmailChange = (text) => {
     console.log("Nuevo valor de email:", text);
 
+    setError("")
     setEmail(text);
     console.log("esto es",email)
 
@@ -57,14 +60,17 @@ const LOGIN = () => {
       console.log("Enviando credenciales:", { email, password });
   
       // Despachar la acción login con las credenciales como argumento
-      const result = await dispatch(login({ email, password }));
+      const result = await dispatch(login({ email:email.toLocaleLowerCase(), password }));
   
-      console.log("Resultado de la acción login:", result);
+      console.log("Resultado de la acción login:", result?.payload?.data?.user);
   
-      if (!result.payload.error) {
+      if (result?.payload?.data?.user) {
+        console.log("Resultado",result)
         // Inicio de sesión exitoso, redirige a la pantalla "Muro"
+        await AsyncStorage.setItem('user', JSON.stringify(result?.payload?.data?.user));
         navigation.navigate('Muro');
       } else {
+        setError("Email o contraseña no validos")
         // Inicio de sesión fallido, muestra un mensaje de error
         console.log("Inicio de sesión fallido:", result.payload.error);
         // Puedes mostrar un mensaje de error al usuario aquí
@@ -163,6 +169,7 @@ const LOGIN = () => {
             ¿Olvidaste tu contraseña?
           </Text>
         </View>
+        {error && <Text>{error}</Text>}
         <LinearGradient
           style={[styles.button, styles.buttonFlexBox]}
           locations={[0, 1]}

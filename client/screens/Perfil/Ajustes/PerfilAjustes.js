@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image } from 'expo-image'
 import { StyleSheet, View, Pressable, Text, ScrollView } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -14,9 +14,25 @@ import HeaderIcons from '../../../components/HeaderIcons'
 import CalendarMuroSVG from '../../../components/svgs/CalendarMuroSVG'
 import BookSVG from '../../../components/svgs/BookSVG'
 import NotificationsMuroSVG from '../../../components/svgs/NotificationsMuroSVG'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const PerfilAjustes = () => {
   const navigation = useNavigation()
+  const [usuario,setUsuario] = useState('')
+
+  useEffect(()=>{
+    const getUser= async()=>{
+    const usuario = await AsyncStorage.getItem('user');
+    console.log(JSON.parse(usuario),"este es")
+    setUsuario(JSON.parse(usuario));
+    return JSON.parse(usuario);
+    }
+    getUser()
+  },[])
+
+const handleLogOut = async ()=>{
+  await AsyncStorage.removeItem("user")
+  navigation.navigate('Splash')
+}
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -70,7 +86,7 @@ const PerfilAjustes = () => {
                   source={require('../../../assets/frame-15477548756.png')}
                 />
                 <View style={styles.brunoPhamWrapper}>
-                  <Text style={styles.brunoPham}>Bruno Pham</Text>
+                  <Text style={styles.brunoPham}>{usuario.username}</Text>
                 </View>
               </View>
               <View style={styles.frameParent2}>
@@ -171,7 +187,8 @@ const PerfilAjustes = () => {
           </View>
           <Pressable
             style={styles.frameWrapper}
-            onPress={() => navigation.navigate('Splash')}
+            onPress={
+             handleLogOut}
           >
             <View style={[styles.logoutParent, styles.parentLayout]}>
               <Image

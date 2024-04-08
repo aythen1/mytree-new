@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Image } from 'expo-image'
 import {
@@ -19,6 +19,9 @@ import ENTRADACREADA from '../components/ENTRADACREADA'
 import { setPanel } from '../redux/slices/panel.slices'
 import Album from './Album'
 import PopUpCalendario from '../components/PopUpCalendario'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import axios from 'axios'
+import { BACKURL } from '../apiBackend'
 
 const Organizador = () => {
   const dispatch = useDispatch()
@@ -34,6 +37,31 @@ const Organizador = () => {
   const [frameContainer2Visible, setFrameContainer2Visible] = useState(false)
   const [submit, setSubmit] = useState(false)
   const [showEtapas, setShowEtapas] = useState(false)
+  const [usuario, setUsuario] = useState({})
+  const [username,setUsername] = useState("")
+
+  
+  const [dataToSend, setDataToSend] = useState({
+    nameUser: "", 
+    description: '',
+    fecha:"20/12/2024",
+    photos: [],
+    etiquets: [],
+    hashtags: [],
+    userId: ""
+  })
+  useEffect(() => {
+    const getUser = async () => {
+      const usuario = await AsyncStorage.getItem('user')
+     const par = JSON.parse(usuario)
+     console.log(par,"parrr")
+     setDataToSend({...dataToSend,["nameUser"]:par.username})
+     setDataToSend({...dataToSend,["userId"]:par.id})
+
+      return JSON.parse(usuario)
+    }
+    getUser()
+  }, [])
   // const [uploadRecuerdo, setUploadRecuerdo] = useState(false)
   // const [cancion, setCancion] = useState(false)
   // const [ischecked, setIschecked] = useState(false)
@@ -133,6 +161,18 @@ const Organizador = () => {
   //   setFrameContainer5Visible(false)
   // }, [])
 
+  const handleSubmit = async () => {
+  try {
+    console.log("data",dataToSend)
+    const res = await axios.post(`${BACKURL}/posts`, dataToSend)
+    if (res.data) {
+      setSubmit(true)
+    }
+  } catch (error) {
+    console.log(error)
+  }
+  }
+
   return (
     <>
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
@@ -161,6 +201,10 @@ const Organizador = () => {
                     <TextInput
                       style={[styles.describeLoQue, styles.eventoTypo]}
                       placeholder=" Describe lo que sientes..."
+                      onChangeText={(des) =>
+                        setDataToSend({ ...dataToSend, ['description']: des })
+                      }
+                      value={dataToSend.description}
                     />
                     <View style={{ top: -20 }}>
                       <Text style={[styles.evento, styles.eventoTypo]}>
@@ -423,7 +467,7 @@ const Organizador = () => {
                 locations={[0, 1]}
                 colors={['#dee274', '#7ec18c']}
               >
-                <Text onPress={() => setSubmit(true)} style={styles.signIn}>
+                <Text onPress={handleSubmit} style={styles.signIn}>
                   Subir
                 </Text>
               </LinearGradient>

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "mytreev2",
-    "slug": "my-tree",
+    "slug": "mytree",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/image-9.png",
@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -27,9 +29,12 @@
     },
     "extra": {
       "eas": {
-        "projectId": "2dcc64f8-32aa-454a-974e-9dd1a2f3afc9"
+        "projectId": "33a3915f-2703-4bdb-93d4-fbd5b0fcf030"
       }
     },
-    "plugins": ["expo-font"]
+    "plugins": [
+      "expo-font"
+    ],
+    "owner": "azschiaffino"
   }
 }
