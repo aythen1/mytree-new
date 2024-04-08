@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
   StyleSheet,
   View,
@@ -13,10 +13,15 @@ import { FontFamily, FontSize, Color } from '../GlobalStyles'
 import Etiquetados from './Etiquetados'
 import EnviarMensajeSVG from '../components/svgs/EnviarMensajeSVG'
 import CompartirSVG from '../components/svgs/CompartirSVG'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import axios from 'axios'
+import { BACKURL } from '../apiBackend'
+import { useFocusEffect } from '@react-navigation/native';
 
-const Post = () => {
+const Posteo = ({ user, desc }) => {
   const [showTagged, setShowTagged] = useState(false)
   const [showIcons, setShowIcons] = useState(false)
+  const [posts, setPosts] = useState([])
 
   const toggleModal = () => {
     setShowTagged(!showTagged)
@@ -27,8 +32,71 @@ const Post = () => {
   }
 
   return (
+    <LinearGradient
+      style={styles.frameChild}
+      locations={[0.77, 1]}
+      colors={['rgba(183, 228, 192, 0.8)', 'rgba(41, 42, 43, 0.8)']}
+    >
+      <Image
+        style={[styles.vectorIcon, styles.vectorIconLayout]}
+        contentFit="cover"
+        source={require('../assets/vector39.png')}
+      />
+
+      {showIcons ? (
+        <View style={styles.iconsContainer}>
+          <EnviarMensajeSVG />
+          <CompartirSVG />
+        </View>
+      ) : (
+        <View style={styles.iconsContainerEmpty}></View>
+      )}
+
+      <View style={styles.textContainer}>
+        <Text style={styles.camila}>{user}</Text>
+        <Text style={styles.yendoALa}>{desc}</Text>
+      </View>
+    </LinearGradient>
+  )
+}
+
+const Post = () => {
+  const [showTagged, setShowTagged] = useState(false)
+  const [showIcons, setShowIcons] = useState(false)
+  const [posts, setPosts] = useState([])
+
+  const toggleModal = () => {
+    setShowTagged(!showTagged)
+  }
+
+  const toggleIcons = () => {
+    setShowIcons((prevShowIcons) => !prevShowIcons)
+  }
+  const fetchPosts = async () => {
+    const usuario = await AsyncStorage.getItem('user')
+    const user = JSON.parse(usuario)
+    const res = await axios.get(`${BACKURL}/user/${user.id}/posts`)
+    console.log(res,"resss")
+    setPosts(res.data.reverse())
+  }
+
+  useEffect(() => {
+    fetchPosts() // Realizar la carga inicial de posts
+  }, [])
+
+  useFocusEffect( // Este hook se ejecutará cada vez que la pantalla obtenga foco
+    useCallback(() => {
+      fetchPosts() // Volver a cargar los posts cuando la pantalla obtenga foco
+    }, [])
+  )
+  return (
     <Pressable style={styles.rectangleParent} onPress={toggleIcons}>
-      <LinearGradient
+      {posts &&
+        posts.map((e, i) => (
+          <Posteo desc={e.description} user={e.nameUser} key={i}></Posteo>
+        ))}
+
+      {/* <LinearGradient
         style={styles.frameChild}
         locations={[0.77, 1]}
         colors={['rgba(183, 228, 192, 0.8)', 'rgba(41, 42, 43, 0.8)']}
@@ -110,7 +178,7 @@ const Post = () => {
             Yendo a la casa de la tía Elisa! Los esperamos allá, familia!
           </Text>
         </View>
-      </LinearGradient>
+      </LinearGradient> */}
 
       {showTagged && (
         <Modal

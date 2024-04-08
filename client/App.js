@@ -65,6 +65,8 @@ import FiltroEdicionRecuerdo from './components/FiltroEdicionRecuerdo'
 import Register from './screens/Inicio/Register'
 import Eventos from './screens/Calendario/Eventos'
 import MasDetallesEventos from './screens/Calendario/MasDetallesEventos'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider } from 'react-redux'
@@ -74,11 +76,14 @@ import { loadFonts } from './GlobalStyles'
 const Stack = createNativeStackNavigator()
 
 const App = () => {
+  
   const [isFooterShow, setIsFooterShow] = useState(null)
-
+  
   const loadApp = async () => {
     await loadFonts()
   }
+  
+
 
   useEffect(() => {
     loadApp()
