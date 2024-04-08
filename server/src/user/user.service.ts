@@ -64,7 +64,9 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
     return user;
+    
   }
+
 
       // ACTUALIZA UN USUARIO POR ID
       async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
