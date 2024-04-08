@@ -238,7 +238,15 @@ async toggleLike(
       const hashedNewPassword = await bcrypt.hash(new_password, 10);
       user.oldPassword = old_password;
       user.password = hashedNewPassword;
-      await this.userService.updateUser(id, user);
+
+
+      // Mapear los valores al DTO de actualización
+      const updateUserDto: UpdateUserDto = {
+        // Aquí mapea los campos necesarios del usuario
+        password: hashedNewPassword,
+        oldPassword: old_password,
+      };
+      await this.userService.updateUser(id, updateUserDto);
       console.log('a ver');
       return {
         statusCode: HttpStatus.OK,

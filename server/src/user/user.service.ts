@@ -38,9 +38,15 @@ export class UserService {
     // CREA CREA USUARIO 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const { email } = createUserDto;
+    const { phone } = createUserDto;
+
     const existingUser = await this.userRepository.findOne({ where: { email: email } });
     if (existingUser) {
       throw new ConflictException('Email already exists');
+    }
+    const existingUserPhone = await this.userRepository.findOne({ where: { phone: phone } });
+    if (existingUserPhone) {
+      throw new ConflictException('Phone already exists');
     }
     const user = this.userRepository.create(createUserDto);
     return await this.userRepository.save(user);
@@ -61,11 +67,15 @@ export class UserService {
   }
 
       // ACTUALIZA UN USUARIO POR ID
-  async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    await this.getUserById(id); // Check if user exists
-    await this.userRepository.update(id, updateUserDto);
-    return await this.getUserById(id);
-  }
+      async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+        const user = await this.userRepository.findOne({where: {id:id}});
+        if (!user) {
+          throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+        }
+        // Actualizar el usuario con los nuevos valores del DTO
+        Object.assign(user, updateUserDto);
+        return await this.userRepository.save(user);
+      }
 
         // ELIMINA UN USUARIO POR ID
   async deleteUser(id: number): Promise<void> {
