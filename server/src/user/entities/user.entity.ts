@@ -13,6 +13,9 @@ export class User {
     username: string;
 
     @Column()
+    apellido: string;
+
+    @Column()
     email: string;
 
     @Column()
@@ -26,6 +29,9 @@ export class User {
 
     @Column({ nullable: true })
     phone: string;
+    @Column({ nullable: true })
+    address: string;
+    
 
     @Column({ nullable: true })
     birthDate: string;
