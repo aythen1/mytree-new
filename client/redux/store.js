@@ -10,7 +10,6 @@ import newspapersPublishedSlices from './slices/newspapersPublished.slices'
 import chatsSlices from './slices/chats.slices'
 import myContactsSlices from './slices/myContacts.slices'
 import userSlices from './slices/user.slices'
-
 export const store = configureStore({
   reducer: {
     stories: storiesSlices,
