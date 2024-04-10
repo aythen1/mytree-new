@@ -18,11 +18,12 @@
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.crisper1988.aythenmytree"
+      "package": "com.company.mytree"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -33,7 +34,15 @@
       }
     },
     "plugins": [
-      "expo-font"
+      "expo-font",  [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
+      ["@react-native-google-signin/google-signin"]
     ],
     "owner": "azschiaffino"
   }

@@ -10,7 +10,7 @@ import {
   Padding,
   Border
 } from '../../GlobalStyles'
-
+// import { GoogleSigninSingleton,GoogleSigninButton } from '@react-native-google-signin/google-signin'
 const Splash = () => {
   const navigation = useNavigation()
 

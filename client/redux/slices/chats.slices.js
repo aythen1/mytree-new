@@ -5,43 +5,9 @@ export const chatsSlices = createSlice({
   initialState: {
     message: {},
     allMessagesFromContact: [],
-    messages: [
-      {
-        id: 1,
-        name: 'Maury',
-        message: 'hola amigo',
-        sendAgo: 'hace 11 min',
-        notRead: 1
-      },
-      {
-        id: 2,
-        name: 'Marito',
-        message: 'Buenos dias',
-        sendAgo: 'hace 1 hora',
-        notRead: 3
-      },
-      {
-        id: 3,
-        name: 'Alex',
-        message: 'Hay que terminar RPA',
-        sendAgo: 'hace 2 hora',
-        notRead: 1
-      },
-      {
-        id: 4,
-        name: 'Juan',
-        message: 'Vamos a la pile',
-        sendAgo: 'hace 5 min',
-        notRead: 4
-      },
-      {
-        id: 5,
-        name: 'Fer',
-        message: 'Aguante editor',
-        sendAgo: 'hace 10 min',
-        notRead: 2
-      }
-    ]
+    loading: false,
+    error: null,
+    messages: []
   },
   reducers: {
     setMessage: (state, action) => {
@@ -50,6 +16,29 @@ export const chatsSlices = createSlice({
     setAllMessagesFromContact: (state, action) => {
       state.allMessagesFromContact = state.message.contact()
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loadMessages.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(loadMessages.fulfilled, (state, action) => {
+        state.loading = false;
+        state.messages = action.payload;
+      })
+      .addCase(loadMessages.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(markAsRead.fulfilled, (state, action) => {
+        const messageId = action.payload.id;
+        state.messages = state.messages.map(message => {
+          if (message.id === messageId) {
+            message.read = true;
+          }
+          return message;
+        });
+      });
   }
 })
 
