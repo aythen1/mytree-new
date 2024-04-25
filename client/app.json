@@ -30,11 +30,12 @@
     },
     "extra": {
       "eas": {
-        "projectId": "33a3915f-2703-4bdb-93d4-fbd5b0fcf030"
+        "projectId": "407a2db3-1f4f-459b-9dba-6abc56078216"
       }
     },
     "plugins": [
-      "expo-font",  [
+      "expo-font",
+      [
         "expo-build-properties",
         {
           "android": {
@@ -42,8 +43,10 @@
           }
         }
       ],
-      ["@react-native-google-signin/google-signin"]
+      [
+        "@react-native-google-signin/google-signin"
+      ]
     ],
-    "owner": "azschiaffino"
+    "owner": "kraa"
   }
 }

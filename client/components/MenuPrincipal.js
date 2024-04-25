@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
 import { Color, FontFamily, FontSize, Border } from '../GlobalStyles'
-import { setPanel } from '../redux/slices/panel.slices'
+// import { setPanel } from '../redux/slices/panel.slices'
 
 const MenuPrincipal = () => {
   const navigation = useNavigation()
@@ -38,7 +38,7 @@ const MenuPrincipal = () => {
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('Muro')
-                  dispatch(setPanel(false))
+                 // dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Muro</Text>
@@ -60,7 +60,7 @@ const MenuPrincipal = () => {
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('MENSAJERA')
-                  dispatch(setPanel(false))
+                 // dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Mensajeria</Text>
@@ -85,7 +85,7 @@ const MenuPrincipal = () => {
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('MIDIARIOPANTALLAPERSONAL')
-                  dispatch(setPanel(false))
+                 // dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Diario Familiar</Text>
@@ -107,7 +107,7 @@ const MenuPrincipal = () => {
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('CALENDARIO')
-                  dispatch(setPanel(false))
+                 // dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Calendario</Text>
@@ -131,7 +131,7 @@ const MenuPrincipal = () => {
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('Organizador')
-                  dispatch(setPanel(false))
+                 // dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Crear</Text>
@@ -156,7 +156,7 @@ const MenuPrincipal = () => {
                   style={styles.muro}
                   onPress={() => {
                     navigation.navigate('Busqueda')
-                    dispatch(setPanel(false))
+                  //  dispatch(setPanel(false))
                   }}
                 >
                   <Text style={styles.muro1Typo}>Búsqueda</Text>
@@ -181,7 +181,7 @@ const MenuPrincipal = () => {
                   style={styles.muro}
                   onPress={() => {
                     navigation.navigate('Novedades')
-                    dispatch(setPanel(false))
+                   // dispatch(setPanel(false))
                   }}
                 >
                   <Text style={styles.muro1Typo}>Novedades</Text>
@@ -208,7 +208,7 @@ const MenuPrincipal = () => {
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('Perfil')
-                  dispatch(setPanel(false))
+                 // dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Perfil</Text>
@@ -232,7 +232,7 @@ const MenuPrincipal = () => {
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('PerfilAjustes')
-                  dispatch(setPanel(false))
+                 // dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Ajustes</Text>

@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import Aadir1 from './Aadir1'
 import { useDispatch, useSelector } from 'react-redux'
-import { setPanelAddFooter } from '../redux/slices/panel.slices'
+// import { setPanelAddFooter } from '../redux/slices/panel.slices'
 import { Color } from '../GlobalStyles'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useNavigation } from '@react-navigation/native'
@@ -22,12 +22,12 @@ const FooterNavBar = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
 
-  const { panelAddFooter } = useSelector((state) => state.panel)
+  // const { panelAddFooter } = useSelector((state) => state.panel)
 
   const [selected, setSelected] = useState(null)
 
   const showModalAdd = () => {
-    dispatch(setPanelAddFooter(!panelAddFooter))
+   // dispatch(setPanelAddFooter(!panelAddFooter))
   }
 
   return (
@@ -109,7 +109,7 @@ const FooterNavBar = () => {
         </Pressable>
       </View>
 
-      {panelAddFooter && (
+      {/* {panelAddFooter && (
         <Modal transparent={true} animationType="slide">
           <TouchableWithoutFeedback onPress={showModalAdd}>
             <View style={{ height: '100%' }}>
@@ -117,7 +117,7 @@ const FooterNavBar = () => {
             </View>
           </TouchableWithoutFeedback>
         </Modal>
-      )}
+      )} */}
     </>
   )
 }

@@ -16,7 +16,7 @@ import Lugar3 from '../components/Lugar3'
 import { FontSize, FontFamily, Color, Border, Padding } from '../GlobalStyles'
 import Checkbox from 'expo-checkbox'
 import ENTRADACREADA from '../components/ENTRADACREADA'
-import { setPanel } from '../redux/slices/panel.slices'
+// import { setPanel } from '../redux/slices/panel.slices'
 import Album from './Album'
 import PopUpCalendario from '../components/PopUpCalendario'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -26,7 +26,7 @@ import { BACKURL } from '../apiBackend'
 const Organizador = () => {
   const dispatch = useDispatch()
 
-  const { showPanel } = useSelector((state) => state.panel)
+//  const { showPanel } = useSelector((state) => state.panel)
 
   const [legado, setLegado] = useState(false)
   const [album, setAlbum] = useState(false)

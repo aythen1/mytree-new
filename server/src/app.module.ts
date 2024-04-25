@@ -26,9 +26,8 @@ import { ChatModule } from './chat/chat.module';
       type: 'postgres',
       host: 'localhost',
       port: 5432,
-      username: 'azul',
-      password: '02030203',
-      
+      username: 'postgres',
+      password: 'krakra1',      
       database: 'mytree',
       entities: [User , Post,Notification,History,Comment , MessageEntity],
       synchronize: true,
