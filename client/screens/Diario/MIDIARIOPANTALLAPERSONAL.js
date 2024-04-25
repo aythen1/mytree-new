@@ -4,7 +4,7 @@ import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
 import { FontFamily, Color, FontSize } from '../../GlobalStyles'
 import { useSelector, useDispatch } from 'react-redux'
-import { setPanel } from '../../redux/slices/panel.slices'
+// import { setPanel } from '../../redux/slices/panel.slices'
 import Papers from './Papers'
 import HeaderIcons from '../../components/HeaderIcons'
 import LupaSVG from '../../components/svgs/LupaSVG'
@@ -53,7 +53,9 @@ const MIDIARIOPANTALLAPERSONAL = () => {
           </View>
 
           <View style={styles.frameParent12}>
-            <Pressable onPress={() => dispatch(setPanel(!showPanel))}>
+            <Pressable 
+            // onPress={() => dispatch(setPanel(!showPanel))}
+            >
               <Image
                 style={[styles.ionmenuIcon, styles.ionmenuIconLayout]}
                 contentFit="cover"

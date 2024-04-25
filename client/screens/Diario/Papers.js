@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { useNavigation } from '@react-navigation/native'
 import { FontSize, Color, FontFamily, Border } from '../../GlobalStyles'
 import { useDispatch, useSelector } from 'react-redux'
-import { setPaper } from '../../redux/slices/newspapersPublished.slices'
+// import { setPaper } from '../../redux/slices/newspapersPublished.slices'
 import PopUpCalendario from '../../components/PopUpCalendario'
 
 const Papers = () => {

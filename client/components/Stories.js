@@ -4,12 +4,12 @@ import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import { useSelector } from 'react-redux'
 
 const Stories = () => {
-  const { stories } = useSelector((state) => state.stories)
+  // const { stories } = useSelector((state) => state.stories)
 
   return (
     <View style={{ top: 15, width: '100%', justifyContent: 'center' }}>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-        {stories.map((story) => (
+        {/* {stories.map((story) => (
           <View key={story.name} style={styles.youLayout}>
             <Image
               style={[styles.aatarIcon, styles.aatarIconPosition]}
@@ -20,7 +20,7 @@ const Stories = () => {
               <Text>{story.name}</Text>
             </View>
           </View>
-        ))}
+        ))} */}
       </ScrollView>
     </View>
   )

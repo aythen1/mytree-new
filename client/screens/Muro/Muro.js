@@ -8,7 +8,7 @@ import {
   Modal,
   ScrollView
 } from 'react-native'
-import { setPanel } from '../../redux/slices/panel.slices'
+// import { setPanel } from '../../redux/slices/panel.slices'
 import { Image } from 'expo-image'
 import {
   Border,
@@ -34,7 +34,7 @@ const Muro = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation()
 
-  const { showPanel } = useSelector((state) => state.panel)
+  // const { showPanel } = useSelector((state) => state.panel)
 
   const [showModalRetos, setShowModalRetos] = useState(false)
   const [colorClick, setColorClick] = useState(true)
@@ -42,7 +42,7 @@ const Muro = () => {
   const [menuVisible, setMenuVisible] = useState(false)
 
   const handleMenu = () => {
-    dispatch(setPanel(false))
+   // dispatch(setPanel(false))
   }
 
   return (
@@ -59,7 +59,7 @@ const Muro = () => {
         >
           <Pressable
             style={[styles.menuIcon, styles.menuPosition]}
-            onPress={() => dispatch(setPanel(!menuVisible))}
+          //  onPress={() => dispatch(setPanel(!menuVisible))}
           >
             <Image
               style={[styles.icon, styles.iconLayout]}
@@ -161,8 +161,8 @@ const Muro = () => {
         <Modal
           animationType="slide"
           transparent={true}
-          visible={showPanel}
-          onRequestClose={() => dispatch(setPanel(false))}
+          visible={false}
+        //  onRequestClose={() => dispatch(setPanel(false))}
           propagateSwipe={true}
         >
           <View style={{ zIndex: 0 }}>

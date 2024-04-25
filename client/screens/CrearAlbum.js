@@ -17,7 +17,6 @@ import Lugar3 from '../components/Lugar3'
 import { FontSize, FontFamily, Color, Border, Padding } from '../GlobalStyles'
 import Checkbox from 'expo-checkbox'
 import ENTRADACREADA from '../components/ENTRADACREADA'
-import { setPanel } from '../redux/slices/panel.slices'
 import Privacidad from './Privacidad'
 import Album from './Album'
 import PopUpCalendario from '../components/PopUpCalendario'
@@ -25,7 +24,7 @@ import PopUpCalendario from '../components/PopUpCalendario'
 const CrearAlbum = () => {
   const dispatch = useDispatch()
 
-  const { showPanel } = useSelector((state) => state.panel)
+  // const { showPanel } = useSelector((state) => state.panel)
   const [uploadRecuerdo, setUploadRecuerdo] = useState(false)
   const [legado, setLegado] = useState(false)
   const [album, setAlbum] = useState(false)
@@ -148,7 +147,9 @@ const CrearAlbum = () => {
             <View style={styles.frameParent}>
               <View style={{ width: '100%' }}>
                 <View style={styles.ionmenuParent}>
-                  <Pressable onPress={() => dispatch(setPanel(!showPanel))}>
+                  <Pressable 
+                  // onPress={() => dispatch(setPanel(!showPanel))}
+                  >
                     <Image
                       style={styles.ionmenuIcon}
                       contentFit="cover"
