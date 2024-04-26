@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Image } from 'expo-image'
 import {
@@ -16,17 +16,20 @@ import Lugar3 from '../components/Lugar3'
 import { FontSize, FontFamily, Color, Border, Padding } from '../GlobalStyles'
 import Checkbox from 'expo-checkbox'
 import ENTRADACREADA from '../components/ENTRADACREADA'
-// import { setPanel } from '../redux/slices/panel.slices'
+import { setPanel } from '../redux/slices/panel.slices'
 import Album from './Album'
 import PopUpCalendario from '../components/PopUpCalendario'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import { BACKURL } from '../apiBackend'
+import Privacidad from './Privacidad'
+import { Context } from '../context/Context'
 
 const Organizador = () => {
   const dispatch = useDispatch()
 
-//  const { showPanel } = useSelector((state) => state.panel)
+ const { showPanel } = useSelector((state) => state.panel)
+ const {libraryImage} = useContext(Context)
 
   const [legado, setLegado] = useState(false)
   const [album, setAlbum] = useState(false)
@@ -62,12 +65,12 @@ const Organizador = () => {
     }
     getUser()
   }, [])
-  // const [uploadRecuerdo, setUploadRecuerdo] = useState(false)
-  // const [cancion, setCancion] = useState(false)
-  // const [ischecked, setIschecked] = useState(false)
-  // const [buttonContainer1Visible, setButtonContainer1Visible] = useState(false)
-  // const [frameContainer5Visible, setFrameContainer5Visible] = useState(false)
-  // const [showPrivacidad, setShowPrivacidad] = useState(false)
+  const [uploadRecuerdo, setUploadRecuerdo] = useState(false)
+  const [cancion, setCancion] = useState(false)
+  const [ischecked, setIschecked] = useState(false)
+  const [buttonContainer1Visible, setButtonContainer1Visible] = useState(false)
+  const [frameContainer5Visible, setFrameContainer5Visible] = useState(false)
+  const [showPrivacidad, setShowPrivacidad] = useState(false)
 
   const closeSubmit = () => {
     setSubmit(false)
@@ -105,21 +108,21 @@ const Organizador = () => {
     setCalendario(false)
   }, [])
 
-  // const openCancion = useCallback(() => {
-  //   setCancion(true)
-  // }, [])
+  const openCancion = useCallback(() => {
+    setCancion(true)
+  }, [])
 
-  // const closeCancion = useCallback(() => {
-  //   setCancion(false)
-  // }, [])
+  const closeCancion = useCallback(() => {
+    setCancion(false)
+  }, [])
 
-  // const openUploadRecuerdo = useCallback(() => {
-  //   setUploadRecuerdo(true)
-  // }, [])
+  const openUploadRecuerdo = useCallback(() => {
+    setUploadRecuerdo(true)
+  }, [])
 
-  // const closeUploadRecuerdo = useCallback(() => {
-  //   setUploadRecuerdo(false)
-  // }, [])
+  const closeUploadRecuerdo = useCallback(() => {
+    setUploadRecuerdo(false)
+  }, [])
 
   const openEtapas = useCallback(() => {
     setShowEtapas(true)
@@ -129,21 +132,21 @@ const Organizador = () => {
     setShowEtapas(false)
   }, [])
 
-  // const openPrivacidad = useCallback(() => {
-  //   setShowPrivacidad(true)
-  // }, [])
+  const openPrivacidad = useCallback(() => {
+    setShowPrivacidad(true)
+  }, [])
 
-  // const closePrivacidad = useCallback(() => {
-  //   setShowPrivacidad(false)
-  // }, [])
+  const closePrivacidad = useCallback(() => {
+    setShowPrivacidad(false)
+  }, [])
 
-  // const openButtonContainer1 = useCallback(() => {
-  //   setButtonContainer1Visible(true)
-  // }, [])
+  const openButtonContainer1 = useCallback(() => {
+    setButtonContainer1Visible(true)
+  }, [])
 
-  // const closeButtonContainer1 = useCallback(() => {
-  //   setButtonContainer1Visible(false)
-  // }, [])
+  const closeButtonContainer1 = useCallback(() => {
+    setButtonContainer1Visible(false)
+  }, [])
 
   const openFrameContainer2 = useCallback(() => {
     setFrameContainer2Visible(true)
@@ -153,18 +156,30 @@ const Organizador = () => {
     setFrameContainer2Visible(false)
   }, [])
 
-  // const openFrameContainer5 = useCallback(() => {
-  //   setFrameContainer5Visible(true)
-  // }, [])
+  const openFrameContainer5 = useCallback(() => {
+    setFrameContainer5Visible(true)
+  }, [])
 
-  // const closeFrameContainer5 = useCallback(() => {
-  //   setFrameContainer5Visible(false)
-  // }, [])
+  const closeFrameContainer5 = useCallback(() => {
+    setFrameContainer5Visible(false)
+  }, [])
 
   const handleSubmit = async () => {
+    const usuario = await AsyncStorage.getItem('user')
+    const user = JSON.parse(usuario)
   try {
-    console.log("data",dataToSend)
-    const res = await axios.post(`${BACKURL}/posts`, dataToSend)
+    
+    console.log('user: ',user)
+    const finalData = {}
+    finalData.etiquets = []
+    finalData.hashtags = []
+    finalData.userId = user.id
+    finalData.fecha = new Date()
+    finalData.nameUser = user.username
+    finalData.photos = [libraryImage]
+    finalData.description = dataToSend.description
+    console.log("sending post...",finalData)
+    const res = await axios.post(`${BACKURL}/posts`, finalData)
     if (res.data) {
       setSubmit(true)
     }
@@ -226,7 +241,7 @@ const Organizador = () => {
                     </View>
                   </View>
                   <View style={styles.fieldParent}>
-                    {/* <Image
+                    <Image
                       style={styles.frameChild}
                       contentFit="cover"
                       source={require('../assets/line-802.png')}
@@ -236,7 +251,7 @@ const Organizador = () => {
                         styles.iconlybolddocumentParent,
                         styles.parentFlexBox
                       ]}
-                      onPress={openUploadRecuerdo}
+                      // onPress={openUploadRecuerdo}
                     >
                       <Image
                         style={styles.iconlybolddocument}
@@ -246,7 +261,7 @@ const Organizador = () => {
                       <Text style={[styles.anexoArchivo, styles.etiquetarTypo]}>
                         Anexo archivo
                       </Text>
-                    </Pressable> */}
+                    </Pressable>
 
                     <Pressable
                       style={[
@@ -264,7 +279,7 @@ const Organizador = () => {
                         Etiquetar
                       </Text>
                     </Pressable>
-                    {/* <Image
+                    <Image
                       style={styles.frameItem}
                       contentFit="cover"
                       source={require('../assets/line-802.png')}
@@ -274,7 +289,7 @@ const Organizador = () => {
                         styles.iconlybolddocumentParent,
                         styles.parentFlexBox
                       ]}
-                      onPress={openCancion}
+                      // onPress={openCancion}
                     >
                       <Image
                         style={styles.groupIcon}
@@ -284,7 +299,7 @@ const Organizador = () => {
                       <Text style={[styles.aadirAudio, styles.etiquetarTypo]}>
                         Añadir audio
                       </Text>
-                    </Pressable> */}
+                    </Pressable>
                     <Image
                       style={styles.frameItem}
                       contentFit="cover"
@@ -412,14 +427,14 @@ const Organizador = () => {
                       contentFit="cover"
                       source={require('../assets/line-802.png')}
                     />
-                    {/* {!añadirAUnAlbum && (
+                    {!añadirAUnAlbum && (
                       <View style={[styles.frameWrapper, styles.frameLayout]}>
                         <View
                           style={[styles.checkParent, styles.button2FlexBox]}
                         >
                           <View style={styles.check}>
                             <View style={styles.checkChild} />
-                            {/* <Image
+                             <Image
                             style={styles.vectorIcon1}
                             contentFit="cover"
                             source={require('../assets/vector.png')}
@@ -436,8 +451,8 @@ const Organizador = () => {
                           </Text>
                         </View>
                       </View>
-                    )} */}
-                    {/* {!añadirAUnAlbum && (
+                    )} 
+                    {!añadirAUnAlbum && (
                       <View style={[styles.frameView, styles.parentFlexBox]}>
                         <Pressable
                           style={styles.opcionesDePrivacidadWrapper}
@@ -458,7 +473,7 @@ const Organizador = () => {
                           source={require('../assets/arrowdown23.png')}
                         />
                       </View>
-                    )} */}
+                    )}
                   </View>
                 </View>
               </View>
@@ -476,13 +491,13 @@ const Organizador = () => {
         </View>
       </ScrollView>
 
-      {/* <Modal animationType="slide" transparent visible={showEtapas}>
+      <Modal animationType="slide" transparent visible={showEtapas}>
         <View style={styles.buttonContainer1Overlay}>
           <Pressable style={styles.buttonContainer1Bg} onPress={closeEtapas}>
-            <Etapas onClose={closeEtapas} />
+            {/* <Etapas onClose={closeEtapas} /> */}
           </Pressable>
         </View>
-      </Modal> */}
+      </Modal>
 
       <Modal animationType="slide" transparent visible={selectedAlbum}>
         <View style={styles.buttonContainer1Overlay}>
@@ -495,7 +510,7 @@ const Organizador = () => {
         </View>
       </Modal>
 
-      {/* <Modal animationType="fade" transparent visible={showPrivacidad}>
+       <Modal animationType="fade" transparent visible={showPrivacidad}>
         <View style={styles.buttonContainer1Overlay}>
           <Pressable
             style={styles.buttonContainer1Bg}
@@ -504,7 +519,7 @@ const Organizador = () => {
             <Privacidad onClose={closePrivacidad} />
           </Pressable>
         </View>
-      </Modal> */}
+      </Modal>
 
       <Modal animationType="slide" transparent visible={frameContainer2Visible}>
         <View style={styles.frameContainer2Overlay}>

@@ -24,7 +24,7 @@ import PopUpCalendario from '../components/PopUpCalendario'
 const CrearAlbum = () => {
   const dispatch = useDispatch()
 
-  // const { showPanel } = useSelector((state) => state.panel)
+  const { showPanel } = useSelector((state) => state.panel)
   const [uploadRecuerdo, setUploadRecuerdo] = useState(false)
   const [legado, setLegado] = useState(false)
   const [album, setAlbum] = useState(false)
@@ -148,7 +148,7 @@ const CrearAlbum = () => {
               <View style={{ width: '100%' }}>
                 <View style={styles.ionmenuParent}>
                   <Pressable 
-                  // onPress={() => dispatch(setPanel(!showPanel))}
+                   onPress={() => dispatch(setPanel(!showPanel))}
                   >
                     <Image
                       style={styles.ionmenuIcon}

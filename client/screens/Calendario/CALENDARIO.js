@@ -4,7 +4,7 @@ import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native'
 import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
 import { Color, FontSize, Padding } from '../../GlobalStyles'
-// import { setPanel } from '../../redux/slices/panel.slices'
+import { setPanel } from '../../redux/slices/panel.slices'
 import Calendario from '../../components/Calendario'
 import BarraBusqueda from '../../components/BarraBusqueda'
 import Fechas from '../../components/Fechas'
@@ -39,7 +39,7 @@ const CALENDARIO = () => {
       <View style={styles.topContainer}>
         <Pressable
           style={styles.ionmenu}
-         // onPress={() => dispatch(setPanel(!showPanel))}
+         onPress={() => dispatch(setPanel(!showPanel))}
         >
           <Image
             style={[styles.icon, styles.iconLayout]}

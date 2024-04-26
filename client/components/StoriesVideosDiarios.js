@@ -9,10 +9,13 @@ const StoriesVideosDiarios = () => {
   const navigation = useNavigation()
 
   return (
-    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-      <View style={styles.mensajera}>
+   <View style={{ marginTop:15, width:'100%', justifyContent: 'center' }}>
+     <ScrollView style={{}} horizontal={true} showsHorizontalScrollIndicator={false}>
+      <View style={{ width: '100%',
+    height: 100 }}>
         <View style={styles.storiesLayout}>
-          <View style={styles.youLayout}>
+          <View style={{height: 90,
+    width: 70,marginLeft:15}}>
             <Image
               style={[styles.aatarIcon, styles.aatarIconPosition]}
               contentFit="cover"
@@ -85,6 +88,7 @@ const StoriesVideosDiarios = () => {
         </View>
       </View>
     </ScrollView>
+   </View>
   )
 }
 
@@ -501,12 +505,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   mensajera: {
-    // borderRadius: Border.br_31xl,
-    // overflow: 'hidden',
     width: '100%',
-    // flex: 1,
-    height: 100
-    // marginTop: 60
+    height: 100,
+    borderWidth:2
   }
 })
 

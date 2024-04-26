@@ -4,7 +4,7 @@ import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
 import { FontSize, FontFamily, Color, Border, Padding } from '../GlobalStyles'
 import { useDispatch } from 'react-redux'
-// import { setPanelAddFooter } from '../redux/slices/panel.slices'
+import { setPanelAddFooter } from '../redux/slices/panel.slices'
 import { LinearGradient } from 'expo-linear-gradient'
 import MessageSVG from './svgs/MessageSVG'
 import CalendarSVG from './svgs/CalendarSVG'
@@ -24,8 +24,8 @@ const Aadir1 = () => {
         <Pressable
           style={[styles.frameWrapper, styles.frameWrapperFlexBox]}
           onPress={() => {
-            // dispatch(setPanelAddFooter(false))
-            navigation.navigate('Organizador')
+            dispatch(setPanelAddFooter(false))
+            navigation.navigate('UploadMemory')
           }}
         >
           <View style={[styles.groupParent, styles.groupParentFlexBox]}>
@@ -40,7 +40,7 @@ const Aadir1 = () => {
         <Pressable
           style={[styles.frameContainer, styles.frameFlexBox]}
           onPress={() => {
-           // dispatch(setPanelAddFooter(false))
+           dispatch(setPanelAddFooter(false))
             navigation.navigate('BOTONInvitarAmigos1')
           }}
         >
@@ -57,7 +57,7 @@ const Aadir1 = () => {
         <Pressable
           style={[styles.framePressable, styles.frameFlexBox]}
           onPress={() => {
-            // dispatch(setPanelAddFooter(false))
+            dispatch(setPanelAddFooter(false))
             navigation.navigate('MIDIARIOPANTALLAPERSONAL')
           }}
         >
@@ -69,7 +69,7 @@ const Aadir1 = () => {
         <Pressable
           style={[styles.frameWrapper1, styles.frameFlexBox]}
           onPress={() => {
-            // dispatch(setPanelAddFooter(false))
+            dispatch(setPanelAddFooter(false))
             navigation.navigate('CrearEvento')
           }}
         >
@@ -81,7 +81,7 @@ const Aadir1 = () => {
         <Pressable
           style={[styles.frameFlexBox]}
           onPress={() => {
-           // dispatch(setPanelAddFooter(false))
+           dispatch(setPanelAddFooter(false))
             navigation.navigate('MUROALERTAS1')
           }}
         >
