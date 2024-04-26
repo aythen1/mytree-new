@@ -13,7 +13,7 @@ import { Color, FontSize, FontFamily, Border, Padding } from '../GlobalStyles'
 import Checkbox from 'expo-checkbox'
 import { useNavigation } from '@react-navigation/native'
 import OpcionesModal from './../components/OpcionesModal'
-// import { setPanel } from '../redux/slices/panel.slices'
+import { setPanel } from '../redux/slices/panel.slices'
 
 const BOTONInvitarAmigos1 = () => {
   const navigation = useNavigation()
@@ -40,7 +40,7 @@ const BOTONInvitarAmigos1 = () => {
     <>
       <View style={styles.botonInvitarAmigos}>
         <Pressable 
-        // onPress={() => dispatch(setPanel(!showPanel))}
+        onPress={() => dispatch(setPanel(!showPanel))}
         >
           <Image
             style={[styles.ionmenuIcon, styles.iconPosition]}

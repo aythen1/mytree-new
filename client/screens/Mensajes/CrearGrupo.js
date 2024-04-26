@@ -18,7 +18,7 @@ import {
   Color,
   Border
 } from '../../GlobalStyles'
-// import { setPanel } from '../../redux/slices/panel.slices'
+import { setPanel } from '../../redux/slices/panel.slices'
 import OpcionesModal from '../../components/OpcionesModal'
 import ENTRADACREADA from '../../components/ENTRADACREADA'
 
@@ -55,7 +55,7 @@ const CrearGrupo = () => {
         <View style={styles.buttonBarFlexBox}>
           <Pressable
             style={styles.backLayout}
-           // onPress={() => dispatch(setPanel(!showPanel))}
+           onPress={() => dispatch(setPanel(!showPanel))}
           >
             <Image
               style={styles.iconLayout}

@@ -10,7 +10,7 @@ import {
   FontSize
 } from '../../GlobalStyles'
 import { useDispatch, useSelector } from 'react-redux'
-// import { setPanel } from '../../redux/slices/panel.slices'
+import { setPanel } from '../../redux/slices/panel.slices'
 import MiLegado from './MiLegado'
 import MisAlbumes from './MisAlbumes'
 import PERFILMIINFO from './PERFILMIINFO'
@@ -92,7 +92,7 @@ const Perfil = () => {
       </View>
 
       <Pressable
-      //  onPress={() => dispatch(setPanel(!showPanel))}
+       onPress={() => dispatch(setPanel(!showPanel))}
         style={styles.menuPosition}
       >
         <Image

@@ -72,11 +72,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider } from 'react-redux'
 import { store } from './redux/store'
 import { loadFonts } from './GlobalStyles'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { StatusBar } from 'react-native'
+import UploadMemory from './screens/Memories/UploadMemory'
+import { ContextProvider } from './context/Context'
 
 const Stack = createNativeStackNavigator()
 
-const App = () => {
-  
+const App = () => {  
   const [isFooterShow, setIsFooterShow] = useState(null)
   
   const loadApp = async () => {
@@ -90,7 +93,19 @@ const App = () => {
   }, [])
 // hola
   return (
+    <SafeAreaView
+      style={{
+        backgroundColor: '#000',
+        flex: 1
+      }}
+    >
+      <StatusBar
+          hidden={!isFooterShow}
+          barStyle={'dark-content'}
+          backgroundColor="#fff"
+        />
     <Provider store={store}>
+    <ContextProvider>
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="Onboarding2"
@@ -109,6 +124,11 @@ const App = () => {
           <Stack.Screen
             name="AadirAlbum"
             component={AadirAlbum}
+            options={{ headerShown: false }}
+          />          
+          <Stack.Screen
+            name="UploadMemory"
+            component={UploadMemory}
             options={{ headerShown: false }}
           />
           <Stack.Screen
@@ -429,7 +449,8 @@ const App = () => {
         </Stack.Navigator>
         {isFooterShow && <FooterNavBar />}
       </NavigationContainer>
-    </Provider>
+      </ContextProvider>
+    </Provider></SafeAreaView>
   )
 }
 export default App
