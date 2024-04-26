@@ -92,7 +92,7 @@ const Perfil = () => {
       </View>
 
       <Pressable
-        onPress={() => dispatch(setPanel(!showPanel))}
+       onPress={() => dispatch(setPanel(!showPanel))}
         style={styles.menuPosition}
       >
         <Image

@@ -5,7 +5,8 @@ import {
   Text,
   Pressable,
   Modal,
-  TouchableOpacity
+  TouchableOpacity,
+  ImageBackground
 } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -18,7 +19,8 @@ import axios from 'axios'
 import { BACKURL } from '../apiBackend'
 import { useFocusEffect } from '@react-navigation/native';
 
-const Posteo = ({ user, desc }) => {
+const Posteo = ({ data }) => {
+  console.log('data: ',data)
   const [showTagged, setShowTagged] = useState(false)
   const [showIcons, setShowIcons] = useState(false)
   const [posts, setPosts] = useState([])
@@ -32,31 +34,79 @@ const Posteo = ({ user, desc }) => {
   }
 
   return (
-    <LinearGradient
+    <View
       style={styles.frameChild}
-      locations={[0.77, 1]}
-      colors={['rgba(183, 228, 192, 0.8)', 'rgba(41, 42, 43, 0.8)']}
     >
-      <Image
-        style={[styles.vectorIcon, styles.vectorIconLayout]}
-        contentFit="cover"
-        source={require('../assets/vector39.png')}
-      />
-
-      {showIcons ? (
-        <View style={styles.iconsContainer}>
-          <EnviarMensajeSVG />
-          <CompartirSVG />
+      <ImageBackground style={{
+            height:500,
+            zIndex: -1000,
+            justifyContent:'flex-end',
+            resizeMode: "cover",
+            overflow: "hidden"
+          }} source={{uri: data.photos[0]}}>
+            <TouchableOpacity style={{position:'absolute',left: 15,top:15}}>
+            <LinearGradient
+            style={{
+              
+          justifyContent:'center',alignItems:'center',
+          
+              width: 64,
+              height: 64,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 25,
+              zIndex: 0
+            }}
+            locations={[0, 1]}
+            colors={['#7ec18c', '#dee274']}
+          >
+            
+            <View style={{
+          justifyContent:'center',alignItems:'center',
+          width: 59,
+         borderRadius:23,
+          backgroundColor: '#c5eacd',
+          height: 59,
+        }}><View
+        style={{
+          justifyContent:'center',alignItems:'center',
+          width: 53,
+         borderRadius:23,
+          backgroundColor: '#b7e4c0',
+          height: 53,
+        }}
+       
+        
+      >
+        <Image contentFit="cover" style={{width:22,height:16.5, zIndex:9999}} source={require('../assets/vector2.png')}/>
+      </View></View>
+          </LinearGradient>
+            </TouchableOpacity>
+     
+       <View style={{gap:50,position:'absolute',right:24,bottom:100}}>
+       <TouchableOpacity>
+         <Image style={{width:40,height:40}} source={require('../assets/iconlyboldchat.png')}/>
+       </TouchableOpacity>
+          <TouchableOpacity>
+            <EnviarMensajeSVG />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <CompartirSVG />
+          </TouchableOpacity>
+          
         </View>
-      ) : (
-        <View style={styles.iconsContainerEmpty}></View>
-      )}
-
-      <View style={styles.textContainer}>
-        <Text style={styles.camila}>{user}</Text>
-        <Text style={styles.yendoALa}>{desc}</Text>
-      </View>
-    </LinearGradient>
+ <LinearGradient
+            style={{ padding: 5,padding: 15}}
+            end={{ x: 0.5, y: 0 }}
+            start={{ x: 0.5, y: 1 }}
+            colors={["rgba(0,0,0,0.9)", "transparent"]}
+          >
+      
+        <Text style={styles.camila}>{data.nameUser}</Text>
+        <Text style={styles.yendoALa}>{data.description}</Text>
+      </LinearGradient>
+      </ImageBackground>
+    </View>
   )
 }
 
@@ -93,92 +143,8 @@ const Post = () => {
     <Pressable style={styles.rectangleParent} onPress={toggleIcons}>
       {posts &&
         posts.map((e, i) => (
-          <Posteo desc={e.description} user={e.nameUser} key={i}></Posteo>
+          <Posteo data={e} key={i}></Posteo>
         ))}
-
-      {/* <LinearGradient
-        style={styles.frameChild}
-        locations={[0.77, 1]}
-        colors={['rgba(183, 228, 192, 0.8)', 'rgba(41, 42, 43, 0.8)']}
-      >
-        <TouchableOpacity style={styles.tagged} onPress={toggleModal}>
-          <Image
-            style={{ width: 30, height: 30 }}
-            contentFit="cover"
-            source={require('../assets/vector39.png')}
-          />
-        </TouchableOpacity>
-
-        {showIcons ? (
-          <View style={styles.iconsContainer}>
-            <EnviarMensajeSVG />
-            <CompartirSVG />
-          </View>
-        ) : (
-          <View style={styles.iconsContainerEmpty}></View>
-        )}
-
-        <View style={styles.textContainer}>
-          <Text style={styles.camila}>Camila</Text>
-          <Text style={styles.yendoALa}>
-            Yendo a la casa de la tía Elisa! Los esperamos allá, familia!
-          </Text>
-        </View>
-      </LinearGradient>
-      <LinearGradient
-        style={styles.frameChild}
-        locations={[0.77, 1]}
-        colors={['rgba(183, 228, 192, 0.8)', 'rgba(41, 42, 43, 0.8)']}
-      >
-        <Image
-          style={[styles.vectorIcon, styles.vectorIconLayout]}
-          contentFit="cover"
-          source={require('../assets/vector39.png')}
-        />
-
-        {showIcons ? (
-          <View style={styles.iconsContainer}>
-            <EnviarMensajeSVG />
-            <CompartirSVG />
-          </View>
-        ) : (
-          <View style={styles.iconsContainerEmpty}></View>
-        )}
-
-        <View style={styles.textContainer}>
-          <Text style={styles.camila}>Camila</Text>
-          <Text style={styles.yendoALa}>
-            Yendo a la casa de la tía Elisa! Los esperamos allá, familia!
-          </Text>
-        </View>
-      </LinearGradient>
-      <LinearGradient
-        style={styles.frameChild}
-        locations={[0.77, 1]}
-        colors={['rgba(183, 228, 192, 0.8)', 'rgba(41, 42, 43, 0.8)']}
-      >
-        <Image
-          style={[styles.vectorIcon, styles.vectorIconLayout]}
-          contentFit="cover"
-          source={require('../assets/vector39.png')}
-        />
-
-        {showIcons ? (
-          <View style={styles.iconsContainer}>
-            <EnviarMensajeSVG />
-            <CompartirSVG />
-          </View>
-        ) : (
-          <View style={styles.iconsContainerEmpty}></View>
-        )}
-
-        <View style={styles.textContainer}>
-          <Text style={styles.camila}>Camila</Text>
-          <Text style={styles.yendoALa}>
-            Yendo a la casa de la tía Elisa! Los esperamos allá, familia!
-          </Text>
-        </View>
-      </LinearGradient> */}
 
       {showTagged && (
         <Modal
@@ -205,7 +171,7 @@ const styles = StyleSheet.create({
     left: 0,
     top: 15,
     height: 500,
-    marginBottom: 30
+    marginBottom: 30,borderRadius:20,marginHorizontal:15,overflow:'hidden'
   },
   vectorIcon: {
     marginTop: -29,
@@ -216,6 +182,7 @@ const styles = StyleSheet.create({
   },
   rectangleParent: {
     height: '85%',
+    paddingBottom:5,
     top: 15
   },
   camila: {

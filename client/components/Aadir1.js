@@ -25,7 +25,7 @@ const Aadir1 = () => {
           style={[styles.frameWrapper, styles.frameWrapperFlexBox]}
           onPress={() => {
             dispatch(setPanelAddFooter(false))
-            navigation.navigate('Organizador')
+            navigation.navigate('UploadMemory')
           }}
         >
           <View style={[styles.groupParent, styles.groupParentFlexBox]}>
@@ -40,7 +40,7 @@ const Aadir1 = () => {
         <Pressable
           style={[styles.frameContainer, styles.frameFlexBox]}
           onPress={() => {
-            dispatch(setPanelAddFooter(false))
+           dispatch(setPanelAddFooter(false))
             navigation.navigate('BOTONInvitarAmigos1')
           }}
         >
@@ -81,7 +81,7 @@ const Aadir1 = () => {
         <Pressable
           style={[styles.frameFlexBox]}
           onPress={() => {
-            dispatch(setPanelAddFooter(false))
+           dispatch(setPanelAddFooter(false))
             navigation.navigate('MUROALERTAS1')
           }}
         >

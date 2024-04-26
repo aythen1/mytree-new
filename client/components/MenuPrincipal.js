@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { View, StyleSheet, Text, Pressable, ScrollView } from 'react-native'
+import { View, StyleSheet, Text, Pressable, ScrollView, StatusBar, Dimensions } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
@@ -10,20 +10,28 @@ import { setPanel } from '../redux/slices/panel.slices'
 const MenuPrincipal = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
+  const { height: fullHeight } = Dimensions.get('window');
+const statusBarHeight = StatusBar.currentHeight || 0;
+const heightWithoutStatusBar = fullHeight - statusBarHeight;
 
   return (
     <ScrollView
-      style={styles.menPrincipal}
+      style={{   maxWidth: '70%',
+      top: 0,
+      zIndex: 0, height:'100%'}}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ paddingBottom: 100 }}
     >
       <LinearGradient
-        style={styles.menPrincipalChild}
+        style={{  borderTopRightRadius: Border.br_3xs,borderBottomRightRadius: Border.br_3xs,
+          backgroundColor: Color.linearBoton, height:fullHeight}}
         start={{ x: 0.9, y: 0.6 }}
         end={{ x: 0, y: 0.6 }}
         colors={['#e2e57a', '#7fc08b']}
       >
-        <View style={styles.frameParent}>
+        <View style={{    top: 20,
+    left: 20,
+    zIndex: 50}}>
           <View>
             <View style={styles.parentFlexBox}>
               <Image
@@ -38,7 +46,7 @@ const MenuPrincipal = () => {
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('Muro')
-                  dispatch(setPanel(false))
+                 dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Muro</Text>
@@ -60,7 +68,7 @@ const MenuPrincipal = () => {
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('MENSAJERA')
-                  dispatch(setPanel(false))
+                 dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Mensajeria</Text>
@@ -85,7 +93,7 @@ const MenuPrincipal = () => {
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('MIDIARIOPANTALLAPERSONAL')
-                  dispatch(setPanel(false))
+                 dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Diario Familiar</Text>
@@ -107,7 +115,7 @@ const MenuPrincipal = () => {
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('CALENDARIO')
-                  dispatch(setPanel(false))
+                 dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Calendario</Text>
@@ -131,7 +139,7 @@ const MenuPrincipal = () => {
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('Organizador')
-                  dispatch(setPanel(false))
+                 dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Crear</Text>
@@ -156,7 +164,7 @@ const MenuPrincipal = () => {
                   style={styles.muro}
                   onPress={() => {
                     navigation.navigate('Busqueda')
-                    dispatch(setPanel(false))
+                   dispatch(setPanel(false))
                   }}
                 >
                   <Text style={styles.muro1Typo}>Búsqueda</Text>
@@ -181,7 +189,7 @@ const MenuPrincipal = () => {
                   style={styles.muro}
                   onPress={() => {
                     navigation.navigate('Novedades')
-                    dispatch(setPanel(false))
+                   dispatch(setPanel(false))
                   }}
                 >
                   <Text style={styles.muro1Typo}>Novedades</Text>
@@ -208,7 +216,7 @@ const MenuPrincipal = () => {
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('Perfil')
-                  dispatch(setPanel(false))
+                 dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Perfil</Text>
@@ -232,7 +240,7 @@ const MenuPrincipal = () => {
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('PerfilAjustes')
-                  dispatch(setPanel(false))
+                 dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Ajustes</Text>
@@ -261,11 +269,6 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     fontSize: 17
   },
-  menPrincipalChild: {
-    borderTopRightRadius: Border.br_3xs,
-    backgroundColor: Color.linearBoton,
-    height: '115.8%'
-  },
   muro: {
     marginLeft: 12
   },
@@ -291,7 +294,7 @@ const styles = StyleSheet.create({
   },
   menPrincipal: {
     maxWidth: '70%',
-    top: 20,
+    top: 0,
     zIndex: 0
   }
 })

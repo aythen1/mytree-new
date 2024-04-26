@@ -20,6 +20,7 @@ export const chatsSlices = createSlice({
   },
   extraReducers: (builder) => {
     builder
+    // =================== LOAD MESSAGES =================== 
       .addCase(loadMessages.pending, (state) => {
         state.loading = true;
       })
@@ -31,6 +32,10 @@ export const chatsSlices = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
+      // =================== MARK AS READ =================== 
+      .addCase(markAsRead.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(markAsRead.fulfilled, (state, action) => {
         const messageId = action.payload.id;
         state.messages = state.messages.map(message => {
@@ -39,8 +44,13 @@ export const chatsSlices = createSlice({
           }
           return message;
         });
-      });
-  }
+      })
+      .addCase(markAsRead.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      // =================== MARK AS READ =================== 
+    }
 })
 
 export const { setMessage, setAllMessagesFromContact } = chatsSlices.actions

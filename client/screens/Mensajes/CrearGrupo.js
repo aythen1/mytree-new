@@ -55,7 +55,7 @@ const CrearGrupo = () => {
         <View style={styles.buttonBarFlexBox}>
           <Pressable
             style={styles.backLayout}
-            onPress={() => dispatch(setPanel(!showPanel))}
+           onPress={() => dispatch(setPanel(!showPanel))}
           >
             <Image
               style={styles.iconLayout}

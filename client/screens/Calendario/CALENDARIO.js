@@ -39,7 +39,7 @@ const CALENDARIO = () => {
       <View style={styles.topContainer}>
         <Pressable
           style={styles.ionmenu}
-          onPress={() => dispatch(setPanel(!showPanel))}
+         onPress={() => dispatch(setPanel(!showPanel))}
         >
           <Image
             style={[styles.icon, styles.iconLayout]}

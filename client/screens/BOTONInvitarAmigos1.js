@@ -39,7 +39,9 @@ const BOTONInvitarAmigos1 = () => {
   return (
     <>
       <View style={styles.botonInvitarAmigos}>
-        <Pressable onPress={() => dispatch(setPanel(!showPanel))}>
+        <Pressable 
+        onPress={() => dispatch(setPanel(!showPanel))}
+        >
           <Image
             style={[styles.ionmenuIcon, styles.iconPosition]}
             contentFit="cover"

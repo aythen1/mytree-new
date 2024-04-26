@@ -1,110 +1,127 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react';
 import {
+  Dimensions,
+  Image,
   Modal,
   Pressable,
-  StyleSheet,
   Text,
   TouchableWithoutFeedback,
   View
-} from 'react-native'
-import Aadir1 from './Aadir1'
-import { useDispatch, useSelector } from 'react-redux'
-import { setPanelAddFooter } from '../redux/slices/panel.slices'
-import { Color } from '../GlobalStyles'
-import { LinearGradient } from 'expo-linear-gradient'
-import { useNavigation } from '@react-navigation/native'
-import CalendarSVG from './svgs/CalendarSVG'
-import FooterBookSVG from './svgs/FooterBookSVG'
-import UsuarioSVG from './svgs/UsuarioSVG'
-import HomeSVG from './svgs/HomeSVG'
+} from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
+import CalendarSVG from './svgs/CalendarSVG';
+import FooterBookSVG from './svgs/FooterBookSVG';
+import UsuarioSVG from './svgs/UsuarioSVG';
+import HomeSVG from './svgs/HomeSVG';
+import Aadir1 from './Aadir1';
+import { setPanelAddFooter } from '../redux/slices/panel.slices';
+import { Color } from '../GlobalStyles';
+import { Context } from '../context/Context';
 
 const FooterNavBar = () => {
-  const navigation = useNavigation()
-  const dispatch = useDispatch()
+  const {showCamera} = useContext(Context)
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
 
-  const { panelAddFooter } = useSelector((state) => state.panel)
+  const { panelAddFooter } = useSelector((state) => state.panel);
 
-  const [selected, setSelected] = useState(null)
+  const [selected, setSelected] = useState('Muro');
 
   const showModalAdd = () => {
-    dispatch(setPanelAddFooter(!panelAddFooter))
-  }
+   dispatch(setPanelAddFooter(!panelAddFooter));
+  };
 
-  return (
+ if (!showCamera) return (
     <>
-      <View style={styles.container}>
-        <View style={{ flexDirection: 'row', marginLeft: 20 }}>
+      <View style={{
+        height: 70,
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderTopStartRadius: 7,
+        borderTopEndRadius: 7,
+        backgroundColor: 'white',
+        zIndex: 100,
+        position: 'absolute',
+        bottom: 0
+      }}>
+        <View style={{ flexDirection: 'row',gap:(Dimensions.get('window').width/10), marginLeft: '12%'}}>
           <Pressable
             onPress={() => {
-              navigation.navigate('Muro')
-              setSelected('Muro')
+              navigation.navigate('Muro');
+              setSelected('Muro');
             }}
           >
             <HomeSVG
-              color={selected === 'Muro' ? Color.primario1 : Color.grisClaro}
+              picked={selected === 'Muro' ? true : false}
             />
           </Pressable>
           <Pressable
             onPress={() => {
-              navigation.navigate('CALENDARIO')
-              setSelected('Calendario')
+              navigation.navigate('CALENDARIO');
+              setSelected('Calendario');
             }}
-            style={{ marginLeft: 30 }}
+            style={{  }}
           >
             <CalendarSVG
-              color={
-                selected === 'Calendario' ? Color.primario1 : Color.grisClaro
-              }
+              picked={selected === 'Calendario' ? true : false}
             />
           </Pressable>
         </View>
 
-        <View style={{ flexDirection: 'row', marginRight: 20 }}>
+        <View style={{ flexDirection: 'row',gap:(Dimensions.get('window').width/10), marginRight: '12%' }}>
           <Pressable
             onPress={() => {
-              navigation.navigate('MIDIARIOPANTALLAPERSONAL')
-              setSelected('MiDiario')
+              navigation.navigate('MIDIARIOPANTALLAPERSONAL');
+              setSelected('MiDiario');
             }}
-            style={{ marginRight: 20 }}
+            style={{  }}
           >
             <FooterBookSVG
-              color={
-                selected === 'MiDiario'
-                  ? Color.primario1
-                  : Color.grisClaroisClaro
-              }
+              picked={selected === 'MiDiario' ? true:false}
             />
           </Pressable>
           <Pressable
             onPress={() => {
-              navigation.navigate('Perfil')
-              setSelected('Perfil')
+              navigation.navigate('Perfil');
+              setSelected('Perfil');
             }}
           >
             <UsuarioSVG
-              color={selected === 'Perfil' ? Color.primario1 : Color.grisClaro}
+              picked={selected === 'Perfil' ? true:false}
             />
           </Pressable>
         </View>
 
-        <Pressable style={styles.pressable} onPress={showModalAdd}>
+        <Pressable style={{
+          width: 60,
+          height: 60,
+          backgroundColor: Color.backgroundGreyBackground,
+          position: 'absolute',
+          top: -30,
+          left: '50%',
+          marginLeft: -30,
+          borderRadius: 30,
+          alignItems: 'center',
+          justifyContent: 'center'
+        }} onPress={showModalAdd}>
           <LinearGradient
-            style={styles.frameChild}
+            style={{
+              width: '100%',
+              height: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 60,
+              zIndex: 0
+            }}
             locations={[0, 1]}
             colors={['#7ec18c', '#dee274']}
           >
-            <View
-              style={{
-                width: 60,
-                height: 60,
-                borderRadius: 25,
-                justifyContent: 'center',
-                alignItems: 'center',
-                zIndex: 100
-              }}
-            >
-              <Text style={styles.masText}>+</Text>
-            </View>
+            
+            <Image style={{width:25,height:25, borderWidth:2}} contentFit="cover" source={require('../assets/PlusPng.png')}/>
           </LinearGradient>
         </Pressable>
       </View>
@@ -119,65 +136,7 @@ const FooterNavBar = () => {
         </Modal>
       )}
     </>
-  )
-}
+  );
+};
 
-const styles = StyleSheet.create({
-  container: {
-    height: 50,
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderRadius: 5,
-    backgroundColor: 'white',
-    zIndex: 100,
-    position: 'absolute',
-    bottom: 0
-  },
-  IconlyLightHome: {
-    width: 24,
-    height: 24
-  },
-  frameChild: {
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 60,
-    zIndex: 0
-  },
-
-  IconlyLightHomeLeft: {
-    width: 23,
-    height: 23,
-    marginLeft: 25
-  },
-  IconlyLightHomeRight: {
-    width: 21,
-    height: 24,
-    marginRight: 25,
-    overflow: 'hidden'
-  },
-  pressable: {
-    width: 60,
-    height: 60,
-    backgroundColor: Color.backgroundGreyBackground,
-    position: 'absolute',
-    top: -30,
-    left: '50%',
-    marginLeft: -30,
-    borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  masText: {
-    fontSize: 35,
-    color: Color.white,
-    textAlign: 'center',
-    justifyContent: 'center',
-    bottom: 1
-  }
-})
-
-export default FooterNavBar
+export default FooterNavBar;
