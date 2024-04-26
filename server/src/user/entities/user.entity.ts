@@ -83,6 +83,15 @@ histories: History[];
     @Column('simple-array', { nullable: true })
     grandparentsIds: string[];
 
+    @Column('simple-array', { nullable: true })
+    cousinsIds: string[];
+
+    @Column('simple-array', { nullable: true })
+    familyIds: string[];
+
+    @Column('simple-array', { nullable: true })
+    friendsIds: string[];
+
 
 @OneToMany(() => Comment, comments => comments.user)
 comments: Comment[];

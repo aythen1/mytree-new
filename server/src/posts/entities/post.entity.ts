@@ -26,6 +26,10 @@ export class Post {
     @Column("simple-array", { nullable: true })
     hashtags: string[];
 
+    @Column("simple-array", { nullable: true })
+    tags: string[];
+    
+
     @ManyToOne(() => User, user => user.posts)
     user: User;
     @OneToMany(() => Comment, comment => comment.post)

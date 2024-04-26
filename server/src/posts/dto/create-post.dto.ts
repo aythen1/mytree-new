@@ -7,5 +7,6 @@ export class CreatePostDto {
     photos?: string[];
     etiquets?: User[];
     hashtags?: string[];
+    tags?: string[];
     userId: number;
 }
