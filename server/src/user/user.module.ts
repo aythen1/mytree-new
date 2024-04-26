@@ -14,5 +14,8 @@ import { Comment } from 'src/comments/entities/comment.entity';
   ],
   controllers: [UserController],
   providers: [UserService], // Incluye UserRepository en la lista de proveedores
+  exports:[
+    TypeOrmModule.forFeature([User]),
+  ]
 })
 export class UserModule {}
