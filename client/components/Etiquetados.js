@@ -5,11 +5,14 @@ import { useNavigation } from '@react-navigation/native'
 import { FontSize, FontFamily, Color, Border, Padding } from '../GlobalStyles'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Context } from '../context/Context'
+import { useSelector } from 'react-redux'
 
 const Etiquetados = () => {
+  const {selectedPostTags} = useContext(Context)
+  const {allUsers} = useSelector(state=>state.users)
   const {setShowTaggedsModal,taggedsData}= useContext(Context)
   const navigation = useNavigation()
-
+console.log('selectedPostTags: ',selectedPostTags)
   return (
     <View style={{    backgroundColor: Color.white,
       width: '80%',
@@ -21,46 +24,17 @@ const Etiquetados = () => {
         contentFit="cover"
         source={require('../assets/line-94.png')}
       />
-      <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
-        <View style={styles.frameContainer}>
+     
+     {selectedPostTags.map((tag,index)=> <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
+        <View key={index} style={styles.frameContainer}>
           <Image
             style={styles.frameItem}
             contentFit="cover"
             source={require('../assets/frame-15477548751.png')}
           />
-          <Text style={styles.brunoPham}>Bruno Pham</Text>
+          <Text style={styles.brunoPham}>{allUsers.filter(user=>user.id.toString()===tag)[0].username + ' ' +allUsers.filter(user=>user.id.toString()===tag)[0].apellido }</Text>
         </View>
-      </View>
-      <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
-        <View style={styles.frameContainer}>
-          <Image
-            style={styles.frameItem}
-            contentFit="cover"
-            source={require('../assets/frame-15477548752.png')}
-          />
-          <Text style={styles.brunoPham}>Bruno Pham</Text>
-        </View>
-      </View>
-      <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
-        <View style={styles.frameContainer}>
-          <Image
-            style={styles.frameItem}
-            contentFit="cover"
-            source={require('../assets/frame-15477548751.png')}
-          />
-          <Text style={styles.brunoPham}>Bruno Pham</Text>
-        </View>
-      </View>
-      <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
-        <View style={styles.frameContainer}>
-          <Image
-            style={styles.frameItem}
-            contentFit="cover"
-            source={require('../assets/frame-15477548752.png')}
-          />
-          <Text style={styles.brunoPham}>Bruno Pham</Text>
-        </View>
-      </View>
+      </View>)}
       <Image
         style={styles.image}
         contentFit="cover"

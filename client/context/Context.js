@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux'
 export const Context = createContext()
 
 export const ContextProvider = ({ children }) => {
+  const [selectedPostTags,setSelectedPostTags] = useState([])
+  const [showQrModal, setShowQrModal] = useState(false)
   const [taggedsData, setTaggedsData] = useState()
   const [showTaggedsModal, setShowTaggedsModal] = useState(false)
   const [showShareModal,setShowShareModal] = useState(false)
@@ -16,6 +18,7 @@ export const ContextProvider = ({ children }) => {
     const [profileImage, setProfileImage] = useState()
     const [coverImage, setCoverImage] = useState()
     const [libraryImage, setLibraryImage] = useState()
+    const [showHashtagsModal,setShowHashtagsModal] = useState(false)
 
 
     function transformHttpToHttps(url) {
@@ -118,7 +121,7 @@ export const ContextProvider = ({ children }) => {
 return (
     <Context.Provider
       value={{
-        pickImage,showCamera,showTaggedsModal, setShowTaggedsModal,showShareModal,setShowShareModal,  setShowCamera,libraryImage,setLibraryImage,coverImage,setCoverImage,profileImage,setProfileImage,provisoryCoverImage,setProvisoryCoverImage,provisoryProfileImage,setProvisoryProfileImage
+        pickImage,selectedPostTags,setSelectedPostTags,showHashtagsModal,setShowHashtagsModal,showQrModal, setShowQrModal,showCamera,showTaggedsModal, setShowTaggedsModal,showShareModal,setShowShareModal,  setShowCamera,libraryImage,setLibraryImage,coverImage,setCoverImage,profileImage,setProfileImage,provisoryCoverImage,setProvisoryCoverImage,provisoryProfileImage,setProvisoryProfileImage
       }}
     >
       {children}

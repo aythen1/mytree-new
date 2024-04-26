@@ -120,7 +120,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    width: '100%',
+    width: '90%',
+    marginLeft:'5%',
     borderRadius: Border.br_11xl
   },
   text: {
