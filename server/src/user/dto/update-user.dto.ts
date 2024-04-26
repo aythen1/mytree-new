@@ -30,5 +30,8 @@ export class UpdateUserDto {
     brotherIds?: string[];
     unclesIds?: string[];
     grandparentsIds?: string[];
+    cousinsIds?: string[];
+    familyIds?: string[];
+    friendsIds?: string[];
   }
   
