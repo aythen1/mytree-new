@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import {
   StyleSheet,
   View,
@@ -18,9 +18,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import { BACKURL } from '../apiBackend'
 import { useFocusEffect } from '@react-navigation/native';
+import { Context } from '../context/Context'
 
 const Posteo = ({ data }) => {
   console.log('data: ',data)
+  const {setShowShareModal,setShowTaggedsModal} = useContext(Context)
   const [showTagged, setShowTagged] = useState(false)
   const [showIcons, setShowIcons] = useState(false)
   const [posts, setPosts] = useState([])
@@ -44,7 +46,7 @@ const Posteo = ({ data }) => {
             resizeMode: "cover",
             overflow: "hidden"
           }} source={{uri: data.photos[0]}}>
-            <TouchableOpacity style={{position:'absolute',left: 15,top:15}}>
+            <TouchableOpacity onPress={()=>setShowTaggedsModal(true)} style={{position:'absolute',left: 15,top:15}}>
             <LinearGradient
             style={{
               
@@ -90,7 +92,7 @@ const Posteo = ({ data }) => {
           <TouchableOpacity>
             <EnviarMensajeSVG />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>setShowShareModal(true)}>
             <CompartirSVG />
           </TouchableOpacity>
           
@@ -145,16 +147,6 @@ const Post = () => {
         posts.map((e, i) => (
           <Posteo data={e} key={i}></Posteo>
         ))}
-
-      {showTagged && (
-        <Modal
-          isVisible={showTagged}
-          onRequestClose={toggleModal}
-          transparent={true}
-        >
-          <Etiquetados setShowTagged={setShowTagged} />
-        </Modal>
-      )}
     </Pressable>
   )
 }

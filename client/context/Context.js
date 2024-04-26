@@ -7,6 +7,9 @@ import { useDispatch, useSelector } from 'react-redux'
 export const Context = createContext()
 
 export const ContextProvider = ({ children }) => {
+  const [taggedsData, setTaggedsData] = useState()
+  const [showTaggedsModal, setShowTaggedsModal] = useState(false)
+  const [showShareModal,setShowShareModal] = useState(false)
   const [showCamera, setShowCamera] = useState(false)
     const [provisoryProfileImage, setProvisoryProfileImage] = useState()
     const [provisoryCoverImage, setProvisoryCoverImage] = useState()
@@ -115,7 +118,7 @@ export const ContextProvider = ({ children }) => {
 return (
     <Context.Provider
       value={{
-        pickImage,showCamera, setShowCamera,libraryImage,setLibraryImage,coverImage,setCoverImage,profileImage,setProfileImage,provisoryCoverImage,setProvisoryCoverImage,provisoryProfileImage,setProvisoryProfileImage
+        pickImage,showCamera,showTaggedsModal, setShowTaggedsModal,showShareModal,setShowShareModal,  setShowCamera,libraryImage,setLibraryImage,coverImage,setCoverImage,profileImage,setProfileImage,provisoryCoverImage,setProvisoryCoverImage,provisoryProfileImage,setProvisoryProfileImage
       }}
     >
       {children}
