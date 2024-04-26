@@ -16,7 +16,7 @@ import { InfoEntityController } from './info-entity.controller';
     HistoriesModule,
     PostsModule
   ],
-  exports: [InfoEntityService],
+  exports: [InfoEntityModule],
   controllers: [InfoEntityController],
   providers:[InfoEntityService],
 })
