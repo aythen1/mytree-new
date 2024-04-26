@@ -8,7 +8,8 @@ import {
   Pressable,
   Modal,
   TextInput,
-  ScrollView
+  ScrollView,
+  TouchableOpacity
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import Etiquetar from '../components/Etiquetar'
@@ -374,10 +375,9 @@ const Organizador = () => {
                           <Pressable
                             style={{ flexDirection: 'row', marginTop: 15 }}
                           >
-                            <Checkbox
-                              value={legado}
-                              onValueChange={setLegado}
-                            />
+                           <TouchableOpacity onPress={()=>setLegado(!legado)}>
+                             {legado ? <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/checked.png')}/> : <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/notchecked.png')}/>}
+                           </TouchableOpacity>
                             <View
                               style={{
                                 flexDirection: 'row',
@@ -401,7 +401,9 @@ const Organizador = () => {
                               marginTop: 15
                             }}
                           >
-                            <Checkbox value={album} onValueChange={setAlbum} />
+                            <TouchableOpacity onPress={()=>setAlbum(!album)}>
+                             {album ? <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/checked.png')}/> : <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/notchecked.png')}/>}
+                           </TouchableOpacity>
                             <View
                               style={{
                                 flexDirection: 'row',
@@ -439,10 +441,9 @@ const Organizador = () => {
                             contentFit="cover"
                             source={require('../assets/vector.png')}
                           /> 
-                            <Checkbox
-                              value={ischecked}
-                              onValueChange={setIschecked}
-                            />
+                            <TouchableOpacity onPress={()=>setIschecked(!ischecked)}>
+                             {ischecked ? <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/checked.png')}/> : <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/notchecked.png')}/>}
+                           </TouchableOpacity>
                           </View>
                           <Text
                             style={[styles.aadirAudio, styles.etiquetarTypo]}

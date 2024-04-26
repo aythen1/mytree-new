@@ -3,18 +3,24 @@ import { View, Text, StyleSheet } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
 import { FontFamily, FontSize, Color, Padding, Border } from '../GlobalStyles'
+import Checkbox from './Checkbox'
 
 const Etiquetar = ({ onClose }) => {
   return (
     <View style={styles.etiquetar}>
       <View style={styles.frameParent}>
-        <View style={styles.frameGroupFlexBox}>
-          <Text style={[styles.grupo1, styles.grupo1Typo]}>Grupo 1</Text>
-          <View style={styles.check}>
-            <View style={styles.checkChild} />
-          </View>
+        
+      <View style={{alignSelf:'flex-start',
+    alignItems: 'center'}}>
+          <Text style={[styles.grupo1, styles.grupo1Typo]}>Amigos</Text>
+
         </View>
-        <View style={styles.frameChild} />
+        <View style={{ borderColor: Color.secundario,
+    borderTopWidth: 1,
+    width: '100%',
+    height: 1,
+    marginTop: 15,
+    borderStyle: 'solid'}} />
         <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
           <View style={styles.buttonFlexBox}>
             <Image
@@ -26,10 +32,22 @@ const Etiquetar = ({ onClose }) => {
               Bruno Pham
             </Text>
           </View>
-          <View style={styles.check}>
-            <View style={styles.checkChild} />
-          </View>
+         <Checkbox />
         </View>
+
+
+
+        <View style={{alignSelf:'flex-start', marginTop:20,
+    alignItems: 'center'}}>
+          <Text style={[styles.grupo1, styles.grupo1Typo]}>Amigos</Text>
+
+        </View>
+        <View style={{ borderColor: Color.secundario,
+    borderTopWidth: 1,
+    width: '100%',
+    height: 1,
+    marginTop: 15,
+    borderStyle: 'solid'}} />
         <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
           <View style={styles.buttonFlexBox}>
             <Image
@@ -41,62 +59,9 @@ const Etiquetar = ({ onClose }) => {
               Bruno Pham
             </Text>
           </View>
-          <View style={styles.check}>
-            <View style={styles.checkChild} />
-          </View>
+         <Checkbox />
         </View>
-        <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
-          <View style={styles.buttonFlexBox}>
-            <Image
-              style={styles.frameItem}
-              contentFit="cover"
-              source={require('../assets/frame-1547754875.png')}
-            />
-            <Text style={[styles.brunoPham, styles.grupo1Typo]}>
-              Bruno Pham
-            </Text>
-          </View>
-          <View style={styles.check}>
-            <View style={styles.checkChild} />
-          </View>
-        </View>
-        <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
-          <Text style={[styles.grupo1, styles.grupo1Typo]}>Grupo 2</Text>
-          <View style={styles.check}>
-            <View style={styles.checkChild} />
-          </View>
-        </View>
-        <View style={styles.frameChild} />
-        <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
-          <View style={styles.buttonFlexBox}>
-            <Image
-              style={styles.frameItem}
-              contentFit="cover"
-              source={require('../assets/frame-1547754875.png')}
-            />
-            <Text style={[styles.brunoPham, styles.grupo1Typo]}>
-              Bruno Pham
-            </Text>
-          </View>
-          <View style={styles.check}>
-            <View style={styles.checkChild} />
-          </View>
-        </View>
-        <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
-          <View style={styles.buttonFlexBox}>
-            <Image
-              style={styles.frameItem}
-              contentFit="cover"
-              source={require('../assets/frame-1547754875.png')}
-            />
-            <Text style={[styles.brunoPham, styles.grupo1Typo]}>
-              Bruno Pham
-            </Text>
-          </View>
-          <View style={styles.check}>
-            <View style={styles.checkChild} />
-          </View>
-        </View>
+        
       </View>
       <LinearGradient
         style={[styles.button, styles.buttonFlexBox]}

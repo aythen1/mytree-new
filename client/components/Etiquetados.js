@@ -1,19 +1,21 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Image } from 'expo-image'
 import { StyleSheet, View, Pressable, Text } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { FontSize, FontFamily, Color, Border, Padding } from '../GlobalStyles'
 import { LinearGradient } from 'expo-linear-gradient'
+import { Context } from '../context/Context'
 
-const Etiquetados = ({ setShowTagged }) => {
+const Etiquetados = () => {
+  const {setShowTaggedsModal,taggedsData}= useContext(Context)
   const navigation = useNavigation()
 
-  const handleClose = () => {
-    setShowTagged(false)
-  }
-
   return (
-    <View style={styles.frameParentPosition}>
+    <View style={{    backgroundColor: Color.white,
+      width: '80%',
+      borderRadius: Border.br_5xl,
+      padding: Padding.p_base,
+      justifyContent: 'center'}}>
       <Image
         style={styles.image}
         contentFit="cover"
@@ -66,14 +68,14 @@ const Etiquetados = ({ setShowTagged }) => {
       />
       <Pressable
         style={[styles.frameGroup, styles.frameGroupFlexBox]}
-        onPress={handleClose}
+        onPress={()=>setShowTaggedsModal(false)}
       >
         <LinearGradient
           style={styles.button}
           locations={[0, 1]}
           colors={['#dee274', '#7ec18c']}
         >
-          <Text>Aceptar</Text>
+          <Text style={{color:"#fff"}}>Aceptar</Text>
         </LinearGradient>
       </Pressable>
     </View>
@@ -86,14 +88,7 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   frameParentPosition: {
-    left: '20%',
-    top: '30%',
-    backgroundColor: Color.white,
-    height: '50%',
-    width: '75%',
-    borderRadius: Border.br_5xl,
-    padding: Padding.p_base,
-    justifyContent: 'center'
+
   },
   frameGroupFlexBox: {
     alignSelf: 'stretch',
