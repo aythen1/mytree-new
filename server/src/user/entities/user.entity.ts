@@ -67,6 +67,22 @@ export class User {
     @OneToMany(() => History, history => history.user)
 histories: History[];
 
+   // Nuevas propiedades para la familia
+    @Column({ nullable: true })
+    momId: string;
+
+    @Column({ nullable: true })
+    dadId: string;
+
+    @Column('simple-array', { nullable: true })
+    brotherIds: string[];
+
+    @Column('simple-array', { nullable: true })
+    unclesIds: string[];
+
+    @Column('simple-array', { nullable: true })
+    grandparentsIds: string[];
+
 
 @OneToMany(() => Comment, comments => comments.user)
 comments: Comment[];

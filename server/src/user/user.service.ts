@@ -464,5 +464,49 @@ async getUserFriends(userId: number): Promise<User[]> {
   
       return validRelations;
     }
+
+
+
+    async addFamilyMember(userId: number, property: string, memberId: string) {
+      const user = await this.userRepository.findOne({where: {id:userId}});
+      if (!user) {
+        throw new NotFoundException('Usuario no encontrado');
+      }
+  
+      // Verificar el tipo de propiedad y manejarlo en consecuencia
+      if (typeof user[property] === 'string') {
+        // Si es una propiedad de tipo string, simplemente reemplazarla con el nuevo ID
+        user[property] = memberId;
+      } else if (Array.isArray(user[property])) {
+        // Si es una propiedad de tipo array, agregar el nuevo ID al arreglo
+        user[property].push(memberId);
+      } else {
+        throw new Error('El tipo de propiedad no es compatible');
+      }
+  
+      return this.userRepository.save(user);
+    }
+  
+    async removeFamilyMember(userId: number, property: string, memberId: string) {
+      const user = await this.userRepository.findOne({where: {id:userId}});
+      if (!user) {
+        throw new NotFoundException('Usuario no encontrado');
+      }
+  
+      // Verificar el tipo de propiedad y manejarlo en consecuencia
+      if (typeof user[property] === 'string') {
+        // Si es una propiedad de tipo string, eliminarla si coincide con el ID a eliminar
+        if (user[property] === memberId) {
+          user[property] = null;
+        }
+      } else if (Array.isArray(user[property])) {
+        // Si es una propiedad de tipo array, filtrar el ID a eliminar del arreglo
+        user[property] = user[property].filter(id => id !== memberId);
+      } else {
+        throw new Error('El tipo de propiedad no es compatible');
+      }
+  
+      return this.userRepository.save(user);
+    }
   
 }

@@ -65,15 +65,18 @@ console.log(dataToSend,"dataToSend")
 
   const next = async () => {
     if (nextField < 3) {
+      console.log("1dasdasdasdsadsa")
       setNextField((prev) => prev + 1)
     } else {
-     try {
-      const res = await axios.post(`${BACKURL}/user`,dataToSend)
-      console.log(res.data,"usuario nuevo")
-      if(res.data){
-        await AsyncStorage.setItem('user', JSON.stringify(res.data));
-        navigation.navigate('Muro')
+      try {
+        console.log("entra aca")
+        const res = await axios.post(`${BACKURL}/user`, dataToSend)
+        console.log("esto es res", res)
+        console.log(res.data, "usuario nuevo")
+      } catch (error) {
+        console.error("Error al realizar la solicitud axios:", error);
       }
+
      } catch (error) {
       if (error.response) {
         // The request was made and the server responded with a status code
@@ -89,8 +92,10 @@ console.log(dataToSend,"dataToSend")
       }
       console.log(error.config);
      }
+
     }
   }
+  
 
   const previous = () => {
     if (nextField > 1) {

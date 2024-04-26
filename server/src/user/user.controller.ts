@@ -281,5 +281,26 @@ async toggleLike(
     return this.userService.findInfoRelation(userId, relationsArray);
   }
 
+
+
+  // Ruta para agregar un miembro a la familia (en property va el tipo de familiar, en memberId va el id del familiar a agregar)
+  @Post(':userId/family/:property/add/:memberId')
+  async addFamilyMember(
+    @Param('userId') userId: number,
+    @Param('property') property: string,
+    @Param('memberId') memberId: string
+  ) {
+    return this.userService.addFamilyMember(userId, property, memberId);
+  }
+
+  // Ruta para eliminar un miembro de la familia
+  @Delete(':userId/family/:property/remove/:memberId')
+  async removeFamilyMember(
+    @Param('userId') userId: number,
+    @Param('property') property: string,
+    @Param('memberId') memberId: string
+  ) {
+    return this.userService.removeFamilyMember(userId, property, memberId);
+  }
   
 }
