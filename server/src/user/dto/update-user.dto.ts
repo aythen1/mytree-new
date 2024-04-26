@@ -25,5 +25,10 @@ export class UpdateUserDto {
     isAdmin?: boolean;
     googleId?: string;
     facebookId?: string;
+    momId?: string;
+    dadId?: string;
+    brotherIds?: string[];
+    unclesIds?: string[];
+    grandparentsIds?: string[];
   }
   

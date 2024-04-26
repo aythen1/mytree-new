@@ -6,7 +6,6 @@ export class CreateUserDto {
     brithDate: string;
     phone: string;
     city: string;
-
     address: string;
 
 }

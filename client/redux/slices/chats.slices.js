@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { loadMessages, markAsRead } from '../actions/chat';
 
 export const chatsSlices = createSlice({
   name: 'chats',
