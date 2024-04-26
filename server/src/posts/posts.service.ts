@@ -17,7 +17,7 @@ export class PostsService {
 
   async createPost(createPostDto: CreatePostDto): Promise<Post> {
     try {
-      const { nameUser, description, photos, etiquets, fecha, hashtags, userId } = createPostDto;
+      const { nameUser, description, photos, etiquets, fecha, hashtags, userId , tags } = createPostDto;
 
       const userEntity = await this.userRepository.findOne({where:{id:userId}});
 
@@ -33,7 +33,7 @@ export class PostsService {
       post.fecha = fecha;
       post.hashtags = hashtags;
       post.user = userEntity;
-
+      post.tags = tags;
       return await this.postRepository.save(post);
     } catch (error) {
       throw error;
