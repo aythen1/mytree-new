@@ -3,7 +3,7 @@ import React from 'react'
 
 const Checkbox = ({checked,setChecked}) => {
   return (
-    <TouchableOpacity onPress={()=>setChecked && setChecked(!checked)}>
+    <TouchableOpacity onPress={setChecked}>
     {checked ? <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/checked.png')}/> : <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/notchecked.png')}/>}
   </TouchableOpacity>
   )

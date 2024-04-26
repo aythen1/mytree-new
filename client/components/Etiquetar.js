@@ -1,11 +1,23 @@
 import * as React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
 import { FontFamily, FontSize, Color, Padding, Border } from '../GlobalStyles'
 import Checkbox from './Checkbox'
+import { useSelector } from 'react-redux'
 
-const Etiquetar = ({ onClose }) => {
+const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers }) => {
+  const {allUsers}= useSelector(state=>state.users)
+
+  const handleToggleTag = (userId) => {
+    if (taggedUsers.includes(userId)) {
+      const newArray = taggedUsers.filter(id => id !== userId);
+      setTaggedUsers(newArray);
+    } else {
+      setTaggedUsers([...taggedUsers, userId]);
+    }
+  };
+
   return (
     <View style={styles.etiquetar}>
       <View style={styles.frameParent}>
@@ -21,7 +33,8 @@ const Etiquetar = ({ onClose }) => {
     height: 1,
     marginTop: 15,
     borderStyle: 'solid'}} />
-        <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
+        {
+          allUsers.map((user,index)=><View key={-index} style={[styles.frameGroup, styles.frameGroupFlexBox]}>
           <View style={styles.buttonFlexBox}>
             <Image
               style={styles.frameItem}
@@ -29,17 +42,19 @@ const Etiquetar = ({ onClose }) => {
               source={require('../assets/frame-1547754875.png')}
             />
             <Text style={[styles.brunoPham, styles.grupo1Typo]}>
-              Bruno Pham
+              {user.username + ' ' + user.apellido}
             </Text>
           </View>
-         <Checkbox />
-        </View>
+         <Checkbox checked={taggedUsers.includes(user.id)}
+              setChecked={() => handleToggleTag(user.id)} />
+        </View>)
+        }
 
 
 
         <View style={{alignSelf:'flex-start', marginTop:20,
     alignItems: 'center'}}>
-          <Text style={[styles.grupo1, styles.grupo1Typo]}>Amigos</Text>
+          <Text style={[styles.grupo1, styles.grupo1Typo]}>Familia</Text>
 
         </View>
         <View style={{ borderColor: Color.secundario,
@@ -48,7 +63,8 @@ const Etiquetar = ({ onClose }) => {
     height: 1,
     marginTop: 15,
     borderStyle: 'solid'}} />
-        <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
+        {
+          allUsers.map((user,index)=><View key={index} style={[styles.frameGroup, styles.frameGroupFlexBox]}>
           <View style={styles.buttonFlexBox}>
             <Image
               style={styles.frameItem}
@@ -56,20 +72,24 @@ const Etiquetar = ({ onClose }) => {
               source={require('../assets/frame-1547754875.png')}
             />
             <Text style={[styles.brunoPham, styles.grupo1Typo]}>
-              Bruno Pham
+              {user.username + ' ' + user.apellido}
             </Text>
           </View>
-         <Checkbox />
-        </View>
+         <Checkbox checked={taggedUsers.includes(user.id)}
+              setChecked={() => handleToggleTag(user.id)}/>
+        </View>)
+        }
         
       </View>
-      <LinearGradient
-        style={[styles.button, styles.buttonFlexBox]}
-        locations={[0, 1]}
-        colors={['#dee274', '#7ec18c']}
-      >
-        <Text style={[styles.signIn, styles.grupo1Typo]}>Aceptar</Text>
-      </LinearGradient>
+      <TouchableOpacity onPress={onClose}>
+        <LinearGradient
+          style={[styles.button, styles.buttonFlexBox]}
+          locations={[0, 1]}
+          colors={['#dee274', '#7ec18c']}
+        >
+          <Text style={[styles.signIn, styles.grupo1Typo]}>Aceptar</Text>
+        </LinearGradient>
+      </TouchableOpacity>
     </View>
   )
 }

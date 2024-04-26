@@ -22,7 +22,7 @@ import { Context } from '../context/Context'
 
 const Posteo = ({ data }) => {
   console.log('data: ',data)
-  const {setShowShareModal,setShowTaggedsModal} = useContext(Context)
+  const {setShowShareModal,setShowTaggedsModal,setSelectedPostTags} = useContext(Context)
   const [showTagged, setShowTagged] = useState(false)
   const [showIcons, setShowIcons] = useState(false)
   const [posts, setPosts] = useState([])
@@ -46,7 +46,11 @@ const Posteo = ({ data }) => {
             resizeMode: "cover",
             overflow: "hidden"
           }} source={{uri: data.photos[0]}}>
-            <TouchableOpacity onPress={()=>setShowTaggedsModal(true)} style={{position:'absolute',left: 15,top:15}}>
+            <TouchableOpacity onPress={()=>{
+              console.log('settings post tags to: ', data.hashtags|| [])
+              setSelectedPostTags(data.hashtags|| [])
+              setShowTaggedsModal(true)
+            }} style={{position:'absolute',left: 15,top:15}}>
             <LinearGradient
             style={{
               
@@ -128,7 +132,6 @@ const Post = () => {
     const usuario = await AsyncStorage.getItem('user')
     const user = JSON.parse(usuario)
     const res = await axios.get(`${BACKURL}/user/${user.id}/posts`)
-    console.log(res,"resss")
     setPosts(res.data.reverse())
   }
 

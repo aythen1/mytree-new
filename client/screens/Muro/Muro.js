@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   View,
@@ -34,6 +34,9 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { Context } from '../../context/Context'
 import Compartir from '../../components/Compartir'
 import Etiquetados from '../../components/Etiquetados'
+import { getUsers } from '../../redux/slices/user.slices'
+import { getAllUsers, getUserData } from '../../redux/actions/user'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Muro = () => {
   const {showShareModal,setShowShareModal,showTaggedsModal,setShowTaggedsModal} = useContext(Context)
@@ -41,7 +44,7 @@ const Muro = () => {
   const navigation = useNavigation()
 
   const { showPanel } = useSelector((state) => state.panel)
-
+const [user, setUser] = useState()
   const [showModalRetos, setShowModalRetos] = useState(false)
   const [colorClick, setColorClick] = useState(true)
   const [showRetos, setShowRetos] = useState(false)
@@ -50,6 +53,22 @@ const Muro = () => {
   const handleMenu = () => {
     dispatch(setPanel(false))
   }
+const getUser= async () => {
+  const usuario = await AsyncStorage.getItem('user')
+  const user = JSON.parse(usuario)
+  setUser(user)
+  return 
+}
+
+useEffect(()=>{
+  getUser()
+},[])
+  useEffect(()=>{
+    if(user){
+      dispatch(getUserData(user.id))
+    dispatch(getAllUsers())
+    }
+  },[user])
 
   return (
     <LinearGradient  colors={['#fff', '#f1f1f1']}
