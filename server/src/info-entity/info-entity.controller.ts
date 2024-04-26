@@ -1,14 +1,13 @@
 import { Body, Controller, Get, Param, ParseArrayPipe, Post, Query } from '@nestjs/common';
 import { InfoEntityService } from './info-entity.service';
-import { NotificationService } from 'src/notification/notification.service';
 import { Info } from './info.interface';
 
 @Controller('info-entity')
 export class InfoEntityController {
   constructor(
-    private readonly infoEntityService: InfoEntityService,
-    private readonly NotificationService: NotificationService) 
-
+    private readonly infoEntityService: InfoEntityService
+  ) 
+  
     {}
   
 //nombre de la entidad, usuario a filtrar, la relacion necesaria, la relacion dentro de la relacion anterior, la ultima relacion (que esta dentro de la relacion anterior, dentro de la anterior)
