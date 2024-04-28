@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { Image } from 'expo-image'
 import { FontSize, FontFamily, Color, Border } from '../GlobalStyles'
 
@@ -12,36 +12,44 @@ const Compartir = ({ onClose }) => {
       <View
         style={[styles.skillIconsinstagramParent, styles.compartirEnPosition]}
       >
-        <Image
+        <TouchableOpacity onPress={onClose}><Image
           style={styles.skillIconsinstagram}
           contentFit="cover"
           source={require('../assets/skilliconsinstagram1.png')}
-        />
-        <Image
+        /></TouchableOpacity>
+       <TouchableOpacity onPress={onClose}><Image
           style={[styles.logoswhatsappIcon, styles.iconSpaceBlock]}
           contentFit="cover"
           source={require('../assets/logoswhatsappicon.png')}
-        />
+        /></TouchableOpacity>
+        <TouchableOpacity onPress={onClose}>
         <Image
           style={[styles.logoswhatsappIcon, styles.iconSpaceBlock]}
           contentFit="cover"
           source={require('../assets/skilliconslinkedin1.png')}
         />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onClose}>
         <Image
           style={[styles.logostiktokIcon, styles.iconSpaceBlock]}
           contentFit="cover"
           source={require('../assets/logostiktokicon1.png')}
         />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onClose}>
         <Image
           style={[styles.logoswhatsappIcon, styles.iconSpaceBlock]}
           contentFit="cover"
           source={require('../assets/deviconfacebook1.png')}
         />
-        <Image
+        </TouchableOpacity>
+       <TouchableOpacity onPress={onClose}>
+       <Image
           style={[styles.logostiktokIcon, styles.iconSpaceBlock]}
           contentFit="cover"
           source={require('../assets/fa6brandssquarextwitter.png')}
         />
+       </TouchableOpacity>
       </View>
     </View>
   )
