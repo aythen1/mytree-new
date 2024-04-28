@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BACKURL } from '../../apiBackend';
+import { getAllUsers, getUserData } from '../actions/user';
 
 
 // Actualiza la contraseña del usuario
@@ -293,19 +294,9 @@ export const deleteUser = createAsyncThunk(
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
-    data: {
-      id:'',
-      username:'',
-      email:'',
-      emailVerified:'',
-      profilePicture:'',
-      phone:'',
-      birthDate:'',
-      recentSearches:[],
-      isAdmin:'',
-      googleId:'',
-      facebookId:''
-    },
+    userData: {},
+    allUsers: [],
+    data: {},
     loading: false,
     error: null
   },
@@ -342,30 +333,54 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     // Manejadores para acciones asincrónicas pendientes, exitosas y rechazadas
     builder
-      .addMatcher(
-        (action) =>
-          action.type.startsWith('user/') && action.type.endsWith('/pending'),
-        (state) => {
-          state.loading = true;
-          state.error = null;
-        }
-      )
-      .addMatcher(
-        (action) =>
-          action.type.startsWith('user/') && action.type.endsWith('/fulfilled'),
-        (state, action) => {
-          state.loading = false;
-          state.data = action.payload;
-        }
-      )
-      .addMatcher(
-        (action) =>
-          action.type.startsWith('user/') && action.type.endsWith('/rejected'),
-        (state, action) => {
-          state.loading = false;
-          state.error = action.payload;
-        }
-      );
+      // .addMatcher(
+      //   (action) =>
+      //     action.type.startsWith('user/') && action.type.endsWith('/pending'),
+      //   (state) => {
+      //     state.loading = true;
+      //     state.error = null;
+      //   }
+      // )
+      // .addMatcher(
+      //   (action) =>
+      //     action.type.startsWith('user/') && action.type.endsWith('/fulfilled'),
+      //   (state, action) => {
+      //     state.loading = false;
+      //     state.data = action.payload;
+      //   }
+      // )
+      // .addMatcher(
+      //   (action) =>
+      //     action.type.startsWith('user/') && action.type.endsWith('/rejected'),
+      //   (state, action) => {
+      //     state.loading = false;
+      //     state.error = action.payload;
+      //   }
+      // )
+       // =================== LOAD MESSAGES =================== 
+       .addCase(getAllUsers.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAllUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allUsers = action.payload;
+      })
+      .addCase(getAllUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+       // =================== LOAD MESSAGES =================== 
+       .addCase(getUserData.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getUserData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userData = action.payload;
+      })
+      .addCase(getUserData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
   }
 });
 

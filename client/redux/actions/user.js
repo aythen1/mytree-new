@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import axiosInstance from '../../apiBackend';
 
 // Actualiza la contraseña del usuario
 export const updatePassword = createAsyncThunk(
@@ -238,6 +239,7 @@ export const updatePassword = createAsyncThunk(
       }
     }
   );
+
   
   export const getUserById = createAsyncThunk(
     'user/getUserById',
@@ -274,3 +276,31 @@ export const updatePassword = createAsyncThunk(
       }
     }
   );
+
+  export const getAllUsers = createAsyncThunk(
+    'getAllUsers/users',
+    async () => {
+      try {
+        console.log('on getAllUsers')
+        const {data} = await axiosInstance.get('/user');
+        console.log('data from getAllUsers: ', data)
+        return data
+      } catch (error) {
+        throw new Error(error)
+      }
+    }
+  )
+
+  export const getUserData = createAsyncThunk(
+    'getUserData/users',
+    async (userId) => {
+      try {
+        console.log('on getUserData')
+        const {data} = await axiosInstance.get(`/user/${userId}`);
+        console.log('data from getUserData: ', data)
+        return data
+      } catch (error) {
+        throw new Error(error)
+      }
+    }
+  )

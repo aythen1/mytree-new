@@ -62,7 +62,7 @@ const QR = ({ onClose }) => {
         >
           <Pressable
             style={styles.pressable}
-            onPress={() => navigation.navigate("BOTONInvitarAmigos1")}
+            onPress={onClose}
           >
             <Text style={[styles.aceptar, styles.aceptarTypo]}>Aceptar</Text>
           </Pressable>
@@ -111,12 +111,12 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     borderRadius: Border.br_3xs,
-    backgroundColor: Color.fAFAFA,
+    backgroundColor: '#f3f3f3',
     height: 40,
     paddingHorizontal: Padding.p_sm,
     paddingVertical: Padding.p_5xs,
     marginTop: 20,
-    width: 388,
+    width: '90%',
     alignItems: "center",
     flexDirection: "row",
   },
@@ -170,7 +170,8 @@ const styles = StyleSheet.create({
   button: {
     height: 52,
     marginTop: 20,
-    width: 388,
+    width: '90%',
+    borderRadius:100,
   },
   frameParent: {
     alignSelf: "stretch",
@@ -179,10 +180,8 @@ const styles = StyleSheet.create({
   },
   qr: {
     backgroundColor: Color.white,
-    width: 428,
+    width: '90%',
     padding: Padding.p_xl,
-    maxWidth: "100%",
-    maxHeight: "100%",
     flexDirection: "row",
     borderRadius: Border.br_11xl,
   },

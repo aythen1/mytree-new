@@ -8,7 +8,8 @@ import {
   Pressable,
   Modal,
   TextInput,
-  ScrollView
+  ScrollView,
+  TouchableOpacity
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import Etiquetar from '../components/Etiquetar'
@@ -24,12 +25,13 @@ import axios from 'axios'
 import { BACKURL } from '../apiBackend'
 import Privacidad from './Privacidad'
 import { Context } from '../context/Context'
+import Cancion1 from '../components/Cancion1'
 
 const Organizador = () => {
   const dispatch = useDispatch()
-
+const [taggedUsers,setTaggedUsers] = useState([])
  const { showPanel } = useSelector((state) => state.panel)
- const {libraryImage} = useContext(Context)
+ const {libraryImage,showHashtagsModal,setShowHashtagsModal, selectedHashtags, setSelectedHashtags} = useContext(Context)
 
   const [legado, setLegado] = useState(false)
   const [album, setAlbum] = useState(false)
@@ -43,13 +45,17 @@ const Organizador = () => {
   const [usuario, setUsuario] = useState({})
   const [username,setUsername] = useState("")
 
+  useEffect(()=>{
+    
+  },[taggedUsers])
+
   
   const [dataToSend, setDataToSend] = useState({
     nameUser: "", 
     description: '',
     fecha:"20/12/2024",
     photos: [],
-    etiquets: [],
+    tags: [],
     hashtags: [],
     userId: ""
   })
@@ -65,6 +71,7 @@ const Organizador = () => {
     }
     getUser()
   }, [])
+  
   const [uploadRecuerdo, setUploadRecuerdo] = useState(false)
   const [cancion, setCancion] = useState(false)
   const [ischecked, setIschecked] = useState(false)
@@ -171,8 +178,8 @@ const Organizador = () => {
     
     console.log('user: ',user)
     const finalData = {}
-    finalData.etiquets = []
-    finalData.hashtags = []
+    finalData.tags = taggedUsers
+    finalData.hashtags = selectedHashtags
     finalData.userId = user.id
     finalData.fecha = new Date()
     finalData.nameUser = user.username
@@ -182,9 +189,13 @@ const Organizador = () => {
     const res = await axios.post(`${BACKURL}/posts`, finalData)
     if (res.data) {
       setSubmit(true)
+      setSelectedHashtags([])
+      setTaggedUsers([])
     }
   } catch (error) {
     console.log(error)
+    setSelectedHashtags([])
+    setTaggedUsers([])
   }
   }
 
@@ -211,7 +222,7 @@ const Organizador = () => {
                   <Text style={styles.subirRecuerdo}>Subir recuerdo</Text>
                   <Text style={styles.subir}>Subir</Text>
                 </View>
-                <View style={styles.fieldParent}>
+                <View style={{marginTop:5}}>
                   <View style={styles.field}>
                     <TextInput
                       style={[styles.describeLoQue, styles.eventoTypo]}
@@ -221,36 +232,53 @@ const Organizador = () => {
                       }
                       value={dataToSend.description}
                     />
-                    <View style={{ top: -20 }}>
-                      <Text style={[styles.evento, styles.eventoTypo]}>
-                        Evento:
+                    <View style={{ top:35 }}>
+                    <Text style={{marginBottom:6,color:'#000',fontSize:16,fontFamily: FontFamily.lato}}>
+                        Hashtags
                       </Text>
-                      <View style={[styles.button, styles.buttonPosition]}>
-                        <Text style={styles.aadirTypo}>
-                          #Mi primera bicicleta
-                        </Text>
-                      </View>
-                      <Pressable
-                        style={[styles.button1, styles.buttonPosition]}
-                        // onPress={openButtonContainer1}
-                      >
-                        <Text style={[styles.aadir, styles.aadirPosition]}>
-                          Añadir #
-                        </Text>
-                      </Pressable>
+                      <View style={{flexWrap:'wrap',flexDirection:'row',width:'100%',gap:3}}>{selectedHashtags.map((hashtag,index)=> <View style={{paddingVertical: 5,
+    paddingHorizontal: 10,
+    backgroundColor: Color.secundario,
+    justifyContent: 'center',
+    gap:5,
+    flexDirection:'row',
+    alignItems: 'center',
+    borderRadius: 100}}>
+        <Text style={{color: Color.primario1,
+    fontSize: FontSize.size_xs,
+    fontFamily: FontFamily.lato,
+    fontWeight: '500'}}>
+          {`#${hashtag}`}
+        </Text>
+        <TouchableOpacity onPress={()=>{
+          setSelectedHashtags(selectedHashtags.filter(tag=>tag !== hashtag ))
+        }}>
+          <Image style={{width:10,height:10}} source={require('../assets/group-68462.png')}/>
+        </TouchableOpacity>
+      </View>)}<TouchableOpacity  onPress={()=>setShowHashtagsModal(true)} style={{paddingVertical: 5,
+    paddingHorizontal: 10,
+    backgroundColor: Color.secundario,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 100}}>
+        <Text style={{color: Color.primario1,
+    fontSize: FontSize.size_xs,
+    fontFamily: FontFamily.lato,
+    fontWeight: '500'}}>
+          {`Añadir #`}
+        </Text>
+      </TouchableOpacity></View>
                     </View>
                   </View>
-                  <View style={styles.fieldParent}>
+                  <View style={{ marginTop: 40}}>
                     <Image
                       style={styles.frameChild}
                       contentFit="cover"
                       source={require('../assets/line-802.png')}
                     />
                     <Pressable
-                      style={[
-                        styles.iconlybolddocumentParent,
-                        styles.parentFlexBox
-                      ]}
+                      style={{marginTop: 10, marginBottom:10,alignItems: 'center',
+                      flexDirection: 'row'}}
                       // onPress={openUploadRecuerdo}
                     >
                       <Image
@@ -374,10 +402,9 @@ const Organizador = () => {
                           <Pressable
                             style={{ flexDirection: 'row', marginTop: 15 }}
                           >
-                            <Checkbox
-                              value={legado}
-                              onValueChange={setLegado}
-                            />
+                           <TouchableOpacity onPress={()=>setLegado(!legado)}>
+                             {legado ? <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/checked.png')}/> : <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/notchecked.png')}/>}
+                           </TouchableOpacity>
                             <View
                               style={{
                                 flexDirection: 'row',
@@ -401,7 +428,9 @@ const Organizador = () => {
                               marginTop: 15
                             }}
                           >
-                            <Checkbox value={album} onValueChange={setAlbum} />
+                            <TouchableOpacity onPress={()=>setAlbum(!album)}>
+                             {album ? <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/checked.png')}/> : <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/notchecked.png')}/>}
+                           </TouchableOpacity>
                             <View
                               style={{
                                 flexDirection: 'row',
@@ -439,10 +468,9 @@ const Organizador = () => {
                             contentFit="cover"
                             source={require('../assets/vector.png')}
                           /> 
-                            <Checkbox
-                              value={ischecked}
-                              onValueChange={setIschecked}
-                            />
+                            <TouchableOpacity onPress={()=>setIschecked(!ischecked)}>
+                             {ischecked ? <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/checked.png')}/> : <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/notchecked.png')}/>}
+                           </TouchableOpacity>
                           </View>
                           <Text
                             style={[styles.aadirAudio, styles.etiquetarTypo]}
@@ -527,7 +555,7 @@ const Organizador = () => {
             style={styles.frameContainer2Bg}
             onPress={closeFrameContainer2}
           />
-          <Etiquetar onClose={closeFrameContainer2} />
+          <Etiquetar taggedUsers={taggedUsers} setTaggedUsers={setTaggedUsers} onClose={closeFrameContainer2} />
         </View>
       </Modal>
 
@@ -550,6 +578,13 @@ const Organizador = () => {
         <View style={styles.frameContainer5Overlay}>
           <Pressable style={styles.frameContainer5Bg} onPress={closeLugar} />
           <Lugar3 onClose={closeLugar} />
+        </View>
+      </Modal>
+
+      <Modal animationType="slide" transparent visible={showHashtagsModal}>
+        <View style={styles.frameContainer5Overlay}>
+          <Pressable style={styles.frameContainer5Bg} onPress={()=>setShowHashtagsModal(false)} />
+          <Cancion1 onClose={()=>setShowHashtagsModal(false)} />
         </View>
       </Modal>
 
@@ -714,7 +749,8 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    left: 86
+    left: 86,
+    paddingHorizontal:10,
     // width: 134
   },
   buttonContainer1Overlay: {
@@ -903,7 +939,7 @@ const styles = StyleSheet.create({
     // width: 388
   },
   fieldParent: {
-    marginTop: 20
+    marginTop: 10
   },
   signIn: {
     letterSpacing: 1,

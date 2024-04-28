@@ -7,12 +7,23 @@ import { useDispatch, useSelector } from 'react-redux'
 export const Context = createContext()
 
 export const ContextProvider = ({ children }) => {
+  const [showInvitationSendModal,setShowInvitationSendModal] = useState(false)
+  const [selectedRelationType,setSelectedRelationType] = useState('Amigos')
+  const [selectedRelationShip,setSelectedRelationShip] = useState('Amigos íntimos')
+  const [selectedUserToInvite,setSelectedUserToInvite] = useState()
+  const [selectedHashtags, setSelectedHashtags] = useState([])
+  const [selectedPostTags,setSelectedPostTags] = useState([])
+  const [showQrModal, setShowQrModal] = useState(false)
+  const [taggedsData, setTaggedsData] = useState()
+  const [showTaggedsModal, setShowTaggedsModal] = useState(false)
+  const [showShareModal,setShowShareModal] = useState(false)
   const [showCamera, setShowCamera] = useState(false)
     const [provisoryProfileImage, setProvisoryProfileImage] = useState()
     const [provisoryCoverImage, setProvisoryCoverImage] = useState()
     const [profileImage, setProfileImage] = useState()
     const [coverImage, setCoverImage] = useState()
     const [libraryImage, setLibraryImage] = useState()
+    const [showHashtagsModal,setShowHashtagsModal] = useState(false)
 
 
     function transformHttpToHttps(url) {
@@ -115,7 +126,7 @@ export const ContextProvider = ({ children }) => {
 return (
     <Context.Provider
       value={{
-        pickImage,showCamera, setShowCamera,libraryImage,setLibraryImage,coverImage,setCoverImage,profileImage,setProfileImage,provisoryCoverImage,setProvisoryCoverImage,provisoryProfileImage,setProvisoryProfileImage
+        pickImage,showInvitationSendModal,setShowInvitationSendModal,selectedPostTags,selectedHashtags,selectedRelationType,setSelectedRelationType,selectedRelationShip,setSelectedRelationShip,selectedUserToInvite,setSelectedUserToInvite, setSelectedHashtags,setSelectedPostTags,showHashtagsModal,setShowHashtagsModal,showQrModal, setShowQrModal,showCamera,showTaggedsModal, setShowTaggedsModal,showShareModal,setShowShareModal,  setShowCamera,libraryImage,setLibraryImage,coverImage,setCoverImage,profileImage,setProfileImage,provisoryCoverImage,setProvisoryCoverImage,provisoryProfileImage,setProvisoryProfileImage
       }}
     >
       {children}
