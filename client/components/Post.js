@@ -47,8 +47,8 @@ const Posteo = ({ data }) => {
             overflow: "hidden"
           }} source={{uri: data.photos[0]}}>
             <TouchableOpacity onPress={()=>{
-              console.log('settings post tags to: ', data.hashtags|| [])
-              setSelectedPostTags(data.hashtags|| [])
+              console.log('settings post tags to: ', data.tags|| [])
+              setSelectedPostTags(data.tags|| [])
               setShowTaggedsModal(true)
             }} style={{position:'absolute',left: 15,top:15}}>
             <LinearGradient
