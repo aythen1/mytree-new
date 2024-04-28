@@ -10,7 +10,9 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   ScrollView,
-  TextInput
+  TextInput,
+  Touchable,
+  Dimensions
 } from 'react-native'
 import { Color, FontSize, FontFamily, Border, Padding } from '../GlobalStyles'
 import Checkbox from 'expo-checkbox'
@@ -20,17 +22,24 @@ import { setPanel } from '../redux/slices/panel.slices'
 import QR from '../components/QR'
 import { Context } from '../context/Context'
 import { LinearGradient } from 'expo-linear-gradient'
+import ScrollableModal from '../components/modals/ScrollableModal'
+import ENTRADACREADA from '../components/ENTRADACREADA'
 
 const BOTONInvitarAmigos1 = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
  
-const {showQrModal, setShowQrModal} = useContext(Context)
+const {showQrModal, setShowQrModal,selectedUserToInvite,setSelectedUserToInvite,selectedRelationType,setSelectedRelationType,selectedRelationShip,showInvitationSendModal,setShowInvitationSendModal,setSelectedRelationShip} = useContext(Context)
+const [relationshipModalVisible,setRelationshipModalVisible] = useState(false)
+const [relationtypeModalVisible, setRelationtypeModalVisible] = useState(false)
   const { showPanel } = useSelector((state) => state.panel)
   const { allUsers } = useSelector((state) => state.users) 
   const [filteredUsers, setFilteredUsers] = useState([...allUsers])
   const [isChecked, setChecked] = useState(false)
   const [frameContainerVisible, setFrameContainerVisible] = useState(false)
+  const [relationshipTop, setRelationshipTop] = useState(0)
+  const [relationtypeTop, setRelationtypeTop] = useState(0)
+  const [scrolledHeight, setScrolledHeight] = useState(0)
 
   const pushName = []
 
@@ -63,6 +72,18 @@ const [value,setValue] = useState('')
 
     filterUsers()
   }, [value, allUsers]);
+
+  const handleChangeRelationType = (type) => {
+    setSelectedRelationType(type)
+    if(type !== selectedRelationType) setSelectedRelationShip()
+  }
+
+  const handleScroll = (event) => {
+    const { contentOffset } = event.nativeEvent
+    const height = contentOffset.y // Get the scrolled height
+    console.log('height: ', height)
+    setScrolledHeight(height)
+  }
   return (
     
     <LinearGradient  colors={['#fff', '#f1f1f1']}
@@ -118,11 +139,101 @@ const [value,setValue] = useState('')
           /></TouchableOpacity>
         </View>
 
-        <ScrollView>
-          {filteredUsers.map(user=><TouchableOpacity style={{paddingHorizontal:10,paddingVertical:15,borderBottomWidth:1,borderBottomColor:'#B7E4C0'}}>
+       {selectedUserToInvite ?<View style={{gap:10, flex:1}}>
+        <Text style={{color:'#7EC18C', fontFamily: FontFamily.lato, fontSize:20, fontWeight:600}}>{`Invitar a ${selectedUserToInvite.username} ${selectedUserToInvite.apellido}`}</Text>
+        <View collapsable={false}
+          onLayout={(event) => {
+            event.target.measure((x, y, width, height, pageX, pageY) => {
+              console.log(pageY)
+              setRelationtypeTop(pageY)
+            })
+          }} style={{gap:5, position:'relative'}}>
+          <Text style={{color:Color.textTextPrimary, fontFamily: FontFamily.lato, fontSize:20, fontWeight:600}}>Relación</Text>
+          <View style={{flexDirection:'row', justifyContent:'space-between',alignItems:'center',width:'100%'}}>
+            <Text style={{color:Color.textTextSecondary, fontFamily: FontFamily.lato, fontSize:16, fontWeight:500}}>{selectedRelationType || 'Selecciona tipo de relación'}</Text>
+            <TouchableOpacity onPress={()=>setRelationtypeModalVisible(true)}>
+              <Image style={{width:20,height:20}} source={require('../assets/back3.png')}/>
+            </TouchableOpacity>
+          </View>
+          {relationtypeModalVisible && (
+            <ScrollableModal
+              scrollHeight={scrolledHeight}
+              parentTop={relationtypeTop}
+              visible={relationtypeModalVisible}
+              closeModal={()=>setRelationtypeModalVisible(false)}
+              onSelectItem={handleChangeRelationType}
+              options={['Amigos', 'Familiar']}
+            />
+          )}
+        </View>
+
+        <View collapsable={false}
+          onLayout={(event) => {
+            event.target.measure((x, y, width, height, pageX, pageY) => {
+              console.log(pageY)
+              setRelationshipTop(pageY)
+            })
+          }} style={{gap:5, position:'relative'}}>
+          <Text style={{color:Color.textTextPrimary, fontFamily: FontFamily.lato, fontSize:20, fontWeight:600}}>Parentezco</Text>
+          <View style={{flexDirection:'row', justifyContent:'space-between',alignItems:'center',width:'100%'}}>
+            <Text style={{color:Color.textTextSecondary, fontFamily: FontFamily.lato, fontSize:16, fontWeight:500}}>{selectedRelationShip || 'Selecciona parentezco'}</Text>
+            <TouchableOpacity onPress={()=>setRelationshipModalVisible(true)}>
+              <Image style={{width:20,height:20}} source={require('../assets/back3.png')}/>
+            </TouchableOpacity>
+          </View>
+          {relationshipModalVisible && (
+            <ScrollableModal
+              scrollHeight={scrolledHeight}
+              parentTop={relationshipTop}
+              visible={relationshipModalVisible}
+              closeModal={()=>setRelationshipModalVisible(false)}
+              onSelectItem={setSelectedRelationShip}
+              options={selectedRelationType === 'Amigos' ? ['Amigos íntimos', 'Colegio', 'Trabajo', 'Universidad', 'Afición'] : ['Madre','Padre','Primo/a','Sobrino/a','Hijo/a','Nieto/a','Tio/a']}
+            />
+          )}
+        </View>
+       </View> : <ScrollView>
+          {filteredUsers.map(user=><TouchableOpacity onPress={()=>setSelectedUserToInvite(user)} style={{paddingHorizontal:10,paddingVertical:15,borderBottomWidth:1,borderBottomColor:'#B7E4C0'}}>
             <Text style={{color:'#787878',fontSize:16,fontWeight:500}}>{user.username + ' ' + user.apellido}</Text>
           </TouchableOpacity>)}
-        </ScrollView>
+        </ScrollView>}
+       {selectedUserToInvite && <TouchableOpacity disabled={!selectedRelationShip || !selectedRelationType || !selectedUserToInvite} onPress={()=>{
+          setShowInvitationSendModal(true)
+          setSelectedUserToInvite()
+          setSelectedRelationShip()
+          setSelectedRelationType()
+        }}>
+        <LinearGradient
+          style={{
+           marginLeft:'5%',
+      borderRadius: 100,
+      backgroundColor: Color.grisClaro,
+      justifyContent: 'center',
+      paddingHorizontal: Padding.p_5xl,
+      height:55,
+      width: '90%',
+      justifySelf:'center',
+      alignItems: 'center',
+      flexDirection: 'row'}} 
+          locations={[0, 1]}
+          colors={['#dee274', '#7ec18c']}
+        >        
+          <View style={{borderRadius: 100,
+          position:'absolute',
+      backgroundColor: Color.white,
+      justifyContent: 'center',
+   height:53,  
+      width: Dimensions.get('screen').width*0.9-30,
+      justifySelf:'center',
+      alignItems: 'center'}}></View>
+      <Text style={{ fontSize: FontSize.size_base,
+    letterSpacing: 1,
+    lineHeight: 24,
+    color: '#7EC18C',
+    textAlign: 'center',
+    fontFamily: FontFamily.lato,
+    flex: 1}}>Enviar invitación</Text>
+       </LinearGradient></TouchableOpacity>}
         <TouchableOpacity onPress={()=>setShowQrModal(true)}>
         <LinearGradient
           style={{
@@ -132,7 +243,7 @@ const [value,setValue] = useState('')
       backgroundColor: Color.grisClaro,
       justifyContent: 'center',
       paddingHorizontal: Padding.p_5xl,
-      paddingVertical: Padding.p_sm,  
+      height:55,  
       width: '90%',
       justifySelf:'center',
       alignItems: 'center',
@@ -157,6 +268,17 @@ const [value,setValue] = useState('')
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+
+      <Modal animationType="slide" transparent visible={showInvitationSendModal}>
+        <View style={styles.buttonContainer2Overlay}>
+          <Pressable style={styles.buttonContainer2Bg} onPress={()=>setShowInvitationSendModal(false)} />
+          <ENTRADACREADA
+            onClose={()=>setShowInvitationSendModal(false)}
+            isNavigate={'Muro'}
+            message={'¡Invitación enviada!'}
+          />
+        </View>
+      </Modal>
       </LinearGradient>
   )
 }
@@ -171,10 +293,21 @@ const styles = StyleSheet.create({
   searchFlexBox: {
     textAlign: 'left',
     color: Color.negro
+  }, buttonContainer2Bg: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    left: 0,
+    top: 0
   },
   buttonFlexBox: {
     alignItems: 'center',
     flexDirection: 'row'
+  },buttonContainer2Overlay: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(113, 113, 113, 0.3)'
   },
   headerLayout: {
     width: '100%',

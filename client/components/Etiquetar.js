@@ -10,11 +10,11 @@ const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers }) => {
   const {allUsers}= useSelector(state=>state.users)
 
   const handleToggleTag = (userId) => {
-    if (taggedUsers.includes(userId)) {
-      const newArray = taggedUsers.filter(id => id !== userId);
+    if (taggedUsers.includes(userId.toString())) {
+      const newArray = taggedUsers.filter(id => id.toString() !== userId.toString());
       setTaggedUsers(newArray);
     } else {
-      setTaggedUsers([...taggedUsers, userId]);
+      setTaggedUsers([...taggedUsers, userId.toString()]);
     }
   };
 
@@ -45,8 +45,8 @@ const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers }) => {
               {user.username + ' ' + user.apellido}
             </Text>
           </View>
-         <Checkbox checked={taggedUsers.includes(user.id)}
-              setChecked={() => handleToggleTag(user.id)} />
+         <Checkbox checked={taggedUsers.includes(user.id.toString())}
+              setChecked={() => handleToggleTag(user.id.toString())} />
         </View>)
         }
 
@@ -75,8 +75,8 @@ const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers }) => {
               {user.username + ' ' + user.apellido}
             </Text>
           </View>
-         <Checkbox checked={taggedUsers.includes(user.id)}
-              setChecked={() => handleToggleTag(user.id)}/>
+         <Checkbox checked={taggedUsers.includes(user.id.toString())}
+              setChecked={() => handleToggleTag(user.id.toString())}/>
         </View>)
         }
         
@@ -164,8 +164,9 @@ const styles = StyleSheet.create({
   frameParent: {
     top: 20,
     height: 320,
+    width:'90%',
     alignItems: 'center',
-    left: 20,
+    left: '5%',
     position: 'absolute'
   },
   signIn: {
@@ -183,9 +184,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: Padding.p_5xl,
     paddingVertical: Padding.p_sm,
     backgroundColor: Color.linearBoton,
-    width: 388,
+    width: '90%',
     flexDirection: 'row',
-    left: 20,
+    left: '5%',
     position: 'absolute',
     borderRadius: Border.br_11xl
   },

@@ -31,7 +31,7 @@ const Organizador = () => {
   const dispatch = useDispatch()
 const [taggedUsers,setTaggedUsers] = useState([])
  const { showPanel } = useSelector((state) => state.panel)
- const {libraryImage,showHashtagsModal,setShowHashtagsModal} = useContext(Context)
+ const {libraryImage,showHashtagsModal,setShowHashtagsModal, selectedHashtags, setSelectedHashtags} = useContext(Context)
 
   const [legado, setLegado] = useState(false)
   const [album, setAlbum] = useState(false)
@@ -71,7 +71,7 @@ const [taggedUsers,setTaggedUsers] = useState([])
     }
     getUser()
   }, [])
-  const [hashtags,setHashtags] = useState([])
+  
   const [uploadRecuerdo, setUploadRecuerdo] = useState(false)
   const [cancion, setCancion] = useState(false)
   const [ischecked, setIschecked] = useState(false)
@@ -179,7 +179,7 @@ const [taggedUsers,setTaggedUsers] = useState([])
     console.log('user: ',user)
     const finalData = {}
     finalData.tags = taggedUsers
-    finalData.hashtags = taggedUsers // check cambiar a hashtags, provisorio
+    finalData.hashtags = selectedHashtags
     finalData.userId = user.id
     finalData.fecha = new Date()
     finalData.nameUser = user.username
@@ -189,9 +189,13 @@ const [taggedUsers,setTaggedUsers] = useState([])
     const res = await axios.post(`${BACKURL}/posts`, finalData)
     if (res.data) {
       setSubmit(true)
+      setSelectedHashtags([])
+      setTaggedUsers([])
     }
   } catch (error) {
     console.log(error)
+    setSelectedHashtags([])
+    setTaggedUsers([])
   }
   }
 
@@ -218,7 +222,7 @@ const [taggedUsers,setTaggedUsers] = useState([])
                   <Text style={styles.subirRecuerdo}>Subir recuerdo</Text>
                   <Text style={styles.subir}>Subir</Text>
                 </View>
-                <View style={styles.fieldParent}>
+                <View style={{marginTop:5}}>
                   <View style={styles.field}>
                     <TextInput
                       style={[styles.describeLoQue, styles.eventoTypo]}
@@ -228,28 +232,53 @@ const [taggedUsers,setTaggedUsers] = useState([])
                       }
                       value={dataToSend.description}
                     />
-                    <View style={{ top: -20 }}>
-                      <Text style={[styles.evento, styles.eventoTypo]}>
-                        Evento:
+                    <View style={{ top:35 }}>
+                    <Text style={{marginBottom:6,color:'#000',fontSize:16,fontFamily: FontFamily.lato}}>
+                        Hashtags
                       </Text>
-                      <TouchableOpacity onPress={()=>setShowHashtagsModal(true)} style={[styles.button, styles.buttonPosition]}>
-                        <Text style={styles.aadirTypo}>
-                          Añadir #
-                        </Text>
-                      </TouchableOpacity>
+                      <View style={{flexWrap:'wrap',flexDirection:'row',width:'100%',gap:3}}>{selectedHashtags.map((hashtag,index)=> <View style={{paddingVertical: 5,
+    paddingHorizontal: 10,
+    backgroundColor: Color.secundario,
+    justifyContent: 'center',
+    gap:5,
+    flexDirection:'row',
+    alignItems: 'center',
+    borderRadius: 100}}>
+        <Text style={{color: Color.primario1,
+    fontSize: FontSize.size_xs,
+    fontFamily: FontFamily.lato,
+    fontWeight: '500'}}>
+          {`#${hashtag}`}
+        </Text>
+        <TouchableOpacity onPress={()=>{
+          setSelectedHashtags(selectedHashtags.filter(tag=>tag !== hashtag ))
+        }}>
+          <Image style={{width:10,height:10}} source={require('../assets/group-68462.png')}/>
+        </TouchableOpacity>
+      </View>)}<TouchableOpacity  onPress={()=>setShowHashtagsModal(true)} style={{paddingVertical: 5,
+    paddingHorizontal: 10,
+    backgroundColor: Color.secundario,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 100}}>
+        <Text style={{color: Color.primario1,
+    fontSize: FontSize.size_xs,
+    fontFamily: FontFamily.lato,
+    fontWeight: '500'}}>
+          {`Añadir #`}
+        </Text>
+      </TouchableOpacity></View>
                     </View>
                   </View>
-                  <View style={styles.fieldParent}>
+                  <View style={{ marginTop: 40}}>
                     <Image
                       style={styles.frameChild}
                       contentFit="cover"
                       source={require('../assets/line-802.png')}
                     />
                     <Pressable
-                      style={[
-                        styles.iconlybolddocumentParent,
-                        styles.parentFlexBox
-                      ]}
+                      style={{marginTop: 10, marginBottom:10,alignItems: 'center',
+                      flexDirection: 'row'}}
                       // onPress={openUploadRecuerdo}
                     >
                       <Image
@@ -910,7 +939,7 @@ const styles = StyleSheet.create({
     // width: 388
   },
   fieldParent: {
-    marginTop: 20
+    marginTop: 10
   },
   signIn: {
     letterSpacing: 1,
