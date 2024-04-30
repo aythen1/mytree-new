@@ -48,6 +48,7 @@ import { InfoEntityModule } from './info-entity/info-entity.module';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET_KEY'),
+        
         signOptions: { expiresIn: '24h' }, // Cambia según tus necesidades
       }),
       inject: [ConfigService],

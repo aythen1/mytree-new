@@ -1,22 +1,36 @@
-import { IsString, IsArray, IsDate, ValidateNested, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateUserDto } from '../../user/dto/create-user.dto';
+import { IsOptional, IsString, IsBoolean, IsArray } from 'class-validator';
 
 export class CreateNotificationDto {
-    @IsString()
-    @IsOptional()
-    description?: string;
+  @IsOptional()
+  @IsString()
+  title?: string;
 
-    @IsArray()
-    @IsOptional()
-    @IsString({ each: true })
-    photos?: string[];
+  @IsOptional()
+  @IsString()
+  message?: string;
 
-    @IsDate()
-    @IsOptional()
-    createdAt?: Date;
+  @IsOptional()
+  @IsString()
+  senderId?: string;
 
-    @ValidateNested()
-    @Type(() => CreateUserDto)
-    user: CreateUserDto;
+  @IsOptional()
+  @IsString()
+  receiverId?: string;
+
+  @IsOptional()
+  @IsString()
+  type?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  readed?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  photos?: string[];
+
+  @IsOptional()
+  extraData?: Record<string, any>; // Puede ser cualquier objeto
 }
