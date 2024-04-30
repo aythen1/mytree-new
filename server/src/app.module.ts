@@ -28,7 +28,7 @@ import { InfoEntityModule } from './info-entity/info-entity.module';
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: '12341234',      
+      password: 'krakra1',      
       database: 'mytree',
       entities: [User , Post,Notification,History,Comment],
       synchronize: true,
@@ -48,6 +48,7 @@ import { InfoEntityModule } from './info-entity/info-entity.module';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET_KEY'),
+        
         signOptions: { expiresIn: '24h' }, // Cambia según tus necesidades
       }),
       inject: [ConfigService],
