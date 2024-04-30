@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
@@ -9,14 +9,29 @@ export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 
 
-  @Post(':userId/create')
-  createNotification(
-    @Param('userId') userId: string,
-    @Body('description') description: string,
-    @Body('photos') photos: string[]
-  ): Promise<Notification> {
-    return this.notificationService.createNotification(+userId, description, photos);
+
+  @Post()
+  async create(@Body() createNotificationDto: CreateNotificationDto) {
+    return await this.notificationService.create(createNotificationDto);
   }
+
+  @Patch(':id')
+  async update(@Param('id') id: number, @Body() updateNotificationDto: UpdateNotificationDto) {
+    const updatedNotification = await this.notificationService.update(id, updateNotificationDto);
+    if (!updatedNotification) {
+      throw new NotFoundException(`Notification with ID ${id} not found.`);
+    }
+    return updatedNotification;
+  }
+
+  // @Post(':userId/create')
+  // createNotification(
+  //   @Param('userId') userId: string,
+  //   @Body('description') description: string,
+  //   @Body('photos') photos: string[]
+  // ): Promise<Notification> {
+  //   return this.notificationService.createNotification(+userId, description, photos);
+  // }
 
   @Get()
   findAll() {
@@ -28,10 +43,7 @@ export class NotificationController {
     return this.notificationService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateNotificationDto: UpdateNotificationDto) {
-    return this.notificationService.update(+id, updateNotificationDto);
-  }
+ 
 
   @Delete(':id')
   remove(@Param('id') id: string) {

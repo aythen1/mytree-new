@@ -1,20 +1,41 @@
+// notification.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 
 @Entity()
 export class Notification {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    description: string;
+  @Column()
+  title: string;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-    createdAt: Date; // Campo para la fecha y hora de creación
+  @Column()
+  message: string;
 
-    @Column("simple-array")
-    photos: string[]; // Suponiendo que las fotos son cadenas que representan las URL de las imágenes
+  @Column()
+  senderId: string;
 
-    @ManyToOne(() => User, user => user.notifications)
-    user: User;
+  @Column()
+  receiverId: string;
+
+  @Column()
+  type: string;
+
+  @Column()
+  readed: boolean;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @Column("simple-array")
+  photos: string[];
+
+  @ManyToOne(() => User, user => user.notifications)
+  user: User;
+
+  @Column({ type: 'json', default: '{}' })
+  extraData: Record<string, any> = {};
+
+
 }
