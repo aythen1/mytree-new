@@ -60,8 +60,13 @@ const Perfil = () => {
   },[])
 
   return (
-    <ScrollView style={styles.perfil} showsVerticalScrollIndicator={false}>
-      <View style={[styles.vectorParent, styles.buttonFlexBox]}>
+    <ScrollView style={{ flex: 1,
+      height: '100%',
+      width: '100%',
+      backgroundColor: Color.white}} showsVerticalScrollIndicator={false}>
+      <View style={{justifyContent: 'flex-end',
+    flexDirection: 'row',
+    alignItems: 'center',top: '5%'}}>
         <Pressable onPress={() => navigation.navigate('Muro')}>
           <Image
             style={[styles.image6Icon, styles.ionmenu]}

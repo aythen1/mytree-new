@@ -1,14 +1,20 @@
 import { useNavigation } from '@react-navigation/native'
 import React from 'react'
-import { Pressable } from 'react-native'
+import { Pressable, Text } from 'react-native'
 import { Path, Svg } from 'react-native-svg'
+import { useSelector } from 'react-redux'
 
 const NotificationsMuroSVG = ({ isNavigation }) => {
   const navigation = useNavigation()
+  const {userData} = useSelector(state=>state.users)
+  const {allNotifications} = useSelector(state=>state.notifications)
+  const userNotifications = allNotifications.filter(notification=>notification?.receiverId === userData?.id?.toString() && notification?.readed === false)
+
   return (
     <Pressable
       onPress={() => isNavigation && navigation.navigate(isNavigation)}
     >
+      {userNotifications.length > 0 && <Text style={{position:'absolute', borderRadius:100, backgroundColor: '#608f6a', width:15,height:15, justifyContent:'center', textAlign:'center',color:'#fff',alignItems:'center',top:-7,left:-5, zIndex:1000, fontSize:10, fontWeight:700}}>{userNotifications?.length}</Text>}
       <Svg
         style={{ marginRight: 10 }}
         width="19"

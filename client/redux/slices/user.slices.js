@@ -331,32 +331,7 @@ export const userSlice = createSlice({
     }
   },
   extraReducers: (builder) => {
-    // Manejadores para acciones asincrónicas pendientes, exitosas y rechazadas
-    builder
-      // .addMatcher(
-      //   (action) =>
-      //     action.type.startsWith('user/') && action.type.endsWith('/pending'),
-      //   (state) => {
-      //     state.loading = true;
-      //     state.error = null;
-      //   }
-      // )
-      // .addMatcher(
-      //   (action) =>
-      //     action.type.startsWith('user/') && action.type.endsWith('/fulfilled'),
-      //   (state, action) => {
-      //     state.loading = false;
-      //     state.data = action.payload;
-      //   }
-      // )
-      // .addMatcher(
-      //   (action) =>
-      //     action.type.startsWith('user/') && action.type.endsWith('/rejected'),
-      //   (state, action) => {
-      //     state.loading = false;
-      //     state.error = action.payload;
-      //   }
-      // )
+        builder
        // =================== LOAD MESSAGES =================== 
        .addCase(getAllUsers.pending, (state) => {
         state.loading = true;

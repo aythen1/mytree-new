@@ -28,34 +28,25 @@ import { InfoEntityModule } from './info-entity/info-entity.module';
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: 'krakra1',      
+      password: 'krakra1',
       database: 'mytree',
-      entities: [User , Post,Notification,History,Comment],
+      entities: [User,Post,Notification,History,Comment],
       synchronize: true,
     }),
-
-
     InfoEntityModule,
-
     PostsModule,
-
     CommentsModule,
-
     UserModule,
-
     NotificationModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET_KEY'),
-        
         signOptions: { expiresIn: '24h' }, // Cambia según tus necesidades
       }),
       inject: [ConfigService],
     }),
     HistoriesModule,
-    // ChatModule
-
   ],
   controllers: [],
   // providers: [ChatGateway, MessageService, ChatService],

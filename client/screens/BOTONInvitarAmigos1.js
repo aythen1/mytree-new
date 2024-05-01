@@ -12,6 +12,7 @@ import {
   ScrollView,
   TextInput,
   Touchable,
+  Animated ,
   Dimensions
 } from 'react-native'
 import { Color, FontSize, FontFamily, Border, Padding } from '../GlobalStyles'
@@ -24,6 +25,7 @@ import { Context } from '../context/Context'
 import { LinearGradient } from 'expo-linear-gradient'
 import ScrollableModal from '../components/modals/ScrollableModal'
 import ENTRADACREADA from '../components/ENTRADACREADA'
+import { getAllNotifications, postNotification } from '../redux/actions/notifications'
 
 const BOTONInvitarAmigos1 = () => {
   const navigation = useNavigation()
@@ -40,6 +42,7 @@ const [relationtypeModalVisible, setRelationtypeModalVisible] = useState(false)
   const [relationshipTop, setRelationshipTop] = useState(0)
   const [relationtypeTop, setRelationtypeTop] = useState(0)
   const [scrolledHeight, setScrolledHeight] = useState(0)
+  const {userData} = useSelector(state=>state.users)
 
   const pushName = []
 
@@ -80,9 +83,27 @@ const [value,setValue] = useState('')
 
   const handleScroll = (event) => {
     const { contentOffset } = event.nativeEvent
-    const height = contentOffset.y // Get the scrolled height
+    const height = contentOffset.y 
     console.log('height: ', height)
     setScrolledHeight(height)
+  }
+
+  const handleSendInvitation = () => {
+    const body = {
+      title: `Solicitud de ${selectedRelationType === 'Familiar' ? "familia" : 'amistad'}`,
+      message: `${userData.username} ${userData.apellido} te ha enviado una solicitud de ${selectedRelationType === 'Familiar' ? "familia" : 'amistad'}`,
+      senderId: userData.id.toString(),
+      receiverId: selectedUserToInvite.id.toString(),
+      type: `${selectedRelationType === 'Familiar' ? "family request" : 'friend request'}`,
+      readed: false,
+      extraData: {},
+      photos: []
+    }
+    console.log('Sending notification: ', body)
+    dispatch(postNotification(body)).then(()=>dispatch(getAllNotifications()))
+    setSelectedRelationShip()
+    setSelectedRelationType()
+    
   }
   return (
     
@@ -151,8 +172,10 @@ const [value,setValue] = useState('')
           <Text style={{color:Color.textTextPrimary, fontFamily: FontFamily.lato, fontSize:20, fontWeight:600}}>Relación</Text>
           <View style={{flexDirection:'row', justifyContent:'space-between',alignItems:'center',width:'100%'}}>
             <Text style={{color:Color.textTextSecondary, fontFamily: FontFamily.lato, fontSize:16, fontWeight:500}}>{selectedRelationType || 'Selecciona tipo de relación'}</Text>
-            <TouchableOpacity onPress={()=>setRelationtypeModalVisible(true)}>
-              <Image style={{width:20,height:20}} source={require('../assets/back3.png')}/>
+            <TouchableOpacity onPress={()=>{
+              setRelationtypeModalVisible(true)
+            }}>
+              <Image style={{width:20,height:20,transform:`${relationtypeModalVisible && 'rotate(90deg)'}`}} source={require('../assets/back3.png')}/>
             </TouchableOpacity>
           </View>
           {relationtypeModalVisible && (
@@ -178,7 +201,7 @@ const [value,setValue] = useState('')
           <View style={{flexDirection:'row', justifyContent:'space-between',alignItems:'center',width:'100%'}}>
             <Text style={{color:Color.textTextSecondary, fontFamily: FontFamily.lato, fontSize:16, fontWeight:500}}>{selectedRelationShip || 'Selecciona parentezco'}</Text>
             <TouchableOpacity onPress={()=>setRelationshipModalVisible(true)}>
-              <Image style={{width:20,height:20}} source={require('../assets/back3.png')}/>
+              <Image style={{width:20,height:20,transform:`${relationshipModalVisible && 'rotate(90deg)'}`}} source={require('../assets/back3.png')}/>
             </TouchableOpacity>
           </View>
           {relationshipModalVisible && (
@@ -198,6 +221,7 @@ const [value,setValue] = useState('')
           </TouchableOpacity>)}
         </ScrollView>}
        {selectedUserToInvite && <TouchableOpacity disabled={!selectedRelationShip || !selectedRelationType || !selectedUserToInvite} onPress={()=>{
+        handleSendInvitation()
           setShowInvitationSendModal(true)
           setSelectedUserToInvite()
           setSelectedRelationShip()
