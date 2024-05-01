@@ -27,22 +27,18 @@ import { InfoEntityModule } from './info-entity/info-entity.module';
       type: 'postgres',
       host: 'localhost',
       port: 5432,
-      username: 'azul',
-      password: '02030203',      
+      username: 'postgres',
+      password: 'krakra1',
+//       username: 'azul',
+//       password: '02030203',      
       database: 'mytree',
-      entities: [User , Post,Notification,History,Comment],
+      entities: [User,Post,Notification,History,Comment],
       synchronize: true,
     }),
-
-
     InfoEntityModule,
-
     PostsModule,
-
     CommentsModule,
-
     UserModule,
-
     NotificationModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -53,8 +49,6 @@ import { InfoEntityModule } from './info-entity/info-entity.module';
       inject: [ConfigService],
     }),
     HistoriesModule,
-    // ChatModule
-
   ],
   controllers: [],
   // providers: [ChatGateway, MessageService, ChatService],

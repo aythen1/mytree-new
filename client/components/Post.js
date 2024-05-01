@@ -21,7 +21,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Context } from '../context/Context'
 
 const Posteo = ({ data }) => {
-  console.log('data: ',data)
   const {setShowShareModal,setShowTaggedsModal,setSelectedPostTags} = useContext(Context)
   const [showTagged, setShowTagged] = useState(false)
   const [showIcons, setShowIcons] = useState(false)

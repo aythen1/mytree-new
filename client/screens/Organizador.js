@@ -9,7 +9,8 @@ import {
   Modal,
   TextInput,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import Etiquetar from '../components/Etiquetar'
@@ -25,6 +26,7 @@ import axios from 'axios'
 import { BACKURL } from '../apiBackend'
 import Privacidad from './Privacidad'
 import { Context } from '../context/Context'
+import { StatusBar } from 'react-native';
 import Cancion1 from '../components/Cancion1'
 
 const Organizador = () => {
@@ -200,16 +202,37 @@ const [taggedUsers,setTaggedUsers] = useState([])
   }
 
   return (
-    <>
-      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        <View style={styles.organizador}>
-          <View style={[styles.image6Parent, styles.parentPosition]}>
+  <ScrollView contentContainerStyle={{height:Dimensions.get('screen').height - StatusBar.currentHeight-95, backgroundColor:'#fff'}}  showsVerticalScrollIndicator={false}>
+    <LinearGradient
+                style={{paddingVertical: Padding.p_sm,
+                  position:'absolute',
+                  bottom:35,
+                  backgroundColor: Color.linearBoton,
+                  borderRadius: Border.br_11xl,
+                  justifyContent: 'center',
+                  marginTop:0,
+                  alignSelf:'center',
+                  width: '95%', justifyContent: 'center',
+                  alignItems: 'center',
+                  flexDirection: 'row'}}
+                locations={[0, 1]}
+                colors={['#dee274', '#7ec18c']}
+              >
+                <Text onPress={handleSubmit} style={styles.signIn}>
+                  Subir
+                </Text>
+              </LinearGradient>
+      
+        <View style={{ width: '100%',
+    backgroundColor: Color.white,
+    paddingHorizontal: 15}}>
+          <View>
             <Image
               style={styles.image6Icon}
               contentFit="cover"
               source={require('../assets/image-6.png')}
             />
-            <View style={styles.frameParent}>
+            <View style={{width: '100%'}}>
               <View style={{ width: '100%' }}>
                 <View style={styles.ionmenuParent}>
                   <Pressable onPress={() => dispatch(setPanel(!showPanel))}>
@@ -223,16 +246,25 @@ const [taggedUsers,setTaggedUsers] = useState([])
                   <Text style={styles.subir}>Subir</Text>
                 </View>
                 <View style={{marginTop:5}}>
-                  <View style={styles.field}>
+                  <View >
                     <TextInput
-                      style={[styles.describeLoQue, styles.eventoTypo]}
+                    multiline={true}
+                    numberOfLines={3}
+                      style={{
+                        color: Color.grisClaro, fontWeight: '500',
+                        fontSize: FontSize.size_lg,
+                        textAlign: 'left',
+                        textAlignVertical:'top',
+                        borderRadius: Border.br_3xs,
+    backgroundColor: Color.fAFAFA, paddingVertical:5, paddingHorizontal:5,
+                        fontFamily: FontFamily.lato}}
                       placeholder=" Describe lo que sientes..."
                       onChangeText={(des) =>
                         setDataToSend({ ...dataToSend, ['description']: des })
                       }
                       value={dataToSend.description}
                     />
-                    <View style={{ top:35 }}>
+                    <View style={{ top:15 }}>
                     <Text style={{marginBottom:6,color:'#000',fontSize:16,fontFamily: FontFamily.lato}}>
                         Hashtags
                       </Text>
@@ -505,20 +537,13 @@ const [taggedUsers,setTaggedUsers] = useState([])
                   </View>
                 </View>
               </View>
-              <LinearGradient
-                style={[styles.button2, styles.button2FlexBox]}
-                locations={[0, 1]}
-                colors={['#dee274', '#7ec18c']}
-              >
-                <Text onPress={handleSubmit} style={styles.signIn}>
-                  Subir
-                </Text>
-              </LinearGradient>
+             
+              
             </View>
           </View>
         </View>
-      </ScrollView>
-
+        
+      
       <Modal animationType="slide" transparent visible={showEtapas}>
         <View style={styles.buttonContainer1Overlay}>
           <Pressable style={styles.buttonContainer1Bg} onPress={closeEtapas}>
@@ -598,14 +623,13 @@ const [taggedUsers,setTaggedUsers] = useState([])
           />
         </View>
       </Modal>
-    </>
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
   parentPosition: {
-    top: 0,
-    left: 0
+   
   },
   optionsAlbum: {
     marginRight: 15,
@@ -960,17 +984,15 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   frameParent: {
-    height: 862,
+    borderWidth:2,
     width: '100%'
     // marginTop: 6
   },
   image6Parent: {
-    height: 926
   },
   organizador: {
     width: '100%',
     overflow: 'hidden',
-    height: 926,
     // flex: 1,
     backgroundColor: Color.white,
     paddingHorizontal: 15

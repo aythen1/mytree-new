@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     top: '13%',
     width: '96%',
     gap: 30,
-    marginBottom: 170
+    marginBottom: 230
   }
 })
 

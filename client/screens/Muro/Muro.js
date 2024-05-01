@@ -37,6 +37,7 @@ import Etiquetados from '../../components/Etiquetados'
 import { getUsers } from '../../redux/slices/user.slices'
 import { getAllUsers, getUserData } from '../../redux/actions/user'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { getAllNotifications } from '../../redux/actions/notifications'
 
 const Muro = () => {
   const {showShareModal,setShowShareModal,showTaggedsModal,setShowTaggedsModal} = useContext(Context)
@@ -65,6 +66,7 @@ useEffect(()=>{
 },[])
   useEffect(()=>{
     if(user){
+      dispatch(getAllNotifications())
       dispatch(getUserData(user.id))
     dispatch(getAllUsers())
     }
@@ -107,7 +109,10 @@ useEffect(()=>{
                 !showRetos
                   ? [
                       <Pressable
-                        onPress={() => navigation.navigate('Busqueda')}
+                        onPress={async() => {
+                          await dispatch(getAllUsers())
+                          navigation.navigate('Busqueda')
+                        }}
                       >
                         <LupaSVG />
                       </Pressable>,
