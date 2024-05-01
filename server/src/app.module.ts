@@ -29,6 +29,8 @@ import { InfoEntityModule } from './info-entity/info-entity.module';
       port: 5432,
       username: 'postgres',
       password: 'krakra1',
+//       username: 'azul',
+//       password: '02030203',      
       database: 'mytree',
       entities: [User,Post,Notification,History,Comment],
       synchronize: true,
