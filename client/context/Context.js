@@ -55,7 +55,7 @@ export const ContextProvider = ({ children }) => {
           })
             .then((res) => res.json())
             .then((data) => {
-             console.log('dataUrl from uriImg:', data.url)
+            //  console.log('dataUrl from uriImg:', data.url)
               setLibraryImage(transformHttpToHttps(data.url))
             })
         } else {
@@ -123,10 +123,46 @@ export const ContextProvider = ({ children }) => {
         }
       }
 
+      function formatDate(dateString) {
+        // Parse the input date string into a Date object
+        const date = new Date(dateString);
+    
+        // Get the current date and time
+        const now = new Date();
+    
+        // Calculate the difference in milliseconds between now and the provided date
+        const diffMilliseconds = now - date;
+    
+        // Convert the difference to seconds
+        const diffSeconds = Math.floor(diffMilliseconds / 1000);
+    
+        // Calculate time units
+        const seconds = diffSeconds % 60;
+        const minutes = Math.floor(diffSeconds / 60) % 60;
+        const hours = Math.floor(diffSeconds / (60 * 60)) % 24;
+        const days = Math.floor(diffSeconds / (60 * 60 * 24));
+    
+        // Determine the appropriate response based on the time elapsed
+        if (days > 0) {
+            // More than a day ago
+            const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+            return formattedDate;
+        } else if (hours > 0) {
+            // Less than a day but more than an hour ago
+            return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+        } else if (minutes > 0) {
+            // Less than an hour but more than a minute ago
+            return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+        } else {
+            // Less than a minute ago
+            return `${seconds} second${seconds !== 1 ? 's' : ''} ago`;
+        }
+    }
+
 return (
     <Context.Provider
       value={{
-        pickImage,showInvitationSendModal,setShowInvitationSendModal,selectedPostTags,selectedHashtags,selectedRelationType,setSelectedRelationType,selectedRelationShip,setSelectedRelationShip,selectedUserToInvite,setSelectedUserToInvite, setSelectedHashtags,setSelectedPostTags,showHashtagsModal,setShowHashtagsModal,showQrModal, setShowQrModal,showCamera,showTaggedsModal, setShowTaggedsModal,showShareModal,setShowShareModal,  setShowCamera,libraryImage,setLibraryImage,coverImage,setCoverImage,profileImage,setProfileImage,provisoryCoverImage,setProvisoryCoverImage,provisoryProfileImage,setProvisoryProfileImage
+        pickImage,showInvitationSendModal,formatDate,setShowInvitationSendModal,selectedPostTags,selectedHashtags,selectedRelationType,setSelectedRelationType,selectedRelationShip,setSelectedRelationShip,selectedUserToInvite,setSelectedUserToInvite, setSelectedHashtags,setSelectedPostTags,showHashtagsModal,setShowHashtagsModal,showQrModal, setShowQrModal,showCamera,showTaggedsModal, setShowTaggedsModal,showShareModal,setShowShareModal,  setShowCamera,libraryImage,setLibraryImage,coverImage,setCoverImage,profileImage,setProfileImage,provisoryCoverImage,setProvisoryCoverImage,provisoryProfileImage,setProvisoryProfileImage
       }}
     >
       {children}

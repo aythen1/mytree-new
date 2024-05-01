@@ -1,25 +1,31 @@
 import * as React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Padding, Border, FontSize, FontFamily, Color } from '../GlobalStyles'
 
-const ETIQUETADO = ({ onClose }) => {
+const ETIQUETADO = ({ onClose,acceptHandler,cancelHandler,message }) => {
   return (
     <View style={styles.etiquetado}>
       <View>
-        <Text style={styles.urielTeHa}>{`Uriel te ha etiquetado 
-en un recuerdo `}</Text>
+        <Text style={styles.urielTeHa}>{message}</Text>
         <View style={styles.buttonBar}>
-          <View style={[styles.button, styles.buttonFlexBox]}>
-            <Text style={styles.signTypo}>Rechazar</Text>
-          </View>
-          <LinearGradient
-            style={[styles.button1, styles.buttonFlexBox]}
-            locations={[0, 1]}
-            colors={['#dee274', '#7ec18c']}
-          >
-            <Text style={[styles.signIn1, styles.signTypo]}>Aceptar</Text>
-          </LinearGradient>
+          <TouchableOpacity onPress={cancelHandler}>
+            <View style={[styles.button, styles.buttonFlexBox]}>
+              <Text style={styles.signTypo}>Rechazar</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={()=>{
+            acceptHandler()
+            onClose()
+          }}>
+            <LinearGradient
+              style={[styles.button1, styles.buttonFlexBox]}
+              locations={[0, 1]}
+              colors={['#dee274', '#7ec18c']}
+            >
+              <Text style={[styles.signIn1, styles.signTypo]}>Aceptar</Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -87,6 +93,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.white,
     borderTopRightRadius: Border.br_11xl,
     borderTopLeftRadius: Border.br_11xl,
+    paddingHorizontal:10,
     width: '100%',
     position: 'absolute',
     bottom: 0

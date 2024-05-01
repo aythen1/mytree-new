@@ -26,7 +26,7 @@ console.log('selectedPostTags: ',selectedPostTags)
       />
      
      {selectedPostTags.map((tag,index)=> <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
-        <View key={index} style={styles.frameContainer}>
+        <View key={index + 999999} style={styles.frameContainer}>
           <Image
             style={styles.frameItem}
             contentFit="cover"

@@ -1,11 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import axiosInstance from '../../apiBackend';
 
 // Get all notifications
 export const getAllNotifications = createAsyncThunk(
     'getAllNotifications/notifications',
     async () => {
       try {
-        const {data} = await axios.get(`/notification`);
+        const {data} = await axiosInstance.get(`/notification`);
+        console.log('data from getAllNotifications: ',data)
         return data
       } catch (error) {
         throw new Error(error)
@@ -17,7 +19,7 @@ export const getNotificationById = createAsyncThunk(
     'getNotificationById/notifications',
     async (notificationId) => {
       try {
-        const {data} = await axios.get(`/notification/${notificationId}`);
+        const {data} = await axiosInstance.get(`/notification/${notificationId}`);
         return data
       } catch (error) {
         throw new Error(error)
@@ -30,7 +32,7 @@ export const getNotificationById = createAsyncThunk(
 //     'getAllUserNotifications/notifications',
 //     async (userId) => {
 //       try {
-//         const {data} = await axios.get(`/notification/user/${userId}`);
+//         const {data} = await axiosInstance.get(`/notification/user/${userId}`);
 //         return data
 //       } catch (error) {
 //         throw new Error(error)
@@ -41,9 +43,10 @@ export const getNotificationById = createAsyncThunk(
   // Post notification
 export const postNotification = createAsyncThunk(
     'postNotification/notifications',
-    async ({userId,notification}) => {
+    async (body) => {
+      console.log('body: ', body)
       try {
-        const {data} = await axios.post(`/notification/${userId}/create`,notification);
+        const {data} = await axiosInstance.post(`/notification`,body);
         return data
       } catch (error) {
         throw new Error(error)

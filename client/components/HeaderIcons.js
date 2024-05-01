@@ -12,7 +12,7 @@ const HeaderIcons = ({ icons }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    gap: 10
+    gap: 10,marginTop:5,
   }
 })
 

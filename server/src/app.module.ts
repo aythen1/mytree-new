@@ -28,22 +28,15 @@ import { EventModule } from './event/event.module';
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: 'krakra1',  
-      
+      password: 'krakra1',
       database: 'mytree',
-      entities: [User , Post,Notification,History,Comment , MessageEntity],
+      entities: [User,Post,Notification,History,Comment],
       synchronize: true,
     }),
-
-
-
-
+    InfoEntityModule,
     PostsModule,
-
     CommentsModule,
-
     UserModule,
-
     NotificationModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -54,9 +47,6 @@ import { EventModule } from './event/event.module';
       inject: [ConfigService],
     }),
     HistoriesModule,
-    ChatModule,
-    EventModule
-
   ],
   controllers: [],
   providers: [ChatGateway, MessageService, ChatService],
