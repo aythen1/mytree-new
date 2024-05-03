@@ -12,7 +12,6 @@ import { Notification } from './notification/entities/notification.entity';
 import { HistoriesModule } from './histories/histories.module';
 import { History } from './histories/entities/history.entity';
 import { Comment } from './comments/entities/comment.entity';
-import { InfoEntityModule } from './info-entity/info-entity.module';
 import { ChatGateway } from './chat/chat.gateway'; // Asegúrate de importar correctamente tu WebSocketGateway
 import { MessageService } from './chat/service/message.service'; // Asegúrate de importar correctamente tu WebSocketGateway
 import { ChatService } from './chat/service/chat.service'; // Asegúrate de importar correctamente tu WebSocketGateway
@@ -21,21 +20,22 @@ import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
-    // TypeOrmModule.forFeature([MessageEntity]),
+    TypeOrmModule.forFeature([MessageEntity]),
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
       port: 5432,
       username: 'azul',
-      password: '02030203',      
+      password: '02030203',
+      
       database: 'mytree',
-      entities: [User , Post,Notification,History,Comment],
+      entities: [User , Post,Notification,History,Comment , MessageEntity],
       synchronize: true,
     }),
 
 
-    InfoEntityModule,
+
 
     PostsModule,
 
@@ -48,7 +48,6 @@ import { ChatModule } from './chat/chat.module';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET_KEY'),
-        
         signOptions: { expiresIn: '24h' }, // Cambia según tus necesidades
       }),
       inject: [ConfigService],
