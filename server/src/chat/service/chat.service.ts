@@ -19,6 +19,7 @@ export class ChatService {
   }
 
   public roomIdGenerator(senderId: string, receiverId: string): string {
+    // Ordena los IDs alfabéticamente para asegurar la consistencia de la sala
     const sortedIds = [senderId, receiverId].sort();
     return sortedIds.join('_'); // Concatena los IDs con un guion bajo
   }
