@@ -86,7 +86,7 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
           </View>
         </View>
       </View>
-      <View>
+      {/* <View>
         <Text style={[styles.labelled, styles.labelledTypo]}>
         Direccion
         </Text>
@@ -106,7 +106,7 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
           </View>
         </View>
         
-      </View>
+      </View> */}
       <View>
         <Text style={[styles.labelled, styles.labelledTypo]}>
           Ciudad
@@ -178,7 +178,7 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
             />
             <TextInput
               style={styles.placeholder}
-              placeholder="Nombre"
+              placeholder="Contraseña"
               onChangeText={(password)=> setDataToSend({...dataToSend,["password"]:password})}
               value={dataToSend.password}
               secureTextEntry={true}

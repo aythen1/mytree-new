@@ -8,7 +8,9 @@ import {
   Pressable,
   Modal,
   TextInput,
-  ScrollView
+  ScrollView,
+  TouchableOpacity,
+  Dimensions
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import Etiquetar from '../components/Etiquetar'
@@ -24,12 +26,14 @@ import axios from 'axios'
 import { BACKURL } from '../apiBackend'
 import Privacidad from './Privacidad'
 import { Context } from '../context/Context'
+import { StatusBar } from 'react-native';
+import Cancion1 from '../components/Cancion1'
 
 const Organizador = () => {
   const dispatch = useDispatch()
-
+const [taggedUsers,setTaggedUsers] = useState([])
  const { showPanel } = useSelector((state) => state.panel)
- const {libraryImage} = useContext(Context)
+ const {libraryImage,showHashtagsModal,setShowHashtagsModal, selectedHashtags, setSelectedHashtags} = useContext(Context)
 
   const [legado, setLegado] = useState(false)
   const [album, setAlbum] = useState(false)
@@ -43,13 +47,17 @@ const Organizador = () => {
   const [usuario, setUsuario] = useState({})
   const [username,setUsername] = useState("")
 
+  useEffect(()=>{
+    
+  },[taggedUsers])
+
   
   const [dataToSend, setDataToSend] = useState({
     nameUser: "", 
     description: '',
     fecha:"20/12/2024",
     photos: [],
-    etiquets: [],
+    tags: [],
     hashtags: [],
     userId: ""
   })
@@ -65,6 +73,7 @@ const Organizador = () => {
     }
     getUser()
   }, [])
+  
   const [uploadRecuerdo, setUploadRecuerdo] = useState(false)
   const [cancion, setCancion] = useState(false)
   const [ischecked, setIschecked] = useState(false)
@@ -171,8 +180,8 @@ const Organizador = () => {
     
     console.log('user: ',user)
     const finalData = {}
-    finalData.etiquets = []
-    finalData.hashtags = []
+    finalData.tags = taggedUsers
+    finalData.hashtags = selectedHashtags
     finalData.userId = user.id
     finalData.fecha = new Date()
     finalData.nameUser = user.username
@@ -182,23 +191,48 @@ const Organizador = () => {
     const res = await axios.post(`${BACKURL}/posts`, finalData)
     if (res.data) {
       setSubmit(true)
+      setSelectedHashtags([])
+      setTaggedUsers([])
     }
   } catch (error) {
     console.log(error)
+    setSelectedHashtags([])
+    setTaggedUsers([])
   }
   }
 
   return (
-    <>
-      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        <View style={styles.organizador}>
-          <View style={[styles.image6Parent, styles.parentPosition]}>
+  <ScrollView contentContainerStyle={{height:Dimensions.get('screen').height - StatusBar.currentHeight-95, backgroundColor:'#fff'}}  showsVerticalScrollIndicator={false}>
+    <LinearGradient
+                style={{paddingVertical: Padding.p_sm,
+                  position:'absolute',
+                  bottom:35,
+                  backgroundColor: Color.linearBoton,
+                  borderRadius: Border.br_11xl,
+                  justifyContent: 'center',
+                  marginTop:0,
+                  alignSelf:'center',
+                  width: '95%', justifyContent: 'center',
+                  alignItems: 'center',
+                  flexDirection: 'row'}}
+                locations={[0, 1]}
+                colors={['#dee274', '#7ec18c']}
+              >
+                <Text onPress={handleSubmit} style={styles.signIn}>
+                  Subir
+                </Text>
+              </LinearGradient>
+      
+        <View style={{ width: '100%',
+    backgroundColor: Color.white,
+    paddingHorizontal: 15}}>
+          <View>
             <Image
               style={styles.image6Icon}
               contentFit="cover"
               source={require('../assets/image-6.png')}
             />
-            <View style={styles.frameParent}>
+            <View style={{width: '100%'}}>
               <View style={{ width: '100%' }}>
                 <View style={styles.ionmenuParent}>
                   <Pressable onPress={() => dispatch(setPanel(!showPanel))}>
@@ -211,46 +245,72 @@ const Organizador = () => {
                   <Text style={styles.subirRecuerdo}>Subir recuerdo</Text>
                   <Text style={styles.subir}>Subir</Text>
                 </View>
-                <View style={styles.fieldParent}>
-                  <View style={styles.field}>
+                <View style={{marginTop:5}}>
+                  <View >
                     <TextInput
-                      style={[styles.describeLoQue, styles.eventoTypo]}
+                    multiline={true}
+                    numberOfLines={3}
+                      style={{
+                        color: Color.grisClaro, fontWeight: '500',
+                        fontSize: FontSize.size_lg,
+                        textAlign: 'left',
+                        textAlignVertical:'top',
+                        borderRadius: Border.br_3xs,
+    backgroundColor: Color.fAFAFA, paddingVertical:5, paddingHorizontal:5,
+                        fontFamily: FontFamily.lato}}
                       placeholder=" Describe lo que sientes..."
                       onChangeText={(des) =>
                         setDataToSend({ ...dataToSend, ['description']: des })
                       }
                       value={dataToSend.description}
                     />
-                    <View style={{ top: -20 }}>
-                      <Text style={[styles.evento, styles.eventoTypo]}>
-                        Evento:
+                    <View style={{ top:15 }}>
+                    <Text style={{marginBottom:6,color:'#000',fontSize:16,fontFamily: FontFamily.lato}}>
+                        Hashtags
                       </Text>
-                      <View style={[styles.button, styles.buttonPosition]}>
-                        <Text style={styles.aadirTypo}>
-                          #Mi primera bicicleta
-                        </Text>
-                      </View>
-                      <Pressable
-                        style={[styles.button1, styles.buttonPosition]}
-                        // onPress={openButtonContainer1}
-                      >
-                        <Text style={[styles.aadir, styles.aadirPosition]}>
-                          Añadir #
-                        </Text>
-                      </Pressable>
+                      <View style={{flexWrap:'wrap',flexDirection:'row',width:'100%',gap:3}}>{selectedHashtags.map((hashtag,index)=> <View style={{paddingVertical: 5,
+    paddingHorizontal: 10,
+    backgroundColor: Color.secundario,
+    justifyContent: 'center',
+    gap:5,
+    flexDirection:'row',
+    alignItems: 'center',
+    borderRadius: 100}}>
+        <Text style={{color: Color.primario1,
+    fontSize: FontSize.size_xs,
+    fontFamily: FontFamily.lato,
+    fontWeight: '500'}}>
+          {`#${hashtag}`}
+        </Text>
+        <TouchableOpacity onPress={()=>{
+          setSelectedHashtags(selectedHashtags.filter(tag=>tag !== hashtag ))
+        }}>
+          <Image style={{width:10,height:10}} source={require('../assets/group-68462.png')}/>
+        </TouchableOpacity>
+      </View>)}<TouchableOpacity  onPress={()=>setShowHashtagsModal(true)} style={{paddingVertical: 5,
+    paddingHorizontal: 10,
+    backgroundColor: Color.secundario,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 100}}>
+        <Text style={{color: Color.primario1,
+    fontSize: FontSize.size_xs,
+    fontFamily: FontFamily.lato,
+    fontWeight: '500'}}>
+          {`Añadir #`}
+        </Text>
+      </TouchableOpacity></View>
                     </View>
                   </View>
-                  <View style={styles.fieldParent}>
+                  <View style={{ marginTop: 40}}>
                     <Image
                       style={styles.frameChild}
                       contentFit="cover"
                       source={require('../assets/line-802.png')}
                     />
                     <Pressable
-                      style={[
-                        styles.iconlybolddocumentParent,
-                        styles.parentFlexBox
-                      ]}
+                      style={{marginTop: 10, marginBottom:10,alignItems: 'center',
+                      flexDirection: 'row'}}
                       // onPress={openUploadRecuerdo}
                     >
                       <Image
@@ -374,10 +434,9 @@ const Organizador = () => {
                           <Pressable
                             style={{ flexDirection: 'row', marginTop: 15 }}
                           >
-                            <Checkbox
-                              value={legado}
-                              onValueChange={setLegado}
-                            />
+                           <TouchableOpacity onPress={()=>setLegado(!legado)}>
+                             {legado ? <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/checked.png')}/> : <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/notchecked.png')}/>}
+                           </TouchableOpacity>
                             <View
                               style={{
                                 flexDirection: 'row',
@@ -401,7 +460,9 @@ const Organizador = () => {
                               marginTop: 15
                             }}
                           >
-                            <Checkbox value={album} onValueChange={setAlbum} />
+                            <TouchableOpacity onPress={()=>setAlbum(!album)}>
+                             {album ? <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/checked.png')}/> : <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/notchecked.png')}/>}
+                           </TouchableOpacity>
                             <View
                               style={{
                                 flexDirection: 'row',
@@ -439,10 +500,9 @@ const Organizador = () => {
                             contentFit="cover"
                             source={require('../assets/vector.png')}
                           /> 
-                            <Checkbox
-                              value={ischecked}
-                              onValueChange={setIschecked}
-                            />
+                            <TouchableOpacity onPress={()=>setIschecked(!ischecked)}>
+                             {ischecked ? <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/checked.png')}/> : <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/notchecked.png')}/>}
+                           </TouchableOpacity>
                           </View>
                           <Text
                             style={[styles.aadirAudio, styles.etiquetarTypo]}
@@ -477,20 +537,13 @@ const Organizador = () => {
                   </View>
                 </View>
               </View>
-              <LinearGradient
-                style={[styles.button2, styles.button2FlexBox]}
-                locations={[0, 1]}
-                colors={['#dee274', '#7ec18c']}
-              >
-                <Text onPress={handleSubmit} style={styles.signIn}>
-                  Subir
-                </Text>
-              </LinearGradient>
+             
+              
             </View>
           </View>
         </View>
-      </ScrollView>
-
+        
+      
       <Modal animationType="slide" transparent visible={showEtapas}>
         <View style={styles.buttonContainer1Overlay}>
           <Pressable style={styles.buttonContainer1Bg} onPress={closeEtapas}>
@@ -527,7 +580,7 @@ const Organizador = () => {
             style={styles.frameContainer2Bg}
             onPress={closeFrameContainer2}
           />
-          <Etiquetar onClose={closeFrameContainer2} />
+          <Etiquetar taggedUsers={taggedUsers} setTaggedUsers={setTaggedUsers} onClose={closeFrameContainer2} />
         </View>
       </Modal>
 
@@ -553,6 +606,13 @@ const Organizador = () => {
         </View>
       </Modal>
 
+      <Modal animationType="slide" transparent visible={showHashtagsModal}>
+        <View style={styles.frameContainer5Overlay}>
+          <Pressable style={styles.frameContainer5Bg} onPress={()=>setShowHashtagsModal(false)} />
+          <Cancion1 onClose={()=>setShowHashtagsModal(false)} />
+        </View>
+      </Modal>
+
       <Modal animationType="slide" transparent visible={submit}>
         <View style={styles.buttonContainer2Overlay}>
           <Pressable style={styles.buttonContainer2Bg} onPress={closeSubmit} />
@@ -563,14 +623,13 @@ const Organizador = () => {
           />
         </View>
       </Modal>
-    </>
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
   parentPosition: {
-    top: 0,
-    left: 0
+   
   },
   optionsAlbum: {
     marginRight: 15,
@@ -714,7 +773,8 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    left: 86
+    left: 86,
+    paddingHorizontal:10,
     // width: 134
   },
   buttonContainer1Overlay: {
@@ -903,7 +963,7 @@ const styles = StyleSheet.create({
     // width: 388
   },
   fieldParent: {
-    marginTop: 20
+    marginTop: 10
   },
   signIn: {
     letterSpacing: 1,
@@ -924,17 +984,15 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   frameParent: {
-    height: 862,
+    borderWidth:2,
     width: '100%'
     // marginTop: 6
   },
   image6Parent: {
-    height: 926
   },
   organizador: {
     width: '100%',
     overflow: 'hidden',
-    height: 926,
     // flex: 1,
     backgroundColor: Color.white,
     paddingHorizontal: 15

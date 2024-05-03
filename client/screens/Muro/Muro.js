@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   View,
   Text,
   Pressable,
   Modal,
-  ScrollView
+  ScrollView,
+  TouchableWithoutFeedback
 } from 'react-native'
 import { Image } from 'expo-image'
 import {
@@ -30,13 +31,21 @@ import { useNavigation } from '@react-navigation/native'
 import { setPanel } from '../../redux/slices/panel.slices'
 import StoriesVideosDiarios from '../../components/StoriesVideosDiarios'
 import { LinearGradient } from 'expo-linear-gradient'
+import { Context } from '../../context/Context'
+import Compartir from '../../components/Compartir'
+import Etiquetados from '../../components/Etiquetados'
+import { getUsers } from '../../redux/slices/user.slices'
+import { getAllUsers, getUserData } from '../../redux/actions/user'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { getAllNotifications } from '../../redux/actions/notifications'
 
 const Muro = () => {
+  const {showShareModal,setShowShareModal,showTaggedsModal,setShowTaggedsModal} = useContext(Context)
   const dispatch = useDispatch()
   const navigation = useNavigation()
 
   const { showPanel } = useSelector((state) => state.panel)
-
+const [user, setUser] = useState()
   const [showModalRetos, setShowModalRetos] = useState(false)
   const [colorClick, setColorClick] = useState(true)
   const [showRetos, setShowRetos] = useState(false)
@@ -45,6 +54,23 @@ const Muro = () => {
   const handleMenu = () => {
     dispatch(setPanel(false))
   }
+const getUser= async () => {
+  const usuario = await AsyncStorage.getItem('user')
+  const user = JSON.parse(usuario)
+  setUser(user)
+  return 
+}
+
+useEffect(()=>{
+  getUser()
+},[])
+  useEffect(()=>{
+    if(user){
+      dispatch(getAllNotifications())
+      dispatch(getUserData(user.id))
+    dispatch(getAllUsers())
+    }
+  },[user])
 
   return (
     <LinearGradient  colors={['#fff', '#f1f1f1']}
@@ -83,7 +109,10 @@ const Muro = () => {
                 !showRetos
                   ? [
                       <Pressable
-                        onPress={() => navigation.navigate('Busqueda')}
+                        onPress={async() => {
+                          await dispatch(getAllUsers())
+                          navigation.navigate('Busqueda')
+                        }}
                       >
                         <LupaSVG />
                       </Pressable>,
@@ -231,6 +260,28 @@ const Muro = () => {
               <MenuPrincipal setMenuVisible={setMenuVisible} />
             </Pressable>
           </View>
+        </Modal>
+        <Modal animationType="slide" transparent visible={showShareModal}>
+        <View style={{   flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'}}>
+          <Pressable style={{    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    left: 0,
+    top: 0}} onPress={()=>setShowShareModal(false)} />
+          <Compartir onClose={()=>setShowShareModal(false)} />
+        </View>
+      </Modal>
+
+      <Modal
+          animationType="slide" transparent visible={showTaggedsModal}
+        >
+          <TouchableWithoutFeedback onPress={()=>setShowTaggedsModal(false)}>
+          <View style={{   flex: 1, justifyContent:'center',alignItems:'center', backgroundColor:'rgba(0,0,0,0.3)'}}>
+          <Etiquetados onClose={()=>setShowTaggedsModal(false)} />
+        </View></TouchableWithoutFeedback>
+          
         </Modal>
       </ScrollView>
     </LinearGradient>

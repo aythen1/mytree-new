@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getAllStories, getAllUserStories } from '../actions/stories';
 import { getAllNotifications } from '../actions/notifications';
 
 export const notificationsSlices = createSlice({
@@ -19,9 +18,11 @@ export const notificationsSlices = createSlice({
     builder
     // =================== GET ALL NOTIFICATIONS =================== 
       .addCase(getAllNotifications.pending, (state) => {
+        console.log('pending: ')
         state.loading = true;
       })
       .addCase(getAllNotifications.fulfilled, (state, action) => {
+        console.log('PAYLOAD: ',action.payload)
         state.loading = false;
         state.allNotifications = action.payload;
       })
@@ -32,6 +33,6 @@ export const notificationsSlices = createSlice({
     }
 })
 
- export const { updateNotifications } = notificationsSlices.actions
+//  export const { updateNotifications } = notificationsSlices.actions
 
 export default notificationsSlices.reducer

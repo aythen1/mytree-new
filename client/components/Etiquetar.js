@@ -1,21 +1,40 @@
 import * as React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
 import { FontFamily, FontSize, Color, Padding, Border } from '../GlobalStyles'
+import Checkbox from './Checkbox'
+import { useSelector } from 'react-redux'
 
-const Etiquetar = ({ onClose }) => {
+const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers }) => {
+  const {allUsers}= useSelector(state=>state.users)
+
+  const handleToggleTag = (userId) => {
+    if (taggedUsers.includes(userId.toString())) {
+      const newArray = taggedUsers.filter(id => id.toString() !== userId.toString());
+      setTaggedUsers(newArray);
+    } else {
+      setTaggedUsers([...taggedUsers, userId.toString()]);
+    }
+  };
+
   return (
     <View style={styles.etiquetar}>
       <View style={styles.frameParent}>
-        <View style={styles.frameGroupFlexBox}>
-          <Text style={[styles.grupo1, styles.grupo1Typo]}>Grupo 1</Text>
-          <View style={styles.check}>
-            <View style={styles.checkChild} />
-          </View>
+        
+      <View style={{alignSelf:'flex-start',
+    alignItems: 'center'}}>
+          <Text style={[styles.grupo1, styles.grupo1Typo]}>Amigos</Text>
+
         </View>
-        <View style={styles.frameChild} />
-        <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
+        <View style={{ borderColor: Color.secundario,
+    borderTopWidth: 1,
+    width: '100%',
+    height: 1,
+    marginTop: 15,
+    borderStyle: 'solid'}} />
+        {
+          allUsers.map((user,index)=><View key={-index} style={[styles.frameGroup, styles.frameGroupFlexBox]}>
           <View style={styles.buttonFlexBox}>
             <Image
               style={styles.frameItem}
@@ -23,14 +42,29 @@ const Etiquetar = ({ onClose }) => {
               source={require('../assets/frame-1547754875.png')}
             />
             <Text style={[styles.brunoPham, styles.grupo1Typo]}>
-              Bruno Pham
+              {user.username + ' ' + user.apellido}
             </Text>
           </View>
-          <View style={styles.check}>
-            <View style={styles.checkChild} />
-          </View>
+         <Checkbox checked={taggedUsers.includes(user.id.toString())}
+              setChecked={() => handleToggleTag(user.id.toString())} />
+        </View>)
+        }
+
+
+
+        <View style={{alignSelf:'flex-start', marginTop:20,
+    alignItems: 'center'}}>
+          <Text style={[styles.grupo1, styles.grupo1Typo]}>Familia</Text>
+
         </View>
-        <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
+        <View style={{ borderColor: Color.secundario,
+    borderTopWidth: 1,
+    width: '100%',
+    height: 1,
+    marginTop: 15,
+    borderStyle: 'solid'}} />
+        {
+          allUsers.map((user,index)=><View key={index} style={[styles.frameGroup, styles.frameGroupFlexBox]}>
           <View style={styles.buttonFlexBox}>
             <Image
               style={styles.frameItem}
@@ -38,73 +72,24 @@ const Etiquetar = ({ onClose }) => {
               source={require('../assets/frame-1547754875.png')}
             />
             <Text style={[styles.brunoPham, styles.grupo1Typo]}>
-              Bruno Pham
+              {user.username + ' ' + user.apellido}
             </Text>
           </View>
-          <View style={styles.check}>
-            <View style={styles.checkChild} />
-          </View>
-        </View>
-        <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
-          <View style={styles.buttonFlexBox}>
-            <Image
-              style={styles.frameItem}
-              contentFit="cover"
-              source={require('../assets/frame-1547754875.png')}
-            />
-            <Text style={[styles.brunoPham, styles.grupo1Typo]}>
-              Bruno Pham
-            </Text>
-          </View>
-          <View style={styles.check}>
-            <View style={styles.checkChild} />
-          </View>
-        </View>
-        <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
-          <Text style={[styles.grupo1, styles.grupo1Typo]}>Grupo 2</Text>
-          <View style={styles.check}>
-            <View style={styles.checkChild} />
-          </View>
-        </View>
-        <View style={styles.frameChild} />
-        <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
-          <View style={styles.buttonFlexBox}>
-            <Image
-              style={styles.frameItem}
-              contentFit="cover"
-              source={require('../assets/frame-1547754875.png')}
-            />
-            <Text style={[styles.brunoPham, styles.grupo1Typo]}>
-              Bruno Pham
-            </Text>
-          </View>
-          <View style={styles.check}>
-            <View style={styles.checkChild} />
-          </View>
-        </View>
-        <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
-          <View style={styles.buttonFlexBox}>
-            <Image
-              style={styles.frameItem}
-              contentFit="cover"
-              source={require('../assets/frame-1547754875.png')}
-            />
-            <Text style={[styles.brunoPham, styles.grupo1Typo]}>
-              Bruno Pham
-            </Text>
-          </View>
-          <View style={styles.check}>
-            <View style={styles.checkChild} />
-          </View>
-        </View>
+         <Checkbox checked={taggedUsers.includes(user.id.toString())}
+              setChecked={() => handleToggleTag(user.id.toString())}/>
+        </View>)
+        }
+        
       </View>
-      <LinearGradient
-        style={[styles.button, styles.buttonFlexBox]}
-        locations={[0, 1]}
-        colors={['#dee274', '#7ec18c']}
-      >
-        <Text style={[styles.signIn, styles.grupo1Typo]}>Aceptar</Text>
-      </LinearGradient>
+      <TouchableOpacity onPress={onClose}>
+        <LinearGradient
+          style={[styles.button, styles.buttonFlexBox]}
+          locations={[0, 1]}
+          colors={['#dee274', '#7ec18c']}
+        >
+          <Text style={[styles.signIn, styles.grupo1Typo]}>Aceptar</Text>
+        </LinearGradient>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -179,8 +164,9 @@ const styles = StyleSheet.create({
   frameParent: {
     top: 20,
     height: 320,
+    width:'90%',
     alignItems: 'center',
-    left: 20,
+    left: '5%',
     position: 'absolute'
   },
   signIn: {
@@ -198,9 +184,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: Padding.p_5xl,
     paddingVertical: Padding.p_sm,
     backgroundColor: Color.linearBoton,
-    width: 388,
+    width: '90%',
     flexDirection: 'row',
-    left: 20,
+    left: '5%',
     position: 'absolute',
     borderRadius: Border.br_11xl
   },

@@ -73,10 +73,8 @@ console.log(dataToSend,"dataToSend")
         const res = await axios.post(`${BACKURL}/user`, dataToSend)
         console.log("esto es res", res)
         console.log(res.data, "usuario nuevo")
-      } catch (error) {
-        console.error("Error al realizar la solicitud axios:", error);
-      }
-
+        navigation.navigate('LOGIN')
+      
      } catch (error) {
       if (error.response) {
         // The request was made and the server responded with a status code

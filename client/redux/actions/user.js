@@ -1,11 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import axiosInstance from '../../apiBackend';
 
 // Actualiza la contraseña del usuario
 export const updatePassword = createAsyncThunk(
     'user/updatePassword',
     async ({ userId, newPassword, oldPassword }, { rejectWithValue }) => {
       try {
-        const response = await axios.patch(`/user/${userId}/update-password`, { new_password: newPassword, old_password: oldPassword });
+        const response = await axiosInstance.patch(`/user/${userId}/update-password`, { new_password: newPassword, old_password: oldPassword });
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -20,7 +21,7 @@ export const updatePassword = createAsyncThunk(
       try {
         console.log("entra al redux")
         console.log("credentials", credentials)
-        const response = await axios.post(`${BACKURL}/user/login`, credentials);
+        const response = await axiosInstance.post(`${BACKURL}/user/login`, credentials);
         console.log(response , "success")
         return response.data;
       } catch (error) {
@@ -35,7 +36,7 @@ export const updatePassword = createAsyncThunk(
     'user/googleSignIn',
     async (googleData, { rejectWithValue }) => {
       try {
-        const response = await axios.post('/user/google', googleData);
+        const response = await axiosInstance.post('/user/google', googleData);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -48,7 +49,7 @@ export const updatePassword = createAsyncThunk(
     'user/facebookSignIn',
     async (facebookData, { rejectWithValue }) => {
       try {
-        const response = await axios.post('/user/facebook', facebookData);
+        const response = await axiosInstance.post('/user/facebook', facebookData);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -61,7 +62,7 @@ export const updatePassword = createAsyncThunk(
     'user/findUserByCellphone',
     async (phone, { rejectWithValue }) => {
       try {
-        const response = await axios.post('/user/findCell', { phone });
+        const response = await axiosInstance.post('/user/findCell', { phone });
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -74,7 +75,7 @@ export const updatePassword = createAsyncThunk(
     'user/findUserByEmail',
     async (email, { rejectWithValue }) => {
       try {
-        const response = await axios.post('/user/findEmail', { email });
+        const response = await axiosInstance.post('/user/findEmail', { email });
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -87,7 +88,7 @@ export const updatePassword = createAsyncThunk(
     'user/addFriend',
     async ({ userId, friendId }, { rejectWithValue }) => {
       try {
-        const response = await axios.post(`/user/${userId}/add-friend/${friendId}`);
+        const response = await axiosInstance.post(`/user/${userId}/add-friend/${friendId}`);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -100,7 +101,7 @@ export const updatePassword = createAsyncThunk(
     'user/removeFriend',
     async ({ userId, friendId }, { rejectWithValue }) => {
       try {
-        const response = await axios.delete(`/user/${userId}/remove-friend/${friendId}`);
+        const response = await axiosInstance.delete(`/user/${userId}/remove-friend/${friendId}`);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -113,7 +114,7 @@ export const updatePassword = createAsyncThunk(
     'user/addToFavorites',
     async ({ userId, postId }, { rejectWithValue }) => {
       try {
-        const response = await axios.post(`/user/${userId}/add-favorite/${postId}`);
+        const response = await axiosInstance.post(`/user/${userId}/add-favorite/${postId}`);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -126,7 +127,7 @@ export const updatePassword = createAsyncThunk(
     'user/getUserNotifications',
     async (userId, { rejectWithValue }) => {
       try {
-        const response = await axios.get(`/user/${userId}/notifications`);
+        const response = await axiosInstance.get(`/user/${userId}/notifications`);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -139,7 +140,7 @@ export const updatePassword = createAsyncThunk(
     'user/getUserRecentSearches',
     async (userId, { rejectWithValue }) => {
       try {
-        const response = await axios.get(`/user/${userId}/recentSearches`);
+        const response = await axiosInstance.get(`/user/${userId}/recentSearches`);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -152,7 +153,7 @@ export const updatePassword = createAsyncThunk(
     'user/addRecentSearch',
     async ({ userId, searchTerm }, { rejectWithValue }) => {
       try {
-        const response = await axios.post(`/user/${userId}/recentSearches/add`, { searchTerm });
+        const response = await axiosInstance.post(`/user/${userId}/recentSearches/add`, { searchTerm });
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -165,7 +166,7 @@ export const updatePassword = createAsyncThunk(
     'user/getUserFeed',
     async ({ userId, option, param1, param2, param3 }, { rejectWithValue }) => {
       try {
-        const response = await axios.get(`/user/${userId}/feed?option=${option}&param1=${param1}&param2=${param2}&param3=${param3}`);
+        const response = await axiosInstance.get(`/user/${userId}/feed?option=${option}&param1=${param1}&param2=${param2}&param3=${param3}`);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -178,7 +179,7 @@ export const updatePassword = createAsyncThunk(
     'user/getUserFavorites',
     async (userId, { rejectWithValue }) => {
       try {
-        const response = await axios.get(`/user/${userId}/favorite`);
+        const response = await axiosInstance.get(`/user/${userId}/favorite`);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -191,7 +192,7 @@ export const updatePassword = createAsyncThunk(
     'user/getUserFriends',
     async (userId, { rejectWithValue }) => {
       try {
-        const response = await axios.get(`/user/${userId}/friends`);
+        const response = await axiosInstance.get(`/user/${userId}/friends`);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -206,7 +207,7 @@ export const updatePassword = createAsyncThunk(
     'user/toggleLike',
     async ({ userId, postId }, { rejectWithValue }) => {
       try {
-        const response = await axios.post(`/user/${userId}/post/${postId}/toggle-like`);
+        const response = await axiosInstance.post(`/user/${userId}/post/${postId}/toggle-like`);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -219,7 +220,7 @@ export const updatePassword = createAsyncThunk(
     'user/createUser',
     async (userData, { rejectWithValue }) => {
       try {
-        const response = await axios.post('/user', userData);
+        const response = await axiosInstance.post('/user', userData);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -231,19 +232,20 @@ export const updatePassword = createAsyncThunk(
     'user/getUsers',
     async (_, { rejectWithValue }) => {
       try {
-        const response = await axios.get('/user');
+        const response = await axiosInstance.get('/user');
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
       }
     }
   );
+
   
   export const getUserById = createAsyncThunk(
     'user/getUserById',
     async (userId, { rejectWithValue }) => {
       try {
-        const response = await axios.get(`/user/${userId}`);
+        const response = await axiosInstance.get(`/user/${userId}`);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -254,8 +256,9 @@ export const updatePassword = createAsyncThunk(
   export const updateUser = createAsyncThunk(
     'user/updateUser',
     async ({ userId, userData }, { rejectWithValue }) => {
+      console.log('userId, userData from updateUser', userId, userData )
       try {
-        const response = await axios.patch(`/user/${userId}`, userData);
+        const response = await axiosInstance.patch(`/user/${userId}`, userData);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -267,10 +270,38 @@ export const updatePassword = createAsyncThunk(
     'user/deleteUser',
     async (userId, { rejectWithValue }) => {
       try {
-        const response = await axios.delete(`/user/${userId}`);
+        const response = await axiosInstance.delete(`/user/${userId}`);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
       }
     }
   );
+
+  export const getAllUsers = createAsyncThunk(
+    'getAllUsers/users',
+    async () => {
+      try {
+        console.log('on getAllUsers')
+        const {data} = await axiosInstance.get('/user');
+        console.log('data from getAllUsers: ', data)
+        return data
+      } catch (error) {
+        throw new Error(error)
+      }
+    }
+  )
+
+  export const getUserData = createAsyncThunk(
+    'getUserData/users',
+    async (userId) => {
+      try {
+        console.log('on getUserData')
+        const {data} = await axiosInstance.get(`/user/${userId}`);
+        console.log('data from getUserData: ', data)
+        return data
+      } catch (error) {
+        throw new Error(error)
+      }
+    }
+  )

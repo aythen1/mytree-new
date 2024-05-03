@@ -34,15 +34,10 @@ import { ChatModule } from './chat/chat.module';
       synchronize: true,
     }),
 
-
-
-
+    InfoEntityModule,
     PostsModule,
-
     CommentsModule,
-
     UserModule,
-
     NotificationModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

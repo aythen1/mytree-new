@@ -104,8 +104,15 @@ const CrearLbum = () => {
       </ScrollView>
 
       <Modal animationType="slide" transparent visible={vectorIcon1Visible}>
-        <View style={styles.vectorIcon1Overlay}>
-          <Pressable style={styles.vectorIcon1Bg} onPress={closeVectorIcon1} />
+        <View style={{   flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(113, 113, 113, 0.3)'}}>
+          <Pressable style={{    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    left: 0,
+    top: 0}} onPress={closeVectorIcon1} />
           <Compartir onClose={closeVectorIcon1} />
         </View>
       </Modal>
