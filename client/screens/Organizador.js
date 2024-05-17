@@ -26,14 +26,20 @@ import axios from 'axios'
 import { BACKURL } from '../apiBackend'
 import Privacidad from './Privacidad'
 import { Context } from '../context/Context'
-import { StatusBar } from 'react-native';
+import { StatusBar } from 'react-native'
 import Cancion1 from '../components/Cancion1'
 
 const Organizador = () => {
   const dispatch = useDispatch()
-const [taggedUsers,setTaggedUsers] = useState([])
- const { showPanel } = useSelector((state) => state.panel)
- const {libraryImage,showHashtagsModal,setShowHashtagsModal, selectedHashtags, setSelectedHashtags} = useContext(Context)
+  const [taggedUsers, setTaggedUsers] = useState([])
+  const { showPanel } = useSelector((state) => state.panel)
+  const {
+    libraryImage,
+    showHashtagsModal,
+    setShowHashtagsModal,
+    selectedHashtags,
+    setSelectedHashtags
+  } = useContext(Context)
 
   const [legado, setLegado] = useState(false)
   const [album, setAlbum] = useState(false)
@@ -45,35 +51,32 @@ const [taggedUsers,setTaggedUsers] = useState([])
   const [submit, setSubmit] = useState(false)
   const [showEtapas, setShowEtapas] = useState(false)
   const [usuario, setUsuario] = useState({})
-  const [username,setUsername] = useState("")
+  const [username, setUsername] = useState('')
 
-  useEffect(()=>{
-    
-  },[taggedUsers])
+  useEffect(() => {}, [taggedUsers])
 
-  
   const [dataToSend, setDataToSend] = useState({
-    nameUser: "", 
+    nameUser: '',
     description: '',
-    fecha:"20/12/2024",
+    fecha: '20/12/2024',
     photos: [],
     tags: [],
     hashtags: [],
-    userId: ""
+    userId: ''
   })
   useEffect(() => {
     const getUser = async () => {
       const usuario = await AsyncStorage.getItem('user')
-     const par = JSON.parse(usuario)
-     console.log(par,"parrr")
-     setDataToSend({...dataToSend,["nameUser"]:par.username})
-     setDataToSend({...dataToSend,["userId"]:par.id})
+      const par = JSON.parse(usuario)
+      console.log(par, 'parrr')
+      setDataToSend({ ...dataToSend, ['nameUser']: par.username })
+      setDataToSend({ ...dataToSend, ['userId']: par.id })
 
       return JSON.parse(usuario)
     }
     getUser()
   }, [])
-  
+
   const [uploadRecuerdo, setUploadRecuerdo] = useState(false)
   const [cancion, setCancion] = useState(false)
   const [ischecked, setIschecked] = useState(false)
@@ -176,374 +179,445 @@ const [taggedUsers,setTaggedUsers] = useState([])
   const handleSubmit = async () => {
     const usuario = await AsyncStorage.getItem('user')
     const user = JSON.parse(usuario)
-  try {
-    
-    console.log('user: ',user)
-    const finalData = {}
-    finalData.tags = taggedUsers
-    finalData.hashtags = selectedHashtags
-    finalData.userId = user.id
-    finalData.fecha = new Date()
-    finalData.nameUser = user.username
-    finalData.photos = [libraryImage]
-    finalData.description = dataToSend.description
-    console.log("sending post...",finalData)
-    const res = await axios.post(`${BACKURL}/posts`, finalData)
-    if (res.data) {
-      setSubmit(true)
+    try {
+      console.log('user: ', user)
+      const finalData = {}
+      finalData.tags = taggedUsers
+      finalData.hashtags = selectedHashtags
+      finalData.userId = user.id
+      finalData.fecha = new Date()
+      finalData.nameUser = user.username
+      finalData.photos = [libraryImage]
+      finalData.description = dataToSend.description
+      console.log('sending post...', finalData)
+      const res = await axios.post(`${BACKURL}/posts`, finalData)
+      if (res.data) {
+        setSubmit(true)
+        setSelectedHashtags([])
+        setTaggedUsers([])
+      }
+    } catch (error) {
+      console.log(error)
       setSelectedHashtags([])
       setTaggedUsers([])
     }
-  } catch (error) {
-    console.log(error)
-    setSelectedHashtags([])
-    setTaggedUsers([])
-  }
   }
 
   return (
-  <ScrollView contentContainerStyle={{height:Dimensions.get('screen').height - StatusBar.currentHeight-95, backgroundColor:'#fff'}}  showsVerticalScrollIndicator={false}>
-    <LinearGradient
-                style={{paddingVertical: Padding.p_sm,
-                  position:'absolute',
-                  bottom:35,
-                  backgroundColor: Color.linearBoton,
-                  borderRadius: Border.br_11xl,
-                  justifyContent: 'center',
-                  marginTop:0,
-                  alignSelf:'center',
-                  width: '95%', justifyContent: 'center',
-                  alignItems: 'center',
-                  flexDirection: 'row'}}
-                locations={[0, 1]}
-                colors={['#dee274', '#7ec18c']}
-              >
-                <Text onPress={handleSubmit} style={styles.signIn}>
-                  Subir
+    <ScrollView
+      style={{
+        width: '100%',
+        flex: 1,
+        backgroundColor: Color.white,
+        padding: Padding.p_xl
+      }}
+      contentContainerStyle={{
+        flexGrow: 1,
+        paddingBottom: 300
+      }}
+      showsVerticalScrollIndicator={false}
+    >
+      <Image
+        style={styles.image6Icon}
+        contentFit="cover"
+        source={require('../assets/image-6.png')}
+      />
+      <View style={{ width: '100%' }}>
+        <View style={{ width: '100%' }}>
+          <View style={styles.ionmenuParent}>
+            <Pressable onPress={() => dispatch(setPanel(!showPanel))}>
+              <Image
+                style={styles.ionmenuIcon}
+                contentFit="cover"
+                source={require('../assets/ionmenu2.png')}
+              />
+            </Pressable>
+            <Text style={styles.subirRecuerdo}>Subir recuerdo</Text>
+            <Text style={styles.subir}>Subir</Text>
+          </View>
+          <View style={{ marginTop: 5 }}>
+            <View>
+              <TextInput
+                multiline={true}
+                numberOfLines={3}
+                style={{
+                  color: Color.grisClaro,
+                  fontWeight: '500',
+                  fontSize: FontSize.size_lg,
+                  textAlign: 'left',
+                  textAlignVertical: 'top',
+                  borderRadius: Border.br_3xs,
+                  backgroundColor: Color.fAFAFA,
+                  paddingVertical: 5,
+                  paddingHorizontal: 5,
+                  fontFamily: FontFamily.lato
+                }}
+                placeholder=" Describe lo que sientes..."
+                onChangeText={(des) =>
+                  setDataToSend({ ...dataToSend, ['description']: des })
+                }
+                value={dataToSend.description}
+              />
+              <View style={{ top: 15 }}>
+                <Text
+                  style={{
+                    marginBottom: 6,
+                    color: '#000',
+                    fontSize: 16,
+                    fontFamily: FontFamily.lato
+                  }}
+                >
+                  Hashtags
                 </Text>
-              </LinearGradient>
-      
-        <View style={{ width: '100%',
-    backgroundColor: Color.white,
-    paddingHorizontal: 15}}>
-          <View>
-            <Image
-              style={styles.image6Icon}
-              contentFit="cover"
-              source={require('../assets/image-6.png')}
-            />
-            <View style={{width: '100%'}}>
-              <View style={{ width: '100%' }}>
-                <View style={styles.ionmenuParent}>
-                  <Pressable onPress={() => dispatch(setPanel(!showPanel))}>
-                    <Image
-                      style={styles.ionmenuIcon}
-                      contentFit="cover"
-                      source={require('../assets/ionmenu2.png')}
-                    />
-                  </Pressable>
-                  <Text style={styles.subirRecuerdo}>Subir recuerdo</Text>
-                  <Text style={styles.subir}>Subir</Text>
-                </View>
-                <View style={{marginTop:5}}>
-                  <View >
-                    <TextInput
-                    multiline={true}
-                    numberOfLines={3}
+                <View
+                  style={{
+                    flexWrap: 'wrap',
+                    flexDirection: 'row',
+                    width: '100%',
+                    gap: 3
+                  }}
+                >
+                  {selectedHashtags.map((hashtag, index) => (
+                    <View
+                      key={index}
                       style={{
-                        color: Color.grisClaro, fontWeight: '500',
-                        fontSize: FontSize.size_lg,
-                        textAlign: 'left',
-                        textAlignVertical:'top',
-                        borderRadius: Border.br_3xs,
-    backgroundColor: Color.fAFAFA, paddingVertical:5, paddingHorizontal:5,
-                        fontFamily: FontFamily.lato}}
-                      placeholder=" Describe lo que sientes..."
-                      onChangeText={(des) =>
-                        setDataToSend({ ...dataToSend, ['description']: des })
-                      }
-                      value={dataToSend.description}
-                    />
-                    <View style={{ top:15 }}>
-                    <Text style={{marginBottom:6,color:'#000',fontSize:16,fontFamily: FontFamily.lato}}>
-                        Hashtags
-                      </Text>
-                      <View style={{flexWrap:'wrap',flexDirection:'row',width:'100%',gap:3}}>{selectedHashtags.map((hashtag,index)=> <View style={{paddingVertical: 5,
-    paddingHorizontal: 10,
-    backgroundColor: Color.secundario,
-    justifyContent: 'center',
-    gap:5,
-    flexDirection:'row',
-    alignItems: 'center',
-    borderRadius: 100}}>
-        <Text style={{color: Color.primario1,
-    fontSize: FontSize.size_xs,
-    fontFamily: FontFamily.lato,
-    fontWeight: '500'}}>
-          {`#${hashtag}`}
-        </Text>
-        <TouchableOpacity onPress={()=>{
-          setSelectedHashtags(selectedHashtags.filter(tag=>tag !== hashtag ))
-        }}>
-          <Image style={{width:10,height:10}} source={require('../assets/group-68462.png')}/>
-        </TouchableOpacity>
-      </View>)}<TouchableOpacity  onPress={()=>setShowHashtagsModal(true)} style={{paddingVertical: 5,
-    paddingHorizontal: 10,
-    backgroundColor: Color.secundario,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 100}}>
-        <Text style={{color: Color.primario1,
-    fontSize: FontSize.size_xs,
-    fontFamily: FontFamily.lato,
-    fontWeight: '500'}}>
-          {`Añadir #`}
-        </Text>
-      </TouchableOpacity></View>
-                    </View>
-                  </View>
-                  <View style={{ marginTop: 40}}>
-                    <Image
-                      style={styles.frameChild}
-                      contentFit="cover"
-                      source={require('../assets/line-802.png')}
-                    />
-                    <Pressable
-                      style={{marginTop: 10, marginBottom:10,alignItems: 'center',
-                      flexDirection: 'row'}}
-                      // onPress={openUploadRecuerdo}
+                        paddingVertical: 5,
+                        paddingHorizontal: 10,
+                        backgroundColor: Color.secundario,
+                        justifyContent: 'center',
+                        gap: 5,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        borderRadius: 100
+                      }}
                     >
-                      <Image
-                        style={styles.iconlybolddocument}
-                        contentFit="cover"
-                        source={require('../assets/iconlybolddocument.png')}
-                      />
-                      <Text style={[styles.anexoArchivo, styles.etiquetarTypo]}>
-                        Anexo archivo
+                      <Text
+                        style={{
+                          color: Color.primario1,
+                          fontSize: FontSize.size_xs,
+                          fontFamily: FontFamily.lato,
+                          fontWeight: '500'
+                        }}
+                      >
+                        {`#${hashtag}`}
                       </Text>
-                    </Pressable>
-
-                    <Pressable
-                      style={[
-                        styles.iconlybolddocumentParent,
-                        styles.parentFlexBox
-                      ]}
-                      onPress={openFrameContainer2}
-                    >
-                      <Image
-                        style={styles.iconlyboldaddUser}
-                        contentFit="cover"
-                        source={require('../assets/iconlyboldadduser.png')}
-                      />
-                      <Text style={[styles.etiquetar, styles.etiquetarTypo]}>
-                        Etiquetar
-                      </Text>
-                    </Pressable>
-                    <Image
-                      style={styles.frameItem}
-                      contentFit="cover"
-                      source={require('../assets/line-802.png')}
-                    />
-                    <Pressable
-                      style={[
-                        styles.iconlybolddocumentParent,
-                        styles.parentFlexBox
-                      ]}
-                      // onPress={openCancion}
-                    >
-                      <Image
-                        style={styles.groupIcon}
-                        contentFit="cover"
-                        source={require('../assets/group.png')}
-                      />
-                      <Text style={[styles.aadirAudio, styles.etiquetarTypo]}>
-                        Añadir audio
-                      </Text>
-                    </Pressable>
-                    <Image
-                      style={styles.frameItem}
-                      contentFit="cover"
-                      source={require('../assets/line-802.png')}
-                    />
-                    <Pressable
-                      style={[
-                        styles.iconlybolddocumentParent,
-                        styles.parentFlexBox
-                      ]}
-                      onPress={openCalendario}
-                    >
-                      <Image
-                        style={styles.iconlybolddocument}
-                        contentFit="cover"
-                        source={require('../assets/vector14.png')}
-                      />
-                      <Text style={[styles.anexoArchivo, styles.etiquetarTypo]}>
-                        Fecha
-                      </Text>
-                    </Pressable>
-                    <Image
-                      style={styles.frameItem}
-                      contentFit="cover"
-                      source={require('../assets/line-802.png')}
-                    />
-                    <Pressable
-                      style={[
-                        styles.iconlybolddocumentParent,
-                        styles.parentFlexBox
-                      ]}
-                      onPress={openLugar}
-                    >
-                      <Image
-                        style={styles.iconlybulklocation}
-                        contentFit="cover"
-                        source={require('../assets/iconlybulklocation.png')}
-                      />
-                      <Text style={[styles.aadirAudio, styles.etiquetarTypo]}>
-                        Lugar
-                      </Text>
-                    </Pressable>
-                    <Image
-                      style={styles.frameItem}
-                      contentFit="cover"
-                      source={require('../assets/line-802.png')}
-                    />
-                    <View style={[styles.frameContainer, styles.frameLayout]}>
-                      <Pressable
-                        style={[styles.imageParent, styles.parentFlexBox]}
+                      <TouchableOpacity
                         onPress={() => {
-                          setAñadirAUnAlbum(!añadirAUnAlbum)
+                          setSelectedHashtags(
+                            selectedHashtags.filter((tag) => tag !== hashtag)
+                          )
                         }}
                       >
                         <Image
-                          style={styles.imageIcon}
-                          contentFit="cover"
-                          source={require('../assets/image3.png')}
+                          style={{ width: 10, height: 10 }}
+                          source={require('../assets/group-68462.png')}
                         />
-                        <Text style={[styles.aadirAudio, styles.etiquetarTypo]}>
-                          Añadir a un álbum
-                        </Text>
-                      </Pressable>
-
-                      <Image
-                        style={[styles.arrowDown2Icon, styles.aadirPosition]}
-                        contentFit="cover"
-                        source={require('../assets/arrowdown22.png')}
-                      />
-                      {añadirAUnAlbum && (
-                        <View style={{ top: 20 }}>
-                          <Pressable
-                            style={{ flexDirection: 'row', marginTop: 15 }}
-                          >
-                           <TouchableOpacity onPress={()=>setLegado(!legado)}>
-                             {legado ? <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/checked.png')}/> : <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/notchecked.png')}/>}
-                           </TouchableOpacity>
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                width: '100%',
-                                justifyContent: 'space-between'
-                              }}
-                            >
-                              <Text style={styles.aadirTypoText}>
-                                Añadir a mi legado
-                              </Text>
-                              <Pressable onPress={openEtapas}>
-                                <Text style={styles.optionsAlbum}>
-                                  Añadir etapa
-                                </Text>
-                              </Pressable>
-                            </View>
-                          </Pressable>
-                          <Pressable
-                            style={{
-                              flexDirection: 'row',
-                              marginTop: 15
-                            }}
-                          >
-                            <TouchableOpacity onPress={()=>setAlbum(!album)}>
-                             {album ? <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/checked.png')}/> : <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/notchecked.png')}/>}
-                           </TouchableOpacity>
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                width: '100%',
-                                justifyContent: 'space-between'
-                              }}
-                            >
-                              <Text style={styles.aadirTypoText}>
-                                Añadir a mis albunes
-                              </Text>
-                              <Pressable onPress={openSelectedAlbum}>
-                                <Text style={styles.optionsAlbum}>
-                                  Elegir album
-                                </Text>
-                              </Pressable>
-                            </View>
-                          </Pressable>
-                        </View>
-                      )}
+                      </TouchableOpacity>
                     </View>
-                    <Image
-                      style={styles.frameItem}
-                      contentFit="cover"
-                      source={require('../assets/line-802.png')}
-                    />
-                    {!añadirAUnAlbum && (
-                      <View style={[styles.frameWrapper, styles.frameLayout]}>
-                        <View
-                          style={[styles.checkParent, styles.button2FlexBox]}
-                        >
-                          <View style={styles.check}>
-                            <View style={styles.checkChild} />
-                             <Image
-                            style={styles.vectorIcon1}
-                            contentFit="cover"
-                            source={require('../assets/vector.png')}
-                          /> 
-                            <TouchableOpacity onPress={()=>setIschecked(!ischecked)}>
-                             {ischecked ? <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/checked.png')}/> : <Image contentFit='cover' style={{width:20,height:20}} source={require('../assets/notchecked.png')}/>}
-                           </TouchableOpacity>
-                          </View>
-                          <Text
-                            style={[styles.aadirAudio, styles.etiquetarTypo]}
-                          >
-                            Cumplir reto
-                          </Text>
-                        </View>
-                      </View>
-                    )} 
-                    {!añadirAUnAlbum && (
-                      <View style={[styles.frameView, styles.parentFlexBox]}>
-                        <Pressable
-                          style={styles.opcionesDePrivacidadWrapper}
-                          onPress={openPrivacidad}
-                        >
-                          <Text
-                            style={[
-                              styles.opcionesDePrivacidad,
-                              styles.etiquetarTypo
-                            ]}
-                          >
-                            Opciones de Privacidad
-                          </Text>
-                        </Pressable>
-                        <Image
-                          style={styles.arrowDown2Icon1}
-                          contentFit="cover"
-                          source={require('../assets/arrowdown23.png')}
-                        />
-                      </View>
-                    )}
-                  </View>
+                  ))}
+                  <TouchableOpacity
+                    onPress={() => setShowHashtagsModal(true)}
+                    style={{
+                      paddingVertical: 5,
+                      paddingHorizontal: 10,
+                      backgroundColor: Color.secundario,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      borderRadius: 100
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: Color.primario1,
+                        fontSize: FontSize.size_xs,
+                        fontFamily: FontFamily.lato,
+                        fontWeight: '500'
+                      }}
+                    >
+                      {'Añadir #'}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
-             
-              
+            </View>
+            <View style={{ marginTop: 40 }}>
+              <Image
+                style={styles.frameChild}
+                contentFit="cover"
+                source={require('../assets/line-802.png')}
+              />
+              <Pressable
+                style={{
+                  marginTop: 10,
+                  marginBottom: 10,
+                  alignItems: 'center',
+                  flexDirection: 'row'
+                }}
+                // onPress={openUploadRecuerdo}
+              >
+                <Image
+                  style={styles.iconlybolddocument}
+                  contentFit="cover"
+                  source={require('../assets/iconlybolddocument.png')}
+                />
+                <Text style={[styles.anexoArchivo, styles.etiquetarTypo]}>
+                  Anexo archivo
+                </Text>
+              </Pressable>
+
+              <Pressable
+                style={[styles.iconlybolddocumentParent, styles.parentFlexBox]}
+                onPress={openFrameContainer2}
+              >
+                <Image
+                  style={styles.iconlyboldaddUser}
+                  contentFit="cover"
+                  source={require('../assets/iconlyboldadduser.png')}
+                />
+                <Text style={[styles.etiquetar, styles.etiquetarTypo]}>
+                  Etiquetar
+                </Text>
+              </Pressable>
+              <Image
+                style={styles.frameItem}
+                contentFit="cover"
+                source={require('../assets/line-802.png')}
+              />
+              <Pressable
+                style={[styles.iconlybolddocumentParent, styles.parentFlexBox]}
+                // onPress={openCancion}
+              >
+                <Image
+                  style={styles.groupIcon}
+                  contentFit="cover"
+                  source={require('../assets/group.png')}
+                />
+                <Text style={[styles.aadirAudio, styles.etiquetarTypo]}>
+                  Añadir audio
+                </Text>
+              </Pressable>
+              <Image
+                style={styles.frameItem}
+                contentFit="cover"
+                source={require('../assets/line-802.png')}
+              />
+              <Pressable
+                style={[styles.iconlybolddocumentParent, styles.parentFlexBox]}
+                onPress={openCalendario}
+              >
+                <Image
+                  style={styles.iconlybolddocument}
+                  contentFit="cover"
+                  source={require('../assets/vector14.png')}
+                />
+                <Text style={[styles.anexoArchivo, styles.etiquetarTypo]}>
+                  Fecha
+                </Text>
+              </Pressable>
+              <Image
+                style={styles.frameItem}
+                contentFit="cover"
+                source={require('../assets/line-802.png')}
+              />
+              <Pressable
+                style={[styles.iconlybolddocumentParent, styles.parentFlexBox]}
+                onPress={openLugar}
+              >
+                <Image
+                  style={styles.iconlybulklocation}
+                  contentFit="cover"
+                  source={require('../assets/iconlybulklocation.png')}
+                />
+                <Text style={[styles.aadirAudio, styles.etiquetarTypo]}>
+                  Lugar
+                </Text>
+              </Pressable>
+              <Image
+                style={styles.frameItem}
+                contentFit="cover"
+                source={require('../assets/line-802.png')}
+              />
+              <View style={[styles.frameContainer, styles.frameLayout]}>
+                <Pressable
+                  style={[styles.imageParent, styles.parentFlexBox]}
+                  onPress={() => {
+                    setAñadirAUnAlbum(!añadirAUnAlbum)
+                  }}
+                >
+                  <Image
+                    style={styles.imageIcon}
+                    contentFit="cover"
+                    source={require('../assets/image3.png')}
+                  />
+                  <Text style={[styles.aadirAudio, styles.etiquetarTypo]}>
+                    Añadir a un álbum
+                  </Text>
+                </Pressable>
+
+                <Image
+                  style={[styles.arrowDown2Icon, styles.aadirPosition]}
+                  contentFit="cover"
+                  source={require('../assets/arrowdown22.png')}
+                />
+                {añadirAUnAlbum && (
+                  <View style={{ top: 20 }}>
+                    <Pressable style={{ flexDirection: 'row', marginTop: 15 }}>
+                      <TouchableOpacity onPress={() => setLegado(!legado)}>
+                        {legado ? (
+                          <Image
+                            contentFit="cover"
+                            style={{ width: 20, height: 20 }}
+                            source={require('../assets/checked.png')}
+                          />
+                        ) : (
+                          <Image
+                            contentFit="cover"
+                            style={{ width: 20, height: 20 }}
+                            source={require('../assets/notchecked.png')}
+                          />
+                        )}
+                      </TouchableOpacity>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          width: '100%',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <Text style={styles.aadirTypoText}>
+                          Añadir a mi legado
+                        </Text>
+                        <Pressable onPress={openEtapas}>
+                          <Text style={styles.optionsAlbum}>Añadir etapa</Text>
+                        </Pressable>
+                      </View>
+                    </Pressable>
+                    <Pressable
+                      style={{
+                        flexDirection: 'row',
+                        marginTop: 15
+                      }}
+                    >
+                      <TouchableOpacity onPress={() => setAlbum(!album)}>
+                        {album ? (
+                          <Image
+                            contentFit="cover"
+                            style={{ width: 20, height: 20 }}
+                            source={require('../assets/checked.png')}
+                          />
+                        ) : (
+                          <Image
+                            contentFit="cover"
+                            style={{ width: 20, height: 20 }}
+                            source={require('../assets/notchecked.png')}
+                          />
+                        )}
+                      </TouchableOpacity>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          width: '100%',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <Text style={styles.aadirTypoText}>
+                          Añadir a mis albunes
+                        </Text>
+                        <Pressable onPress={openSelectedAlbum}>
+                          <Text style={styles.optionsAlbum}>Elegir album</Text>
+                        </Pressable>
+                      </View>
+                    </Pressable>
+                  </View>
+                )}
+              </View>
+              <Image
+                style={styles.frameItem}
+                contentFit="cover"
+                source={require('../assets/line-802.png')}
+              />
+              {!añadirAUnAlbum && (
+                <View style={[styles.frameWrapper, styles.frameLayout]}>
+                  <View style={[styles.checkParent, styles.button2FlexBox]}>
+                    <View style={styles.check}>
+                      <View style={styles.checkChild} />
+                      <Image
+                        style={styles.vectorIcon1}
+                        contentFit="cover"
+                        source={require('../assets/vector.png')}
+                      />
+                      <TouchableOpacity
+                        onPress={() => setIschecked(!ischecked)}
+                      >
+                        {ischecked ? (
+                          <Image
+                            contentFit="cover"
+                            style={{ width: 20, height: 20 }}
+                            source={require('../assets/checked.png')}
+                          />
+                        ) : (
+                          <Image
+                            contentFit="cover"
+                            style={{ width: 20, height: 20 }}
+                            source={require('../assets/notchecked.png')}
+                          />
+                        )}
+                      </TouchableOpacity>
+                    </View>
+                    <Text style={[styles.aadirAudio, styles.etiquetarTypo]}>
+                      Cumplir reto
+                    </Text>
+                  </View>
+                </View>
+              )}
+              {!añadirAUnAlbum && (
+                <View style={[styles.frameView, styles.parentFlexBox]}>
+                  <Pressable
+                    style={styles.opcionesDePrivacidadWrapper}
+                    onPress={openPrivacidad}
+                  >
+                    <Text
+                      style={[
+                        styles.opcionesDePrivacidad,
+                        styles.etiquetarTypo
+                      ]}
+                    >
+                      Opciones de Privacidad
+                    </Text>
+                  </Pressable>
+                  <Image
+                    style={styles.arrowDown2Icon1}
+                    contentFit="cover"
+                    source={require('../assets/arrowdown23.png')}
+                  />
+                </View>
+              )}
             </View>
           </View>
         </View>
-        
-      
+      </View>
+      <LinearGradient
+        style={{
+          paddingVertical: Padding.p_sm,
+          // position: 'absolute',
+          // bottom: 35,
+          backgroundColor: Color.linearBoton,
+          borderRadius: Border.br_11xl,
+          justifyContent: 'center',
+          marginTop: 0,
+          alignSelf: 'center',
+          width: '95%',
+          alignItems: 'center',
+          flexDirection: 'row'
+        }}
+        locations={[0, 1]}
+        colors={['#dee274', '#7ec18c']}
+      >
+        <Text onPress={handleSubmit} style={styles.signIn}>
+          Subir
+        </Text>
+      </LinearGradient>
+
       <Modal animationType="slide" transparent visible={showEtapas}>
         <View style={styles.buttonContainer1Overlay}>
           <Pressable style={styles.buttonContainer1Bg} onPress={closeEtapas}>
@@ -563,7 +637,7 @@ const [taggedUsers,setTaggedUsers] = useState([])
         </View>
       </Modal>
 
-       <Modal animationType="fade" transparent visible={showPrivacidad}>
+      <Modal animationType="fade" transparent visible={showPrivacidad}>
         <View style={styles.buttonContainer1Overlay}>
           <Pressable
             style={styles.buttonContainer1Bg}
@@ -580,7 +654,11 @@ const [taggedUsers,setTaggedUsers] = useState([])
             style={styles.frameContainer2Bg}
             onPress={closeFrameContainer2}
           />
-          <Etiquetar taggedUsers={taggedUsers} setTaggedUsers={setTaggedUsers} onClose={closeFrameContainer2} />
+          <Etiquetar
+            taggedUsers={taggedUsers}
+            setTaggedUsers={setTaggedUsers}
+            onClose={closeFrameContainer2}
+          />
         </View>
       </Modal>
 
@@ -608,8 +686,11 @@ const [taggedUsers,setTaggedUsers] = useState([])
 
       <Modal animationType="slide" transparent visible={showHashtagsModal}>
         <View style={styles.frameContainer5Overlay}>
-          <Pressable style={styles.frameContainer5Bg} onPress={()=>setShowHashtagsModal(false)} />
-          <Cancion1 onClose={()=>setShowHashtagsModal(false)} />
+          <Pressable
+            style={styles.frameContainer5Bg}
+            onPress={() => setShowHashtagsModal(false)}
+          />
+          <Cancion1 onClose={() => setShowHashtagsModal(false)} />
         </View>
       </Modal>
 
@@ -628,9 +709,7 @@ const [taggedUsers,setTaggedUsers] = useState([])
 }
 
 const styles = StyleSheet.create({
-  parentPosition: {
-   
-  },
+  parentPosition: {},
   optionsAlbum: {
     marginRight: 15,
     height: 30,
@@ -774,7 +853,7 @@ const styles = StyleSheet.create({
 
   button: {
     left: 86,
-    paddingHorizontal:10,
+    paddingHorizontal: 10
     // width: 134
   },
   buttonContainer1Overlay: {
@@ -984,12 +1063,11 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   frameParent: {
-    borderWidth:2,
+    borderWidth: 2,
     width: '100%'
     // marginTop: 6
   },
-  image6Parent: {
-  },
+  image6Parent: {},
   organizador: {
     width: '100%',
     overflow: 'hidden',

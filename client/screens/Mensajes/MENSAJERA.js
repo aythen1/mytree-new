@@ -27,6 +27,9 @@ const MENSAJERA = () => {
         <ButtonsMensajeria />
         <Messages />
       </View>
+      <View style={{ borderWidth: 2, width: '100%', flex: 1 }}>
+        <View style={{}}></View>
+      </View>
     </View>
   )
 }

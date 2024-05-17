@@ -13,7 +13,7 @@ const MiLegado = () => {
         <View
           style={[styles.miBiografaActualParent, styles.groupParentFlexBox]}
         >
-          <Text style={styles.miBiografaActual}>Mi biografía actual</Text>
+          <Text style={styles.miBiografaActual}>Mis publicaciones</Text>
           <View style={[styles.vectorGroup, styles.groupParentFlexBox]}>
             <Pressable onPress={() => navigation.navigate('CrearAlbum')}>
               <Image
@@ -69,7 +69,7 @@ const MiLegado = () => {
         <View
           style={[styles.miBiografaActualParent, styles.groupParentFlexBox]}
         >
-          <Text style={styles.miBiografaActual}>Mis recuerdos</Text>
+          <Text style={styles.miBiografaActual}>Mis eventos</Text>
           <View style={[styles.vectorGroup, styles.groupParentFlexBox]}>
             <Image
               style={styles.vectorIcon1}
@@ -121,7 +121,7 @@ const MiLegado = () => {
         <View
           style={[styles.miBiografaActualParent, styles.groupParentFlexBox]}
         >
-          <Text style={styles.miBiografaActual}>Mis etapas</Text>
+          <Text style={styles.miBiografaActual}>Mis diarios</Text>
           <View style={[styles.vectorGroup, styles.groupParentFlexBox]}>
             <Image
               style={styles.vectorIcon1}
