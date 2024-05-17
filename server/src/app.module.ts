@@ -17,6 +17,7 @@ import { MessageService } from './chat/service/message.service'; // Asegúrate d
 import { ChatService } from './chat/service/chat.service'; // Asegúrate de importar correctamente tu WebSocketGateway
 import { MessageEntity } from './chat/entities/message.entity'; // Asegúrate de importar correctamente tu WebSocketGateway
 import { ChatModule } from './chat/chat.module';
+import { EventModule } from './event/event.module';
 
 @Module({
   imports: [
@@ -53,7 +54,8 @@ import { ChatModule } from './chat/chat.module';
       inject: [ConfigService],
     }),
     HistoriesModule,
-    ChatModule
+    ChatModule,
+    EventModule
 
   ],
   controllers: [],
