@@ -40,12 +40,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getAllNotifications } from '../../redux/actions/notifications'
 
 const Muro = () => {
-  const {showShareModal,setShowShareModal,showTaggedsModal,setShowTaggedsModal} = useContext(Context)
+  const {
+    showShareModal,
+    setShowShareModal,
+    showTaggedsModal,
+    setShowTaggedsModal
+  } = useContext(Context)
   const dispatch = useDispatch()
   const navigation = useNavigation()
 
   const { showPanel } = useSelector((state) => state.panel)
-const [user, setUser] = useState()
+  const [user, setUser] = useState()
   const [showModalRetos, setShowModalRetos] = useState(false)
   const [colorClick, setColorClick] = useState(true)
   const [showRetos, setShowRetos] = useState(false)
@@ -54,33 +59,35 @@ const [user, setUser] = useState()
   const handleMenu = () => {
     dispatch(setPanel(false))
   }
-const getUser= async () => {
-  const usuario = await AsyncStorage.getItem('user')
-  const user = JSON.parse(usuario)
-  setUser(user)
-  return 
-}
+  const getUser = async () => {
+    const usuario = await AsyncStorage.getItem('user')
+    const user = JSON.parse(usuario)
+    setUser(user)
+  }
 
-useEffect(()=>{
-  getUser()
-},[])
-  useEffect(()=>{
-    if(user){
+  useEffect(() => {
+    getUser()
+  }, [])
+  useEffect(() => {
+    if (user) {
       dispatch(getAllNotifications())
       dispatch(getUserData(user.id))
-    dispatch(getAllUsers())
+      dispatch(getAllUsers())
     }
-  },[user])
+  }, [user])
 
   return (
-    <LinearGradient  colors={['#fff', '#f1f1f1']}
-    style={{ flex: 1,paddingBottom:70}}
-    start={{ x: 0, y: 0 }}
-    end={{ x: 0, y: 1 }}>
+    <LinearGradient
+      colors={['#fff', '#f1f1f1']}
+      style={{ flex: 1, paddingBottom: 70 }}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+    >
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
-            width: '100%',paddingTop:5,
+            width: '100%',
+            paddingTop: 5,
             flexDirection: 'row',
             justifyContent: 'space-between',
             paddingHorizontal: 15
@@ -89,7 +96,7 @@ useEffect(()=>{
           <Pressable
             style={{
               width: 26,
-              height: 20,
+              height: 20
             }}
             onPress={() => dispatch(setPanel(!menuVisible))}
           >
@@ -109,7 +116,7 @@ useEffect(()=>{
                 !showRetos
                   ? [
                       <Pressable
-                        onPress={async() => {
+                        onPress={async () => {
                           await dispatch(getAllUsers())
                           navigation.navigate('Busqueda')
                         }}
@@ -128,20 +135,30 @@ useEffect(()=>{
         </View>
 
         <View>
-          <View style={{ marginTop: 20, flexDirection: 'row', width: '100%', justifyContent: 'center'}}>
+          <View
+            style={{
+              marginTop: 20,
+              flexDirection: 'row',
+              width: '95%',
+              alignSelf: 'center',
+              justifyContent: 'center'
+            }}
+          >
             <View
               style={{
                 backgroundColor: !colorClick
                   ? Color.backgroundPrimaryBackground
                   : Color.secundario,
-                  borderBottomLeftRadius:5,borderTopLeftRadius:5
+                borderBottomLeftRadius: 5,
+                borderTopLeftRadius: 5,
+                width: '50%'
               }}
             >
               <Pressable
                 style={{
                   paddingVertical: Padding.p_3xs,
                   paddingHorizontal: Padding.p_9xs,
-                  width: 194,
+                  width: '100%',
                   justifyContent: 'center',
                   alignItems: 'center',
                   flexDirection: 'row',
@@ -156,11 +173,8 @@ useEffect(()=>{
                 <Text
                   style={{
                     fontWeight: colorClick ? '700' : '300',
-                    width: 110,
                     textAlign: 'center',
                     fontFamily: FontFamily.lato,
-                    lineHeight: 19,
-                    letterSpacing: 0,
                     fontSize: FontSize.size_base,
                     color: colorClick ? '#fff' : Color.textPlaceholder
                   }}
@@ -173,14 +187,16 @@ useEffect(()=>{
               style={{
                 backgroundColor: colorClick
                   ? Color.backgroundPrimaryBackground
-                  : Color.secundario,borderBottomRightRadius:5,borderTopRightRadius:5
+                  : Color.secundario,
+                borderBottomRightRadius: 5,
+                borderTopRightRadius: 5,
+                width: '50%'
               }}
             >
               <Pressable
                 style={{
                   paddingVertical: Padding.p_3xs,
                   paddingHorizontal: Padding.p_9xs,
-                  width: 194,
                   justifyContent: 'center',
                   alignItems: 'center',
                   flexDirection: 'row',
@@ -240,13 +256,11 @@ useEffect(()=>{
               />
             </View>
           </Modal>
-          <StoriesVideosDiarios/>
+          <StoriesVideosDiarios />
           {/* <Stories /> */}
 
           {showRetos ? <VotacionDeRetos /> : <Post />}
         </View>
-
-        
 
         <Modal
           animationType="slide"
@@ -255,33 +269,43 @@ useEffect(()=>{
           onRequestClose={() => dispatch(setPanel(false))}
           propagateSwipe={true}
         >
-          <View style={{ flex:1}}>
+          <View style={{ flex: 1 }}>
             <Pressable onPress={handleMenu}>
               <MenuPrincipal setMenuVisible={setMenuVisible} />
             </Pressable>
           </View>
         </Modal>
         <Modal animationType="slide" transparent visible={showShareModal}>
-        <View style={{   flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'}}>
-          <Pressable style={{    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    left: 0,
-    top: 0}} onPress={()=>setShowShareModal(false)} />
-          <Compartir onClose={()=>setShowShareModal(false)} />
-        </View>
-      </Modal>
+          <View
+            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+          >
+            <Pressable
+              style={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                left: 0,
+                top: 0
+              }}
+              onPress={() => setShowShareModal(false)}
+            />
+            <Compartir onClose={() => setShowShareModal(false)} />
+          </View>
+        </Modal>
 
-      <Modal
-          animationType="slide" transparent visible={showTaggedsModal}
-        >
-          <TouchableWithoutFeedback onPress={()=>setShowTaggedsModal(false)}>
-          <View style={{   flex: 1, justifyContent:'center',alignItems:'center', backgroundColor:'rgba(0,0,0,0.3)'}}>
-          <Etiquetados onClose={()=>setShowTaggedsModal(false)} />
-        </View></TouchableWithoutFeedback>
-          
+        <Modal animationType="slide" transparent visible={showTaggedsModal}>
+          <TouchableWithoutFeedback onPress={() => setShowTaggedsModal(false)}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(0,0,0,0.3)'
+              }}
+            >
+              <Etiquetados onClose={() => setShowTaggedsModal(false)} />
+            </View>
+          </TouchableWithoutFeedback>
         </Modal>
       </ScrollView>
     </LinearGradient>

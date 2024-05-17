@@ -20,69 +20,70 @@ import {
 import Checkbox from 'expo-checkbox'
 import axios from 'axios'
 import { BACKURL } from '../../apiBackend'
-import { useDispatch } from 'react-redux';
-import { login } from '../../redux/slices/user.slices'; // Importa la acción de inicio de sesión desde el slice de Redux
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux'
+import { login } from '../../redux/slices/user.slices' // Importa la acción de inicio de sesión desde el slice de Redux
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const LOGIN = () => {
   const navigation = useNavigation()
   const [checked, setChecked] = useState(false)
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
-  const [error,setError] = useState()
-  const dispatch = useDispatch();
-
+  const [error, setError] = useState()
+  const dispatch = useDispatch()
 
   const handlePasswordChange = (text) => {
-    console.log("Nuevo valor de contraseña:", text);
-    setPassword(text);
-    setError("")
-    console.log("esto es",password)
-  };
+    console.log('Nuevo valor de contraseña:', text)
+    setPassword(text)
+    setError('')
+    console.log('esto es', password)
+  }
 
   const handleEmailChange = (text) => {
-    console.log("Nuevo valor de email:", text);
+    console.log('Nuevo valor de email:', text)
 
-    setError("")
-    setEmail(text);
-    console.log("esto es",email)
-
-  };
+    setError('')
+    setEmail(text)
+    console.log('esto es', email)
+  }
 
   const handleSubmit = async () => {
     try {
       // Verificar que tanto email como password estén presentes
       if (!email || !password) {
-        console.error('Por favor ingresa tanto email como contraseña');
-        return;
+        console.error('Por favor ingresa tanto email como contraseña')
+        return
       }
-  
-      console.log("Enviando credenciales:", { email, password });
-  
+
+      console.log('Enviando credenciales:', { email, password })
+
       // Despachar la acción login con las credenciales como argumento
-      const result = await dispatch(login({ email:email.toLocaleLowerCase(), password }));
-  
-      console.log("Resultado de la acción login:", result?.payload?.data?.user);
-  
+      const result = await dispatch(
+        login({ email: email.toLocaleLowerCase(), password })
+      )
+
+      console.log('Resultado de la acción login:', result?.payload?.data?.user)
+
       if (result?.payload?.data?.user) {
-        console.log("Resultado",result)
+        console.log('Resultado', result)
         // Inicio de sesión exitoso, redirige a la pantalla "Muro"
-        await AsyncStorage.setItem('user', JSON.stringify(result?.payload?.data?.user));
-        navigation.navigate('Muro');
+        await AsyncStorage.setItem(
+          'user',
+          JSON.stringify(result?.payload?.data?.user)
+        )
+        navigation.navigate('Muro')
       } else {
-        setError("Email o contraseña no validos")
+        setError('Email o contraseña no validos')
         // Inicio de sesión fallido, muestra un mensaje de error
-        console.log("Inicio de sesión fallido:", result.payload.error);
+        console.log('Inicio de sesión fallido:', result.payload.error)
         // Puedes mostrar un mensaje de error al usuario aquí
       }
     } catch (error) {
       // Error al despachar la acción de inicio de sesión
-      console.error('Error al iniciar sesión:', error);
+      console.error('Error al iniciar sesión:', error)
       // Puedes mostrar un mensaje de error al usuario aquí
     }
-  };
-  
-  
+  }
 
   return (
     <ScrollView
@@ -135,7 +136,13 @@ const LOGIN = () => {
                 contentFit="cover"
                 source={require('../../assets/icons--envelope-simple.png')}
               />
-              <TextInput placeholder="correo" value={email} onChangeText={handleEmailChange}  style={styles.input}  editable={true} />
+              <TextInput
+                placeholder="correo"
+                value={email}
+                onChangeText={handleEmailChange}
+                style={styles.input}
+                editable={true}
+              />
             </View>
           </View>
         </View>
@@ -154,7 +161,15 @@ const LOGIN = () => {
                 contentFit="cover"
                 source={require('../../assets/frame-1.png')}
               />
-              <TextInput value={password} onChangeText={handlePasswordChange}  placeholder="••••••••" style={styles.input2}  editable={true}/>
+              <TextInput
+                on
+                value={password}
+                onChangeText={handlePasswordChange}
+                secureTextEntry={true}
+                placeholder="••••••••"
+                style={styles.input2}
+                editable={true}
+              />
             </View>
           </View>
         </View>
