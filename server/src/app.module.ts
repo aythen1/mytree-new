@@ -18,6 +18,7 @@ import { ChatService } from './chat/service/chat.service'; // Asegúrate de impo
 import { MessageEntity } from './chat/entities/message.entity'; // Asegúrate de importar correctamente tu WebSocketGateway
 import { ChatModule } from './chat/chat.module';
 import { EventModule } from './event/event.module';
+import { InfoEntityModule } from './info-entity/info-entity.module';
 
 @Module({
   imports: [
@@ -53,3 +54,4 @@ import { EventModule } from './event/event.module';
   exports: [],
 })
 export class AppModule {}
+
