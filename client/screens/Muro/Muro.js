@@ -38,6 +38,7 @@ import { getUsers } from '../../redux/slices/user.slices'
 import { getAllUsers, getUserData } from '../../redux/actions/user'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getAllNotifications } from '../../redux/actions/notifications'
+import { getAllEvents } from '../../redux/actions/events'
 
 const Muro = () => {
   const {
@@ -73,6 +74,7 @@ const Muro = () => {
       dispatch(getAllNotifications())
       dispatch(getUserData(user.id))
       dispatch(getAllUsers())
+      dispatch(getAllEvents())
     }
   }, [user])
 

@@ -18,6 +18,7 @@ import Aadir1 from './Aadir1'
 import { setPanelAddFooter } from '../redux/slices/panel.slices'
 import { Color } from '../GlobalStyles'
 import { Context } from '../context/Context'
+import SelectEventTypeModal from './SelectEventTypeModal'
 
 const FooterNavBar = () => {
   const { showCamera } = useContext(Context)
@@ -27,6 +28,8 @@ const FooterNavBar = () => {
   const { panelAddFooter } = useSelector((state) => state.panel)
 
   const [selected, setSelected] = useState('Muro')
+  const [showSelectEventTypeModal, setShowSelectEventTypeModal] =
+    useState(false)
 
   const showModalAdd = () => {
     dispatch(setPanelAddFooter(!panelAddFooter))
@@ -138,11 +141,36 @@ const FooterNavBar = () => {
           </Pressable>
         </View>
 
+        <Modal
+          animationType="slide"
+          transparent
+          visible={showSelectEventTypeModal}
+        >
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(113, 113, 113, 0.3)',
+              height: '100%'
+            }}
+          >
+            <Pressable
+              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              onPress={() => setShowSelectEventTypeModal(false)}
+            />
+            <SelectEventTypeModal
+              onClose={() => setShowSelectEventTypeModal(false)}
+            />
+          </View>
+        </Modal>
+
         {panelAddFooter && (
           <Modal transparent={true} animationType="slide">
             <TouchableWithoutFeedback onPress={showModalAdd}>
               <View style={{ height: '100%' }}>
-                <Aadir1 />
+                <Aadir1
+                  setShowSelectEventTypeModal={setShowSelectEventTypeModal}
+                />
               </View>
             </TouchableWithoutFeedback>
           </Modal>

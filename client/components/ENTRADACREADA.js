@@ -81,25 +81,23 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   aceptar: {
-    marginTop: -11,
-    marginLeft: -24,
-    fontSize: FontSize.size_sm,
-    lineHeight: 21,
+    fontWeight: '700',
+    fontSize: 15,
     color: Color.white
   },
   pressable: {
-    width: '100%',
-    height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Color.linearBoton,
     borderRadius: Border.br_11xl
   },
   button: {
-    width: 388,
+    width: '90%',
     borderRadius: 50,
     height: 52,
-    marginTop: 20
+    marginTop: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   frameParent: {
     top: 20,
