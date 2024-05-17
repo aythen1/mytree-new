@@ -22,7 +22,7 @@ import PlusSVG from '../../components/svgs/PlusSVG'
 import NotificationsMuroSVG from '../../components/svgs/NotificationsMuroSVG'
 import LupaSVG from '../../components/svgs/LupaSVG'
 import BarraBusqueda from '../../components/BarraBusqueda'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Perfil = () => {
   const navigation = useNavigation()
@@ -34,7 +34,6 @@ const Perfil = () => {
   const [search, setSearch] = useState(false)
   const [usuario, setUsuario] = useState({})
 
-
   const renderSelectedComponent = () => {
     switch (selectedComponent) {
       case 'MiLegado':
@@ -42,31 +41,46 @@ const Perfil = () => {
       case 'MisAlbumes':
         return <MisAlbumes />
       case 'PERFILMIINFO':
-        return <PERFILMIINFO usuario={usuario} setSelectedComponent={setSelectedComponent} />
+        return (
+          <PERFILMIINFO
+            usuario={usuario}
+            setSelectedComponent={setSelectedComponent}
+          />
+        )
       case 'SOLOYO':
         return <SOLOYO />
       default:
         return null
     }
   }
-  useEffect(()=>{
-    const getUser= async()=>{
-    const usuario = await AsyncStorage.getItem('user');
-    console.log(JSON.parse(usuario),"este es")
-    setUsuario(JSON.parse(usuario));
-    return JSON.parse(usuario);
+  useEffect(() => {
+    const getUser = async () => {
+      const usuario = await AsyncStorage.getItem('user')
+      console.log(JSON.parse(usuario), 'este es')
+      setUsuario(JSON.parse(usuario))
+      return JSON.parse(usuario)
     }
     getUser()
-  },[])
+  }, [])
 
   return (
-    <ScrollView style={{ flex: 1,
-      height: '100%',
-      width: '100%',
-      backgroundColor: Color.white}} showsVerticalScrollIndicator={false}>
-      <View style={{justifyContent: 'flex-end',
-    flexDirection: 'row',
-    alignItems: 'center',top: '5%'}}>
+    <ScrollView
+      style={{
+        flex: 1,
+        height: '100%',
+        width: '100%',
+        backgroundColor: Color.white
+      }}
+      showsVerticalScrollIndicator={false}
+    >
+      <View
+        style={{
+          justifyContent: 'flex-end',
+          flexDirection: 'row',
+          alignItems: 'center',
+          top: '5%'
+        }}
+      >
         <Pressable onPress={() => navigation.navigate('Muro')}>
           <Image
             style={[styles.image6Icon, styles.ionmenu]}
@@ -97,7 +111,7 @@ const Perfil = () => {
       </View>
 
       <Pressable
-       onPress={() => dispatch(setPanel(!showPanel))}
+        onPress={() => dispatch(setPanel(!showPanel))}
         style={styles.menuPosition}
       >
         <Image
