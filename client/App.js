@@ -65,7 +65,7 @@ import FiltroEdicionRecuerdo from './components/FiltroEdicionRecuerdo'
 import Register from './screens/Inicio/Register'
 import Eventos from './screens/Calendario/Eventos'
 import MasDetallesEventos from './screens/Calendario/MasDetallesEventos'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -79,19 +79,17 @@ import { ContextProvider } from './context/Context'
 
 const Stack = createNativeStackNavigator()
 
-const App = () => {  
+const App = () => {
   const [isFooterShow, setIsFooterShow] = useState(null)
-  
+
   const loadApp = async () => {
     await loadFonts()
   }
-  
-
 
   useEffect(() => {
     loadApp()
   }, [])
-// hola
+  // hola
   return (
     <SafeAreaView
       style={{
@@ -100,357 +98,358 @@ const App = () => {
       }}
     >
       <StatusBar
-          hidden={!isFooterShow}
-          barStyle={'dark-content'}
-          backgroundColor="#fff"
-        />
-    <Provider store={store}>
-    <ContextProvider>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="Onboarding2"
-          screenOptions={({ route }) => ({
-            headerShown: false,
-            footerShown: setIsFooterShow(
-              route.name !== 'Register' &&
-                route.name !== 'Splash' &&
-                route.name !== 'Onboarding' &&
-                route.name !== 'Onboarding1' &&
-                route.name !== 'Onboarding2' &&
-                route.name !== 'LOGIN'
-            )
-          })}
-        >
-          <Stack.Screen
-            name="AadirAlbum"
-            component={AadirAlbum}
-            options={{ headerShown: false }}
-          />          
-          <Stack.Screen
-            name="UploadMemory"
-            component={UploadMemory}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Album"
-            component={Album}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Privacidad"
-            component={Privacidad}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="LOGIN"
-            component={LOGIN}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Onboarding"
-            component={Onboarding}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Onboarding1"
-            component={Onboarding1}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="RETOSMSVOTADOS"
-            component={RETOSMSVOTADOS}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="FiltroEdicion"
-            component={FiltroEdicion}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="CrearLbum"
-            component={CrearLbum}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="AadirAUnAlbum"
-            component={AadirAUnAlbum}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="CrearAlbum"
-            component={CrearAlbum}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Organizador"
-            component={Organizador}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="RetosFamiliaresCumplido"
-            component={RetosFamiliaresCumplido}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="RetosFamiliaresSinCumplir"
-            component={RetosFamiliaresSinCumplir}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Chat"
-            component={Chat}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="AADIRAADIRANCESTRO"
-            component={AADIRAADIRANCESTRO}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="AADIRAADIRINFANTE"
-            component={AADIRAADIRINFANTE}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="TarjetaDigital"
-            component={TarjetaDigital}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="CrearReto"
-            component={CrearReto}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="MUROALERTAS1"
-            component={MUROALERTAS1}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="MENSAJERA"
-            component={MENSAJERA}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Busqueda"
-            component={Busqueda}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="BIO2Ancestro"
-            component={BIO2Ancestro}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="BIO2Infante"
-            component={BIO2Infante}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="PERFILIDANCESTRO"
-            component={PERFILIDANCESTRO}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="PERFILIDINFANTE"
-            component={PERFILIDINFANTE}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="PERFILCREARIDINFANTEANCE"
-            component={PERFILCREARIDINFANTEANCE}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Novedades"
-            component={Novedades}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Recompensas"
-            component={Recompensas}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Invitacin"
-            component={Invitacin}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="MIDIARIOPANTALLAPERSONAL"
-            component={MIDIARIOPANTALLAPERSONAL}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="MIDIARIOEDICINVIDEO"
-            component={MIDIARIOEDICINVIDEO}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="MIDIARIOENTRADAVIDEO"
-            component={MIDIARIOENTRADAVIDEO}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Onboarding2"
-            component={Onboarding2}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Muro"
-            component={Muro}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="CrearEvento"
-            component={CrearEvento}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="BOTONInvitarAmigos1"
-            component={BOTONInvitarAmigos1}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="PERFILNOTIFICACIONES"
-            component={PERFILNOTIFICACIONES}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="PerfilSeguridad"
-            component={PerfilSeguridad}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="PerfilPrivacidad"
-            component={PerfilPrivacidad}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="PerfilVisualizacionMyTree"
-            component={PerfilVisualizacionMyTree}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="PERFILANCESTROAJUSTES"
-            component={PERFILANCESTROAJUSTES}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="PERFILANCESTROAJUSTES1"
-            component={PERFILANCESTROAJUSTES1}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="PERFILINFANTEAJUSTES"
-            component={PERFILINFANTEAJUSTES}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="PerfilConfiguracion"
-            component={PerfilConfiguracion}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="PerfilAjustes"
-            component={PerfilAjustes}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="PERFILMIINFO"
-            component={PERFILMIINFO}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="RetosBienvenida"
-            component={RetosBienvenida}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="MisAlbumes"
-            component={MisAlbumes}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="SOLOYO"
-            component={SOLOYO}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Perfil"
-            component={Perfil}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Papers"
-            component={Papers}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="MIDIARIOENTRADATEXTOPL7"
-            component={MIDIARIOENTRADATEXTOPL7}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="CALENDARIO"
-            component={CALENDARIO}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Eventos"
-            component={Eventos}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="MasDetallesEventos"
-            component={MasDetallesEventos}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="FiltroEdicionRecuerdo"
-            component={FiltroEdicionRecuerdo}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Splash"
-            component={Splash}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="REGISTROPOLTICASDEPRIVAC"
-            component={REGISTROPOLTICASDEPRIVAC}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="REGISTROTRMINOSYCONDICIO"
-            component={REGISTROTRMINOSYCONDICIO}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Register"
-            component={Register}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Suscripciones"
-            component={Suscripciones}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="CrearGrupo"
-            component={CrearGrupo}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="CrearFechaEspecial"
-            component={CrearFechaEspecial}
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
-        {isFooterShow && <FooterNavBar />}
-      </NavigationContainer>
-      </ContextProvider>
-    </Provider></SafeAreaView>
+        hidden={!isFooterShow}
+        barStyle={'dark-content'}
+        backgroundColor="#fff"
+      />
+      <Provider store={store}>
+        <ContextProvider>
+          <NavigationContainer>
+            <Stack.Navigator
+              initialRouteName="Onboarding2"
+              screenOptions={({ route }) => ({
+                headerShown: false,
+                footerShown: setIsFooterShow(
+                  route.name !== 'Register' &&
+                    route.name !== 'Splash' &&
+                    route.name !== 'Onboarding' &&
+                    route.name !== 'Onboarding1' &&
+                    route.name !== 'Onboarding2' &&
+                    route.name !== 'LOGIN'
+                )
+              })}
+            >
+              <Stack.Screen
+                name="AadirAlbum"
+                component={AadirAlbum}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="UploadMemory"
+                component={UploadMemory}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Album"
+                component={Album}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Privacidad"
+                component={Privacidad}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="LOGIN"
+                component={LOGIN}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Onboarding"
+                component={Onboarding}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Onboarding1"
+                component={Onboarding1}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="RETOSMSVOTADOS"
+                component={RETOSMSVOTADOS}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="FiltroEdicion"
+                component={FiltroEdicion}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="CrearLbum"
+                component={CrearLbum}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="AadirAUnAlbum"
+                component={AadirAUnAlbum}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="CrearAlbum"
+                component={CrearAlbum}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Organizador"
+                component={Organizador}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="RetosFamiliaresCumplido"
+                component={RetosFamiliaresCumplido}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="RetosFamiliaresSinCumplir"
+                component={RetosFamiliaresSinCumplir}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Chat"
+                component={Chat}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="AADIRAADIRANCESTRO"
+                component={AADIRAADIRANCESTRO}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="AADIRAADIRINFANTE"
+                component={AADIRAADIRINFANTE}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="TarjetaDigital"
+                component={TarjetaDigital}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="CrearReto"
+                component={CrearReto}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="MUROALERTAS1"
+                component={MUROALERTAS1}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="MENSAJERA"
+                component={MENSAJERA}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Busqueda"
+                component={Busqueda}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="BIO2Ancestro"
+                component={BIO2Ancestro}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="BIO2Infante"
+                component={BIO2Infante}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="PERFILIDANCESTRO"
+                component={PERFILIDANCESTRO}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="PERFILIDINFANTE"
+                component={PERFILIDINFANTE}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="PERFILCREARIDINFANTEANCE"
+                component={PERFILCREARIDINFANTEANCE}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Novedades"
+                component={Novedades}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Recompensas"
+                component={Recompensas}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Invitacin"
+                component={Invitacin}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="MIDIARIOPANTALLAPERSONAL"
+                component={MIDIARIOPANTALLAPERSONAL}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="MIDIARIOEDICINVIDEO"
+                component={MIDIARIOEDICINVIDEO}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="MIDIARIOENTRADAVIDEO"
+                component={MIDIARIOENTRADAVIDEO}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Onboarding2"
+                component={Onboarding2}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Muro"
+                component={Muro}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="CrearEvento"
+                component={CrearEvento}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="BOTONInvitarAmigos1"
+                component={BOTONInvitarAmigos1}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="PERFILNOTIFICACIONES"
+                component={PERFILNOTIFICACIONES}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="PerfilSeguridad"
+                component={PerfilSeguridad}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="PerfilPrivacidad"
+                component={PerfilPrivacidad}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="PerfilVisualizacionMyTree"
+                component={PerfilVisualizacionMyTree}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="PERFILANCESTROAJUSTES"
+                component={PERFILANCESTROAJUSTES}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="PERFILANCESTROAJUSTES1"
+                component={PERFILANCESTROAJUSTES1}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="PERFILINFANTEAJUSTES"
+                component={PERFILINFANTEAJUSTES}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="PerfilConfiguracion"
+                component={PerfilConfiguracion}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="PerfilAjustes"
+                component={PerfilAjustes}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="PERFILMIINFO"
+                component={PERFILMIINFO}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="RetosBienvenida"
+                component={RetosBienvenida}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="MisAlbumes"
+                component={MisAlbumes}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="SOLOYO"
+                component={SOLOYO}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Perfil"
+                component={Perfil}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Papers"
+                component={Papers}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="MIDIARIOENTRADATEXTOPL7"
+                component={MIDIARIOENTRADATEXTOPL7}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="CALENDARIO"
+                component={CALENDARIO}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Eventos"
+                component={Eventos}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="MasDetallesEventos"
+                component={MasDetallesEventos}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="FiltroEdicionRecuerdo"
+                component={FiltroEdicionRecuerdo}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Splash"
+                component={Splash}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="REGISTROPOLTICASDEPRIVAC"
+                component={REGISTROPOLTICASDEPRIVAC}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="REGISTROTRMINOSYCONDICIO"
+                component={REGISTROTRMINOSYCONDICIO}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Register"
+                component={Register}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Suscripciones"
+                component={Suscripciones}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="CrearGrupo"
+                component={CrearGrupo}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="CrearFechaEspecial"
+                component={CrearFechaEspecial}
+                options={{ headerShown: false }}
+              />
+            </Stack.Navigator>
+            {isFooterShow && <FooterNavBar />}
+          </NavigationContainer>
+        </ContextProvider>
+      </Provider>
+    </SafeAreaView>
   )
 }
 export default App

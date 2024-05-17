@@ -1,5 +1,12 @@
 import React from 'react'
-import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  Text,
+  Pressable,
+  ScrollView,
+  Dimensions
+} from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useNavigation } from '@react-navigation/native'
@@ -15,12 +22,28 @@ const Splash = () => {
   const navigation = useNavigation()
 
   return (
-    <ScrollView style={styles.splash} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={{
+        flex: 1,
+        height: '100%',
+        width: '100%',
+        backgroundColor: Color.white
+      }}
+      showsVerticalScrollIndicator={false}
+    >
       <View>
         <View style={styles.splashChild} />
         <Image
-          style={styles.splashItem}
+          style={{
+            top: Dimensions.get('screen').height / 1.9,
+            left: -Dimensions.get('screen').width * 0.2,
+            width: '100%',
+            height: 300,
+            position: 'absolute',
+            transform: 'scale(0.8)'
+          }}
           contentFit="cover"
+          contentPosition={'bottom'}
           source={require('../../assets/vector-1.png')}
         />
         <Image
@@ -28,16 +51,44 @@ const Splash = () => {
           contentFit="cover"
           source={require('../../assets/vector-3.png')}
         />
+        {/* ====================== THIS ==================== */}
         <Image
-          style={[styles.vectorIcon, styles.splashLayout]}
+          style={{
+            position: 'absolute',
+            height: Dimensions.get('screen').height,
+            width: '115%',
+            bottom: 340,
+            left: -Dimensions.get('screen').width * 0.15
+          }}
+          contentPosition={'left'}
+          contentFit="cover"
+          source={require('../../assets/vector-3.png')}
+        />
+        <Image
+          style={{
+            position: 'absolute',
+            height: Dimensions.get('screen').height,
+            width: '115%',
+            bottom: 310,
+            left: -Dimensions.get('screen').width * 0.15
+          }}
+          contentPosition={'left'}
           contentFit="cover"
           source={require('../../assets/vector-8.png')}
         />
         <Image
-          style={[styles.splashChild1, styles.splashLayout]}
+          style={{
+            position: 'absolute',
+            height: Dimensions.get('screen').height,
+            width: '115%',
+            bottom: 288,
+            left: -Dimensions.get('screen').width * 0.15
+          }}
+          contentPosition={'left'}
           contentFit="cover"
           source={require('../../assets/vector-9.png')}
         />
+        {/* =============================================== */}
         <Image
           style={[styles.splashChild2, styles.splashChildLayout]}
           contentFit="cover"
@@ -72,7 +123,7 @@ generaciones`}</Text>
             >{`Tu historia comienza aquí, dejando una huella en el corazón de tu familia
 `}</Text>
           </View>
-          <View style={styles.frameParent}>
+          {/* <View style={styles.frameParent}>
             <View style={[styles.rectangleParent, styles.frameChildLayout]}>
               <View style={[styles.frameChild, styles.buttonBorder]} />
               <Image
@@ -92,8 +143,8 @@ generaciones`}</Text>
                 source={require('../../assets/devicongoogle.png')}
               />
             </View>
-          </View>
-          <View style={{ top: 60 }}>
+          </View> */}
+          <View style={{ marginTop: 100 }}>
             <View
               style={[styles.iniciarSesion, styles.buttonSpaceBlock]}
               locations={[0, 1]}
@@ -103,7 +154,24 @@ generaciones`}</Text>
                 <Text style={styles.signTypo}>INICIAR SESIÓN</Text>
               </Pressable>
             </View>
-            <Text style={[styles.o, styles.oTypo]}>O</Text>
+            <Text
+              style={{
+                marginTop: 20,
+                borderRadius: Border.br_11xl,
+                height: 20,
+                width: 222,
+                fontWeight: '600',
+                lineHeight: 21,
+                letterSpacing: 0,
+                fontSize: FontSize.size_sm,
+                textAlign: 'center',
+                fontFamily: FontFamily.lato,
+                color: '#000',
+                alignSelf: 'center'
+              }}
+            >
+              O
+            </Text>
             <LinearGradient
               style={[styles.button1, styles.buttonLayout]}
               locations={[0, 1]}
@@ -125,8 +193,8 @@ generaciones`}</Text>
 
 const styles = StyleSheet.create({
   splashLayout: {
-    height: 824,
-    width: 869,
+    height: Dimensions.get('screen').height,
+    width: '100%',
     left: -9
   },
   splashChildLayout: {
@@ -195,7 +263,7 @@ const styles = StyleSheet.create({
     position: 'absolute'
   },
   splashInner: {
-    top: 605
+    top: 610
   },
   vectorIcon: {
     top: 635,

@@ -7,8 +7,10 @@ export const getAllEvents = createAsyncThunk(
   async () => {
     try {
       const { data } = await axiosInstance.get('/events')
+      console.log('all events data: ', data)
       return data
     } catch (error) {
+      console.log('error from getAllEvents')
       throw new Error(error)
     }
   }

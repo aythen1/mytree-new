@@ -649,9 +649,16 @@ const Organizador = () => {
       </Modal>
 
       <Modal animationType="slide" transparent visible={frameContainer2Visible}>
-        <View style={styles.frameContainer2Overlay}>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(113, 113, 113, 0.3)',
+            height: '100%'
+          }}
+        >
           <Pressable
-            style={styles.frameContainer2Bg}
+            style={{ width: '100%', height: '100%', left: 0, top: 0 }}
             onPress={closeFrameContainer2}
           />
           <Etiquetar

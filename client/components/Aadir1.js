@@ -10,7 +10,7 @@ import MessageSVG from './svgs/MessageSVG'
 import CalendarSVG from './svgs/CalendarSVG'
 import DiarioSVG from './svgs/DiarioSVG'
 
-const Aadir1 = () => {
+const Aadir1 = ({ setShowSelectEventTypeModal }) => {
   const dispatch = useDispatch()
   const navigation = useNavigation()
 
@@ -40,7 +40,7 @@ const Aadir1 = () => {
         <Pressable
           style={[styles.frameContainer, styles.frameFlexBox]}
           onPress={() => {
-           dispatch(setPanelAddFooter(false))
+            dispatch(setPanelAddFooter(false))
             navigation.navigate('BOTONInvitarAmigos1')
           }}
         >
@@ -70,18 +70,22 @@ const Aadir1 = () => {
           style={[styles.frameWrapper1, styles.frameFlexBox]}
           onPress={() => {
             dispatch(setPanelAddFooter(false))
-            navigation.navigate('CrearEvento')
+            setShowSelectEventTypeModal(true)
           }}
         >
           <View style={styles.groupParentFlexBox}>
-            <CalendarSVG color={Color.white} />
-            <Text style={styles.aadirRecuerdo2}>Crear Evento Familiar</Text>
+            <Image
+              contentFit="cover"
+              style={{ width: 25, height: 25, marginRight: 11 }}
+              source={require('../assets/whiteCalendar.png')}
+            />
+            <Text style={styles.aadirRecuerdo2}>Crear evento</Text>
           </View>
         </Pressable>
         <Pressable
           style={[styles.frameFlexBox]}
           onPress={() => {
-           dispatch(setPanelAddFooter(false))
+            dispatch(setPanelAddFooter(false))
             navigation.navigate('MUROALERTAS1')
           }}
         >
