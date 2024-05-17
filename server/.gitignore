@@ -1,43 +1,11 @@
-<<<<<<< HEAD
 # compiled output
 /dist
 /node_modules
 
-=======
->>>>>>> b65a9e510e0a378123ca9a5fdff3e194910d8b0d
 # Logs
 logs
 *.log
 npm-debug.log*
-<<<<<<< HEAD
-pnpm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-
-# OS
-.DS_Store
-
-# Tests
-/coverage
-/.nyc_output
-
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-=======
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
@@ -109,7 +77,7 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variable files
-# .env
+.env
 # .env.development.local
 # .env.test.local
 # .env.production.local
@@ -161,4 +129,3 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
->>>>>>> b65a9e510e0a378123ca9a5fdff3e194910d8b0d
