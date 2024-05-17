@@ -24,15 +24,19 @@ import { InfoEntityModule } from './info-entity/info-entity.module';
   imports: [
     TypeOrmModule.forFeature([MessageEntity]),
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'krakra1',
-      database: 'mytree',
-      entities: [User,Post,Notification,History,Comment],
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get<string>('DB_USER'),
+        password: configService.get<string>('DB_PASS'),
+        database: configService.get<string>('DB_NAME'),
+        entities: [User, Post, Notification, History, Comment],
+        synchronize: true,
+      }),
+      inject: [ConfigService],
     }),
     InfoEntityModule,
     PostsModule,
@@ -53,5 +57,5 @@ import { InfoEntityModule } from './info-entity/info-entity.module';
   providers: [ChatGateway, MessageService, ChatService],
   exports: [],
 })
-export class AppModule {}
+export class AppModule { }
 
