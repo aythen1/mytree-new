@@ -17,6 +17,8 @@ import { MessageService } from './chat/service/message.service'; // Asegúrate d
 import { ChatService } from './chat/service/chat.service'; // Asegúrate de importar correctamente tu WebSocketGateway
 import { MessageEntity } from './chat/entities/message.entity'; // Asegúrate de importar correctamente tu WebSocketGateway
 import { ChatModule } from './chat/chat.module';
+import { EventModule } from './event/event.module';
+import { InfoEntityModule } from './info-entity/info-entity.module';
 
 @Module({
   imports: [
@@ -27,13 +29,11 @@ import { ChatModule } from './chat/chat.module';
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: 'krakra1',  
-      
+      password: 'krakra1',
       database: 'mytree',
-      entities: [User , Post,Notification,History,Comment , MessageEntity],
+      entities: [User,Post,Notification,History,Comment],
       synchronize: true,
     }),
-
     InfoEntityModule,
     PostsModule,
     CommentsModule,
@@ -48,11 +48,10 @@ import { ChatModule } from './chat/chat.module';
       inject: [ConfigService],
     }),
     HistoriesModule,
-    ChatModule
-
   ],
   controllers: [],
   providers: [ChatGateway, MessageService, ChatService],
   exports: [],
 })
 export class AppModule {}
+
