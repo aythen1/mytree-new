@@ -7,10 +7,10 @@ import { Border, Color, FontFamily, FontSize } from '../GlobalStyles'
 const PopUpCalendario = ({
   setButtonContainer2Visible,
   setCalendario,
-  not
+  not,
+  selectedDate,
+  setSelectedDate
 }) => {
-  const [selectedDate, setSelectedDate] = useState(null)
-
   const handleDayPress = (day) => {
     if (selectedDate === day.dateString) {
       setSelectedDate(null)

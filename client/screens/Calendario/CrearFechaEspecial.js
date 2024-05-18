@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Text,
   StyleSheet,
@@ -20,18 +20,38 @@ import {
 } from '../../GlobalStyles'
 import ENTRADACREADA from '../../components/ENTRADACREADA'
 import PopUpCalendario from '../../components/PopUpCalendario'
-import CalendarSVG from '../../components/svgs/CalendarSVG'
 import UbicacionSVG from '../../components/svgs/UbicacionSVG'
 import AñadirUsuarioSVG from '../../components/svgs/AñadirUsuarioSVG'
-import CheckBox from 'expo-checkbox'
+import Etiquetar from '../../components/Etiquetar'
+import OpcionesCaategora from '../../components/OpcionesCaategora'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useDispatch } from 'react-redux'
+import { createEvent } from '../../redux/actions/events'
 
 const CrearFechaEspecial = () => {
+  const [user, setUser] = useState()
   const navigation = useNavigation()
+  const [description, setDescription] = useState('')
+  const [selectedDate, setSelectedDate] = useState('')
+  const [location, setLocation] = useState()
+  const [invitedUsers, setInvitedUsers] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState()
 
   const [modalCreate, setModalCreate] = useState(false)
   const [programar, setProgramar] = useState(false)
   const [calendario, setCalendario] = useState(false)
-  const [check, setCheck] = useState(false)
+  const [showTagUsers, setShowTagUsers] = useState(false)
+  const [showCategoryModal, setShowCategoryModal] = useState(false)
+
+  const getUser = async () => {
+    const usuario = await AsyncStorage.getItem('user')
+    const user = JSON.parse(usuario)
+    setUser(user)
+  }
+
+  useEffect(() => {
+    getUser()
+  }, [])
 
   const onCloseModalCreate = () => {
     setModalCreate(false)
@@ -43,6 +63,30 @@ const CrearFechaEspecial = () => {
 
   const closeCalendario = () => {
     setCalendario(false)
+  }
+  const dispatch = useDispatch()
+  const handleCreateEvent = async () => {
+    if (
+      description.length > 0 &&
+      selectedCategory &&
+      location.length > 0 &&
+      selectedDate &&
+      invitedUsers.length > 0
+    ) {
+      const event = {
+        type: 'normal event',
+        creatorId: user?.id.toString(),
+        description,
+        title: selectedCategory,
+        location,
+        shared: false,
+        wishList: [],
+        date: new Date(selectedDate),
+        invitedUsers
+      }
+      console.log('creating special date with values: ', event)
+      dispatch(createEvent(event))
+    }
   }
 
   return (
@@ -75,15 +119,30 @@ const CrearFechaEspecial = () => {
 
         <View>
           <View style={styles.titleBase}>
-            <Text style={[styles.title, styles.titleTypo]}>
-              Titulo de la fecha
-            </Text>
+            <Text style={[styles.title, styles.titleTypo]}>Categoría</Text>
           </View>
-          <TextInput
-            style={styles.fieldSpaceBlock}
-            placeholder="Nombre de la fecha"
-            multiline={true}
-          />
+          <Pressable
+            onPress={() => setShowCategoryModal(true)}
+            style={{
+              paddingVertical: 13,
+              backgroundColor: Color.fAFAFA,
+              borderRadius: Border.br_3xs,
+              paddingHorizontal: Padding.p_xl,
+              flexDirection: 'row',
+              width: '100%',
+              justifyContent: 'space-between'
+            }}
+          >
+            <Text style={{ color: selectedCategory ? '#000' : '#606060' }}>
+              {selectedCategory || 'Selecione la categoría'}
+            </Text>
+
+            <Image
+              contentFit="cover"
+              style={{ width: 20, height: 20, marginRight: 10 }}
+              source={require('../../assets/downArrow.png')}
+            />
+          </Pressable>
         </View>
 
         <View>
@@ -91,7 +150,19 @@ const CrearFechaEspecial = () => {
             <Text style={[styles.title, styles.titleTypo]}>Descripción</Text>
           </View>
           <TextInput
-            style={styles.descriptionField}
+            multiline={true}
+            numberOfLines={4}
+            value={description}
+            onChangeText={(text) => setDescription(text)}
+            style={{
+              textAlignVertical: 'top',
+              paddingVertical: Padding.p_smi,
+              backgroundColor: Color.fAFAFA,
+              borderRadius: Border.br_3xs,
+              paddingHorizontal: Padding.p_xl,
+              flexDirection: 'row',
+              width: '100%'
+            }}
             placeholder="Descripción de la fecha especial"
           />
         </View>
@@ -101,12 +172,28 @@ const CrearFechaEspecial = () => {
             <Text style={[styles.title, styles.titleTypo]}>Fecha</Text>
           </View>
 
-          <View style={styles.fieldSpaceBlock2}>
-            <TextInput placeholder="21/02/2023" />
-            <Pressable onPress={openCalendario}>
-              <CalendarSVG />
-            </Pressable>
-          </View>
+          <Pressable
+            onPress={openCalendario}
+            style={{
+              paddingVertical: 13,
+              backgroundColor: Color.fAFAFA,
+              borderRadius: Border.br_3xs,
+              paddingHorizontal: Padding.p_xl,
+              flexDirection: 'row',
+              width: '100%',
+              justifyContent: 'space-between'
+            }}
+          >
+            <Text style={{ color: selectedDate ? '#000' : '#606060' }}>
+              {selectedDate || 'Selecciona una fecha'}
+            </Text>
+
+            <Image
+              contentFit="cover"
+              style={{ width: 22, height: 22, marginRight: 13 }}
+              source={require('../../assets/vector14.png')}
+            />
+          </Pressable>
         </View>
 
         <View>
@@ -115,7 +202,11 @@ const CrearFechaEspecial = () => {
           </View>
 
           <View style={styles.fieldSpaceBlock2}>
-            <TextInput placeholder="Ubicacion" />
+            <TextInput
+              value={location}
+              onChangeText={(text) => setLocation(text)}
+              placeholder="Ubicacion"
+            />
             <Pressable>
               <UbicacionSVG />
             </Pressable>
@@ -125,26 +216,49 @@ const CrearFechaEspecial = () => {
         <View>
           <View style={styles.titleBase}>
             <Text style={[styles.title, styles.titleTypo]}>
-              Etiqueta a tu compañía
+              Etiqueta a tus invitados
             </Text>
           </View>
 
-          <View style={styles.fieldSpaceBlock2}>
-            <TextInput placeholder="Agrega invitados" />
-            <Pressable>
-              <AñadirUsuarioSVG />
-            </Pressable>
-          </View>
+          <Pressable
+            onPress={() => setShowTagUsers(true)}
+            style={{
+              paddingVertical: 13,
+              backgroundColor: Color.fAFAFA,
+              borderRadius: Border.br_3xs,
+              paddingHorizontal: Padding.p_xl,
+              flexDirection: 'row',
+              width: '100%',
+              justifyContent: 'space-between'
+            }}
+          >
+            <Text
+              style={{ color: invitedUsers.length > 0 ? '#000' : '#606060' }}
+            >
+              {invitedUsers.length === 0 ? 'Agrega invitados' : 'Ver invitados'}
+            </Text>
+            <AñadirUsuarioSVG />
+          </Pressable>
         </View>
 
-        <View>
+        <View
+          style={{
+            width: '100%',
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            alignItems: 'center'
+          }}
+        >
           <View style={styles.titleBase}>
-            <Text style={[styles.title, styles.titleTypo]}>Compartir</Text>
+            <Text style={[styles.title, styles.titleTypo]}>
+              Opciones de Privacidad
+            </Text>
           </View>
-          <View style={styles.fieldSpaceBlock}>
-            <CheckBox value={check} onValueChange={setCheck} />
-            <TextInput placeholder="Como actividad familiar" />
-          </View>
+          <Image
+            contentFit="cover"
+            style={{ width: 20, height: 20, marginRight: 10 }}
+            source={require('../../assets/grayRightArrow.png')}
+          />
         </View>
 
         <View style={styles.button2}>
@@ -162,7 +276,10 @@ const CrearFechaEspecial = () => {
         >
           <Pressable
             style={[styles.pressable1, styles.pressableFlexBox]}
-            onPress={() => setModalCreate(true)}
+            onPress={() => {
+              handleCreateEvent()
+              setModalCreate(true)
+            }}
           >
             <Text style={[styles.signIn2, styles.signTypo]}>Enviar</Text>
           </Pressable>
@@ -205,8 +322,50 @@ const CrearFechaEspecial = () => {
             onPress={closeCalendario}
           />
           <PopUpCalendario
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
             setButtonContainer2Visible={() => {}}
             setCalendario={setCalendario}
+          />
+        </View>
+      </Modal>
+      <Modal animationType="slide" transparent visible={showTagUsers}>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(113, 113, 113, 0.3)',
+            height: '100%'
+          }}
+        >
+          <Pressable
+            style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+            onPress={() => setShowTagUsers(false)}
+          />
+          <Etiquetar
+            taggedUsers={invitedUsers}
+            setTaggedUsers={setInvitedUsers}
+            onClose={() => setShowTagUsers(false)}
+          />
+        </View>
+      </Modal>
+      <Modal animationType="slide" transparent visible={showCategoryModal}>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(113, 113, 113, 0.3)',
+            height: '100%'
+          }}
+        >
+          <Pressable
+            style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+            onPress={() => setShowCategoryModal(false)}
+          />
+          <OpcionesCaategora
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            onClose={() => setShowCategoryModal(false)}
           />
         </View>
       </Modal>
@@ -237,7 +396,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   title: {
-    color: Color.textTextPrimary,
+    color: '#242424',
     fontWeight: '500',
     lineHeight: 19,
     fontSize: FontSize.size_base,
@@ -255,7 +414,7 @@ const styles = StyleSheet.create({
     gap: 20
   },
   fieldSpaceBlock2: {
-    paddingVertical: Padding.p_smi,
+    paddingVertical: 10,
     backgroundColor: Color.fAFAFA,
     borderRadius: Border.br_3xs,
     paddingHorizontal: Padding.p_xl,
@@ -325,8 +484,9 @@ const styles = StyleSheet.create({
   crearEvento: {
     flex: 1,
     backgroundColor: Color.white,
-    padding: Padding.p_xl,
-    gap: 10
+    paddingHorizontal: Padding.p_xl,
+    gap: 10,
+    marginBottom: -10
   },
   titleBase: {
     paddingBottom: Padding.p_7xs,

@@ -12,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -44,9 +42,7 @@
           }
         }
       ],
-      [
-        "@react-native-google-signin/google-signin"
-      ]
+      ["@react-native-google-signin/google-signin"]
     ],
     "owner": "azschiaffino"
   }
