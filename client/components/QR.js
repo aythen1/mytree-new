@@ -6,15 +6,27 @@ import { useNavigation } from "@react-navigation/native";
 import { FontSize, FontFamily, Color, Border, Padding } from "../GlobalStyles";
 import { Svg } from "react-native-svg";
 import QRCode from 'react-native-qrcode-svg';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const QR = ({ onClose, relation,selectedUserToInvite }) => {
   const navigation = useNavigation();
   const [qr, setQr] = React.useState("")
-
+  const [user, setUser] = React.useState()
 
 
   React.useEffect(() => {
     console.log("relations ",relation , selectedUserToInvite,"invite")
+  }, [])
+
+  const getUser = async () => {
+    const usuario = await AsyncStorage.getItem('user')
+    const user = JSON.parse(usuario)
+    setUser(user)
+  }
+
+  React.useEffect(() => {
+   
+    getUser()
   }, [])
 
   return (
@@ -23,7 +35,7 @@ const QR = ({ onClose, relation,selectedUserToInvite }) => {
         <View style={styles.image8Parent}>
           <QRCode
             size={200}
-            value={relation}
+            value={`http://mytreeappoficial.com/app?invite=true&property=momId&memberId=${user?.id}`}
           />
           <View style={styles.searchBar}>
             <View style={styles.placeholderInput}>

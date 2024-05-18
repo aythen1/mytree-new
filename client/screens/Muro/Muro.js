@@ -6,7 +6,8 @@ import {
   Pressable,
   Modal,
   ScrollView,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Button
 } from 'react-native'
 import { Image } from 'expo-image'
 import {
@@ -27,7 +28,7 @@ import MessageSVG from '../../components/svgs/MessageSVG'
 import NotificationsMuroSVG from '../../components/svgs/NotificationsMuroSVG'
 import CalendarMuroSVG from '../../components/svgs/CalendarMuroSVG'
 import SettingMuroSVG from '../../components/svgs/SettingMuroSVG'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { setPanel } from '../../redux/slices/panel.slices'
 import StoriesVideosDiarios from '../../components/StoriesVideosDiarios'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -39,6 +40,7 @@ import { getAllUsers, getUserData } from '../../redux/actions/user'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getAllNotifications } from '../../redux/actions/notifications'
 import { getAllEvents } from '../../redux/actions/events'
+import axiosInstance from '../../apiBackend'
 
 const Muro = () => {
   const {
@@ -49,13 +51,17 @@ const Muro = () => {
   } = useContext(Context)
   const dispatch = useDispatch()
   const navigation = useNavigation()
-
+  const route = useRoute();
+  const queryParams  = route.params;
+  console.log(queryParams,"queryparams")
   const { showPanel } = useSelector((state) => state.panel)
   const [user, setUser] = useState()
   const [showModalRetos, setShowModalRetos] = useState(false)
   const [colorClick, setColorClick] = useState(true)
   const [showRetos, setShowRetos] = useState(false)
   const [menuVisible, setMenuVisible] = useState(false)
+  showInviteModal
+  const [showInviteModal, setShowInviteModal] = useState(false)
 
   const handleMenu = () => {
     dispatch(setPanel(false))
@@ -65,8 +71,15 @@ const Muro = () => {
     const user = JSON.parse(usuario)
     setUser(user)
   }
+  useEffect(() => {
+    if(queryParams?.invite && queryParams?.memberId){
+      console.log(user,"user")
+      setShowInviteModal(true)
+    }
+  }, [queryParams])
 
   useEffect(() => {
+   
     getUser()
   }, [])
   useEffect(() => {
@@ -77,6 +90,17 @@ const Muro = () => {
       dispatch(getAllEvents())
     }
   }, [user])
+
+  const handleAceptInvitation = async()=>{
+   try {
+    
+    const res = await axiosInstance.patch(`/user/${user.id}`,{[queryParams.property]:queryParams.memberId})
+    console.log(res.data,"datasss")
+    setShowInviteModal(false)
+   } catch (error) {
+    console.log(error,"error")
+   }
+  }
 
   return (
     <LinearGradient
@@ -257,6 +281,29 @@ const Muro = () => {
                 setShowModalRetos={setShowModalRetos}
               />
             </View>
+          </Modal>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={showInviteModal}
+          >
+            <Pressable
+              style={{
+                top: 300,
+                height: '50%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor:"#FFFF",
+                gap:20
+              }}
+            >
+             <Text>{queryParams?.name} te invito a su grupo familiar</Text>
+             <View style={{flexDirection:"row",gap:20}}>
+              <Button onPress={()=> handleAceptInvitation()} title='Aceptar'></Button>
+              <Button  onPress={()=> setShowInviteModal(false)} title='Cancelar'></Button>
+
+             </View>
+            </Pressable>
           </Modal>
           <StoriesVideosDiarios />
           {/* <Stories /> */}
