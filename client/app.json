@@ -3,7 +3,7 @@
     "name": "mytreev2",
     "slug": "mytreenueva",
     "version": "1.0.0",
-    "scheme": "http",
+    "scheme": "mytree",
     "orientation": "portrait",
     "icon": "./assets/image-9.png",
     "userInterfaceStyle": "light",

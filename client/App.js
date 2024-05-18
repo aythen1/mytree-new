@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import AadirAlbum from './screens/AadirAlbum'
 import Album from './screens/Album'
@@ -79,23 +79,34 @@ import { ContextProvider } from './context/Context'
 import * as Linking from 'expo-linking';
 const Stack = createNativeStackNavigator()
 
-const prefix = Platform.OS == 'android' ? 'miapp://miapp/' : 'miapp://';
+const prefix = Platform.OS == 'android' ? 'mytree://mytree/' : 'mytree://';
 
 const linking = {
-  prefixes: ['https://app.example.com'],
- 
+  prefixes: [prefix,'https://app.mytree.com'],
+
 };
 
 
+
 const App = () => {
+  const navigationRef = useRef();
   const [isFooterShow, setIsFooterShow] = useState(null)
   const loadApp = async () => {
     await loadFonts()
   }
+
+
   useEffect(() => {
-    loadApp()
-  }, [])
-  // hola
+    Linking.addEventListener('url',async (e)=> {
+      const { hostname, path, queryParams } = Linking.parse(e.url);
+      // console.log(queryParams,"parms")
+      // const re =await Linking.openURL("http://mytreeappoficial.com")
+      // console.log(re,"navsss")
+      navigationRef.current?.navigate('Muro', queryParams); // Usar 
+    });
+    loadApp();
+  }, []);
+  
   return (
     <SafeAreaView
       style={{
@@ -110,7 +121,7 @@ const App = () => {
       />
       <Provider store={store}>
         <ContextProvider >
-          <NavigationContainer linking={linking} >
+          <NavigationContainer ref={navigationRef} linking={linking} >
             <Stack.Navigator
 
               initialRouteName="Onboarding2"
