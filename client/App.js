@@ -73,19 +73,25 @@ import { Provider } from 'react-redux'
 import { store } from './redux/store'
 import { loadFonts } from './GlobalStyles'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { StatusBar } from 'react-native'
+import { Platform, StatusBar } from 'react-native'
 import UploadMemory from './screens/Memories/UploadMemory'
 import { ContextProvider } from './context/Context'
-
+import * as Linking from 'expo-linking';
 const Stack = createNativeStackNavigator()
+
+const prefix = Platform.OS == 'android' ? 'miapp://miapp/' : 'miapp://';
+
+const linking = {
+  prefixes: ['https://app.example.com'],
+ 
+};
+
 
 const App = () => {
   const [isFooterShow, setIsFooterShow] = useState(null)
-
   const loadApp = async () => {
     await loadFonts()
   }
-
   useEffect(() => {
     loadApp()
   }, [])
@@ -103,19 +109,20 @@ const App = () => {
         backgroundColor="#fff"
       />
       <Provider store={store}>
-        <ContextProvider>
-          <NavigationContainer>
+        <ContextProvider >
+          <NavigationContainer linking={linking} >
             <Stack.Navigator
+
               initialRouteName="Onboarding2"
               screenOptions={({ route }) => ({
                 headerShown: false,
                 footerShown: setIsFooterShow(
                   route.name !== 'Register' &&
-                    route.name !== 'Splash' &&
-                    route.name !== 'Onboarding' &&
-                    route.name !== 'Onboarding1' &&
-                    route.name !== 'Onboarding2' &&
-                    route.name !== 'LOGIN'
+                  route.name !== 'Splash' &&
+                  route.name !== 'Onboarding' &&
+                  route.name !== 'Onboarding1' &&
+                  route.name !== 'Onboarding2' &&
+                  route.name !== 'LOGIN'
                 )
               })}
             >
@@ -448,8 +455,7 @@ const App = () => {
             {isFooterShow && <FooterNavBar />}
           </NavigationContainer>
         </ContextProvider>
-      </Provider>
-    </SafeAreaView>
+      </Provider></SafeAreaView>
   )
 }
 export default App

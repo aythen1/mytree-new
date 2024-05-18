@@ -4,23 +4,31 @@ import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, FontFamily, Color, Border, Padding } from "../GlobalStyles";
+import { Svg } from "react-native-svg";
+import QRCode from 'react-native-qrcode-svg';
 
-const QR = ({ onClose }) => {
+const QR = ({ onClose, relation,selectedUserToInvite }) => {
   const navigation = useNavigation();
+  const [qr, setQr] = React.useState("")
+
+
+
+  React.useEffect(() => {
+    console.log("relations ",relation , selectedUserToInvite,"invite")
+  }, [])
 
   return (
     <View style={styles.qr}>
       <View style={styles.frameParent}>
         <View style={styles.image8Parent}>
-          <Image
-            style={styles.image8Icon}
-            contentFit="cover"
-            source={require("../assets/image-8.png")}
+          <QRCode
+            size={200}
+            value={relation}
           />
           <View style={styles.searchBar}>
             <View style={styles.placeholderInput}>
               <Text style={[styles.search, styles.searchLayout]}>
-                mytree.app/familia-diaz
+                mytree.app/{relation}
               </Text>
             </View>
             <Image
@@ -171,7 +179,7 @@ const styles = StyleSheet.create({
     height: 52,
     marginTop: 20,
     width: '90%',
-    borderRadius:100,
+    borderRadius: 100,
   },
   frameParent: {
     alignSelf: "stretch",
