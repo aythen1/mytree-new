@@ -51,16 +51,14 @@ const Muro = () => {
   } = useContext(Context)
   const dispatch = useDispatch()
   const navigation = useNavigation()
-  const route = useRoute();
-  const queryParams  = route.params;
-  console.log(queryParams,"queryparams")
+  const route = useRoute()
+  const queryParams = route.params
   const { showPanel } = useSelector((state) => state.panel)
   const [user, setUser] = useState()
   const [showModalRetos, setShowModalRetos] = useState(false)
   const [colorClick, setColorClick] = useState(true)
   const [showRetos, setShowRetos] = useState(false)
   const [menuVisible, setMenuVisible] = useState(false)
-  showInviteModal
   const [showInviteModal, setShowInviteModal] = useState(false)
 
   const handleMenu = () => {
@@ -72,14 +70,13 @@ const Muro = () => {
     setUser(user)
   }
   useEffect(() => {
-    if(queryParams?.invite && queryParams?.memberId){
-      console.log(user,"user")
+    if (queryParams?.invite && queryParams?.memberId) {
+      console.log(user, 'user')
       setShowInviteModal(true)
     }
   }, [queryParams])
 
   useEffect(() => {
-   
     getUser()
   }, [])
   useEffect(() => {
@@ -91,15 +88,16 @@ const Muro = () => {
     }
   }, [user])
 
-  const handleAceptInvitation = async()=>{
-   try {
-    
-    const res = await axiosInstance.patch(`/user/${user.id}`,{[queryParams.property]:queryParams.memberId})
-    console.log(res.data,"datasss")
-    setShowInviteModal(false)
-   } catch (error) {
-    console.log(error,"error")
-   }
+  const handleAceptInvitation = async () => {
+    try {
+      const res = await axiosInstance.patch(`/user/${user.id}`, {
+        [queryParams.property]: queryParams.memberId
+      })
+      console.log(res.data, 'datasss')
+      setShowInviteModal(false)
+    } catch (error) {
+      console.log(error, 'error')
+    }
   }
 
   return (
@@ -142,6 +140,7 @@ const Muro = () => {
                 !showRetos
                   ? [
                       <Pressable
+                        key={1000}
                         onPress={async () => {
                           await dispatch(getAllUsers())
                           navigation.navigate('Busqueda')
@@ -149,12 +148,17 @@ const Muro = () => {
                       >
                         <LupaSVG />
                       </Pressable>,
-                      <MessageSVG />,
+                      <MessageSVG key={2000} />,
                       <NotificationsMuroSVG
+                        key={3000}
                         isNavigation={'PERFILNOTIFICACIONES'}
                       />
                     ]
-                  : [<MessageSVG />, <CalendarMuroSVG />, <SettingMuroSVG />]
+                  : [
+                      <MessageSVG key={3000} />,
+                      <CalendarMuroSVG key={4000} />,
+                      <SettingMuroSVG key={5000} />
+                    ]
               }
             />
           </View>
@@ -293,16 +297,21 @@ const Muro = () => {
                 height: '50%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor:"#FFFF",
-                gap:20
+                backgroundColor: '#FFFF',
+                gap: 20
               }}
             >
-             <Text>{queryParams?.name} te invito a su grupo familiar</Text>
-             <View style={{flexDirection:"row",gap:20}}>
-              <Button onPress={()=> handleAceptInvitation()} title='Aceptar'></Button>
-              <Button  onPress={()=> setShowInviteModal(false)} title='Cancelar'></Button>
-
-             </View>
+              <Text>{queryParams?.name} te invito a su grupo familiar</Text>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <Button
+                  onPress={() => handleAceptInvitation()}
+                  title="Aceptar"
+                ></Button>
+                <Button
+                  onPress={() => setShowInviteModal(false)}
+                  title="Cancelar"
+                ></Button>
+              </View>
             </Pressable>
           </Modal>
           <StoriesVideosDiarios />

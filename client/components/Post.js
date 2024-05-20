@@ -61,11 +61,8 @@ const Posteo = ({ data }) => {
             style={{
               justifyContent: 'center',
               alignItems: 'center',
-
               width: 64,
               height: 64,
-              justifyContent: 'center',
-              alignItems: 'center',
               borderRadius: 25,
               zIndex: 0
             }}

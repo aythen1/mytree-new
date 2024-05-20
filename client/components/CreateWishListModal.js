@@ -166,7 +166,11 @@ const CreateWishListModal = ({ onClose, wishList, setWishList }) => {
         placeholder="Ingresa tu deseo"
       />
 
-      <TouchableOpacity style={{ marginTop: 10 }} onPress={handleAddWish}>
+      <TouchableOpacity
+        disabled={wish.length === 0}
+        style={{ marginTop: 10 }}
+        onPress={handleAddWish}
+      >
         <LinearGradient
           style={{
             justifyContent: 'center',

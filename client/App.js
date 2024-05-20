@@ -76,37 +76,34 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Platform, StatusBar } from 'react-native'
 import UploadMemory from './screens/Memories/UploadMemory'
 import { ContextProvider } from './context/Context'
-import * as Linking from 'expo-linking';
+import * as Linking from 'expo-linking'
+import OpenedChat from './screens/Mensajes/OpenedChat'
 const Stack = createNativeStackNavigator()
 
-const prefix = Platform.OS == 'android' ? 'mytree://mytree/' : 'mytree://';
+const prefix = Platform.OS == 'android' ? 'mytree://mytree/' : 'mytree://'
 
 const linking = {
-  prefixes: [prefix,'https://app.mytree.com'],
-
-};
-
-
+  prefixes: [prefix, 'https://app.mytree.com']
+}
 
 const App = () => {
-  const navigationRef = useRef();
+  const navigationRef = useRef()
   const [isFooterShow, setIsFooterShow] = useState(null)
   const loadApp = async () => {
     await loadFonts()
   }
 
-
   useEffect(() => {
-    Linking.addEventListener('url',async (e)=> {
-      const { hostname, path, queryParams } = Linking.parse(e.url);
+    Linking.addEventListener('url', async (e) => {
+      const { hostname, path, queryParams } = Linking.parse(e.url)
       // console.log(queryParams,"parms")
       // const re =await Linking.openURL("http://mytreeappoficial.com")
       // console.log(re,"navsss")
-      navigationRef.current?.navigate('Muro', queryParams); // Usar 
-    });
-    loadApp();
-  }, []);
-  
+      navigationRef.current?.navigate('Muro', queryParams) // Usar
+    })
+    loadApp()
+  }, [])
+
   return (
     <SafeAreaView
       style={{
@@ -120,20 +117,19 @@ const App = () => {
         backgroundColor="#fff"
       />
       <Provider store={store}>
-        <ContextProvider >
-          <NavigationContainer ref={navigationRef} linking={linking} >
+        <ContextProvider>
+          <NavigationContainer ref={navigationRef} linking={linking}>
             <Stack.Navigator
-
               initialRouteName="Onboarding2"
               screenOptions={({ route }) => ({
                 headerShown: false,
                 footerShown: setIsFooterShow(
                   route.name !== 'Register' &&
-                  route.name !== 'Splash' &&
-                  route.name !== 'Onboarding' &&
-                  route.name !== 'Onboarding1' &&
-                  route.name !== 'Onboarding2' &&
-                  route.name !== 'LOGIN'
+                    route.name !== 'Splash' &&
+                    route.name !== 'Onboarding' &&
+                    route.name !== 'Onboarding1' &&
+                    route.name !== 'Onboarding2' &&
+                    route.name !== 'LOGIN'
                 )
               })}
             >
@@ -303,6 +299,11 @@ const App = () => {
                 options={{ headerShown: false }}
               />
               <Stack.Screen
+                name="OpenedChat"
+                component={OpenedChat}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
                 name="MIDIARIOENTRADAVIDEO"
                 component={MIDIARIOENTRADAVIDEO}
                 options={{ headerShown: false }}
@@ -466,7 +467,8 @@ const App = () => {
             {isFooterShow && <FooterNavBar />}
           </NavigationContainer>
         </ContextProvider>
-      </Provider></SafeAreaView>
+      </Provider>
+    </SafeAreaView>
   )
 }
 export default App

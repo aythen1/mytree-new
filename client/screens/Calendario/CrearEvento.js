@@ -280,7 +280,11 @@ const CrearFechaEspecial = () => {
           </Pressable>
         </View>
         <LinearGradient
-          style={styles.button2}
+          style={{
+            marginTop: '5%',
+            borderRadius: Border.br_11xl,
+            marginBottom: -15
+          }}
           locations={[0, 1]}
           colors={['#dee274', '#7ec18c']}
         >
@@ -494,7 +498,8 @@ const styles = StyleSheet.create({
   crearEvento: {
     flex: 1,
     backgroundColor: Color.white,
-    padding: Padding.p_xl,
+    paddingHorizontal: 20,
+    paddingTop: 20,
     gap: 10
   },
   titleBase: {
