@@ -1,6 +1,14 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { View, StyleSheet, Text, Pressable, ScrollView, StatusBar, Dimensions } from 'react-native'
+import {
+  View,
+  StyleSheet,
+  Text,
+  Pressable,
+  ScrollView,
+  StatusBar,
+  Dimensions
+} from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
@@ -10,28 +18,28 @@ import { setPanel } from '../redux/slices/panel.slices'
 const MenuPrincipal = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
-  const { height: fullHeight } = Dimensions.get('window');
-const statusBarHeight = StatusBar.currentHeight || 0;
-const heightWithoutStatusBar = fullHeight - statusBarHeight;
+  const { height: fullHeight } = Dimensions.get('window')
+  const statusBarHeight = StatusBar.currentHeight || 0
+  const heightWithoutStatusBar = fullHeight - statusBarHeight
 
   return (
     <ScrollView
-      style={{   maxWidth: '70%',
-      top: 0,
-      zIndex: 0, height:'100%'}}
+      style={{ maxWidth: '70%', top: 0, zIndex: 0, height: '100%' }}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ paddingBottom: 100 }}
     >
       <LinearGradient
-        style={{  borderTopRightRadius: Border.br_3xs,borderBottomRightRadius: Border.br_3xs,
-          backgroundColor: Color.linearBoton, height:fullHeight}}
+        style={{
+          borderTopRightRadius: Border.br_3xs,
+          borderBottomRightRadius: Border.br_3xs,
+          backgroundColor: Color.linearBoton,
+          height: fullHeight
+        }}
         start={{ x: 0.9, y: 0.6 }}
         end={{ x: 0, y: 0.6 }}
         colors={['#e2e57a', '#7fc08b']}
       >
-        <View style={{    top: 20,
-    left: 20,
-    zIndex: 50}}>
+        <View style={{ top: 20, left: 20, zIndex: 50 }}>
           <View>
             <View style={styles.parentFlexBox}>
               <Image
@@ -46,7 +54,7 @@ const heightWithoutStatusBar = fullHeight - statusBarHeight;
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('Muro')
-                 dispatch(setPanel(false))
+                  dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Muro</Text>
@@ -68,7 +76,7 @@ const heightWithoutStatusBar = fullHeight - statusBarHeight;
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('MENSAJERA')
-                 dispatch(setPanel(false))
+                  dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Mensajeria</Text>
@@ -93,7 +101,7 @@ const heightWithoutStatusBar = fullHeight - statusBarHeight;
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('MIDIARIOPANTALLAPERSONAL')
-                 dispatch(setPanel(false))
+                  dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Diario Familiar</Text>
@@ -115,7 +123,7 @@ const heightWithoutStatusBar = fullHeight - statusBarHeight;
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('CALENDARIO')
-                 dispatch(setPanel(false))
+                  dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Calendario</Text>
@@ -139,7 +147,7 @@ const heightWithoutStatusBar = fullHeight - statusBarHeight;
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('Organizador')
-                 dispatch(setPanel(false))
+                  dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Crear</Text>
@@ -164,7 +172,7 @@ const heightWithoutStatusBar = fullHeight - statusBarHeight;
                   style={styles.muro}
                   onPress={() => {
                     navigation.navigate('Busqueda')
-                   dispatch(setPanel(false))
+                    dispatch(setPanel(false))
                   }}
                 >
                   <Text style={styles.muro1Typo}>Búsqueda</Text>
@@ -189,7 +197,7 @@ const heightWithoutStatusBar = fullHeight - statusBarHeight;
                   style={styles.muro}
                   onPress={() => {
                     navigation.navigate('Novedades')
-                   dispatch(setPanel(false))
+                    dispatch(setPanel(false))
                   }}
                 >
                   <Text style={styles.muro1Typo}>Novedades</Text>
@@ -216,7 +224,7 @@ const heightWithoutStatusBar = fullHeight - statusBarHeight;
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('Perfil')
-                 dispatch(setPanel(false))
+                  dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Perfil</Text>
@@ -240,7 +248,7 @@ const heightWithoutStatusBar = fullHeight - statusBarHeight;
                 style={styles.muro}
                 onPress={() => {
                   navigation.navigate('PerfilAjustes')
-                 dispatch(setPanel(false))
+                  dispatch(setPanel(false))
                 }}
               >
                 <Text style={styles.muro1Typo}>Ajustes</Text>

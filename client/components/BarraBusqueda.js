@@ -1,5 +1,11 @@
 import React from 'react'
-import { View, TextInput, StyleSheet, Pressable } from 'react-native'
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Pressable,
+  Dimensions
+} from 'react-native'
 import { Image } from 'expo-image'
 import { Color, Border, Padding, FontFamily, FontSize } from '../GlobalStyles'
 import MasBusquedaSVG from './svgs/MasBusquedaSVG'
@@ -38,18 +44,18 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     flexDirection: 'row',
-    width: '80%',
+    width: Dimensions.get('screen').width * 0.9,
+    marginLeft: Dimensions.get('screen').width * 0.05,
     backgroundColor: Color.white,
-    top: '10%',
-    left: '1%',
-    gap: 20
+    marginTop: 20,
+    justifyContent: 'space-between'
   },
   searchBar: {
     backgroundColor: Color.fAFAFA,
     paddingHorizontal: Padding.p_sm,
-    paddingVertical: Padding.p_5xs,
+    paddingVertical: 3.5,
     borderRadius: Border.br_3xs,
-    width: '100%',
+    width: '85%',
     flexDirection: 'row',
     alignItems: 'center'
   },

@@ -25,7 +25,7 @@ export const eventsSlices = createSlice({
         state.loading = true
       })
       .addCase(getAllEvents.fulfilled, (state, action) => {
-        console.log('PAYLOAD: ', action.payload)
+        console.log('PAYLOAD gAE: ', action.payload)
         state.loading = false
         state.allEvents = action.payload
       })
@@ -39,7 +39,7 @@ export const eventsSlices = createSlice({
         state.loading = true
       })
       .addCase(getAllUserEvents.fulfilled, (state, action) => {
-        console.log('PAYLOAD: ', action.payload)
+        console.log('PAYLOAD gUE: ', action.payload)
         state.loading = false
         state.userEvents = action.payload
       })

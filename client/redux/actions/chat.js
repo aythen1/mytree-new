@@ -1,23 +1,46 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import { setAllMessages } from '../slices/chats.slices'
+import axiosInstance from '../../apiBackend'
 
-export const loadMessages = createAsyncThunk(
-  'chat/loadMessages',
-  async ({ senderId, receiverId, createdAt, limit }, thunkAPI) => {
-    const response = await fetch(
-      `/chat/room?senderId=${senderId}&receiverId=${receiverId}&createdAt=${createdAt}&limit=${limit}`
-    )
-    const data = await response.json()
-    return data
+export const getChatHistory = createAsyncThunk(
+  'getChatHistory/chats',
+  async ({ sender, receiver, limit, date }) => {
+    try {
+      const ts = new Date()
+      if (!date) {
+        const { data } = await axiosInstance.get(
+          `chat/room?limit=${limit || 10}&senderId=${sender}&receiverId=${receiver}`
+        )
+        console.log('data1: ', data)
+        return data
+      } else {
+        const { data } = await axiosInstance.get(
+          `chat/room?limit=${limit || 10}&createdAt=${date || ts}&senderId=${sender}&receiverId=${receiver}`
+        )
+        // console.log('data: ', data)
+        return data
+      }
+    } catch (error) {
+      throw new Error(error)
+    }
   }
 )
 
-export const markAsRead = createAsyncThunk(
-  'chat/markAsRead',
-  async (messageId, thunkAPI) => {
-    const response = await fetch(`/chat/readed/${messageId}`, {
-      method: 'PUT'
-    })
-    const data = await response.json()
-    return data
+export const updateMessages = createAsyncThunk(
+  'updateMessages/chats',
+  async (msg) => {
+    try {
+      return msg
+    } catch (error) {
+      throw new Error(error)
+    }
   }
 )
+
+export const emptyAllMessages = () => async (dispatch) => {
+  try {
+    dispatch(setAllMessages([]))
+  } catch (error) {
+    console.log(error)
+  }
+}
