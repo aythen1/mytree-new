@@ -5,9 +5,11 @@ import { FontFamily, FontSize, Color } from '../../../GlobalStyles'
 import { useSelector } from 'react-redux'
 
 const BusquedaContactos = () => {
-  const {userData,allUsers} = useSelector(state=>state.users)
-  const userFamily = allUsers.filter(user=>user.id === userData.id)[0]?.familyIds || []
-  const userFriends = allUsers.filter(user=>user.id === userData.id)[0]?.friendsIds || []
+  const { userData, allUsers } = useSelector((state) => state.users)
+  const userFamily =
+    allUsers.filter((user) => user.id === userData.id)[0]?.familyIds || []
+  const userFriends =
+    allUsers.filter((user) => user.id === userData.id)[0]?.friendsIds || []
 
   return (
     <ScrollView
@@ -23,18 +25,53 @@ const BusquedaContactos = () => {
             <View style={[styles.frameChild, styles.frameChildLayout]} />
           </View>
           <View style={styles.frameView}>
-           {userFamily.length > 0 ? <ScrollView>
-            {userFamily.map(((familyMember,index)=> <View key={index} style={styles.frameParent1}>
-              <Image
-                style={styles.frameItem}
-                contentFit="cover"
-                source={require('../../../assets/frame-1547754875.png')}
-              />
-              <Text style={[styles.brunoPham, styles.retosLayout]}>
-                {allUsers.filter(user=>user.id.toString()===familyMember)[0]?.username + ' ' + allUsers.filter(user=>user.id.toString()===familyMember)[0]?.apellido }
+            {userFamily.length > 0 ? (
+              <ScrollView>
+                {userFamily.map((familyMember, index) => (
+                  <View key={index} style={styles.frameParent1}>
+                    <Image
+                      style={styles.frameItem}
+                      contentFit="cover"
+                      source={require('../../../assets/frame-1547754875.png')}
+                    />
+                    <Text
+                      numberOfLines={1}
+                      style={{
+                        color: Color.grisDiscord,
+                        textAlign: 'justify',
+                        marginLeft: 13,
+                        fontSize: FontSize.size_base,
+                        lineHeight: 19,
+                        fontFamily: FontFamily.lato,
+                        fontWeight: '700',
+                        letterSpacing: 0,
+                        width: '80%'
+                      }}
+                    >
+                      {allUsers.filter(
+                        (user) => user.id.toString() === familyMember
+                      )[0]?.username +
+                        ' ' +
+                        allUsers.filter(
+                          (user) => user.id.toString() === familyMember
+                        )[0]?.apellido}
+                    </Text>
+                  </View>
+                ))}
+              </ScrollView>
+            ) : (
+              <Text
+                style={{
+                  color: '#000',
+                  marginTop: 40,
+                  fontSize: 16,
+                  alignSelf: 'center',
+                  fontWeight: 400
+                }}
+              >
+                Aun no tienes ningun contacto agregado a familiares.
               </Text>
-            </View>))}
-           </ScrollView> : <Text style={{color:"#000",marginTop:40, fontSize:16,alignSelf:'center', fontWeight:400}}>Aun no tienes ningun contacto agregado a familiares.</Text>}
+            )}
           </View>
 
           <View style={styles.frameParent4}>
@@ -45,18 +82,54 @@ const BusquedaContactos = () => {
               <View style={[styles.frameChild, styles.frameChildLayout]} />
             </View>
             <View style={styles.frameView}>
-            {userFriends.length > 0 ? <ScrollView>
-            {userFriends.map(((friendMember,index)=> <View key={index} style={styles.frameParent1}>
-              <Image
-                style={styles.frameItem}
-                contentFit="cover"
-                source={require('../../../assets/frame-1547754875.png')}
-              />
-              <Text style={[styles.brunoPham, styles.retosLayout]}>
-              {allUsers.filter(user=>user.id.toString()===friendMember)[0]?.username + ' ' + allUsers.filter(user=>user.id.toString()===friendMember)[0]?.apellido }
-              </Text>
-            </View>))}
-           </ScrollView> : <Text style={{color:"#000",paddingHorizontal:15,marginTop:40, fontSize:16,alignSelf:'center', fontWeight:400}}>Aun no tienes ningun contacto agregado a amigos.</Text>}
+              {userFriends.length > 0 ? (
+                <ScrollView>
+                  {userFriends.map((friendMember, index) => (
+                    <View key={index} style={styles.frameParent1}>
+                      <Image
+                        style={styles.frameItem}
+                        contentFit="cover"
+                        source={require('../../../assets/frame-1547754875.png')}
+                      />
+                      <Text
+                        numberOfLines={1}
+                        style={{
+                          color: Color.grisDiscord,
+                          textAlign: 'justify',
+                          marginLeft: 13,
+                          fontSize: FontSize.size_base,
+                          lineHeight: 19,
+                          fontFamily: FontFamily.lato,
+                          fontWeight: '700',
+                          letterSpacing: 0,
+                          width: '80%'
+                        }}
+                      >
+                        {allUsers.filter(
+                          (user) => user.id.toString() === friendMember
+                        )[0]?.username +
+                          ' ' +
+                          allUsers.filter(
+                            (user) => user.id.toString() === friendMember
+                          )[0]?.apellido}
+                      </Text>
+                    </View>
+                  ))}
+                </ScrollView>
+              ) : (
+                <Text
+                  style={{
+                    color: '#000',
+                    paddingHorizontal: 15,
+                    marginTop: 40,
+                    fontSize: 16,
+                    alignSelf: 'center',
+                    fontWeight: 400
+                  }}
+                >
+                  Aun no tienes ningun contacto agregado a amigos.
+                </Text>
+              )}
             </View>
           </View>
         </View>
@@ -156,15 +229,13 @@ const styles = StyleSheet.create({
     right: '5%'
   },
   frameParent: {
-    // left: '13%',
     alignItems: 'center'
   },
   bsquedaContactos: {
     overflow: 'hidden',
     flex: 1,
-    backgroundColor: Color.white,
-    top: '15%',
-    paddingBottom: 100
+    paddingHorizontal: 20,
+    paddingTop: 40
   }
 })
 

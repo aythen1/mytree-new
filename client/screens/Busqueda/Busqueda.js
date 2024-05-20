@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image } from 'expo-image'
 import {
   StyleSheet,
@@ -23,164 +23,241 @@ import BusquedaHashtags from './BusquedaComponents/BusquedaHashtags'
 import BusquedaEventos from './BusquedaComponents/BusquedaEventos'
 import MasBusquedaSVG from '../../components/svgs/MasBusquedaSVG'
 import BarraBusqueda from '../../components/BarraBusqueda'
+import Post from '../../components/Post'
+import { LinearGradient } from 'expo-linear-gradient'
+import { useDispatch, useSelector } from 'react-redux'
+import { getAllPosts } from '../../redux/actions/posts'
 
 const Busqueda = () => {
   const navigation = useNavigation()
+  const dispatch = useDispatch()
+  const [search, setSearch] = useState('')
+  const { allPosts } = useSelector((state) => state.posts)
+  const { allEvents } = useSelector((state) => state.events)
+  const [filteredPosts, setFilteredPosts] = useState(allPosts || [])
+  const [filteredEvents, setFilteredEvents] = useState(allEvents || [])
+
+  useEffect(() => {
+    dispatch(getAllPosts())
+  }, [])
 
   const [selectedComponent, setSelectedComponent] =
     useState('BusquedaContactos')
+
+  useEffect(() => {
+    console.log('search changed: ', search)
+    if (search.length > 0) {
+      if (selectedComponent === 'BusquedaPublicaciones') {
+        const postFilteredBySearch = [...allPosts].filter((post) => {
+          if (
+            post.hashtags
+              .map((hashtag) => hashtag.toLowerCase())
+              .includes(search.toLowerCase())
+          ) {
+            return true
+          }
+          if (post.description.toLowerCase().includes(search.toLowerCase())) {
+            return true
+          }
+          if (post.nameUser.toLowerCase().includes(search.toLowerCase())) {
+            return true
+          }
+          return false
+        })
+        setFilteredPosts(postFilteredBySearch)
+      }
+      if (selectedComponent === 'BusquedaEventos') {
+        const eventsFilteredBySearch = [...allEvents].filter((evnt) =>
+          evnt.title.toLowerCase().includes(search.toLowerCase())
+        )
+        setFilteredEvents(eventsFilteredBySearch)
+      }
+    } else {
+      if (selectedComponent === 'BusquedaPublicaciones') {
+        setFilteredPosts(allPosts)
+      }
+      if (selectedComponent === 'BusquedaEventos') {
+        setFilteredEvents(allEvents)
+      }
+      // if (selectedComponent === 'BusquedaContactos') {
+      //   setFilteredContacts(allUsers)
+      // }
+      // if (selectedComponent === 'BusquedaDiarios') {
+      //   setFilteredDiaries(allDiaries)
+      // }
+      // if (selectedComponent === 'BusquedaHashtags') {
+      //   setFilteredHashtags(allHashtags)
+      // }
+    }
+  }, [search])
 
   const renderSelectedComponent = () => {
     switch (selectedComponent) {
       case 'BusquedaContactos':
         return <BusquedaContactos />
       case 'BusquedaPublicaciones':
-        return <BusquedaPublicaciones />
+        return <Post posts={filteredPosts} padding={true} />
       case 'BusquedaDiarios':
         return <BusquedaDiarios />
       case 'BusquedaHashtags':
         return <BusquedaHashtags />
       case 'BusquedaEventos':
-        return <BusquedaEventos />
+        return <BusquedaEventos events={filteredEvents} />
       default:
         return null
     }
   }
 
   return (
-    <ScrollView style={styles.bsqueda} showsVerticalScrollIndicator={false}>
-      <View style={styles.bsquedaContainer}>
-        <Image
-          style={styles.image6Icon}
-          contentFit="cover"
-          source={require('../../assets/image-6.png')}
-        />
-        <View style={styles.backParent}>
-          <Pressable
-            style={styles.back}
-            onPress={() => navigation.navigate('Muro')}
-          >
-            <Image
-              style={styles.icon}
-              contentFit="cover"
-              source={require('../../assets/back.png')}
-            />
-          </Pressable>
-          <Text style={[styles.bsqueda1, styles.bsqueda1Typo]}>Búsqueda</Text>
-        </View>
+    <LinearGradient
+      colors={['#fff', '#f6f6f6']}
+      style={{ flex: 1 }}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+    >
+      <ScrollView
+        style={styles.bsqueda}
+        contentContainerStyle={{
+          paddingBottom: selectedComponent === 'BusquedaContactos' ? 72 : 100
+        }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.bsquedaContainer}>
+          <Image
+            style={styles.image6Icon}
+            contentFit="cover"
+            source={require('../../assets/image-6.png')}
+          />
+          <View style={styles.backParent}>
+            <Pressable
+              style={styles.back}
+              onPress={() => navigation.navigate('Muro')}
+            >
+              <Image
+                style={styles.icon}
+                contentFit="cover"
+                source={require('../../assets/back.png')}
+              />
+            </Pressable>
+            <Text style={[styles.bsqueda1, styles.bsqueda1Typo]}>Búsqueda</Text>
+          </View>
 
-        <BarraBusqueda />
+          <BarraBusqueda
+            search={search}
+            setSearch={setSearch}
+            fromSearch={true}
+          />
 
-        <ScrollView
-          style={styles.tabsParent}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-        >
-          <Pressable
-            style={[
-              selectedComponent === 'BusquedaContactos'
-                ? styles.tabs
-                : styles.contactosWrapper,
-              styles.tabsFlexBox
-            ]}
-            onPress={() => setSelectedComponent('BusquedaContactos')}
+          <ScrollView
+            style={styles.tabsParent}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
           >
-            <Text
+            <Pressable
               style={[
                 selectedComponent === 'BusquedaContactos'
-                  ? styles.retos
-                  : styles.contactos,
-                styles.retosTypo
+                  ? styles.tabs
+                  : styles.contactosWrapper,
+                styles.tabsFlexBox
               ]}
+              onPress={() => setSelectedComponent('BusquedaContactos')}
             >
-              Contactos
-            </Text>
-          </Pressable>
-          <Pressable
-            style={[
-              selectedComponent === 'BusquedaPublicaciones'
-                ? styles.tabs
-                : styles.contactosWrapper,
-              styles.tabsFlexBox
-            ]}
-            onPress={() => setSelectedComponent('BusquedaPublicaciones')}
-          >
-            <Text
+              <Text
+                style={[
+                  selectedComponent === 'BusquedaContactos'
+                    ? styles.retos
+                    : styles.contactos,
+                  styles.retosTypo
+                ]}
+              >
+                Contactos
+              </Text>
+            </Pressable>
+            <Pressable
               style={[
                 selectedComponent === 'BusquedaPublicaciones'
-                  ? styles.retos
-                  : styles.contactos,
-                styles.retosTypo
+                  ? styles.tabs
+                  : styles.contactosWrapper,
+                styles.tabsFlexBox
               ]}
+              onPress={() => setSelectedComponent('BusquedaPublicaciones')}
             >
-              Publicaciones
-            </Text>
-          </Pressable>
-          <Pressable
-            style={[
-              selectedComponent === 'BusquedaDiarios'
-                ? styles.tabs
-                : styles.contactosWrapper,
-              styles.tabsFlexBox
-            ]}
-            onPress={() => setSelectedComponent('BusquedaDiarios')}
-          >
-            <Text
+              <Text
+                style={[
+                  selectedComponent === 'BusquedaPublicaciones'
+                    ? styles.retos
+                    : styles.contactos,
+                  styles.retosTypo
+                ]}
+              >
+                Publicaciones
+              </Text>
+            </Pressable>
+            <Pressable
               style={[
                 selectedComponent === 'BusquedaDiarios'
-                  ? styles.retos
-                  : styles.contactos,
-                styles.retosTypo
+                  ? styles.tabs
+                  : styles.contactosWrapper,
+                styles.tabsFlexBox
               ]}
+              onPress={() => setSelectedComponent('BusquedaDiarios')}
             >
-              Diarios
-            </Text>
-          </Pressable>
-          <Pressable
-            style={[
-              selectedComponent === 'BusquedaHashtags'
-                ? styles.tabs
-                : styles.contactosWrapper,
-              styles.tabsFlexBox
-            ]}
-            onPress={() => setSelectedComponent('BusquedaHashtags')}
-          >
-            <Text
+              <Text
+                style={[
+                  selectedComponent === 'BusquedaDiarios'
+                    ? styles.retos
+                    : styles.contactos,
+                  styles.retosTypo
+                ]}
+              >
+                Diarios
+              </Text>
+            </Pressable>
+            <Pressable
               style={[
                 selectedComponent === 'BusquedaHashtags'
-                  ? styles.retos
-                  : styles.contactos,
-                styles.retosTypo
+                  ? styles.tabs
+                  : styles.contactosWrapper,
+                styles.tabsFlexBox
               ]}
+              onPress={() => setSelectedComponent('BusquedaHashtags')}
             >
-              Hashtags
-            </Text>
-          </Pressable>
-          <Pressable
-            style={[
-              selectedComponent === 'BusquedaEventos'
-                ? styles.tabs
-                : styles.contactosWrapper,
-              styles.tabsFlexBox
-            ]}
-            onPress={() => setSelectedComponent('BusquedaEventos')}
-          >
-            <Text
+              <Text
+                style={[
+                  selectedComponent === 'BusquedaHashtags'
+                    ? styles.retos
+                    : styles.contactos,
+                  styles.retosTypo
+                ]}
+              >
+                Hashtags
+              </Text>
+            </Pressable>
+            <Pressable
               style={[
                 selectedComponent === 'BusquedaEventos'
-                  ? styles.retos
-                  : styles.contactos,
-                styles.retosTypo
+                  ? styles.tabs
+                  : styles.contactosWrapper,
+                styles.tabsFlexBox
               ]}
+              onPress={() => setSelectedComponent('BusquedaEventos')}
             >
-              Eventos
-            </Text>
-          </Pressable>
-        </ScrollView>
-
+              <Text
+                style={[
+                  selectedComponent === 'BusquedaEventos'
+                    ? styles.retos
+                    : styles.contactos,
+                  styles.retosTypo
+                ]}
+              >
+                Eventos
+              </Text>
+            </Pressable>
+          </ScrollView>
+        </View>
         {renderSelectedComponent()}
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </LinearGradient>
   )
 }
 
@@ -191,11 +268,12 @@ const styles = StyleSheet.create({
   },
   tabsFlexBox: {
     paddingVertical: Padding.p_3xs,
-    paddingHorizontal: Padding.p_9xs,
+    paddingHorizontal: 4,
     borderRadius: Border.br_7xs,
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginHorizontal: 2
   },
   retosTypo: {
     textAlign: 'center',
@@ -273,17 +351,25 @@ const styles = StyleSheet.create({
     color: Color.grisGeneral
   },
   tabsParent: {
-    top: '20%',
+    marginTop: 15,
     flexDirection: 'row'
   },
   bsqueda: {
     width: '100%',
-    flex: 1,
-    backgroundColor: Color.white,
-    padding: Padding.p_xl
+    flex: 1
   },
   bsquedaContainer: {
-    paddingBottom: 80
+    paddingBottom: 10,
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+    shadowOpacity: 1,
+    elevation: 5,
+    shadowRadius: 15,
+    shadowOffset: {
+      width: 10,
+      height: 10
+    },
+    shadowColor: 'black'
   }
 })
 
