@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "mytreev2",
-    "slug": "mytreenueva",
+    "name": "MyTree",
+    "slug": "mytree",
     "version": "1.0.0",
     "scheme": "mytree",
     "orientation": "portrait",
-    "icon": "./assets/image-9.png",
+    "icon": "./assets/myTreeLogo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -29,7 +29,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "296deecb-db9a-47bc-9d00-4f8bd96480ba"
+        "projectId": "407a2db3-1f4f-459b-9dba-6abc56078216"
       }
     },
     "plugins": [
@@ -44,6 +44,6 @@
       ],
       ["@react-native-google-signin/google-signin"]
     ],
-    "owner": "azschiaffino"
+    "owner": "kraa"
   }
 }

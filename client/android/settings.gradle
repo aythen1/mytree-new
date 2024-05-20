@@ -1,4 +1,4 @@
-rootProject.name = 'mytreev2'
+rootProject.name = 'MyTree'
 
 dependencyResolutionManagement {
   versionCatalogs {

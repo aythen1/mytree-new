@@ -9,117 +9,81 @@ import {
   TextInput,
   Dimensions
 } from 'react-native'
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native'
 import { Context } from '../../context/Context'
 import { Color, FontFamily } from '../../GlobalStyles'
 import { LinearGradient } from 'expo-linear-gradient'
 import SingleMessage from './SingleMessage'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { emptyAllMessages, getChatHistory } from '../../redux/actions/chat'
+import { setAllConversationMessagesToRead } from '../../redux/slices/chats.slices'
+import axiosInstance from '../../apiBackend'
 
 const OpenedChat = () => {
   const scrollViewRef = useRef()
   const route = useRoute()
+  const dispatch = useDispatch()
   const { allUsers } = useSelector((state) => state.users)
   const { allMessages } = useSelector((state) => state.chats)
-  const [message, setMessage] = useState()
+  const [selectedUserDetails, setSelectedUserDetails] = useState()
+  const [message, setMessage] = useState('')
   const isFocused = useIsFocused()
   const navigation = useNavigation()
-  const { getUsersMessages, sendMessage, userData, getTimeFromDate } =
-    useContext(Context)
-
-  const [hardcodedMessages, setHardcodedMessages] = useState([
-    {
-      createdAt: new Date(),
-      senderId: 6,
-      key: 1,
-      message: 'testing',
-      isReaded: false
-    },
-    {
-      createdAt: new Date(),
-      key: 2,
-      senderId: 5,
-      message: 'testing1',
-      isReaded: true
-    },
-    {
-      createdAt: new Date(),
-      key: 3,
-      message: 'testing2',
-      senderId: 6,
-      isReaded: true
-    },
-    {
-      createdAt: new Date(),
-      key: 4,
-      message: 'testing3',
-      senderId: 6,
-      isReaded: true
-    },
-    {
-      createdAt: new Date(),
-      key: 5,
-      message: 'testing',
-      senderId: 5,
-      isReaded: true
-    },
-    {
-      createdAt: new Date(),
-      key: 6,
-      message: 'testingg',
-      senderId: 5,
-      isReaded: true
-    },
-    {
-      createdAt: new Date(),
-      key: 7,
-      message: 'testingggg',
-      senderId: 5,
-      isReaded: true
-    },
-    {
-      createdAt: new Date(),
-      key: 8,
-      message: 'testinggggggg',
-      senderId: 5,
-      isReaded: true
-    },
-    {
-      createdAt: new Date(),
-      key: 9,
-      message: 'testinggggasdsd',
-      senderId: 6,
-      isReaded: true
-    },
-    {
-      createdAt: new Date(),
-      key: 10,
-      message: 'tgafadsa',
-      senderId: 6,
-      isReaded: true
-    },
-    {
-      createdAt: new Date(),
-      key: 11,
-      message: 'vbngf',
-      senderId: 5,
-      isReaded: true
-    },
-    {
-      createdAt: new Date(),
-      key: 12,
-      message: 'hgfsdsdf',
-      senderId: 6,
-      isReaded: true
-    }
-  ])
+  const {
+    joinRoom,
+    getUsersMessages,
+    roomId,
+    leaveRoom,
+    userData,
+    sendMessage,
+    getTimeFromDate
+  } = useContext(Context)
 
   const handleSendMessage = () => {
     sendMessage(message, userData.id, route.params.receiverId)
     setMessage()
   }
+
+  useEffect(() => {
+    setSelectedUserDetails(
+      allUsers.filter((user) => user.id === route.params.receiverId)[0]
+    )
+    console.log(
+      'userData',
+      allUsers.filter((user) => user.id === route.params.receiverId)[0]
+    )
+  }, [])
+  useEffect(() => {
+    joinRoom(userData.id, route.params.receiverId)
+    dispatch(
+      getChatHistory({
+        sender: userData.id,
+        receiver: route.params.receiverId
+      })
+    )
+    return () => {
+      dispatch(emptyAllMessages())
+      leaveRoom(userData.id, route.params.receiverId)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (allMessages && allMessages.length > 0) {
+      const messagesToSetReaded = allMessages?.filter(
+        (message) =>
+          message.senderId.toString() !== userData.id.toString() &&
+          message.isReaded === false
+      )
+      // console.log('messagesToSetReaded: ', messagesToSetReaded)
+      messagesToSetReaded.forEach((message) => {
+        axiosInstance.put(`chat/readed/${message.id}`)
+        dispatch(setAllConversationMessagesToRead())
+      })
+    }
+  }, [allMessages])
+
   return (
     <LinearGradient
       style={{
@@ -187,8 +151,7 @@ const OpenedChat = () => {
                 color: Color.primario1
               }}
             >
-              {/* {route.params.receiverName} */}
-              User Name
+              {route.params.receiverName}
             </Text>
           </TouchableOpacity>
         </View>
@@ -282,12 +245,12 @@ const OpenedChat = () => {
             paddingLeft: 10
           }}
         >
-          {hardcodedMessages?.map((chat) => (
+          {allMessages?.map((chat) => (
             <SingleMessage
               hour={getTimeFromDate(chat.createdAt)}
               key={chat.id}
               text={chat.message}
-              isMy={chat.senderId === userData.id}
+              isMy={chat.senderId.toString() === userData.id.toString()}
               read={chat.isReaded}
             />
           ))}
@@ -320,7 +283,7 @@ const OpenedChat = () => {
           }}
         />
         <Pressable
-          disabled={message}
+          disabled={message?.length === 0}
           onPress={handleSendMessage}
           style={{ width: 50, height: 50, borderRadius: 100 }}
         >

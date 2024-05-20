@@ -198,9 +198,11 @@ export const ContextProvider = ({ children }) => {
           `chat/room?limit=${10}&senderId=${userData.id}&receiverId=${user.id}`
         )
         console.log('data from chat with ', user.id, data)
-        const filterByDelete = data.filter((message) => {
+        const filterByDelete = data?.filter((message) => {
           const senderOrReceiver =
-            message.senderId === userData.id ? 'sender' : 'receiver'
+            message.senderId.toString() === userData.id.toString()
+              ? 'sender'
+              : 'receiver'
           if (senderOrReceiver === 'sender') {
             if (message.senderDelete === true) {
               return false
@@ -246,7 +248,7 @@ export const ContextProvider = ({ children }) => {
   }
 
   const socket = io(
-    'http://cda3a8c0-e981-4f8d-808f-a9a389c5174e.pub.instances.scw.cloud:3010',
+    'http://6f651255-2a5d-4271-a8c7-35730a2de342.pub.instances.scw.cloud:3010',
     {
       transports: ['websocket']
       // auth: {
@@ -297,6 +299,7 @@ export const ContextProvider = ({ children }) => {
   }
 
   const sendMessage = (message, sender, receiver) => {
+    console.log('=============SENDING MESSAGE=============')
     socket.emit('message', { message, sender, receiver })
   }
 
