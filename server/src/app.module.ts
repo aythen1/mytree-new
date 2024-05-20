@@ -34,7 +34,7 @@ import { Event } from './event/entities/event.entity';
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASS'),
         database: configService.get<string>('DB_NAME'),
-        entities: [User, Post, Notification, History, Comment,Event],
+        entities: [User, Post, Notification, History, Comment,Event,MessageEntity],
         synchronize: true,
       }),
       inject: [ConfigService],

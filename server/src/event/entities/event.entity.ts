@@ -33,4 +33,7 @@ export class Event {
     @Column({ type: 'varchar', nullable: true })
     title: string;
 
+    @Column('jsonb', { nullable: true })
+    extraData: any;
+
 }

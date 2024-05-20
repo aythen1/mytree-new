@@ -22,7 +22,7 @@ import { Context } from '../context/Context'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllPosts } from '../redux/actions/posts'
 
-const Posteo = ({ data }) => {
+const Posteo = ({ data, padding }) => {
   const { setShowShareModal, setShowTaggedsModal, setSelectedPostTags } =
     useContext(Context)
   const [showTagged, setShowTagged] = useState(false)
@@ -38,7 +38,18 @@ const Posteo = ({ data }) => {
   }
 
   return (
-    <View style={styles.frameChild}>
+    <View
+      style={{
+        backgroundColor: Color.mytreeClarito,
+        left: 0,
+        top: padding && padding !== false ? 15 : 5,
+        height: 500,
+        marginBottom: 30,
+        borderRadius: 20,
+        marginHorizontal: padding && padding !== false && 15,
+        overflow: 'hidden'
+      }}
+    >
       <ImageBackground
         style={{
           height: 500,
@@ -114,7 +125,7 @@ const Posteo = ({ data }) => {
           </TouchableOpacity>
         </View>
         <LinearGradient
-          style={{ padding: 5, padding: 15 }}
+          style={{ padding: 15 }}
           end={{ x: 0.5, y: 0 }}
           start={{ x: 0.5, y: 1 }}
           colors={['rgba(0,0,0,0.9)', 'transparent']}
@@ -127,7 +138,7 @@ const Posteo = ({ data }) => {
   )
 }
 
-const Post = () => {
+const Post = ({ padding, posts }) => {
   const [showTagged, setShowTagged] = useState(false)
   const [showIcons, setShowIcons] = useState(false)
   const { allPosts } = useSelector((state) => state.posts)
@@ -155,9 +166,24 @@ const Post = () => {
   //     fetchPosts() // Volver a cargar los posts cuando la pantalla obtenga foco
   //   }, [])
   // )
+  if (posts?.length === 0)
+    return (
+      <View style={{ width: '100%', alignItems: 'center', paddingTop: 50 }}>
+        <Text style={{ fontSize: 14, fontWeight: 500, color: '#202020' }}>
+          No se han encontrado resultados!
+        </Text>
+      </View>
+    )
   return (
     <Pressable style={styles.rectangleParent} onPress={toggleIcons}>
-      {allPosts && allPosts.map((e, i) => <Posteo data={e} key={i}></Posteo>)}
+      {posts
+        ? posts.map((e, i) => (
+            <Posteo padding={padding} data={e} key={i}></Posteo>
+          ))
+        : allPosts &&
+          allPosts.map((e, i) => (
+            <Posteo padding={padding} data={e} key={i}></Posteo>
+          ))}
     </Pressable>
   )
 }
@@ -188,8 +214,7 @@ const styles = StyleSheet.create({
   },
   rectangleParent: {
     height: '85%',
-    paddingBottom: 5,
-    top: 15
+    paddingBottom: 5
   },
   camila: {
     fontSize: FontSize.size_5xl,

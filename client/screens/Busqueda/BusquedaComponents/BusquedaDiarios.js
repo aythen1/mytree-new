@@ -26,7 +26,6 @@ const BusquedaPublicaciones = () => {
 const styles = StyleSheet.create({
   bsquedaPublicaciones: {
     flex: 1,
-    backgroundColor: Color.white,
     paddingBottom: 50,
     top: '30%'
   },

@@ -368,8 +368,7 @@ const styles = StyleSheet.create({
     height: '100%',
     // flex: 1,
     paddingHorizontal: 0,
-    backgroundColor: Color.white,
-    top: 15
+    backgroundColor: Color.white
   }
 })
 

@@ -9,78 +9,47 @@ import {
   FontFamily,
   Color
 } from '../../../GlobalStyles'
+import { useSelector } from 'react-redux'
 
-function BusquedaEventos() {
+function BusquedaEventos({ events }) {
   const navigation = useNavigation()
-
+  if (events.length === 0)
+    return (
+      <View style={{ width: '100%', alignItems: 'center', paddingTop: 50 }}>
+        <Text style={{ fontSize: 14, fontWeight: 500, color: '#202020' }}>
+          No se han encontrado resultados!
+        </Text>
+      </View>
+    )
   return (
     <ScrollView
       style={styles.notificationParent}
       showsVerticalScrollIndicator={false}
     >
-      <LinearGradient
-        style={[styles.notification1, styles.pressableBg]}
-        locations={[0, 1]}
-        colors={['#dee274', '#7ec18c']}
-      >
-        <Pressable
-          style={styles.pressable}
-          onPress={() => navigation.navigate('BusquedaRetoSemanal')}
+      {events.map((evnt, index) => (
+        <LinearGradient
+          key={index}
+          style={[styles.notification1, styles.pressableBg]}
+          locations={[0, 1]}
+          colors={['#dee274', '#7ec18c']}
         >
-          <View style={styles.notificationInner}>
-            <View style={styles.frameParent}>
-              <View style={styles.retoSemanal08112023Wrapper}>
-                <Text style={styles.retoSemanal}>Evento - 08-11-2023</Text>
+          <Pressable
+            style={styles.pressable}
+            // onPress={() => navigation.navigate('BusquedaRetoSemanal')}
+          >
+            <View style={styles.notificationInner}>
+              <View style={styles.frameParent}>
+                <View style={styles.retoSemanal08112023Wrapper}>
+                  <Text style={styles.retoSemanal}>{evnt.title}</Text>
+                </View>
+                <Text style={styles.descubreCulEs}>
+                  Más información del evento
+                </Text>
               </View>
-              <Text style={styles.descubreCulEs}>
-                Más información del evento
-              </Text>
             </View>
-          </View>
-        </Pressable>
-      </LinearGradient>
-      <LinearGradient
-        style={[styles.notification1, styles.pressableBg]}
-        locations={[0, 1]}
-        colors={['#dee274', '#7ec18c']}
-      >
-        <View style={styles.notificationInner}>
-          <View style={styles.frameParent}>
-            <View style={styles.retoSemanal08112023Wrapper}>
-              <Text style={styles.retoSemanal}>Evento - 06-11-2023</Text>
-            </View>
-            <Text style={styles.descubreCulEs}>Más información del evento</Text>
-          </View>
-        </View>
-      </LinearGradient>
-      <LinearGradient
-        style={[styles.notification1, styles.pressableBg]}
-        locations={[0, 1]}
-        colors={['#dee274', '#7ec18c']}
-      >
-        <View style={styles.notificationInner}>
-          <View style={styles.frameParent}>
-            <View style={styles.retoSemanal08112023Wrapper}>
-              <Text style={styles.retoSemanal}>Evento - 01-11-2023</Text>
-            </View>
-            <Text style={styles.descubreCulEs}>Más información del evento</Text>
-          </View>
-        </View>
-      </LinearGradient>
-      <LinearGradient
-        style={[styles.notification1, styles.pressableBg]}
-        locations={[0, 1]}
-        colors={['#dee274', '#7ec18c']}
-      >
-        <View style={styles.notificationInner}>
-          <View style={styles.frameParent}>
-            <View style={styles.retoSemanal08112023Wrapper}>
-              <Text style={styles.retoSemanal}>Evento - 01-11-2023</Text>
-            </View>
-            <Text style={styles.descubreCulEs}>Más información del evento</Text>
-          </View>
-        </View>
-      </LinearGradient>
+          </Pressable>
+        </LinearGradient>
+      ))}
     </ScrollView>
   )
 }
@@ -140,8 +109,8 @@ const styles = StyleSheet.create({
   },
   notificationParent: {
     flex: 1,
-    top: '10%',
-    paddingBottom: 70
+    paddingHorizontal: 15,
+    paddingBottom: 5
   }
 })
 
