@@ -299,7 +299,7 @@ const BOTONInvitarAmigos1 = () => {
         <TouchableWithoutFeedback onPress={() => setShowQrModal(false)}>
           <View style={styles.modalOverlay}>
             <View>
-              <QR selectedUserToInvite={selectedUserToInvite} relation={selectedRelationShip} onClose={() => setShowQrModal(false)} />
+              <QR selectedUserToInvite={selectedUserToInvite} relation={selectedRelationShip} relationType={selectedRelationType} onClose={() => setShowQrModal(false)} />
             </View>
           </View>
         </TouchableWithoutFeedback>
