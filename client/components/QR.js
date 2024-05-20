@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, StyleSheet, Text, Pressable ,Share } from "react-native";
+import { View, StyleSheet, Text, Pressable, Share } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
@@ -8,14 +8,15 @@ import { Svg } from "react-native-svg";
 import QRCode from 'react-native-qrcode-svg';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const QR = ({ onClose, relation,selectedUserToInvite }) => {
+const QR = ({ onClose, relation, selectedUserToInvite, relationType }) => {
   const navigation = useNavigation();
   const [qr, setQr] = React.useState("")
   const [user, setUser] = React.useState()
+  const [relationSelected, setRelationSelected] = React.useState()
 
 
   React.useEffect(() => {
-    console.log("relations ",relation , selectedUserToInvite,"invite")
+    console.log("relations ", relation, selectedUserToInvite, "invite", "relation type", relationType)
   }, [])
 
   const getUser = async () => {
@@ -25,9 +26,21 @@ const QR = ({ onClose, relation,selectedUserToInvite }) => {
   }
 
   React.useEffect(() => {
-   
+    const relations = () => {
+      let rel
+      if (relation === "Padre") rel = "dadId"
+      if (relation === "Madre") rel = "momId"
+      if (relation === "Hermano/a") rel = "brothersIds"
+      if (relation === "Primo/a") rel = "cousinsIds"
+      if (relation === "Tio/a") rel = "unclesIds"
+      if (relation === "Nieto/a") rel = "grandparentsIds"
+      if(relationType === "Amigos" ) rel = "friendsIds"
+      if (rel) setRelationSelected(rel)
+    }
     getUser()
   }, [])
+
+
 
   const onShare = async (eventLink) => {
     try {
@@ -67,12 +80,12 @@ const QR = ({ onClose, relation,selectedUserToInvite }) => {
         <View style={styles.image8Parent}>
           <QRCode
             size={200}
-            value={`http://app.mytreeoficial.com/app?invite=true&property=dadId&memberId=${user?.id}`}
+            value={`http://app.mytreeoficial.com/app?invite=true&property=${relationSelected}&memberId=${user?.id}`}
           />
           <View style={styles.searchBar}>
             <View style={styles.placeholderInput}>
               <Text style={[styles.search, styles.searchLayout]}>
-              http://app.mytreeoficial.com/app?invite=true&property=dadId&memberId=
+              {`http://app.mytreeoficial.com/app?invite=true&property=${relationSelected}&memberId=${user?.id}`}
               </Text>
             </View>
             <Image
@@ -95,14 +108,14 @@ const QR = ({ onClose, relation,selectedUserToInvite }) => {
               contentFit="cover"
               source={require("../assets/skilliconslinkedin2.png")}
             />
-         <Pressable onPress={()=> onShare("holaa") }>
-         <Image
-              style={styles.frameChildLayout}
-              contentFit="cover"
-              source={require("../assets/group-1171276696.png")}
-              
-            />
-         </Pressable>
+            <Pressable onPress={() => onShare("holaa")}>
+              <Image
+                style={styles.frameChildLayout}
+                contentFit="cover"
+                source={require("../assets/group-1171276696.png")}
+
+              />
+            </Pressable>
             <Image
               style={[styles.skillIconslinkedin, styles.frameChildLayout]}
               contentFit="cover"
