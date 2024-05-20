@@ -2,10 +2,14 @@ import React, { createContext, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as ImagePicker from 'expo-image-picker'
 import { useDispatch, useSelector } from 'react-redux'
+import io from 'socket.io-client'
+import { updateMessages } from '../redux/actions/chat'
+import axiosInstance from '../apiBackend'
 
 export const Context = createContext()
 
 export const ContextProvider = ({ children }) => {
+  const dispatch = useDispatch()
   const [showInvitationSendModal, setShowInvitationSendModal] = useState(false)
   const [selectedRelationType, setSelectedRelationType] = useState('Amigos')
   const [selectedRelationShip, setSelectedRelationShip] =
@@ -13,6 +17,7 @@ export const ContextProvider = ({ children }) => {
   const [selectedUserToInvite, setSelectedUserToInvite] = useState()
   const [selectedHashtags, setSelectedHashtags] = useState([])
   const [selectedPostTags, setSelectedPostTags] = useState([])
+  const [usersWithMessages, setUsersWithMessages] = useState([])
   const [showQrModal, setShowQrModal] = useState(false)
   const [showTaggedsModal, setShowTaggedsModal] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
@@ -23,6 +28,19 @@ export const ContextProvider = ({ children }) => {
   const [coverImage, setCoverImage] = useState()
   const [libraryImage, setLibraryImage] = useState()
   const [showHashtagsModal, setShowHashtagsModal] = useState(false)
+  const [roomId, setRoomId] = useState()
+  const { allUsers } = useSelector((state) => state.users)
+  const [userData, setUserData] = useState()
+
+  const getUser = async () => {
+    const usuario = await AsyncStorage.getItem('user')
+    const user = JSON.parse(usuario)
+    setUserData(user)
+  }
+
+  useEffect(() => {
+    getUser()
+  }, [])
 
   function transformHttpToHttps(url) {
     if (url.startsWith('http://')) {
@@ -157,13 +175,146 @@ export const ContextProvider = ({ children }) => {
     }
   }
 
+  function getTimeFromDate(dateString) {
+    const utcDate = new Date(dateString)
+
+    const localTime = utcDate
+
+    const localDate = new Date(localTime)
+
+    const hours = localDate.getHours()
+    const minutes = localDate.getMinutes()
+
+    const formattedHours = hours < 10 ? '0' + hours : hours
+    const formattedMinutes = minutes < 10 ? '0' + minutes : minutes
+
+    return `${formattedHours}:${formattedMinutes}`
+  }
+
+  const getUsersMessages = () => {
+    const getConvMessages = async (user) => {
+      try {
+        const { data } = await axiosInstance.get(
+          `chat/room?limit=${10}&senderId=${userData.id}&receiverId=${user.id}`
+        )
+        console.log('data from chat with ', user.id, data)
+        const filterByDelete = data.filter((message) => {
+          const senderOrReceiver =
+            message.senderId === userData.id ? 'sender' : 'receiver'
+          if (senderOrReceiver === 'sender') {
+            if (message.senderDelete === true) {
+              return false
+            }
+            return true
+          }
+          if (senderOrReceiver === 'receiver') {
+            if (message.receiverDelete === true) {
+              return false
+            }
+            return true
+          }
+        })
+        return filterByDelete
+      } catch (error) {
+        console.error('Error fetching data:', error)
+        return []
+      }
+    }
+    Promise.all(
+      allUsers
+        ?.filter((user) => user?.id !== userData.id)
+        ?.map(async (user) => ({
+          user,
+          data: await getConvMessages(user)
+        }))
+    )
+      .then((filteredUsers) => {
+        const usersWithMessages = filteredUsers?.filter(
+          (user) => user?.data && user?.data.length > 0
+        )
+
+        const sortedUsersWithMessages = usersWithMessages?.sort(
+          (a, b) =>
+            new Date(b.data[0].createdAt) - new Date(a.data[0].createdAt)
+        )
+
+        setUsersWithMessages(sortedUsersWithMessages?.map(({ user }) => user))
+      })
+      .catch((error) => {
+        console.error('Error fetching messages for users:', error)
+      })
+  }
+
+  const socket = io(
+    'http://cda3a8c0-e981-4f8d-808f-a9a389c5174e.pub.instances.scw.cloud:3010',
+    {
+      transports: ['websocket']
+      // auth: {
+      //   autoConnect: true,
+      //   forceNew: true,
+      //   addTrailingSlash: false,
+      //   withCredentials: true
+      // }
+    }
+  )
+
+  socket.on('connect', () => {
+    console.log('Connected to server')
+  })
+
+  socket.on('disconnect', () => {
+    console.log('Disconnected from server')
+    setRoomId()
+  })
+
+  socket.on('error', (error) => {
+    console.error('Socket connection error:', error)
+  })
+
+  socket.on('joinedRoom', (room) => {
+    console.log('Joined to room: ', room)
+    setRoomId(room)
+  })
+
+  socket.on('leaveRoom', (room) => {
+    console.log('Leaving room: ', room)
+    setRoomId()
+  })
+
+  socket.on('message-server', (msg) => {
+    console.log('New message:', msg)
+    dispatch(updateMessages(msg))
+  })
+
+  const joinRoom = (sender, receiver) => {
+    console.log('on joinRoom with id: ', sender, receiver)
+    socket.emit('joinRoom', { sender, receiver })
+  }
+
+  const leaveRoom = (sender, receiver) => {
+    console.log('on leaveRoom with id: ', sender, receiver)
+    socket.emit('leaveRoom', { sender, receiver })
+  }
+
+  const sendMessage = (message, sender, receiver) => {
+    socket.emit('message', { message, sender, receiver })
+  }
+
   return (
     <Context.Provider
       value={{
         pickImage,
+        usersWithMessages,
+        setUsersWithMessages,
+        leaveRoom,
+        roomId,
+        setRoomId,
+        sendMessage,
+        joinRoom,
         showInvitationSendModal,
         formatDate,
         setShowInvitationSendModal,
+        getUsersMessages,
         selectedPostTags,
         selectedHashtags,
         selectedRelationType,
@@ -182,6 +333,7 @@ export const ContextProvider = ({ children }) => {
         showTaggedsModal,
         setShowTaggedsModal,
         showShareModal,
+        getTimeFromDate,
         setShowShareModal,
         setShowCamera,
         libraryImage,
@@ -193,7 +345,9 @@ export const ContextProvider = ({ children }) => {
         provisoryCoverImage,
         setProvisoryCoverImage,
         provisoryProfileImage,
-        setProvisoryProfileImage
+        setProvisoryProfileImage,
+        userData,
+        setUserData
       }}
     >
       {children}

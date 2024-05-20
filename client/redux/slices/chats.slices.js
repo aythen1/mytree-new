@@ -1,58 +1,58 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { loadMessages, markAsRead } from '../actions/chat';
+import { getChatHistory, updateMessages } from '../actions/chat'
 
 export const chatsSlices = createSlice({
   name: 'chats',
   initialState: {
-    message: {},
-    allMessagesFromContact: [],
-    loading: false,
-    error: null,
-    messages: []
+    allMessages: []
   },
   reducers: {
-    setMessage: (state, action) => {
-      state.message = action.payload
+    setAllMessages: (state, action) => {
+      state.allMessages = action.payload
     },
-    setAllMessagesFromContact: (state, action) => {
-      state.allMessagesFromContact = state.message.contact()
+    setAllConversationMessagesToRead: (state, action) => {
+      const allToReaded = state.allMessages.map((message) => ({
+        ...message,
+        isReaded: true
+      }))
+      console.log('allToReaded', allToReaded)
+      state.allMessages = allToReaded
     }
   },
   extraReducers: (builder) => {
     builder
-    // =================== LOAD MESSAGES =================== 
-      .addCase(loadMessages.pending, (state) => {
-        state.loading = true;
+      // Get chat history
+      .addCase(getChatHistory.pending, (state) => {
+        state.loading = true
+        state.error = false
       })
-      .addCase(loadMessages.fulfilled, (state, action) => {
-        state.loading = false;
-        state.messages = action.payload;
+      .addCase(getChatHistory.fulfilled, (state, action) => {
+        state.loading = false
+        state.allMessages = action.payload
+        state.error = false
       })
-      .addCase(loadMessages.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
+      .addCase(getChatHistory.rejected, (state) => {
+        state.loading = false
+        state.error = true
       })
-      // =================== MARK AS READ =================== 
-      .addCase(markAsRead.pending, (state) => {
-        state.loading = true;
+      // Update allMessages
+      .addCase(updateMessages.pending, (state) => {
+        state.loading = true
+        state.error = false
       })
-      .addCase(markAsRead.fulfilled, (state, action) => {
-        const messageId = action.payload.id;
-        state.messages = state.messages.map(message => {
-          if (message.id === messageId) {
-            message.read = true;
-          }
-          return message;
-        });
+      .addCase(updateMessages.fulfilled, (state, action) => {
+        state.loading = false
+        state.allMessages = [action.payload, ...state.allMessages]
+        state.error = false
       })
-      .addCase(markAsRead.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
+      .addCase(updateMessages.rejected, (state) => {
+        state.loading = false
+        state.error = true
       })
-      // =================== MARK AS READ =================== 
-    }
+  }
 })
 
-export const { setMessage, setAllMessagesFromContact } = chatsSlices.actions
+export const { setAllMessages, setAllConversationMessagesToRead } =
+  chatsSlices.actions
 
 export default chatsSlices.reducer
