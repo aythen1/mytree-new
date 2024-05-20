@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, StyleSheet, Text, Pressable } from "react-native";
+import { View, StyleSheet, Text, Pressable ,Share } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
@@ -29,18 +29,50 @@ const QR = ({ onClose, relation,selectedUserToInvite }) => {
     getUser()
   }, [])
 
+  const onShare = async (eventLink) => {
+    try {
+      const result = await Share.share(
+        {
+          message: `Te invito a formar parte de mi familia , ingresa a este link ! http://app.mytreeoficial.com/app?invite=true&property=dadId&memberId=${user?.id} `,
+          title: 'Mira éste evento increíble'
+        },
+        {
+          // Android only:
+          dialogTitle: 'Te invito a formar parte de mi familia',
+          // iOS only:
+          excludedActivityTypes: ['com.apple.UIKit.activity.PostToTwitter']
+        }
+      )
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // compartido con el tipo de actividad de result.activityType
+          console.log('evento conmpartido con ', result.activityType)
+        } else {
+          // compartido
+          console.log('evento conmpartido')
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // descartado
+      }
+    } catch (error) {
+      alert(error.message)
+    }
+  }
+
+
   return (
     <View style={styles.qr}>
       <View style={styles.frameParent}>
         <View style={styles.image8Parent}>
           <QRCode
             size={200}
-            value={`http://mytreeappoficial.com/app?invite=true&property=momId&memberId=${user?.id}`}
+            value={`http://app.mytreeoficial.com/app?invite=true&property=dadId&memberId=${user?.id}`}
           />
           <View style={styles.searchBar}>
             <View style={styles.placeholderInput}>
               <Text style={[styles.search, styles.searchLayout]}>
-                mytree.app/{relation}
+              http://app.mytreeoficial.com/app?invite=true&property=dadId&memberId=
               </Text>
             </View>
             <Image
@@ -63,11 +95,14 @@ const QR = ({ onClose, relation,selectedUserToInvite }) => {
               contentFit="cover"
               source={require("../assets/skilliconslinkedin2.png")}
             />
-            <Image
+         <Pressable onPress={()=> onShare("holaa") }>
+         <Image
               style={styles.frameChildLayout}
               contentFit="cover"
               source={require("../assets/group-1171276696.png")}
+              
             />
+         </Pressable>
             <Image
               style={[styles.skillIconslinkedin, styles.frameChildLayout]}
               contentFit="cover"

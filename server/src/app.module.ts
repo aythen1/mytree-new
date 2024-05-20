@@ -19,6 +19,7 @@ import { MessageEntity } from './chat/entities/message.entity'; // Asegúrate de
 import { ChatModule } from './chat/chat.module';
 import { EventModule } from './event/event.module';
 import { InfoEntityModule } from './info-entity/info-entity.module';
+import { Event } from './event/entities/event.entity';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { InfoEntityModule } from './info-entity/info-entity.module';
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASS'),
         database: configService.get<string>('DB_NAME'),
-        entities: [User, Post, Notification, History, Comment],
+        entities: [User, Post, Notification, History, Comment,Event],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -43,6 +44,8 @@ import { InfoEntityModule } from './info-entity/info-entity.module';
     CommentsModule,
     UserModule,
     NotificationModule,
+    EventModule,
+    ChatModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
