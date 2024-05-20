@@ -8,20 +8,56 @@ import BarraBusqueda from '../../components/BarraBusqueda'
 import { LinearGradient } from 'expo-linear-gradient'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Context } from '../../context/Context'
+import ChatCard from './ChatCard'
+import { useSelector } from 'react-redux'
 
 const MENSAJERA = () => {
   const navigation = useNavigation()
-  const { usersWithMessages, userData } = useContext(Context)
+  const [search, setSearch] = useState('')
+  const { allUsers } = useSelector((state) => state.users)
+  const { usersWithMessages, userData, getUsersMessages } = useContext(Context)
 
   useEffect(() => {
     console.log('usersWithMessages changed:', usersWithMessages)
   }, [usersWithMessages])
 
-  // useEffect(() => {
-  //   if (userData) {
-  //     getUsersMessages()
-  //   }
-  // }, [])
+  useEffect(() => {
+    if (userData) {
+      getUsersMessages()
+    }
+  }, [])
+
+  // console.log('allUsers: ', allUsers)
+
+  const sortUsers = (userA, userB) => {
+    const isInMessagesB =
+      usersWithMessages?.filter((user) => user.id === userA.id).length > 0
+    const isInMessagesA =
+      usersWithMessages?.filter((user) => user.id === userB.id).length > 0
+
+    if (isInMessagesA && !isInMessagesB) {
+      return -1 // userA has messages, should come before userB
+    } else if (!isInMessagesA && isInMessagesB) {
+      return 1 // userB has messages, should come before userA
+    } else {
+      return 0 // maintain current order if both have messages or neither have messages
+    }
+  }
+
+  const filteredUsers = allUsers
+    ?.filter((user) => {
+      if (user.username.toLowerCase()?.includes(search?.toLowerCase())) {
+        return true
+      }
+      if (user.apellido.toLowerCase()?.includes(search?.toLowerCase())) {
+        return true
+      }
+      return false
+    })
+    .sort(sortUsers)
+    .reverse()
+
+  console.log('usersWithMessages:', usersWithMessages)
 
   return (
     <LinearGradient
@@ -72,7 +108,12 @@ const MENSAJERA = () => {
             Mensajes / Grupos
           </Text>
         </View>
-        <BarraBusqueda navigate={navigation.navigate} route="CrearGrupo" />
+        <BarraBusqueda
+          search={search}
+          setSearch={setSearch}
+          navigate={navigation.navigate}
+          route="CrearGrupo"
+        />
         <View
           style={{
             paddingHorizontal: 0,
@@ -89,210 +130,35 @@ const MENSAJERA = () => {
           paddingTop: 10
         }}
       >
-        <Pressable
-          style={{
-            height: 85,
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            marginTop: 10,
-            borderRadius: 10,
-            padding: 10,
-            backgroundColor: Color.colorWhitesmoke_200,
-            flexDirection: 'row'
-          }}
-          onPress={() => {
-            navigation.navigate('OpenedChat', {
-              receiverId: 3,
-              receiverName: 'Random User'
-            })
-            // dispatch(setMessage(message))
-          }}
-        >
-          <View style={{ marginLeft: 16, width: '50%' }}>
-            <Text
-              style={{
-                textAlign: 'justify',
-                color: Color.primario1,
-                fontFamily: FontFamily.lato,
-                lineHeight: 19,
-                fontSize: FontSize.size_base,
-                fontWeight: '700',
-                letterSpacing: 0,
-                alignSelf: 'stretch'
-              }}
-            >
-              {'User name'}
-            </Text>
-            <Text
-              style={{
-                marginTop: 4,
-                color: Color.textTextSecondary,
-                textAlign: 'left',
-                fontFamily: FontFamily.lato,
-                letterSpacing: 0,
-                alignSelf: 'stretch',
-                lineHeight: 21,
-                fontSize: FontSize.size_sm
-              }}
-            >
-              {'random message'}
-            </Text>
-          </View>
-          <View
-            style={{
-              width: '30%',
-              alignItems: 'flex-end',
-              height: 44
-            }}
-          >
-            <Text
-              style={{
-                fontWeight: '300',
-                lineHeight: 18,
-                fontSize: FontSize.size_xs,
-                textAlign: 'justify',
-                fontFamily: FontFamily.lato,
-                color: Color.textPlaceholder,
-                letterSpacing: 0
-              }}
-            >
-              {'hace 2 minutos'}
-            </Text>
-            <View style={{ marginTop: 4, flexDirection: 'row' }}>
-              <Image
-                style={{ width: 23, height: 23, zIndex: 0 }}
-                contentFit="cover"
-                source={require('../../assets/ellipse-7159.png')}
+        {search !== '' && filteredUsers.length > 0
+          ? filteredUsers?.map((user) => (
+              <ChatCard
+                key={user.id}
+                name={user.username + ' ' + user.apellido}
+                selectedUserId={user.id}
               />
-              <Text
-                style={{
-                  left: 8,
-                  color: Color.grisHome,
-                  display: 'flex',
-                  width: 7,
-                  height: 17,
-                  alignItems: 'center',
-                  lineHeight: 18,
-                  fontSize: FontSize.size_xs,
-                  textAlign: 'justify',
-                  fontFamily: FontFamily.lato,
-                  fontWeight: '700',
-                  letterSpacing: 0,
-                  top: 3,
-                  position: 'absolute',
-                  zIndex: 1
-                }}
+            ))
+          : search !== '' &&
+            filteredUsers.length === 0 && (
+              <View
+                style={{ width: '100%', alignItems: 'center', paddingTop: 50 }}
               >
-                {3}
-              </Text>
-            </View>
-          </View>
-        </Pressable>
-        <Pressable
-          style={{
-            height: 85,
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            marginTop: 10,
-            borderRadius: 10,
-            padding: 10,
-            backgroundColor: Color.colorWhitesmoke_200,
-            flexDirection: 'row'
-          }}
-          onPress={() => {
-            navigation.navigate('OpenedChat', {
-              receiverId: 8,
-              receiverName: 'Hardcoded user'
-            })
-            // dispatch(setMessage(message))
-          }}
-        >
-          <View style={{ marginLeft: 16, width: '50%' }}>
-            <Text
-              style={{
-                textAlign: 'justify',
-                color: Color.primario1,
-                fontFamily: FontFamily.lato,
-                lineHeight: 19,
-                fontSize: FontSize.size_base,
-                fontWeight: '700',
-                letterSpacing: 0,
-                alignSelf: 'stretch'
-              }}
-            >
-              {'Hardcoded user'}
-            </Text>
-            <Text
-              style={{
-                marginTop: 4,
-                color: Color.textTextSecondary,
-                textAlign: 'left',
-                fontFamily: FontFamily.lato,
-                letterSpacing: 0,
-                alignSelf: 'stretch',
-                lineHeight: 21,
-                fontSize: FontSize.size_sm
-              }}
-            >
-              {'hardcoded message'}
-            </Text>
-          </View>
-          <View
-            style={{
-              width: '30%',
-              alignItems: 'flex-end',
-              height: 44
-            }}
-          >
-            <Text
-              style={{
-                fontWeight: '300',
-                lineHeight: 18,
-                fontSize: FontSize.size_xs,
-                textAlign: 'justify',
-                fontFamily: FontFamily.lato,
-                color: Color.textPlaceholder,
-                letterSpacing: 0
-              }}
-            >
-              {'hace 5 minutos'}
-            </Text>
-            <View style={{ marginTop: 4, flexDirection: 'row' }}>
-              <Image
-                style={{ width: 23, height: 23, zIndex: 0 }}
-                contentFit="cover"
-                source={require('../../assets/ellipse-7159.png')}
-              />
-              <Text
-                style={{
-                  left: 8,
-                  color: Color.grisHome,
-                  display: 'flex',
-                  width: 7,
-                  height: 17,
-                  alignItems: 'center',
-                  lineHeight: 18,
-                  fontSize: FontSize.size_xs,
-                  textAlign: 'justify',
-                  fontFamily: FontFamily.lato,
-                  fontWeight: '700',
-                  letterSpacing: 0,
-                  top: 3,
-                  position: 'absolute',
-                  zIndex: 1
-                }}
-              >
-                {2}
-              </Text>
-            </View>
-          </View>
-        </Pressable>
+                <Text
+                  style={{ fontSize: 14, fontWeight: 500, color: '#202020' }}
+                >
+                  No se han encontrado resultados!
+                </Text>
+              </View>
+            )}
+        {search === '' &&
+          usersWithMessages?.map((user) => (
+            <ChatCard
+              key={user.id}
+              name={user.username + ' ' + user.apellido}
+              selectedUserId={user.id}
+            />
+          ))}
       </ScrollView>
-      {/* <Messages /> */}
-
-      {/* <View style={{ borderWidth: 2, width: '100%', flex: 1 }}>
-        <View style={{}}></View>
-      </View> */}
     </LinearGradient>
   )
 }

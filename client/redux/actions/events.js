@@ -7,7 +7,6 @@ export const getAllEvents = createAsyncThunk(
   async () => {
     try {
       const { data } = await axiosInstance.get('/events')
-      console.log('all events data: ', data)
       return data
     } catch (error) {
       console.log('error from getAllEvents')
@@ -33,10 +32,8 @@ export const getAllUserEvents = createAsyncThunk(
 export const createEvent = createAsyncThunk(
   'createEvent/events',
   async (body) => {
-    console.log('on createEvent with: ', body)
     try {
       const { data } = await axiosInstance.post('/events', body)
-      console.log('response from createEvent: ', data)
       return data
     } catch (error) {
       console.log('error from createEvent: ', error)
