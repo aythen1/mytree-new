@@ -37,6 +37,7 @@ const QR = ({ onClose, relation, selectedUserToInvite, relationType }) => {
       if(relationType === "Amigos" ) rel = "friendsIds"
       if (rel) setRelationSelected(rel)
     }
+  relations()
     getUser()
   }, [])
 
@@ -46,7 +47,7 @@ const QR = ({ onClose, relation, selectedUserToInvite, relationType }) => {
     try {
       const result = await Share.share(
         {
-          message: `Te invito a formar parte de mi familia , ingresa a este link ! http://app.mytreeoficial.com/app?invite=true&property=dadId&memberId=${user?.id} `,
+          message: `Te invito a formar parte de mi familia , ingresa a este link ! http://app.mytreeoficial.com/app?invite=true&property=${relationSelected}&memberId=${user?.id} `,
           title: 'Mira éste evento increíble'
         },
         {
