@@ -12,7 +12,7 @@ export class EventsController {
       const event = await this.eventsService.create(createEventDto);
       return event;
     } catch (error) {
-      return { error: 'No se pudo crear el evento' };
+      return { error: 'No se pudo crear el evento',message:error };
     }
   }
 
