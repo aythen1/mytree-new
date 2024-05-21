@@ -28,6 +28,8 @@ import Privacidad from './Privacidad'
 import { Context } from '../context/Context'
 import { StatusBar } from 'react-native'
 import Cancion1 from '../components/Cancion1'
+import MapView from 'react-native-maps';
+
 
 const Organizador = () => {
   const dispatch = useDispatch()

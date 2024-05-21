@@ -4,7 +4,7 @@ import { CreateEventDto } from './dto/create-event.dto';
 
 @Controller('events')
 export class EventsController {
-  constructor(private readonly eventsService: EventService) {}
+  constructor(private readonly eventsService: EventService) { }
 
   @Post()
   async create(@Body() createEventDto: CreateEventDto) {
@@ -12,7 +12,7 @@ export class EventsController {
       const event = await this.eventsService.create(createEventDto);
       return event;
     } catch (error) {
-      return { error: 'No se pudo crear el evento',message:error };
+      return { error: 'No se pudo crear el evento', message: error };
     }
   }
 
@@ -33,6 +33,16 @@ export class EventsController {
       return event;
     } catch (error) {
       return { error: 'No se pudo encontrar el evento' };
+    }
+  }
+
+  @Get('by-creator/:creatorId')
+  async findByCreator(@Param('creatorId') creatorId: string) {
+    try {
+      const events = await this.eventsService.findByCreator(creatorId);
+      return events;
+    } catch (error) {
+      return { error: 'No se pudieron recuperar los eventos creados por el usuario' };
     }
   }
 
@@ -66,8 +76,8 @@ export class EventsController {
     }
   }
 
-//filtra para saber quienes leyeron la invitacion al evento, quienes la aceptan y quienes no. 
-//filtra segun los query, si son true o false. 
+  //filtra para saber quienes leyeron la invitacion al evento, quienes la aceptan y quienes no. 
+  //filtra segun los query, si son true o false. 
   @Get('invited')
   async findInvitedByStatus(@Query('leida') leida: boolean, @Query('aceptada') aceptada: boolean) {
     try {
