@@ -3,10 +3,17 @@ import { View, StyleSheet, Text, Pressable } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
 import { FontFamily, FontSize, Color, Padding, Border } from '../GlobalStyles'
+import MapView, { Marker, PROVIDER_GOOGLE,Callout } from 'react-native-maps';
 
 const Lugar3 = ({ onClose }) => {
+  const [x, setX] = React.useState({latitude: 37.78825,
+    longitude: -122.4324})
+    const [markerPosition, setMarkerPosition] = React.useState(null);
+
+
   return (
     <View style={styles.lugar}>
+      
       <View style={styles.header}>
         <View style={[styles.searchBar]}>
           <Image
@@ -26,21 +33,26 @@ const Lugar3 = ({ onClose }) => {
           />
         </View>
       </View>
-      <Image
-        style={[styles.rectangleIcon]}
-        contentFit="cover"
-        source={require('../assets/rectangle5.png')}
-      />
-      <View style={styles.fieldWithTitle}>
-        <View style={styles.titleBase}>
-          <Text style={[styles.momento, styles.signInTypo]}>Momento</Text>
-        </View>
-        <View style={styles.field}>
-          <Text style={[styles.culEsEste, styles.signInTypo]}>
-            ¿Cuál es este momento?
-          </Text>
-        </View>
-      </View>
+   
+      <MapView
+          onPress={(e) => {setMarkerPosition(e.nativeEvent.coordinate);
+            console.log(e.nativeEvent.coordinate,"coo",e.currentTarget)
+          }}
+        provider={PROVIDER_GOOGLE} initialRegion={{
+          latitude: 37.78825,
+          longitude: -122.4324,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421
+        }}
+        style={{ width: "100%", height: 300 }} >
+         {markerPosition && (
+        <Marker
+          coordinate={markerPosition}
+          title="Marcador personalizado"
+          description="Ubicación seleccionada por el usuario"
+        />
+      )}
+      </MapView>
       <Pressable onPress={onClose}>
         <LinearGradient
           style={styles.button}
@@ -86,7 +98,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: Border.br_11xl,
     flexDirection: 'row',
-    width: '90%'
+    width: '86%'
     // backgroundColor: 'red'
   },
   iconlylightsendCopy: {
@@ -102,9 +114,7 @@ const styles = StyleSheet.create({
   },
   header: {
     // marginLeft: -212,
-    top: 20,
     width: '100%',
-    paddingHorizontal: Padding.p_xl,
     paddingVertical: Padding.p_xs,
     alignItems: 'center',
     flexDirection: 'row',
@@ -169,7 +179,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   button: {
-    marginTop: 50,
+    marginTop: 20,
     paddingHorizontal: Padding.p_5xl,
     paddingVertical: Padding.p_sm,
     backgroundColor: Color.linearBoton,
@@ -179,15 +189,17 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_11xl
   },
   lugar: {
-    width: '100%',
+    flex:1,
+    width: '90%',
     position: 'absolute',
-    bottom: 0,
+    paddingHorizontal:20,
+    paddingTop:3,
+    bottom: 20,
     height: 451,
     maxWidth: '100%',
     maxHeight: '100%',
     backgroundColor: Color.white,
-    borderTopRightRadius: Border.br_11xl,
-    borderTopLeftRadius: Border.br_11xl
+    borderRadius:30
   }
 })
 

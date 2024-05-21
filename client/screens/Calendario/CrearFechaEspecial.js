@@ -74,7 +74,7 @@ const CrearFechaEspecial = () => {
       invitedUsers.length > 0
     ) {
       const event = {
-        type: 'normal event',
+        type: 'special',
         creatorId: user?.id.toString(),
         description,
         title: selectedCategory,

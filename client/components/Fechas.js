@@ -1,13 +1,70 @@
-import React from 'react'
-import { StyleSheet, Text, View, Pressable } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, Text, View, Pressable, FlatList } from 'react-native'
 import { Image } from 'expo-image'
 import { Color, FontFamily, FontSize } from '../GlobalStyles'
+import { useNavigation } from '@react-navigation/native'
+import axiosInstance from '../apiBackend'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const Fechas = () => {
+const Fechas = ({selectedDate,dates , user}) => {
+
+  const [datesFechas, setDatesFechas] = useState([])
+
+  useEffect(() => {
+    const searchDate = async () => {
+      const nuevasDates = dates.filter((e) => {
+        console.log(e.date.slice(0,10),selectedDate,"eee")
+        const date = e.date.slice(0, 10)
+        if (date === selectedDate) return e
+      })
+      setDatesFechas(nuevasDates)
+    }
+    searchDate()
+  }, [selectedDate,dates])
+
+
+  const navigation = useNavigation()
+
+
+  const renderItem = ({ item }) => (
+    <Pressable
+      style={styles.frameContainer}
+      onPress={() => navigation.navigate('Invitacin')}
+    >
+      <View style={styles.unsplashilip77sbmoeParent}>
+        <Image
+          style={styles.unsplashilip77sbmoeIcon}
+          contentFit="cover"
+          source={require('../assets/unsplashilip77sbmoe.png')}
+        />
+        <Image
+          style={styles.vectorIcon}
+          contentFit="cover"
+          source={require('../assets/vector15.png')}
+        />
+      </View>
+      <View style={styles.TextWrapper}>
+        <Text style={styles.marieContainerTypo}>
+          <Text style={styles.textTypo}>{item.creatorId == user.id ? "Yo" : item.creatorId} </Text>
+          <Text style={styles.cumple28Aos}>{item.title}</Text>
+        </Text>
+      </View>
+    </Pressable>
+  );
+
+
+
+
   return (
     <View style={styles.frameGroup}>
       <Text style={styles.title}>Actividad Familiar</Text>
-      <Pressable
+      <FlatList
+        style={{ paddingBottom: 70 }}
+        data={datesFechas}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id.toString()}
+      />
+      {/* <Pressable
         style={styles.frameContainer}
         onPress={() => navigation.navigate('Invitacin')}
       >
@@ -102,7 +159,7 @@ const Fechas = () => {
             </Text>
           </Text>
         </View>
-      </Pressable>
+      </Pressable> */}
     </View>
   )
 }

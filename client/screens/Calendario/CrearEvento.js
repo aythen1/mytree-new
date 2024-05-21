@@ -79,7 +79,7 @@ const CrearFechaEspecial = () => {
       wishList.length > 0
     ) {
       const event = {
-        type: 'normal event',
+        type: 'normal',
         creatorId: user?.id.toString(),
         description,
         title,

@@ -21,6 +21,7 @@ const PopUpCalendario = ({
 
   return (
     <View style={styles.container}>
+      <View style={{borderWidth:0.2,borderRadius:3,borderColor:"gray",width:"90%",alignSelf:"center"}}>
       <Calendar
         onDayPress={handleDayPress}
         markingType="custom"
@@ -44,6 +45,7 @@ const PopUpCalendario = ({
           todayTextColor: 'black'
         }}
       />
+      </View>
       <View
         style={{
           paddingHorizontal: 15,
@@ -73,9 +75,13 @@ const PopUpCalendario = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    width: '90%',
     position: 'absolute',
-    bottom: 0
+    bottom: 20,
+    borderRadius:30,
+    overflow:"hidden",
+    backgroundColor:"#FFFF",
+    paddingTop:20
   },
   save: {
     letterSpacing: 1,

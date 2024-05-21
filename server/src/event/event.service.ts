@@ -23,6 +23,10 @@ export class EventService {
     return await this.eventRepository.findOne({where: {id:id}});
   }
 
+  async findByCreator(creatorId: string): Promise<Event[]> {
+    return await this.eventRepository.find({ where: { creatorId } });
+  }
+
   async remove(id: string): Promise<Event> {
     const event = await this.eventRepository.findOne({where: {id:id}});
     if (!event) {

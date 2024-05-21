@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native'
 import { Image } from 'expo-image'
@@ -9,6 +9,8 @@ import Calendario from '../../components/Calendario'
 import BarraBusqueda from '../../components/BarraBusqueda'
 import Fechas from '../../components/Fechas'
 import Eventos from '../../components/Eventos'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import axiosInstance from '../../apiBackend'
 
 const CALENDARIO = () => {
   const navigation = useNavigation()
@@ -17,10 +19,41 @@ const CALENDARIO = () => {
   const { showPanel } = useSelector((state) => state.panel)
 
   const [selectedItem, setSelectedItem] = useState('fechas')
+  const [selectedDate, setSelectedDate] = useState('')
+  const [user, setUser] = useState({})
+  const [dates, setDates] = useState([])
 
   const handleItemPress = (item) => {
     setSelectedItem(item)
   }
+
+  useEffect(() => {
+    // Función para obtener la fecha actual en formato YYYY-MM-DD
+    function getCurrentDate() {
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // El mes es base 0, por eso se suma 1
+      const day = String(currentDate.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    // Establecer la fecha actual como valor por defecto al montar el componente
+    setSelectedDate(getCurrentDate());
+  }, []); 
+
+  useEffect(() => {
+    const searchDate = async () => {
+      const user = await AsyncStorage.getItem("user")
+      const userpar = JSON.parse(user)
+      setUser(userpar)
+      const res = await axiosInstance.get(`/events/by-creator/${userpar.id}`)
+      console.log(res.data, "las fechas")
+      setDates(res.data)
+    }
+    searchDate()
+  }, [selectedDate])
+  
+ 
 
   const getRoute = () => {
     if (selectedItem === 'fechas') {
@@ -58,7 +91,7 @@ const CALENDARIO = () => {
         <BarraBusqueda navigate={navigation.navigate} route={getRoute()} />
       </View>
 
-      <Calendario />
+      <Calendario dates={dates} selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
       <View style={styles.frameParent}>
         <View style={styles.upcomingParent}>
           <Pressable
@@ -99,7 +132,7 @@ const CALENDARIO = () => {
           </Pressable>
         </View>
       </View>
-      {selectedItem === 'fechas' ? <Fechas /> : <Eventos />}
+      {selectedItem === 'fechas' ? <Fechas user={user} dates={dates} selectedDate={selectedDate} /> : <Eventos dates={dates} selectedDate={selectedDate} />}
     </ScrollView>
   )
 }
