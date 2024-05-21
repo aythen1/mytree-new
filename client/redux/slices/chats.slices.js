@@ -41,6 +41,7 @@ export const chatsSlices = createSlice({
         state.error = false
       })
       .addCase(updateMessages.fulfilled, (state, action) => {
+        console.log('message payload: ', action.payload)
         state.loading = false
         state.allMessages = [action.payload, ...state.allMessages]
         state.error = false
