@@ -98,8 +98,8 @@ export class User {
   @Column('simple-array', { nullable: true })
   friendsIds: string[];
 
-  @OneToMany(() => Comment, (comments) => comments.user)
-  comments: Comment[];
+  // @OneToMany(() => Comment, (comments) => comments.user)
+  // comments: Comment[];
 
   @ManyToMany(() => Post)
   @JoinTable()
