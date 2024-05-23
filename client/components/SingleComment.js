@@ -1,7 +1,8 @@
-import { View, Text, Dimensions } from 'react-native'
-import React from 'react'
+import { View, Text, Dimensions, Pressable } from 'react-native'
+import React, { useContext } from 'react'
 import { Image } from 'expo-image'
 import { AntDesign, Ionicons } from '@expo/vector-icons'
+import { Context } from '../context/Context'
 
 const SingleComment = ({
   image,
@@ -12,6 +13,15 @@ const SingleComment = ({
   likes,
   dislikes
 }) => {
+  const { selectedPost } = useContext(Context)
+
+  const handleLike = () => {
+    console.log('handling like on post', selectedPost)
+  }
+
+  const handleDislike = () => {
+    console.log('handling dislike on post', selectedPost)
+  }
   return (
     <View
       style={{
@@ -88,7 +98,8 @@ const SingleComment = ({
                 gap: 20
               }}
             >
-              <View
+              <Pressable
+                onPress={handleLike}
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
@@ -102,8 +113,10 @@ const SingleComment = ({
                 >
                   {likes?.length}
                 </Text>
-              </View>
-              <AntDesign size={17} color={'#787878'} name="dislike2" />
+              </Pressable>
+              <Pressable onPress={handleDislike}>
+                <AntDesign size={17} color={'#787878'} name="dislike2" />
+              </Pressable>
             </View>
           </View>
 

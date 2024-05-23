@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import {
   View,
   Text,
@@ -11,12 +11,17 @@ import {
 import { Image } from 'expo-image'
 import { FontSize, FontFamily, Color, Border } from '../../GlobalStyles'
 import SingleComment from '../SingleComment'
-import { useDispatch } from 'react-redux'
-import { postComment } from '../../redux/actions/comments'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  getAllCommentsByPostId,
+  postComment
+} from '../../redux/actions/comments'
 import { Context } from '../../context/Context'
 
 const CommentsModal = ({ onClose }) => {
   const dispatch = useDispatch()
+  const { selectedPostComments } = useSelector((state) => state.comments)
+  const { allUsers } = useSelector((state) => state.users)
   const { userData, selectedPost } = useContext(Context)
   const [search, setSearch] = useState('')
   const [comment, setComment] = useState('')
@@ -32,49 +37,8 @@ const CommentsModal = ({ onClose }) => {
     require('../../assets/emoji9.png'),
     require('../../assets/emoji10.png')
   ]
-  const hardcodedComments = [
-    {
-      userName: 'Bruno Pham',
-      content: 'Lorem ipsum dolor sit amet consectetur',
-      createdAt: new Date(),
-      responses: [1, 2, 3, 4, 5],
-      likes: [1, 2, 3, 4, 5, 6, 7, 8],
-      dislikes: [1, 2, 3, 4, 5, 6, 7, 8],
-      profilePic:
-        'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716389822/idv5sw3zoyvual6moptl.jpg'
-    },
-    {
-      userName: 'Bruno Pham',
-      content: 'Lorem ipsum dolor sit amet consectetur',
-      createdAt: new Date(),
-      responses: [1, 2, 3, 4, 5],
-      likes: [1, 2, 3, 4, 5, 6, 7, 8],
-      dislikes: [1, 2, 3, 4, 5, 6, 7, 8],
-      profilePic:
-        'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716389822/idv5sw3zoyvual6moptl.jpg'
-    },
-    {
-      userName: 'Bruno Pham2',
-      content: 'Lorem ipsum dolor sit amet consectetur',
-      createdAt: new Date(),
-      responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-      likes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-      dislikes: [1, 2, 3, 4, 5, 6, 7, 8],
-      profilePic:
-        'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716389822/idv5sw3zoyvual6moptl.jpg'
-    },
-    {
-      userName: 'Bruno Pham3',
-      content:
-        'Lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur',
-      createdAt: new Date(),
-      responses: [1, 2],
-      likes: [1, 2, 3],
-      dislikes: [1, 2, 3, 4, 5, 6, 7, 8],
-      profilePic:
-        'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716389822/idv5sw3zoyvual6moptl.jpg'
-    }
-  ]
+
+  const scrollViewRef = useRef(null)
 
   const handleSendComment = (comment) => {
     dispatch(
@@ -90,8 +54,16 @@ const CommentsModal = ({ onClose }) => {
           extraData: {}
         }
       })
-    )
+    ).then((data) => dispatch(getAllCommentsByPostId(selectedPost)))
+    setComment('')
+    setSearch('')
   }
+
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: true })
+    }
+  }, [selectedPostComments])
 
   return (
     <View
@@ -163,9 +135,10 @@ const CommentsModal = ({ onClose }) => {
             marginTop: 12
           }}
         >
-          438 comentarios
+          {`${selectedPostComments.length} comentarios`}
         </Text>
         <ScrollView
+          ref={scrollViewRef}
           showsVerticalScrollIndicator={false}
           style={{
             maxHeight: 250,
@@ -179,16 +152,26 @@ const CommentsModal = ({ onClose }) => {
             gap: 20
           }}
         >
-          {hardcodedComments.map((comment, index) => (
+          {selectedPostComments.map((comment, index) => (
             <SingleComment
               key={index}
-              image={comment.profilePic}
-              createdAt={comment.createdAt}
-              dislikes={comment.dislikes}
-              likes={comment.likes}
+              image={
+                'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716389822/idv5sw3zoyvual6moptl.jpg'
+              }
+              createdAt={comment.createdAt || new Date()}
+              dislikes={comment.dislikes || []}
+              likes={comment.likes || []}
               comment={comment.content}
-              author={comment.userName}
-              responses={comment.responses}
+              author={
+                allUsers.filter(
+                  (user) => user.id.toString() === comment.creatorId
+                )[0].username +
+                ' ' +
+                allUsers.filter(
+                  (user) => user.id.toString() === comment.creatorId
+                )[0].apellido
+              }
+              responses={comment.responses || []}
             />
           ))}
         </ScrollView>
