@@ -30,30 +30,28 @@ const CALENDARIO = () => {
   useEffect(() => {
     // Función para obtener la fecha actual en formato YYYY-MM-DD
     function getCurrentDate() {
-      const currentDate = new Date();
-      const year = currentDate.getFullYear();
-      const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // El mes es base 0, por eso se suma 1
-      const day = String(currentDate.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
+      const currentDate = new Date()
+      const year = currentDate.getFullYear()
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0') // El mes es base 0, por eso se suma 1
+      const day = String(currentDate.getDate()).padStart(2, '0')
+      return `${year}-${month}-${day}`
     }
 
     // Establecer la fecha actual como valor por defecto al montar el componente
-    setSelectedDate(getCurrentDate());
-  }, []); 
+    setSelectedDate(getCurrentDate())
+  }, [])
 
   useEffect(() => {
     const searchDate = async () => {
-      const user = await AsyncStorage.getItem("user")
+      const user = await AsyncStorage.getItem('user')
       const userpar = JSON.parse(user)
       setUser(userpar)
       const res = await axiosInstance.get(`/events/by-creator/${userpar.id}`)
-      console.log(res.data, "las fechas")
+      console.log(res.data, 'las fechas')
       setDates(res.data)
     }
     searchDate()
   }, [selectedDate])
-  
- 
 
   const getRoute = () => {
     if (selectedItem === 'fechas') {
@@ -72,7 +70,7 @@ const CALENDARIO = () => {
       <View style={styles.topContainer}>
         <Pressable
           style={styles.ionmenu}
-         onPress={() => dispatch(setPanel(!showPanel))}
+          onPress={() => navigation.openDrawer()}
         >
           <Image
             style={[styles.icon, styles.iconLayout]}
@@ -91,7 +89,11 @@ const CALENDARIO = () => {
         <BarraBusqueda navigate={navigation.navigate} route={getRoute()} />
       </View>
 
-      <Calendario dates={dates} selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+      <Calendario
+        dates={dates}
+        selectedDate={selectedDate}
+        setSelectedDate={setSelectedDate}
+      />
       <View style={styles.frameParent}>
         <View style={styles.upcomingParent}>
           <Pressable
@@ -132,7 +134,11 @@ const CALENDARIO = () => {
           </Pressable>
         </View>
       </View>
-      {selectedItem === 'fechas' ? <Fechas user={user} dates={dates} selectedDate={selectedDate} /> : <Eventos dates={dates} selectedDate={selectedDate} />}
+      {selectedItem === 'fechas' ? (
+        <Fechas user={user} dates={dates} selectedDate={selectedDate} />
+      ) : (
+        <Eventos dates={dates} selectedDate={selectedDate} />
+      )}
     </ScrollView>
   )
 }

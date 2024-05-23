@@ -20,6 +20,7 @@ import ENTRADACREADA from '../components/ENTRADACREADA'
 import Privacidad from './Privacidad'
 import Album from './Album'
 import PopUpCalendario from '../components/PopUpCalendario'
+import { useNavigation } from '@react-navigation/native'
 
 const CrearAlbum = () => {
   const dispatch = useDispatch()
@@ -134,6 +135,8 @@ const CrearAlbum = () => {
     setFrameContainer5Visible(false)
   }, [])
 
+  const navigation = useNavigation()
+
   return (
     <>
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
@@ -147,9 +150,7 @@ const CrearAlbum = () => {
             <View style={styles.frameParent}>
               <View style={{ width: '100%' }}>
                 <View style={styles.ionmenuParent}>
-                  <Pressable 
-                   onPress={() => dispatch(setPanel(!showPanel))}
-                  >
+                  <Pressable onPress={() => navigation.openDrawer()}>
                     <Image
                       style={styles.ionmenuIcon}
                       contentFit="cover"
@@ -190,22 +191,6 @@ const CrearAlbum = () => {
                       contentFit="cover"
                       source={require('../assets/line-802.png')}
                     />
-                    <Pressable
-                      style={[
-                        styles.iconlybolddocumentParent,
-                        styles.parentFlexBox
-                      ]}
-                      onPress={openUploadRecuerdo}
-                    >
-                      <Image
-                        style={styles.iconlybolddocument}
-                        contentFit="cover"
-                        source={require('../assets/iconlybolddocument.png')}
-                      />
-                      <Text style={[styles.anexoArchivo, styles.etiquetarTypo]}>
-                        Anexo archivo
-                      </Text>
-                    </Pressable>
                     <Image
                       style={styles.frameItem}
                       contentFit="cover"

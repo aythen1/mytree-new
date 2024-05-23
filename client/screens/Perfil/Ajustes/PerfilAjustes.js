@@ -14,45 +14,47 @@ import HeaderIcons from '../../../components/HeaderIcons'
 import CalendarMuroSVG from '../../../components/svgs/CalendarMuroSVG'
 import BookSVG from '../../../components/svgs/BookSVG'
 import NotificationsMuroSVG from '../../../components/svgs/NotificationsMuroSVG'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 const PerfilAjustes = () => {
   const navigation = useNavigation()
-  const [usuario,setUsuario] = useState('')
+  const [usuario, setUsuario] = useState('')
 
-  useEffect(()=>{
-    const getUser= async()=>{
-    const usuario = await AsyncStorage.getItem('user');
-    console.log(JSON.parse(usuario),"este es")
-    setUsuario(JSON.parse(usuario));
-    return JSON.parse(usuario);
+  useEffect(() => {
+    const getUser = async () => {
+      const usuario = await AsyncStorage.getItem('user')
+      console.log(JSON.parse(usuario), 'este es')
+      setUsuario(JSON.parse(usuario))
+      return JSON.parse(usuario)
     }
     getUser()
-  },[])
+  }, [])
 
-const handleLogOut = async ()=>{
-  await AsyncStorage.removeItem("user")
-  navigation.navigate('Splash')
-}
+  const handleLogOut = async () => {
+    await AsyncStorage.removeItem('user')
+    navigation.navigate('Splash')
+  }
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <LinearGradient
-        style={[styles.perfilAjustes, styles.iconLayout1]}
-        locations={[0.1, 1]}
-        colors={['#fff', '#7ec18c']}
-      >
-        <View style={styles.frameParent}>
-          <View style={styles.frameGroup}>
-            <View>
-              <View style={styles.parentIcons}>
-                <Pressable onPress={() => navigation.navigate('Muro')}>
-                  <Image
-                    style={styles.image6Icon}
-                    contentFit="cover"
-                    source={require('../../../assets/image-6.png')}
-                  />
-                </Pressable>
-                {/* <View style={styles.iconlylightOutlinecalendarParent}>
+    <LinearGradient
+      style={{
+        backgroundColor: Color.linearBoton,
+        flex: 1
+      }}
+      locations={[0.1, 1]}
+      colors={['#fff', '#7ec18c']}
+    >
+      <View style={styles.frameParent}>
+        <View style={styles.frameGroup}>
+          <View>
+            <View style={styles.parentIcons}>
+              <Pressable onPress={() => navigation.navigate('Muro')}>
+                <Image
+                  style={styles.image6Icon}
+                  contentFit="cover"
+                  source={require('../../../assets/image-6.png')}
+                />
+              </Pressable>
+              {/* <View style={styles.iconlylightOutlinecalendarParent}>
                   <HeaderIcons
                     style={styles.header}
                     icons={[
@@ -62,148 +64,143 @@ const handleLogOut = async ()=>{
                     ]}
                   />
                 </View> */}
-              </View>
-              <View style={[styles.backParent, styles.parentFlexBox]}>
-                <Pressable
-                  style={styles.iconlylightOutlinecalendar}
-                  onPress={() => navigation.goBack()}
-                >
-                  <Image
-                    style={[styles.icon, styles.iconLayout1]}
-                    contentFit="cover"
-                    source={require('../../../assets/back.png')}
-                  />
-                </Pressable>
-                <Text style={styles.ajustes}>Ajustes</Text>
-              </View>
             </View>
-
-            <View style={styles.frameView}>
-              <View style={styles.parentFlexBox}>
+            <View style={[styles.backParent, styles.parentFlexBox]}>
+              <Pressable
+                style={styles.iconlylightOutlinecalendar}
+                onPress={() => navigation.goBack()}
+              >
                 <Image
-                  style={styles.frameChild}
+                  style={[styles.icon, styles.iconLayout1]}
                   contentFit="cover"
-                  source={require('../../../assets/frame-15477548756.png')}
+                  source={require('../../../assets/back.png')}
                 />
-                <View style={styles.brunoPhamWrapper}>
-                  <Text style={styles.brunoPham}>{usuario.username}</Text>
-                </View>
-              </View>
-              <View style={styles.frameParent2}>
-                <Pressable
-                  style={styles.parentFlexBox}
-                  onPress={() => navigation.navigate('PerfilConfiguracion')}
-                >
-                  <View style={styles.settingParent}>
-                    <Image
-                      style={[styles.settingIcon, styles.iconLayout]}
-                      contentFit="cover"
-                      source={require('../../../assets/setting1.png')}
-                    />
-                    <Text style={[styles.configuracin, styles.mytreeTypo]}>
-                      Configuración
-                    </Text>
-                    <Image
-                      style={[styles.arrowDown2Icon, styles.arrowIconLayout]}
-                      contentFit="cover"
-                      source={require('../../../assets/arrowdown29.png')}
-                    />
-                  </View>
-                </Pressable>
-                <Pressable
-                  style={[styles.frameParent3, styles.parentFlexBox]}
-                  onPress={() => navigation.navigate('PerfilSeguridad')}
-                >
-                  <View style={styles.settingParent}>
-                    <Image
-                      style={styles.shieldDoneIcon}
-                      contentFit="cover"
-                      source={require('../../../assets/shield-done.png')}
-                    />
-                    <Text style={[styles.configuracin, styles.mytreeTypo]}>
-                      Seguridad
-                    </Text>
-                    <Image
-                      style={[styles.arrowDown2Icon, styles.arrowIconLayout]}
-                      contentFit="cover"
-                      source={require('../../../assets/arrowdown29.png')}
-                    />
-                  </View>
-                </Pressable>
-                <Pressable
-                  style={[styles.frameParent3, styles.parentFlexBox]}
-                  onPress={() => navigation.navigate('Suscripciones')}
-                >
-                  <View style={styles.parentFlexBox}>
-                    <Image
-                      style={styles.starIcon}
-                      contentFit="cover"
-                      source={require('../../../assets/star.png')}
-                    />
-                    <Text style={[styles.configuracin, styles.mytreeTypo]}>
-                      Suscripciones
-                    </Text>
-                    <Image
-                      style={[styles.arrowDown2Icon, styles.arrowIconLayout]}
-                      contentFit="cover"
-                      source={require('../../../assets/arrowdown29.png')}
-                    />
-                  </View>
-                </Pressable>
-              </View>
+              </Pressable>
+              <Text style={styles.ajustes}>Ajustes</Text>
             </View>
           </View>
-          <View style={[styles.frameParent8, styles.parentLayout]}>
+
+          <View style={styles.frameView}>
             <View style={styles.parentFlexBox}>
               <Image
-                style={styles.shieldDoneIcon}
+                style={styles.frameChild}
                 contentFit="cover"
-                source={require('../../../assets/document8.png')}
+                source={require('../../../assets/frame-15477548756.png')}
               />
-              <Text style={[styles.configuracin, styles.mytreeTypo]}>
-                Términos y condiciones
-              </Text>
+              <View style={styles.brunoPhamWrapper}>
+                <Text style={styles.brunoPham}>{usuario.username}</Text>
+              </View>
             </View>
-            <View style={styles.categoryParent}>
-              <Image
-                style={[styles.settingIcon, styles.iconLayout]}
-                contentFit="cover"
-                source={require('../../../assets/category.png')}
-              />
-              <Text style={[styles.polticaDePrivacidad, styles.mytreeTypo]}>
-                Política de Privacidad
-              </Text>
-            </View>
-            <View style={[styles.frameParent3, styles.parentFlexBox]}>
-              <Image
-                style={[styles.settingIcon, styles.iconLayout]}
-                contentFit="cover"
-                source={require('../../../assets/call1.png')}
-              />
-              <Text style={[styles.polticaDePrivacidad, styles.mytreeTypo]}>
-                Contacta con MyTree
-              </Text>
+            <View style={styles.frameParent2}>
+              <Pressable
+                style={styles.parentFlexBox}
+                onPress={() => navigation.navigate('PerfilConfiguracion')}
+              >
+                <View style={styles.settingParent}>
+                  <Image
+                    style={[styles.settingIcon, styles.iconLayout]}
+                    contentFit="cover"
+                    source={require('../../../assets/setting1.png')}
+                  />
+                  <Text style={[styles.configuracin, styles.mytreeTypo]}>
+                    Configuración
+                  </Text>
+                  <Image
+                    style={[styles.arrowDown2Icon, styles.arrowIconLayout]}
+                    contentFit="cover"
+                    source={require('../../../assets/arrowdown29.png')}
+                  />
+                </View>
+              </Pressable>
+              <Pressable
+                style={[styles.frameParent3, styles.parentFlexBox]}
+                onPress={() => navigation.navigate('PerfilSeguridad')}
+              >
+                <View style={styles.settingParent}>
+                  <Image
+                    style={styles.shieldDoneIcon}
+                    contentFit="cover"
+                    source={require('../../../assets/shield-done.png')}
+                  />
+                  <Text style={[styles.configuracin, styles.mytreeTypo]}>
+                    Seguridad
+                  </Text>
+                  <Image
+                    style={[styles.arrowDown2Icon, styles.arrowIconLayout]}
+                    contentFit="cover"
+                    source={require('../../../assets/arrowdown29.png')}
+                  />
+                </View>
+              </Pressable>
+              <Pressable
+                style={[styles.frameParent3, styles.parentFlexBox]}
+                onPress={() => navigation.navigate('Suscripciones')}
+              >
+                <View style={styles.parentFlexBox}>
+                  <Image
+                    style={styles.starIcon}
+                    contentFit="cover"
+                    source={require('../../../assets/star.png')}
+                  />
+                  <Text style={[styles.configuracin, styles.mytreeTypo]}>
+                    Suscripciones
+                  </Text>
+                  <Image
+                    style={[styles.arrowDown2Icon, styles.arrowIconLayout]}
+                    contentFit="cover"
+                    source={require('../../../assets/arrowdown29.png')}
+                  />
+                </View>
+              </Pressable>
             </View>
           </View>
-          <Pressable
-            style={styles.frameWrapper}
-            onPress={
-             handleLogOut}
-          >
-            <View style={[styles.logoutParent, styles.parentLayout]}>
-              <Image
-                style={styles.starIcon}
-                contentFit="cover"
-                source={require('../../../assets/logout.png')}
-              />
-              <Text style={[styles.suscripciones, styles.mytreeTypo]}>
-                Cerrar sesión
-              </Text>
-            </View>
-          </Pressable>
         </View>
-      </LinearGradient>
-    </ScrollView>
+        <View style={[styles.frameParent8, styles.parentLayout]}>
+          <View style={styles.parentFlexBox}>
+            <Image
+              style={styles.shieldDoneIcon}
+              contentFit="cover"
+              source={require('../../../assets/document8.png')}
+            />
+            <Text style={[styles.configuracin, styles.mytreeTypo]}>
+              Términos y condiciones
+            </Text>
+          </View>
+          <View style={styles.categoryParent}>
+            <Image
+              style={[styles.settingIcon, styles.iconLayout]}
+              contentFit="cover"
+              source={require('../../../assets/category.png')}
+            />
+            <Text style={[styles.polticaDePrivacidad, styles.mytreeTypo]}>
+              Política de Privacidad
+            </Text>
+          </View>
+          <View style={[styles.frameParent3, styles.parentFlexBox]}>
+            <Image
+              style={[styles.settingIcon, styles.iconLayout]}
+              contentFit="cover"
+              source={require('../../../assets/call1.png')}
+            />
+            <Text style={[styles.polticaDePrivacidad, styles.mytreeTypo]}>
+              Contacta con MyTree
+            </Text>
+          </View>
+        </View>
+        <Pressable style={styles.frameWrapper} onPress={handleLogOut}>
+          <View style={[styles.logoutParent, styles.parentLayout]}>
+            <Image
+              style={styles.starIcon}
+              contentFit="cover"
+              source={require('../../../assets/logout.png')}
+            />
+            <Text style={[styles.suscripciones, styles.mytreeTypo]}>
+              Cerrar sesión
+            </Text>
+          </View>
+        </Pressable>
+      </View>
+    </LinearGradient>
   )
 }
 
@@ -375,8 +372,7 @@ const styles = StyleSheet.create({
     paddingVertical: 0
   },
   perfilAjustes: {
-    backgroundColor: Color.linearBoton,
-    paddingBottom: 50
+    backgroundColor: Color.linearBoton
   }
 })
 

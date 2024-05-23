@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { Image } from 'expo-image'
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Color, FontSize, FontFamily, Padding, Border } from '../GlobalStyles'
 import Checkbox from 'expo-checkbox'
 
-const Privacidad = () => {
+const Privacidad = ({ onClose }) => {
   const [check1, setCheck1] = useState(false)
   const [check2, setCheck2] = useState(false)
   const [check3, setCheck3] = useState(false)
@@ -97,13 +97,15 @@ const Privacidad = () => {
           </View>
         </View>
       </View>
-      <LinearGradient
-        style={[styles.button, styles.parentFlexBox]}
-        locations={[0, 1]}
-        colors={['#dee274', '#7ec18c']}
-      >
-        <Text style={styles.signIn}>Guardar</Text>
-      </LinearGradient>
+      <Pressable onPress={onClose}>
+        <LinearGradient
+          style={[styles.button, styles.parentFlexBox]}
+          locations={[0, 1]}
+          colors={['#dee274', '#7ec18c']}
+        >
+          <Text style={styles.signIn}>Guardar</Text>
+        </LinearGradient>
+      </Pressable>
     </View>
   )
 }

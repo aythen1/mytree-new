@@ -100,10 +100,14 @@ const Muro = () => {
     }
   }
 
+  const openDrawer = () => {
+    navigation.openDrawer()
+  }
+
   return (
     <LinearGradient
       colors={['#fff', '#f1f1f1']}
-      style={{ flex: 1, paddingBottom: 70 }}
+      style={{ flex: 1 }}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
     >
@@ -123,7 +127,8 @@ const Muro = () => {
               width: 26,
               height: 20
             }}
-            onPress={() => dispatch(setPanel(!menuVisible))}
+            //onPress={() => dispatch(setPanel(!menuVisible))}
+            onPress={openDrawer}
           >
             <Image
               style={{
