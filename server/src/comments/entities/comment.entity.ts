@@ -10,6 +10,21 @@ export class Comment {
   @Column()
   content: string;
 
+  @Column()
+  creatorId: string;
+
+  @Column('simple-array', { nullable: true })
+  responses: string[];
+
+  @Column('simple-array', { nullable: true })
+  likes: string[];
+
+  @Column('simple-array', { nullable: true })
+  dislikes: string[];
+
+  @Column('simple-array',{ nullable: true })
+  extraData: any;
+
   @ManyToOne(() => User, user => user.comments)
   user: User;
 
