@@ -102,8 +102,10 @@ const Posteo = ({ data, padding }) => {
               >
                 <Image
                   contentFit="cover"
-                  style={{ width: 22, height: 16.5, zIndex: 9999 }}
-                  source={require('../assets/vector2.png')}
+                  style={{ width: 22, height: 16.5, zIndex: 999999999999 }}
+                  source={{
+                    uri: 'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716419224/bciupv6y3hwccgmtpwoe.png'
+                  }}
                 />
               </View>
             </View>

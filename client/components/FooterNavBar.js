@@ -19,6 +19,10 @@ import { setPanelAddFooter } from '../redux/slices/panel.slices'
 import { Color } from '../GlobalStyles'
 import { Context } from '../context/Context'
 import SelectEventTypeModal from './SelectEventTypeModal'
+import FooterIcon from './FooterIcon'
+import FooterBar from './svgs/FooterBarSVG'
+import TreeSVG from './svgs/TreeSVG'
+import FooterBarSVG from './svgs/FooterBarSVG'
 
 const FooterNavBar = () => {
   const { showCamera } = useContext(Context)
@@ -37,17 +41,16 @@ const FooterNavBar = () => {
 
   if (!showCamera)
     return (
-      <>
+      <View style={{ backgroundColor: '#f1f1f1' }}>
         <View
           style={{
-            height: 70,
+            height: 75,
             flexDirection: 'row',
             width: '100%',
             justifyContent: 'space-between',
             alignItems: 'center',
             borderTopStartRadius: 7,
             borderTopEndRadius: 7,
-            backgroundColor: 'white',
             zIndex: 100,
             position: 'absolute',
             bottom: 0
@@ -140,6 +143,7 @@ const FooterNavBar = () => {
             </LinearGradient>
           </Pressable>
         </View>
+        <FooterBarSVG />
 
         <Modal
           animationType="slide"
@@ -175,7 +179,7 @@ const FooterNavBar = () => {
             </TouchableWithoutFeedback>
           </Modal>
         )}
-      </>
+      </View>
     )
 }
 

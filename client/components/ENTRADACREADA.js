@@ -27,23 +27,42 @@ const ENTRADACREADA = ({ onClose, message, isNavigate }) => {
         <Text style={[styles.cambiosGuardados, styles.aceptarTypo]}>
           {message}
         </Text>
-        <LinearGradient
-          style={styles.button}
-          locations={[0, 1]}
-          colors={['#dee274', '#7ec18c']}
+        <Pressable
+          style={{
+            width: '90%',
+            marginTop: 20,
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+          onPress={() => {
+            if (isNavigate) {
+              navigation.navigate(isNavigate)
+            }
+            onClose()
+          }}
         >
-          <Pressable
-            style={styles.pressable}
-            onPress={() => {
-              if (isNavigate) {
-                navigation.navigate(isNavigate)
-              }
-              onClose()
+          <LinearGradient
+            style={{
+              width: '100%',
+              borderRadius: 50,
+              height: 52,
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
+            locations={[0, 1]}
+            colors={['#dee274', '#7ec18c']}
           >
-            <Text style={[styles.aceptar, styles.aceptarTypo]}>Aceptar</Text>
-          </Pressable>
-        </LinearGradient>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: Border.br_11xl
+              }}
+            >
+              <Text style={[styles.aceptar, styles.aceptarTypo]}>Aceptar</Text>
+            </View>
+          </LinearGradient>
+        </Pressable>
       </View>
     </View>
   )

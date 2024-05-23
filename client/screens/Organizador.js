@@ -28,8 +28,8 @@ import Privacidad from './Privacidad'
 import { Context } from '../context/Context'
 import { StatusBar } from 'react-native'
 import Cancion1 from '../components/Cancion1'
-import MapView from 'react-native-maps';
-
+import MapView from 'react-native-maps'
+import { useNavigation } from '@react-navigation/native'
 
 const Organizador = () => {
   const dispatch = useDispatch()
@@ -122,22 +122,6 @@ const Organizador = () => {
     setCalendario(false)
   }, [])
 
-  const openCancion = useCallback(() => {
-    setCancion(true)
-  }, [])
-
-  const closeCancion = useCallback(() => {
-    setCancion(false)
-  }, [])
-
-  const openUploadRecuerdo = useCallback(() => {
-    setUploadRecuerdo(true)
-  }, [])
-
-  const closeUploadRecuerdo = useCallback(() => {
-    setUploadRecuerdo(false)
-  }, [])
-
   const openEtapas = useCallback(() => {
     setShowEtapas(true)
   }, [])
@@ -154,28 +138,12 @@ const Organizador = () => {
     setShowPrivacidad(false)
   }, [])
 
-  const openButtonContainer1 = useCallback(() => {
-    setButtonContainer1Visible(true)
-  }, [])
-
-  const closeButtonContainer1 = useCallback(() => {
-    setButtonContainer1Visible(false)
-  }, [])
-
   const openFrameContainer2 = useCallback(() => {
     setFrameContainer2Visible(true)
   }, [])
 
   const closeFrameContainer2 = useCallback(() => {
     setFrameContainer2Visible(false)
-  }, [])
-
-  const openFrameContainer5 = useCallback(() => {
-    setFrameContainer5Visible(true)
-  }, [])
-
-  const closeFrameContainer5 = useCallback(() => {
-    setFrameContainer5Visible(false)
   }, [])
 
   const handleSubmit = async () => {
@@ -205,45 +173,94 @@ const Organizador = () => {
     }
   }
 
+  const navigation = useNavigation()
+
   return (
-    <ScrollView
-      style={{
-        width: '100%',
-        flex: 1,
-        backgroundColor: Color.white,
-        padding: Padding.p_xl
-      }}
-      contentContainerStyle={{
-        flexGrow: 1,
-        paddingBottom: 300
-      }}
-      showsVerticalScrollIndicator={false}
+    <LinearGradient
+      colors={['#fff', '#f1f1f1']}
+      style={{ flex: 1 }}
+      start={{ x: 0, y: 0.6 }}
+      end={{ x: 0, y: 1 }}
     >
-      <Image
-        style={styles.image6Icon}
-        contentFit="cover"
-        source={require('../assets/image-6.png')}
-      />
-      <View style={{ width: '100%' }}>
+      <View
+        style={{
+          width: '100%',
+          flex: 1,
+          padding: Padding.p_xl
+        }}
+      >
+        <Image
+          style={{
+            width: 87,
+            height: 55
+          }}
+          contentFit="cover"
+          source={require('../assets/image-6.png')}
+        />
         <View style={{ width: '100%' }}>
-          <View style={styles.ionmenuParent}>
-            <Pressable onPress={() => dispatch(setPanel(!showPanel))}>
+          <View
+            style={{
+              height: 29,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: '100%'
+            }}
+          >
+            <Pressable onPress={() => navigation.openDrawer()}>
               <Image
-                style={styles.ionmenuIcon}
+                style={{
+                  top: 5,
+                  width: 26,
+                  height: 20,
+                  overflow: 'hidden'
+                }}
                 contentFit="cover"
                 source={require('../assets/ionmenu2.png')}
               />
             </Pressable>
-            <Text style={styles.subirRecuerdo}>Subir recuerdo</Text>
-            <Text style={styles.subir}>Subir</Text>
+            <Text
+              style={{
+                fontSize: FontSize.size_5xl,
+                fontWeight: '700',
+                textAlign: 'left',
+                fontFamily: FontFamily.lato,
+                color: Color.negro,
+                top: 0
+              }}
+            >
+              Subir recuerdo
+            </Text>
+            <Text
+              style={{
+                color: Color.primario1,
+                fontWeight: '500',
+                letterSpacing: 0,
+                lineHeight: 22,
+                fontSize: FontSize.size_lg,
+                fontFamily: FontFamily.lato
+              }}
+            >
+              Subir
+            </Text>
           </View>
-          <View style={{ marginTop: 5 }}>
+          <ScrollView
+            style={{
+              width: '100%',
+              marginTop: 15,
+              height: '73%'
+            }}
+            contentContainerStyle={{
+              flexGrow: 1,
+              paddingBottom: 40
+            }}
+            showsVerticalScrollIndicator={false}
+          >
             <View>
               <TextInput
                 multiline={true}
                 numberOfLines={3}
                 style={{
-                  color: Color.grisClaro,
+                  color: '#202020',
                   fontWeight: '500',
                   fontSize: FontSize.size_lg,
                   textAlign: 'left',
@@ -260,7 +277,7 @@ const Organizador = () => {
                 }
                 value={dataToSend.description}
               />
-              <View style={{ top: 15 }}>
+              <View style={{ marginTop: 15 }}>
                 <Text
                   style={{
                     marginBottom: 6,
@@ -342,749 +359,512 @@ const Organizador = () => {
                 </View>
               </View>
             </View>
-            <View style={{ marginTop: 40 }}>
-              <Image
-                style={styles.frameChild}
-                contentFit="cover"
-                source={require('../assets/line-802.png')}
-              />
+            <View style={{ marginTop: 5 }}>
               <Pressable
                 style={{
-                  marginTop: 10,
-                  marginBottom: 10,
+                  marginTop: 15,
                   alignItems: 'center',
                   flexDirection: 'row'
                 }}
-                // onPress={openUploadRecuerdo}
-              >
-                <Image
-                  style={styles.iconlybolddocument}
-                  contentFit="cover"
-                  source={require('../assets/iconlybolddocument.png')}
-                />
-                <Text style={[styles.anexoArchivo, styles.etiquetarTypo]}>
-                  Anexo archivo
-                </Text>
-              </Pressable>
-
-              <Pressable
-                style={[styles.iconlybolddocumentParent, styles.parentFlexBox]}
                 onPress={openFrameContainer2}
               >
-                <Image
-                  style={styles.iconlyboldaddUser}
-                  contentFit="cover"
-                  source={require('../assets/iconlyboldadduser.png')}
-                />
-                <Text style={[styles.etiquetar, styles.etiquetarTypo]}>
-                  Etiquetar
-                </Text>
-              </Pressable>
-              <Image
-                style={styles.frameItem}
-                contentFit="cover"
-                source={require('../assets/line-802.png')}
-              />
-              <Pressable
-                style={[styles.iconlybolddocumentParent, styles.parentFlexBox]}
-                // onPress={openCancion}
-              >
-                <Image
-                  style={styles.groupIcon}
-                  contentFit="cover"
-                  source={require('../assets/group.png')}
-                />
-                <Text style={[styles.aadirAudio, styles.etiquetarTypo]}>
-                  Añadir audio
-                </Text>
-              </Pressable>
-              <Image
-                style={styles.frameItem}
-                contentFit="cover"
-                source={require('../assets/line-802.png')}
-              />
-              <Pressable
-                style={[styles.iconlybolddocumentParent, styles.parentFlexBox]}
-                onPress={openCalendario}
-              >
-                <Image
-                  style={styles.iconlybolddocument}
-                  contentFit="cover"
-                  source={require('../assets/vector14.png')}
-                />
-                <Text style={[styles.anexoArchivo, styles.etiquetarTypo]}>
-                  Fecha
-                </Text>
-              </Pressable>
-              <Image
-                style={styles.frameItem}
-                contentFit="cover"
-                source={require('../assets/line-802.png')}
-              />
-              <Pressable
-                style={[styles.iconlybolddocumentParent, styles.parentFlexBox]}
-                onPress={openLugar}
-              >
-                <Image
-                  style={styles.iconlybulklocation}
-                  contentFit="cover"
-                  source={require('../assets/iconlybulklocation.png')}
-                />
-                <Text style={[styles.aadirAudio, styles.etiquetarTypo]}>
-                  Lugar
-                </Text>
-              </Pressable>
-              <Image
-                style={styles.frameItem}
-                contentFit="cover"
-                source={require('../assets/line-802.png')}
-              />
-              <View style={[styles.frameContainer, styles.frameLayout]}>
-                <Pressable
-                  style={[styles.imageParent, styles.parentFlexBox]}
-                  onPress={() => {
-                    setAñadirAUnAlbum(!añadirAUnAlbum)
+                <View
+                  style={{
+                    width: 30,
+                    height: 30,
+                    marginRight: 10,
+                    justifyContent: 'center',
+                    alignItems: 'flex-start'
                   }}
                 >
                   <Image
-                    style={styles.imageIcon}
+                    style={{ width: 22, height: 22 }}
                     contentFit="cover"
-                    source={require('../assets/image3.png')}
+                    source={require('../assets/iconlyboldadduser.png')}
                   />
-                  <Text style={[styles.aadirAudio, styles.etiquetarTypo]}>
-                    Añadir a un álbum
-                  </Text>
-                </Pressable>
+                </View>
+                <Text
+                  style={{
+                    lineHeight: 19,
+                    color: Color.gris,
+                    fontSize: FontSize.size_base
+                  }}
+                >
+                  Etiquetar
+                </Text>
+              </Pressable>
+              <Pressable
+                style={{
+                  marginTop: 15,
+                  alignItems: 'center',
+                  flexDirection: 'row'
+                }}
+                onPress={openCalendario}
+              >
+                <View
+                  style={{
+                    width: 30,
+                    height: 30,
+                    marginRight: 10,
+                    justifyContent: 'center',
+                    alignItems: 'flex-start'
+                  }}
+                >
+                  <Image
+                    style={{ width: 22, height: 22 }}
+                    contentFit="cover"
+                    source={require('../assets/vector14.png')}
+                  />
+                </View>
+                <Text
+                  style={{
+                    lineHeight: 19,
+                    color: Color.gris,
+                    fontSize: FontSize.size_base
+                  }}
+                >
+                  Fecha
+                </Text>
+              </Pressable>
+              <Pressable
+                style={{
+                  marginTop: 15,
+                  alignItems: 'center',
+                  flexDirection: 'row'
+                }}
+                onPress={openLugar}
+              >
+                <View
+                  style={{
+                    width: 30,
+                    height: 30,
+                    marginRight: 10,
+                    justifyContent: 'center',
+                    alignItems: 'flex-start'
+                  }}
+                >
+                  <Image
+                    style={{ width: 20, height: 29 }}
+                    contentFit="cover"
+                    source={require('../assets/iconlybulklocation.png')}
+                  />
+                </View>
+                <Text
+                  style={{
+                    lineHeight: 19,
+                    color: Color.gris,
+                    fontSize: FontSize.size_base
+                  }}
+                >
+                  Lugar
+                </Text>
+              </Pressable>
+              {/* =============== ADD TO ALBUM ================= */}
+              <View
+                style={{
+                  marginTop: 15,
+                  flexDirection: 'column',
+                  width: '100%',
+                  alignItems: 'center'
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    width: '100%',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <Pressable
+                    style={{
+                      alignItems: 'center',
+                      flexDirection: 'row'
+                    }}
+                    onPress={() => {
+                      setAñadirAUnAlbum(!añadirAUnAlbum)
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: 30,
+                        height: 30,
+                        marginRight: 10,
+                        justifyContent: 'center',
+                        alignItems: 'flex-start'
+                      }}
+                    >
+                      <Image
+                        style={{ width: 23, height: 24 }}
+                        contentFit="cover"
+                        source={require('../assets/image3.png')}
+                      />
+                    </View>
+                    <Text
+                      style={{
+                        lineHeight: 19,
+                        color: Color.gris,
+                        fontSize: FontSize.size_base
+                      }}
+                    >
+                      Añadir a un álbum
+                    </Text>
+                  </Pressable>
+                  <Image
+                    style={{ width: 9, height: 16 }}
+                    contentFit="cover"
+                    source={require('../assets/arrowdown22.png')}
+                  />
+                </View>
 
-                <Image
-                  style={[styles.arrowDown2Icon, styles.aadirPosition]}
-                  contentFit="cover"
-                  source={require('../assets/arrowdown22.png')}
-                />
                 {añadirAUnAlbum && (
-                  <View style={{ top: 20 }}>
-                    <Pressable style={{ flexDirection: 'row', marginTop: 15 }}>
-                      <TouchableOpacity onPress={() => setLegado(!legado)}>
-                        {legado ? (
-                          <Image
-                            contentFit="cover"
-                            style={{ width: 20, height: 20 }}
-                            source={require('../assets/checked.png')}
-                          />
-                        ) : (
-                          <Image
-                            contentFit="cover"
-                            style={{ width: 20, height: 20 }}
-                            source={require('../assets/notchecked.png')}
-                          />
-                        )}
-                      </TouchableOpacity>
+                  <View
+                    style={{
+                      marginTop: 5,
+                      width: '100%',
+                      gap: 10
+                    }}
+                  >
+                    <Pressable
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center'
+                      }}
+                    >
                       <View
                         style={{
                           flexDirection: 'row',
-                          width: '100%',
-                          justifyContent: 'space-between'
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          width: '100%'
                         }}
                       >
-                        <Text style={styles.aadirTypoText}>
-                          Añadir a mi legado
-                        </Text>
-                        <Pressable onPress={openEtapas}>
-                          <Text style={styles.optionsAlbum}>Añadir etapa</Text>
+                        <View style={{ flexDirection: 'row', gap: 10 }}>
+                          <TouchableOpacity onPress={() => setLegado(!legado)}>
+                            {legado ? (
+                              <Image
+                                contentFit="cover"
+                                style={{ width: 20, height: 20 }}
+                                source={require('../assets/checked.png')}
+                              />
+                            ) : (
+                              <Image
+                                contentFit="cover"
+                                style={{ width: 20, height: 20 }}
+                                source={require('../assets/notchecked.png')}
+                              />
+                            )}
+                          </TouchableOpacity>
+                          <Text
+                            style={{
+                              textAlign: 'left',
+                              color: Color.gris,
+                              fontFamily: FontFamily.lato,
+                              fontWeight: '500',
+                              lineHeight: 19,
+                              letterSpacing: 0,
+                              fontSize: FontSize.size_base
+                            }}
+                          >
+                            Añadir a mi legado
+                          </Text>
+                        </View>
+                        <Pressable
+                        // onPress={openEtapas}
+                        >
+                          <Text
+                            style={{
+                              height: 30,
+                              padding: 5,
+                              backgroundColor: Color.secundario,
+                              borderRadius: Border.br_11xl,
+                              textAlign: 'center',
+                              color: Color.primario1,
+                              lineHeight: 18,
+                              fontSize: FontSize.size_xs,
+                              fontFamily: FontFamily.lato
+                            }}
+                          >
+                            Añadir etapa
+                          </Text>
                         </Pressable>
                       </View>
                     </Pressable>
                     <Pressable
                       style={{
                         flexDirection: 'row',
-                        marginTop: 15
+                        alignItems: 'center'
                       }}
                     >
-                      <TouchableOpacity onPress={() => setAlbum(!album)}>
-                        {album ? (
-                          <Image
-                            contentFit="cover"
-                            style={{ width: 20, height: 20 }}
-                            source={require('../assets/checked.png')}
-                          />
-                        ) : (
-                          <Image
-                            contentFit="cover"
-                            style={{ width: 20, height: 20 }}
-                            source={require('../assets/notchecked.png')}
-                          />
-                        )}
-                      </TouchableOpacity>
                       <View
                         style={{
                           flexDirection: 'row',
-                          width: '100%',
-                          justifyContent: 'space-between'
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          width: '100%'
                         }}
                       >
-                        <Text style={styles.aadirTypoText}>
-                          Añadir a mis albunes
-                        </Text>
+                        <View style={{ flexDirection: 'row', gap: 10 }}>
+                          <TouchableOpacity onPress={() => setAlbum(!album)}>
+                            {album ? (
+                              <Image
+                                contentFit="cover"
+                                style={{ width: 20, height: 20 }}
+                                source={require('../assets/checked.png')}
+                              />
+                            ) : (
+                              <Image
+                                contentFit="cover"
+                                style={{ width: 20, height: 20 }}
+                                source={require('../assets/notchecked.png')}
+                              />
+                            )}
+                          </TouchableOpacity>
+                          <Text
+                            style={{
+                              textAlign: 'left',
+                              color: Color.gris,
+                              fontFamily: FontFamily.lato,
+                              fontWeight: '500',
+                              lineHeight: 19,
+                              letterSpacing: 0,
+                              fontSize: FontSize.size_base
+                            }}
+                          >
+                            Añadir a mis albunes
+                          </Text>
+                        </View>
                         <Pressable onPress={openSelectedAlbum}>
-                          <Text style={styles.optionsAlbum}>Elegir album</Text>
+                          <Text
+                            style={{
+                              height: 30,
+                              padding: 5,
+                              backgroundColor: Color.secundario,
+                              borderRadius: Border.br_11xl,
+                              textAlign: 'center',
+                              color: Color.primario1,
+                              lineHeight: 18,
+                              fontSize: FontSize.size_xs,
+                              fontFamily: FontFamily.lato
+                            }}
+                          >
+                            Elegir album
+                          </Text>
                         </Pressable>
                       </View>
                     </Pressable>
                   </View>
                 )}
               </View>
-              <Image
-                style={styles.frameItem}
-                contentFit="cover"
-                source={require('../assets/line-802.png')}
-              />
-              {!añadirAUnAlbum && (
-                <View style={[styles.frameWrapper, styles.frameLayout]}>
-                  <View style={[styles.checkParent, styles.button2FlexBox]}>
-                    <View style={styles.check}>
-                      <View style={styles.checkChild} />
-                      <Image
-                        style={styles.vectorIcon1}
-                        contentFit="cover"
-                        source={require('../assets/vector.png')}
-                      />
-                      <TouchableOpacity
-                        onPress={() => setIschecked(!ischecked)}
-                      >
-                        {ischecked ? (
-                          <Image
-                            contentFit="cover"
-                            style={{ width: 20, height: 20 }}
-                            source={require('../assets/checked.png')}
-                          />
-                        ) : (
-                          <Image
-                            contentFit="cover"
-                            style={{ width: 20, height: 20 }}
-                            source={require('../assets/notchecked.png')}
-                          />
-                        )}
-                      </TouchableOpacity>
-                    </View>
-                    <Text style={[styles.aadirAudio, styles.etiquetarTypo]}>
-                      Cumplir reto
-                    </Text>
-                  </View>
-                </View>
-              )}
-              {!añadirAUnAlbum && (
-                <View style={[styles.frameView, styles.parentFlexBox]}>
-                  <Pressable
-                    style={styles.opcionesDePrivacidadWrapper}
-                    onPress={openPrivacidad}
+              {/* ============================================== */}
+              <View
+                style={{
+                  marginTop: 15,
+                  width: '100%',
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}
+              >
+                <Pressable
+                  style={{ alignItems: 'center', flexDirection: 'row' }}
+                  onPress={openPrivacidad}
+                >
+                  <Text
+                    style={{
+                      color: Color.gris,
+                      lineHeight: 22,
+                      fontSize: FontSize.size_lg
+                    }}
                   >
-                    <Text
-                      style={[
-                        styles.opcionesDePrivacidad,
-                        styles.etiquetarTypo
-                      ]}
-                    >
-                      Opciones de Privacidad
-                    </Text>
-                  </Pressable>
-                  <Image
-                    style={styles.arrowDown2Icon1}
-                    contentFit="cover"
-                    source={require('../assets/arrowdown23.png')}
-                  />
-                </View>
-              )}
+                    Opciones de Privacidad
+                  </Text>
+                </Pressable>
+                <Image
+                  style={{ marginLeft: 20, width: 9, height: 16 }}
+                  contentFit="cover"
+                  source={require('../assets/arrowdown23.png')}
+                />
+              </View>
             </View>
-          </View>
+          </ScrollView>
         </View>
-      </View>
-      <LinearGradient
-        style={{
-          paddingVertical: Padding.p_sm,
-          // position: 'absolute',
-          // bottom: 35,
-          backgroundColor: Color.linearBoton,
-          borderRadius: Border.br_11xl,
-          justifyContent: 'center',
-          marginTop: 0,
-          alignSelf: 'center',
-          width: '95%',
-          alignItems: 'center',
-          flexDirection: 'row'
-        }}
-        locations={[0, 1]}
-        colors={['#dee274', '#7ec18c']}
-      >
-        <Text onPress={handleSubmit} style={styles.signIn}>
-          Subir
-        </Text>
-      </LinearGradient>
-
-      <Modal animationType="slide" transparent visible={showEtapas}>
-        <View style={styles.buttonContainer1Overlay}>
-          <Pressable style={styles.buttonContainer1Bg} onPress={closeEtapas}>
-            {/* <Etapas onClose={closeEtapas} /> */}
-          </Pressable>
-        </View>
-      </Modal>
-
-      <Modal animationType="slide" transparent visible={selectedAlbum}>
-        <View style={styles.buttonContainer1Overlay}>
-          <Pressable
-            style={styles.buttonContainer1Bg}
-            onPress={closeSelectedAlbum}
-          >
-            <Album onClose={closeSelectedAlbum} />
-          </Pressable>
-        </View>
-      </Modal>
-
-      <Modal animationType="fade" transparent visible={showPrivacidad}>
-        <View style={styles.buttonContainer1Overlay}>
-          <Pressable
-            style={styles.buttonContainer1Bg}
-            onPress={closePrivacidad}
-          >
-            <Privacidad onClose={closePrivacidad} />
-          </Pressable>
-        </View>
-      </Modal>
-
-      <Modal animationType="slide" transparent visible={frameContainer2Visible}>
-        <View
+        <LinearGradient
           style={{
-            alignItems: 'center',
+            paddingVertical: Padding.p_sm,
+            backgroundColor: Color.linearBoton,
+            borderRadius: Border.br_11xl,
             justifyContent: 'center',
-            backgroundColor: 'rgba(113, 113, 113, 0.3)',
-            height: '100%'
+            position: 'absolute',
+            bottom: 35,
+            alignSelf: 'center',
+            width: '95%',
+            alignItems: 'center',
+            flexDirection: 'row'
           }}
+          locations={[0, 1]}
+          colors={['#dee274', '#7ec18c']}
         >
-          <Pressable
-            style={{ width: '100%', height: '100%', left: 0, top: 0 }}
-            onPress={closeFrameContainer2}
-          />
-          <Etiquetar
-            taggedUsers={taggedUsers}
-            setTaggedUsers={setTaggedUsers}
-            onClose={closeFrameContainer2}
-          />
-        </View>
-      </Modal>
-
-      <Modal animationType="slide" transparent visible={calendario}>
-        <View style={styles.frameContainer2Overlay}>
-          <Pressable
-            style={styles.frameContainer2Bg}
-            onPress={closeCalendario}
-          />
-          <PopUpCalendario
-            setButtonContainer2Visible={() => {}}
-            setCalendario={setCalendario}
-          />
-        </View>
-      </Modal>
-
-      {/* ---------------------------------------------------------- */}
-
-      <Modal animationType="slide" transparent visible={lugar}>
-        <View style={styles.frameContainer5Overlay}>
-          <Pressable style={styles.frameContainer5Bg} onPress={closeLugar} />
-          <Lugar3 onClose={closeLugar} />
-        </View>
-      </Modal>
-
-      <Modal animationType="slide" transparent visible={showHashtagsModal}>
-        <View style={styles.frameContainer5Overlay}>
-          <Pressable
-            style={styles.frameContainer5Bg}
-            onPress={() => setShowHashtagsModal(false)}
-          />
-          <Cancion1 onClose={() => setShowHashtagsModal(false)} />
-        </View>
-      </Modal>
-
-      <Modal animationType="slide" transparent visible={submit}>
-        <View style={styles.buttonContainer2Overlay}>
-          <Pressable style={styles.buttonContainer2Bg} onPress={closeSubmit} />
-          <ENTRADACREADA
-            onClose={closeSubmit}
-            isNavigate={'Muro'}
-            message={'Creado con exito'}
-          />
-        </View>
-      </Modal>
-    </ScrollView>
+          <Text
+            onPress={handleSubmit}
+            style={{
+              letterSpacing: 1,
+              lineHeight: 24,
+              color: Color.white,
+              textAlign: 'center',
+              fontSize: FontSize.size_base,
+              fontFamily: FontFamily.lato
+            }}
+          >
+            Subir
+          </Text>
+        </LinearGradient>
+        <Modal animationType="slide" transparent visible={showEtapas}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(113, 113, 113, 0.3)',
+              height: '100%'
+            }}
+          >
+            <Pressable
+              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              onPress={closeEtapas}
+            />
+            {/* <Etapas onClose={closeEtapas} /> */}
+          </View>
+        </Modal>
+        <Modal animationType="slide" transparent visible={selectedAlbum}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(113, 113, 113, 0.3)',
+              height: '100%'
+            }}
+          >
+            <Pressable
+              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              onPress={closeSelectedAlbum}
+            />
+            <Album onClose={closeSelectedAlbum} />
+          </View>
+        </Modal>
+        <Modal animationType="fade" transparent visible={showPrivacidad}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(113, 113, 113, 0.3)',
+              height: '100%'
+            }}
+          >
+            <Pressable
+              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              onPress={closePrivacidad}
+            />
+            <Privacidad onClose={closePrivacidad} />
+          </View>
+        </Modal>
+        <Modal
+          animationType="slide"
+          transparent
+          visible={frameContainer2Visible}
+        >
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(113, 113, 113, 0.3)',
+              height: '100%'
+            }}
+          >
+            <Pressable
+              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              onPress={closeFrameContainer2}
+            />
+            <Etiquetar
+              taggedUsers={taggedUsers}
+              setTaggedUsers={setTaggedUsers}
+              onClose={closeFrameContainer2}
+            />
+          </View>
+        </Modal>
+        <Modal animationType="slide" transparent visible={calendario}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(113, 113, 113, 0.3)',
+              height: '100%'
+            }}
+          >
+            <Pressable
+              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              onPress={closeCalendario}
+            />
+            <PopUpCalendario
+              setButtonContainer2Visible={() => {}}
+              setCalendario={setCalendario}
+            />
+          </View>
+        </Modal>
+        {/* <Modal animationType="slide" transparent visible={lugar}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(113, 113, 113, 0.3)',
+              height: '100%'
+            }}
+          >
+            <Pressable
+              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              onPress={closeLugar}
+            />
+            <Lugar3 onClose={closeLugar} />
+          </View>
+        </Modal> */}
+        <Modal animationType="slide" transparent visible={showHashtagsModal}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(113, 113, 113, 0.3)',
+              height: '100%'
+            }}
+          >
+            <Pressable
+              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              onPress={() => setShowHashtagsModal(false)}
+            />
+            <Cancion1 onClose={() => setShowHashtagsModal(false)} />
+          </View>
+        </Modal>
+        <Modal animationType="slide" transparent visible={submit}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(113, 113, 113, 0.3)',
+              height: '100%'
+            }}
+          >
+            <Pressable
+              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              onPress={closeSubmit}
+            />
+            <ENTRADACREADA
+              onClose={closeSubmit}
+              isNavigate={'Muro'}
+              message={'Creado con exito'}
+            />
+          </View>
+        </Modal>
+      </View>
+    </LinearGradient>
   )
 }
-
-const styles = StyleSheet.create({
-  parentPosition: {},
-  optionsAlbum: {
-    marginRight: 15,
-    height: 30,
-    padding: 5,
-    backgroundColor: Color.secundario,
-    borderRadius: Border.br_11xl,
-    textAlign: 'center',
-    color: Color.primario1,
-    lineHeight: 18,
-    fontSize: FontSize.size_xs,
-    fontFamily: FontFamily.lato
-  },
-  aadirTypoText: {
-    textAlign: 'left',
-    color: Color.gris,
-    fontFamily: FontFamily.lato,
-    fontWeight: '500',
-    lineHeight: 19,
-    letterSpacing: 0,
-    fontSize: FontSize.size_base,
-    marginLeft: 10
-  },
-  buttonContainer2Overlay: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(113, 113, 113, 0.3)'
-  },
-  buttonContainer2Bg: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    left: 0,
-    top: 0
-  },
-  modalOverlay: {
-    // flex: 1,
-    // top: -100,
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center'
-    // alignItems: 'center'
-  },
-  eventoTypo: {
-    // left: 20,
-    fontWeight: '500',
-    fontSize: FontSize.size_lg,
-    textAlign: 'left',
-    fontFamily: FontFamily.lato
-    // position: 'absolute'
-  },
-  buttonPosition: {
-    backgroundColor: Color.secundario,
-    top: 58,
-    borderRadius: Border.br_11xl,
-    height: 29,
-    position: 'absolute'
-  },
-  aadirTypo: {
-    lineHeight: 14,
-    fontSize: FontSize.size_xs,
-    top: 7,
-    color: Color.primario1,
-    fontWeight: '500',
-    letterSpacing: 0,
-    textAlign: 'left',
-    fontFamily: FontFamily.lato
-  },
-  aadirPosition: {
-    left: '50%',
-    position: 'absolute'
-  },
-  parentFlexBox: {
-    alignItems: 'center',
-    flexDirection: 'row'
-  },
-  etiquetarTypo: {
-    color: Color.gris,
-    fontWeight: '500',
-    letterSpacing: 0,
-    textAlign: 'left',
-    fontFamily: FontFamily.lato
-  },
-  frameLayout: {
-    height: 23,
-    marginTop: 15
-  },
-  button2FlexBox: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row'
-  },
-  // navigationIcon: {
-  //   top: 821,
-  //   width: 428,
-  //   height: 105
-  // },
-  image6Icon: {
-    width: 87,
-    height: 55
-  },
-  ionmenuIcon: {
-    top: 5,
-    width: 26,
-    height: 20,
-    overflow: 'hidden'
-  },
-  subirRecuerdo: {
-    // left: 109,
-    fontSize: FontSize.size_5xl,
-    fontWeight: '700',
-    textAlign: 'left',
-    fontFamily: FontFamily.lato,
-    color: Color.negro,
-    top: 0
-    // position: 'absolute'
-  },
-  subir: {
-    color: Color.primario1,
-    fontWeight: '500',
-    letterSpacing: 0,
-    lineHeight: 22,
-    fontSize: FontSize.size_lg,
-    fontFamily: FontFamily.lato
-  },
-  ionmenuParent: {
-    height: 29,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%'
-  },
-  describeLoQue: {
-    top: 20,
-    color: Color.grisClaro
-  },
-  evento: {
-    top: 62,
-    color: Color.negro
-    // left: 20
-  },
-
-  button: {
-    left: 86,
-    paddingHorizontal: 10
-    // width: 134
-  },
-  buttonContainer1Overlay: {
-    // flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(113, 113, 113, 0.3)',
-    height: '100%'
-  },
-  buttonContainer1Bg: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    left: 0,
-    top: 0
-  },
-  aadir: {
-    marginLeft: -22.5,
-    lineHeight: 14,
-    fontSize: FontSize.size_xs,
-    top: 7,
-    color: Color.primario1,
-    fontWeight: '500',
-    letterSpacing: 0,
-    textAlign: 'left',
-    fontFamily: FontFamily.lato
-  },
-  button1: {
-    left: 226,
-    width: 75
-  },
-  field: {
-    borderRadius: Border.br_3xs,
-    backgroundColor: Color.fAFAFA,
-    height: 97
-    // width: 388
-  },
-  frameChild: {
-    maxHeight: '100%'
-    // width: 388
-  },
-  iconlybolddocument: {
-    width: 22,
-    height: 22
-  },
-  anexoArchivo: {
-    marginLeft: 13,
-    lineHeight: 19,
-    color: Color.gris,
-    fontSize: FontSize.size_base
-  },
-  iconlybolddocumentParent: {
-    marginTop: 15
-  },
-  frameItem: {
-    marginTop: 15,
-    maxHeight: '100%'
-    // width: 388
-  },
-  frameContainer2Overlay: {
-    // flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(113, 113, 113, 0.3)',
-    height: '100%'
-  },
-  frameContainer2Bg: {
-    // position: 'absolute',
-    width: '100%',
-    height: '100%',
-    left: 0,
-    top: 0
-  },
-  iconlyboldaddUser: {
-    width: 18,
-    height: 16
-  },
-  etiquetar: {
-    marginLeft: 12,
-    lineHeight: 19,
-    color: Color.gris,
-    fontSize: FontSize.size_base
-  },
-  groupIcon: {
-    width: 16,
-    height: 16
-  },
-  aadirAudio: {
-    marginLeft: 16,
-    lineHeight: 19,
-    color: Color.gris,
-    fontSize: FontSize.size_base
-  },
-  frameContainer5Overlay: {
-    // flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(113, 113, 113, 0.3)',
-    height: '100%'
-  },
-  frameContainer5Bg: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    left: 0,
-    top: 0
-  },
-  iconlybulklocation: {
-    width: 16,
-    height: 22
-  },
-  imageIcon: {
-    width: 23,
-    height: 24
-  },
-  imageParent: {
-    top: 0,
-    left: 0,
-    position: 'absolute'
-  },
-  arrowDown2Icon: {
-    height: '67.39%',
-    marginLeft: 184.7,
-    top: '16.52%',
-    bottom: '16.09%',
-    width: 9,
-    maxHeight: '100%'
-  },
-  frameContainer: {
-    // width: 388
-  },
-  checkChild: {
-    height: '105%',
-    width: '100%',
-    top: '-2.5%',
-    right: '-2.5%',
-    bottom: '-2.5%',
-    left: '-2.5%',
-    borderRadius: 3,
-    borderStyle: 'solid',
-    borderColor: Color.colorGainsboro_100,
-    borderWidth: 1,
-    position: 'absolute',
-    backgroundColor: Color.white
-  },
-  vectorIcon1: {
-    height: '34.5%',
-    width: '45%',
-    top: '35%',
-    right: '30%',
-    bottom: '30.5%',
-    left: '25%',
-    maxWidth: '100%',
-    maxHeight: '100%',
-    position: 'absolute',
-    overflow: 'hidden'
-  },
-  check: {
-    width: 20,
-    height: 20
-  },
-  checkParent: {
-    top: 0,
-    left: 0,
-    position: 'absolute'
-  },
-  frameWrapper: {
-    width: 165
-  },
-  opcionesDePrivacidad: {
-    color: Color.gris,
-    lineHeight: 22,
-    fontSize: FontSize.size_lg
-  },
-  opcionesDePrivacidadWrapper: {
-    width: '100%'
-  },
-  arrowDown2Icon1: {
-    marginLeft: 20,
-    width: 9,
-    height: 16
-  },
-  frameView: {
-    // justifyContent: 'flex-end',
-    marginTop: 15
-    // width: 388
-  },
-  fieldParent: {
-    marginTop: 10
-  },
-  signIn: {
-    letterSpacing: 1,
-    lineHeight: 24,
-    color: Color.white,
-    textAlign: 'center',
-    fontSize: FontSize.size_base,
-    fontFamily: FontFamily.lato
-    // flex: 1
-  },
-  button2: {
-    // paddingHorizontal: Padding.p_5xl,
-    paddingVertical: Padding.p_sm,
-    backgroundColor: Color.linearBoton,
-    marginTop: 80,
-    borderRadius: Border.br_11xl,
-    justifyContent: 'center',
-    width: '100%'
-  },
-  frameParent: {
-    borderWidth: 2,
-    width: '100%'
-    // marginTop: 6
-  },
-  image6Parent: {},
-  organizador: {
-    width: '100%',
-    overflow: 'hidden',
-    // flex: 1,
-    backgroundColor: Color.white,
-    paddingHorizontal: 15
-    // top: 100
-  }
-})
 
 export default Organizador

@@ -91,9 +91,9 @@ const OpenedChat = () => {
         overflow: 'hidden',
         paddingTop: 10,
         width: '100%',
-        paddingBottom: 105
+        paddingBottom: 35
       }}
-      colors={['#fff', '#fbfbfb']}
+      colors={['#fff', '#f1f1f1']}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
     >
@@ -279,7 +279,7 @@ const OpenedChat = () => {
             fontSize: 16,
             borderRadius: 10,
             color: '#303030',
-            backgroundColor: '#f6f6f6'
+            backgroundColor: '#f9f9f9'
           }}
         />
         <Pressable
