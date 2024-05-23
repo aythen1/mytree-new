@@ -1,18 +1,25 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
   View,
   Text,
   TouchableOpacity,
   ScrollView,
   TextInput,
-  Dimensions
+  Dimensions,
+  Pressable
 } from 'react-native'
 import { Image } from 'expo-image'
 import { FontSize, FontFamily, Color, Border } from '../../GlobalStyles'
 import SingleComment from '../SingleComment'
+import { useDispatch } from 'react-redux'
+import { postComment } from '../../redux/actions/comments'
+import { Context } from '../../context/Context'
 
-const CommentsModal = ({ onClose, postId }) => {
+const CommentsModal = ({ onClose }) => {
+  const dispatch = useDispatch()
+  const { userData, selectedPost } = useContext(Context)
   const [search, setSearch] = useState('')
+  const [comment, setComment] = useState('')
   const images = [
     require('../../assets/emoji1.png'),
     require('../../assets/emoji2.png'),
@@ -68,6 +75,24 @@ const CommentsModal = ({ onClose, postId }) => {
         'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716389822/idv5sw3zoyvual6moptl.jpg'
     }
   ]
+
+  const handleSendComment = (comment) => {
+    dispatch(
+      postComment({
+        userId: userData.id,
+        postId: selectedPost,
+        comment: {
+          content: comment,
+          creatorId: userData.id.toString(),
+          responses: [],
+          likes: [],
+          dislikes: [],
+          extraData: {}
+        }
+      })
+    )
+  }
+
   return (
     <View
       style={{
@@ -223,7 +248,10 @@ const CommentsModal = ({ onClose, postId }) => {
             flexDirection: 'row',
             backgroundColor: '#fff',
             borderRadius: 10,
-            width: '80%'
+            width: '80%',
+            justifyContent: 'space-between',
+            paddingRight: 12,
+            alignItems: 'center'
           }}
         >
           <TextInput
@@ -233,13 +261,25 @@ const CommentsModal = ({ onClose, postId }) => {
               fontSize: 16,
               textAlign: 'left',
               paddingVertical: 7,
-              paddingHorizontal: 20
+              paddingHorizontal: 20,
+              maxWidth: '90%'
             }}
             placeholderTextColor={'#bdbdbd'}
             placeholder="Añadir comentario..."
-            onChangeText={(text) => setSearch(text)}
-            value={search}
+            onChangeText={(text) => setComment(text)}
+            value={comment}
           />
+          <Pressable
+            disabled={comment === ''}
+            onPress={() => handleSendComment(comment)}
+          >
+            <Image
+              style={{ width: 20, height: 20 }}
+              contentFit="cover"
+              contentPosition={'center'}
+              source={require('../../assets/send.png')}
+            />
+          </Pressable>
         </View>
       </View>
       {/* ========================================================= */}

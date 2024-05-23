@@ -21,6 +21,7 @@ import { useFocusEffect } from '@react-navigation/native'
 import { Context } from '../context/Context'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllPosts } from '../redux/actions/posts'
+import { getAllCommentsByPostId } from '../redux/actions/comments'
 
 const Posteo = ({ data, padding }) => {
   const {
@@ -30,6 +31,8 @@ const Posteo = ({ data, padding }) => {
     setSelectedPost,
     setSelectedPostTags
   } = useContext(Context)
+
+  const dispatch = useDispatch()
 
   return (
     <View
@@ -110,6 +113,7 @@ const Posteo = ({ data, padding }) => {
           <TouchableOpacity
             onPress={() => {
               setSelectedPost(data.id)
+              dispatch(getAllCommentsByPostId(data.id))
               setShowCommentsModal(true)
             }}
           >

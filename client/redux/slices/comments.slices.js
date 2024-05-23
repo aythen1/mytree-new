@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getAllComments } from '../actions/comments'
+import { getAllComments, getAllCommentsByPostId } from '../actions/comments'
 
 export const commentsSlices = createSlice({
   name: 'comments',
   initialState: {
     allComments: [],
     userComments: [],
+    selectedPostComments: [],
     loading: false,
     error: null
   },
@@ -25,6 +26,18 @@ export const commentsSlices = createSlice({
         state.allComments = action.payload
       })
       .addCase(getAllComments.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.error.message
+      })
+      // =================== GET ALL COMMENTS BY POST ID ===================
+      .addCase(getAllCommentsByPostId.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getAllCommentsByPostId.fulfilled, (state, action) => {
+        state.loading = false
+        state.selectedPostComments = action.payload
+      })
+      .addCase(getAllCommentsByPostId.rejected, (state, action) => {
         state.loading = false
         state.error = action.error.message
       })
