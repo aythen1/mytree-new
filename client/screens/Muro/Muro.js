@@ -41,13 +41,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getAllNotifications } from '../../redux/actions/notifications'
 import { getAllEvents } from '../../redux/actions/events'
 import axiosInstance from '../../apiBackend'
+import CommentsModal from '../../components/modals/CommentsModal'
 
 const Muro = () => {
   const {
     showShareModal,
     setShowShareModal,
     showTaggedsModal,
-    setShowTaggedsModal
+    setShowTaggedsModal,
+    showCommentsModal,
+    setShowCommentsModal
   } = useContext(Context)
   const dispatch = useDispatch()
   const navigation = useNavigation()
@@ -370,6 +373,23 @@ const Muro = () => {
               <Etiquetados onClose={() => setShowTaggedsModal(false)} />
             </View>
           </TouchableWithoutFeedback>
+        </Modal>
+
+        <Modal animationType="slide" transparent visible={showCommentsModal}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(113, 113, 113, 0.3)',
+              height: '100%'
+            }}
+          >
+            <Pressable
+              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              onPress={() => setShowCommentsModal(false)}
+            />
+            <CommentsModal onClose={() => setShowCommentsModal(false)} />
+          </View>
         </Modal>
       </ScrollView>
     </LinearGradient>

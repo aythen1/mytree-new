@@ -16,6 +16,7 @@ export const ContextProvider = ({ children }) => {
     useState('Amigos íntimos')
   const [selectedUserToInvite, setSelectedUserToInvite] = useState()
   const [selectedHashtags, setSelectedHashtags] = useState([])
+  const [showCommentsModal, setShowCommentsModal] = useState(false)
   const [selectedPostTags, setSelectedPostTags] = useState([])
   const [usersWithMessages, setUsersWithMessages] = useState([])
   const [showQrModal, setShowQrModal] = useState(false)
@@ -31,6 +32,7 @@ export const ContextProvider = ({ children }) => {
   const [roomId, setRoomId] = useState()
   const { allUsers } = useSelector((state) => state.users)
   const [userData, setUserData] = useState()
+  const [selectedPost, setSelectedPost] = useState()
 
   const getUser = async () => {
     const usuario = await AsyncStorage.getItem('user')
@@ -347,9 +349,13 @@ export const ContextProvider = ({ children }) => {
         setProfileImage,
         provisoryCoverImage,
         setProvisoryCoverImage,
+        showCommentsModal,
+        setShowCommentsModal,
         provisoryProfileImage,
         setProvisoryProfileImage,
         userData,
+        selectedPost,
+        setSelectedPost,
         setUserData
       }}
     >
