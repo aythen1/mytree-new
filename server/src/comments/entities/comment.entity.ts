@@ -1,11 +1,12 @@
+import { v4 as uuidv4 } from 'uuid'; 
 import { Post } from "src/posts/entities/post.entity";
 import { User } from "src/user/entities/user.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Comment {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   content: string;
@@ -25,8 +26,8 @@ export class Comment {
   @Column('simple-array',{ nullable: true })
   extraData: any;
 
-  @ManyToOne(() => User, user => user.comments)
-  user: User;
+  // @ManyToOne(() => User, user => user.comments)
+  // user: User;
 
   @ManyToOne(() => Post, post => post.comments)
   post: Post;

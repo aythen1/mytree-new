@@ -22,13 +22,13 @@ export class CommentsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number) {
+  async findOne(@Param('id') id: string) {
     return this.commentsService.findOne(id);
   }
 
 
   @Patch(':id')
-  async update(@Param('id') id: number, @Body() updateCommentDto: CreateCommentDto) {
+  async update(@Param('id') id: string, @Body() updateCommentDto: CreateCommentDto) {
     return this.commentsService.update(id, updateCommentDto);
   }
 
