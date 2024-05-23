@@ -23,19 +23,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getAllPosts } from '../redux/actions/posts'
 
 const Posteo = ({ data, padding }) => {
-  const { setShowShareModal, setShowTaggedsModal, setSelectedPostTags } =
-    useContext(Context)
-  const [showTagged, setShowTagged] = useState(false)
-  const [showIcons, setShowIcons] = useState(false)
-  const [posts, setPosts] = useState([])
-
-  const toggleModal = () => {
-    setShowTagged(!showTagged)
-  }
-
-  const toggleIcons = () => {
-    setShowIcons((prevShowIcons) => !prevShowIcons)
-  }
+  const {
+    setShowShareModal,
+    setShowTaggedsModal,
+    setShowCommentsModal,
+    setSelectedPost,
+    setSelectedPostTags
+  } = useContext(Context)
 
   return (
     <View
@@ -113,7 +107,12 @@ const Posteo = ({ data, padding }) => {
         </TouchableOpacity>
 
         <View style={{ gap: 50, position: 'absolute', right: 24, bottom: 100 }}>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setSelectedPost(data.id)
+              setShowCommentsModal(true)
+            }}
+          >
             <Image
               style={{ width: 40, height: 40 }}
               source={require('../assets/iconlyboldchat.png')}
@@ -145,6 +144,7 @@ const Post = ({ padding, posts }) => {
   const [showIcons, setShowIcons] = useState(false)
   const { allPosts } = useSelector((state) => state.posts)
   const dispatch = useDispatch()
+
   const toggleModal = () => {
     setShowTagged(!showTagged)
   }

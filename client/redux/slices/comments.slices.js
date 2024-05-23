@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getAllComments } from '../actions/comments';
+import { getAllComments } from '../actions/comments'
 
 export const commentsSlices = createSlice({
   name: 'comments',
@@ -7,7 +7,7 @@ export const commentsSlices = createSlice({
     allComments: [],
     userComments: [],
     loading: false,
-    error: null,
+    error: null
   },
   reducers: {
     updateComment: (state, action) => {
@@ -16,19 +16,19 @@ export const commentsSlices = createSlice({
   },
   extraReducers: (builder) => {
     builder
-    // =================== GET ALL COMMENTS =================== 
+      // =================== GET ALL COMMENTS ===================
       .addCase(getAllComments.pending, (state) => {
-        state.loading = true;
+        state.loading = true
       })
       .addCase(getAllComments.fulfilled, (state, action) => {
-        state.loading = false;
-        state.allComments = action.payload;
+        state.loading = false
+        state.allComments = action.payload
       })
       .addCase(getAllComments.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
+        state.loading = false
+        state.error = action.error.message
       })
-    }
+  }
 })
 
 export const { updateComment } = commentsSlices.actions
