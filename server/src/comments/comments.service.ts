@@ -16,7 +16,7 @@ export class CommentsService {
     comment.content = createCommentDto.content;
     // Asignamos el ID del usuario al comentario
     comment.post = postId; // Asignamos el ID del post al comentario
-
+    comment.creatorId = userId
     return await this.commentRepository.save(comment);
   }
 
