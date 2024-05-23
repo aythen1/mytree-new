@@ -8,21 +8,21 @@ export class Comment {
   id: number;
 
   @Column()
-  content: string[];
+  content: string;
 
   @Column()
   creatorId: string;
 
-  @Column()
+  @Column('simple-array', { nullable: true })
   responses: string[];
 
-  @Column()
+  @Column('simple-array', { nullable: true })
   likes: string[];
 
-  @Column()
+  @Column('simple-array', { nullable: true })
   dislikes: string[];
 
-  @Column()
+  @Column('simple-array',{ nullable: true })
   extraData: any;
 
   @ManyToOne(() => User, user => user.comments)
