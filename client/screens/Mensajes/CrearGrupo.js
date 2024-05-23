@@ -21,6 +21,7 @@ import {
 import { setPanel } from '../../redux/slices/panel.slices'
 import OpcionesModal from '../../components/OpcionesModal'
 import ENTRADACREADA from '../../components/ENTRADACREADA'
+import { useNavigation } from '@react-navigation/native'
 
 const CrearGrupo = () => {
   const dispatch = useDispatch()
@@ -42,6 +43,8 @@ const CrearGrupo = () => {
     setModalCreate(false)
   }
 
+  const navigation = useNavigation()
+
   return (
     <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
       <View style={[styles.crearEvento]}>
@@ -55,7 +58,7 @@ const CrearGrupo = () => {
         <View style={styles.buttonBarFlexBox}>
           <Pressable
             style={styles.backLayout}
-           onPress={() => dispatch(setPanel(!showPanel))}
+            onPress={() => navigation.openDrawer()}
           >
             <Image
               style={styles.iconLayout}

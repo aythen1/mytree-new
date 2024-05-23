@@ -111,7 +111,7 @@ const Perfil = () => {
       </View>
 
       <Pressable
-        onPress={() => dispatch(setPanel(!showPanel))}
+        onPress={() => navigation.openDrawer()}
         style={styles.menuPosition}
       >
         <Image

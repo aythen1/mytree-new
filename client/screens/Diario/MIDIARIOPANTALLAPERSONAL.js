@@ -53,9 +53,7 @@ const MIDIARIOPANTALLAPERSONAL = () => {
           </View>
 
           <View style={styles.frameParent12}>
-            <Pressable 
-            onPress={() => dispatch(setPanel(!showPanel))}
-            >
+            <Pressable onPress={() => navigation.openDrawer()}>
               <Image
                 style={[styles.ionmenuIcon, styles.ionmenuIconLayout]}
                 contentFit="cover"
