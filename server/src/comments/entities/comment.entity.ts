@@ -8,7 +8,22 @@ export class Comment {
   id: number;
 
   @Column()
-  content: string;
+  content: string[];
+
+  @Column()
+  creatorId: string;
+
+  @Column()
+  responses: string[];
+
+  @Column()
+  likes: string[];
+
+  @Column()
+  dislikes: string[];
+
+  @Column()
+  extraData: any;
 
   @ManyToOne(() => User, user => user.comments)
   user: User;
