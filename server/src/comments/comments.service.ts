@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { Comment } from './entities/comment.entity';
+import { UpdateCommentDto } from './dto/update-comment.dto';
 
 @Injectable()
 export class CommentsService {
@@ -41,16 +42,45 @@ export class CommentsService {
     }
     return comments;
   }
-
-  async update(id: string, updateCommentDto: CreateCommentDto): Promise<Comment> {
-    const comment = await this.commentRepository.findOne({where:{id:id}});
+  async update(id: string, updateCommentDto: UpdateCommentDto): Promise<Comment> {
+    const comment = await this.commentRepository.findOne({ where: { id } });
+  
     if (!comment) {
       throw new NotFoundException(`Comment with ID ${id} not found`);
     }
-
-    // Actualizamos el contenido del comentario
+  
     Object.assign(comment, updateCommentDto);
+  
+    return await this.commentRepository.save(comment);
+  }
 
+  async updateLikes(id: string, updateCommentDto: UpdateCommentDto): Promise<Comment> {
+    const comment = await this.commentRepository.findOne({ where: { id } });
+  
+    if (!comment) {
+      throw new NotFoundException(`Comment with ID ${id} not found`);
+    }
+  
+    // Update other properties from updateCommentDto if needed
+  
+    // Handle likes array
+    const { likes } = updateCommentDto; // Destructure likes from DTO
+    const existingLikes = comment.likes || []; // Initialize with empty array if none exists
+  
+    // Combine adding and removing in a single loop for efficiency
+    for (const likeId of likes) {
+      if (!existingLikes.includes(likeId)) {
+        existingLikes.push(likeId); // Add new like
+      } else {
+        const indexToRemove = existingLikes.indexOf(likeId);
+        if (indexToRemove !== -1) {
+          existingLikes.splice(indexToRemove, 1); // Remove existing like
+        }
+      }
+    }
+  
+    comment.likes = existingLikes;
+  
     return await this.commentRepository.save(comment);
   }
 
