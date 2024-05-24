@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'; 
 import { Post } from "src/posts/entities/post.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Comment {
@@ -14,17 +14,23 @@ export class Comment {
   @Column()
   creatorId: string;
 
-  @Column('simple-array', { nullable: true })
-  responses: string[];
+  @Column('jsonb', { nullable: true })
+  responses:any;
 
-  @Column('simple-array', { nullable: true })
+  @Column('jsonb', { nullable: true })
   likes: string[];
 
   @Column('simple-array', { nullable: true })
   dislikes: string[];
 
-  @Column('simple-array',{ nullable: true })
+  @Column('jsonb',{ nullable: true })
   extraData: any;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   // @ManyToOne(() => User, user => user.comments)
   // user: User;
