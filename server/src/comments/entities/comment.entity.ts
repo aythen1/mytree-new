@@ -14,10 +14,10 @@ export class Comment {
   @Column()
   creatorId: string;
 
-  @Column('jsonb', { nullable: true })
-  responses:any;
+  @Column('simple-array', { nullable: true })
+  responses:object[];
 
-  @Column('jsonb', { nullable: true })
+  @Column('simple-array', { nullable: true })
   likes: string[];
 
   @Column('simple-array', { nullable: true })
