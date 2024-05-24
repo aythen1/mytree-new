@@ -5,7 +5,7 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 
 @Controller('comments')
 export class CommentsController {
-  constructor(private readonly commentsService: CommentsService) {}
+  constructor(private readonly commentsService: CommentsService) { }
 
   @Post(':postId/:userId')
   async create(@Param('postId') postId: number, @Param('userId') userId: number, @Body() createCommentDto: CreateCommentDto) {
@@ -31,6 +31,10 @@ export class CommentsController {
   async update(@Param('id') id: string, @Body() updateCommentDto: CreateCommentDto) {
     return this.commentsService.update(id, updateCommentDto);
   }
+  @Patch(':id/response')
+  async updateResponse(@Param('id') id: string, @Body() updateCommentDto: CreateCommentDto) {
+    return this.commentsService.updateResponses(id, updateCommentDto);
+  }
   @Patch(':id/like')
   async updateLike(@Param('id') id: string, @Body() updateCommentDto: CreateCommentDto) {
     return this.commentsService.updateLikes(id, updateCommentDto);
@@ -47,17 +51,17 @@ export class CommentsController {
 
   @Post(':commentId/info-relation')
   async findInfoRelation(
-    @Param('commentId') commentId: number, 
+    @Param('commentId') commentId: number,
     @Body() requestBody: { relations: string }
   ): Promise<any[]> {
     // Verificar si se proporcionaron relaciones
     if (!requestBody.relations || typeof requestBody.relations !== 'string') {
       throw new Error('Debe proporcionar al menos una relación como una cadena de texto.');
     }
-  console.log(requestBody.relations)
+    console.log(requestBody.relations)
     // Convertir las relaciones en un array
     const relationsArray = requestBody.relations.split(',');
-  
+
     // Llamar al servicio para obtener la información relacionada
     return this.commentsService.findInfoRelation(commentId, relationsArray);
   }

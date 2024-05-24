@@ -54,6 +54,18 @@ export class CommentsService {
     return await this.commentRepository.save(comment);
   }
 
+  async updateResponses(id: string, updateCommentDto: UpdateCommentDto): Promise<Comment> {
+    const comment = await this.commentRepository.findOne({ where: { id } });
+  
+    if (!comment) {
+      throw new NotFoundException(`Comment with ID ${id} not found`);
+    }
+  
+    comment.responses.push(updateCommentDto.responses)
+  
+    return await this.commentRepository.save(comment);
+  }
+
   async updateLikes(id: string, updateCommentDto: UpdateCommentDto): Promise<Comment> {
     const comment = await this.commentRepository.findOne({ where: { id } });
   
