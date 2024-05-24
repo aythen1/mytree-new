@@ -34,8 +34,8 @@ export class ChatGateway
   handleConnection(client: Socket) {
     this.connectedUsers++;
     this.server.emit('users online', this.connectedUsers);
-    console.log('users online', this.connectedUsers);
-    console.log('Cliente conectado:', client.handshake.headers.userid);
+    // console.log('users online', this.connectedUsers);
+    // console.log('Cliente conectado:', client.handshake.headers.userid);
   }
 
   handleDisconnect(client: Socket) {
