@@ -34,6 +34,7 @@ export class CommentsService {
   async findAllByPost(postId: number): Promise<Comment[]> {
     const comments = await this.commentRepository.find({ 
       where: { post: { id: postId } }
+
     });
     if (!comments || comments.length === 0) {
       throw new NotFoundException(`No comments found for post with ID ${postId}`);
@@ -48,7 +49,7 @@ export class CommentsService {
     }
 
     // Actualizamos el contenido del comentario
-    comment.content = updateCommentDto.content;
+    Object.assign(comment, updateCommentDto);
 
     return await this.commentRepository.save(comment);
   }
