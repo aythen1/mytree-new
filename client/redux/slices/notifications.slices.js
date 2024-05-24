@@ -18,11 +18,11 @@ export const notificationsSlices = createSlice({
     builder
       // =================== GET ALL NOTIFICATIONS ===================
       .addCase(getAllNotifications.pending, (state) => {
-        console.log('pending: ')
+        // console.log('pending: ')
         state.loading = true
       })
       .addCase(getAllNotifications.fulfilled, (state, action) => {
-        console.log('PAYLOAD gAN: ', action.payload)
+        // console.log('PAYLOAD gAN: ', action.payload)
         state.loading = false
         state.allNotifications = action.payload
       })

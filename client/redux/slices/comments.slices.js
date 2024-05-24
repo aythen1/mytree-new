@@ -1,13 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getAllComments } from '../actions/comments';
+import { getAllComments, getAllCommentsByPostId } from '../actions/comments'
 
 export const commentsSlices = createSlice({
   name: 'comments',
   initialState: {
     allComments: [],
     userComments: [],
+    selectedPostComments: [],
     loading: false,
-    error: null,
+    error: null
   },
   reducers: {
     updateComment: (state, action) => {
@@ -16,19 +17,31 @@ export const commentsSlices = createSlice({
   },
   extraReducers: (builder) => {
     builder
-    // =================== GET ALL COMMENTS =================== 
+      // =================== GET ALL COMMENTS ===================
       .addCase(getAllComments.pending, (state) => {
-        state.loading = true;
+        state.loading = true
       })
       .addCase(getAllComments.fulfilled, (state, action) => {
-        state.loading = false;
-        state.allComments = action.payload;
+        state.loading = false
+        state.allComments = action.payload
       })
       .addCase(getAllComments.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
+        state.loading = false
+        state.error = action.error.message
       })
-    }
+      // =================== GET ALL COMMENTS BY POST ID ===================
+      .addCase(getAllCommentsByPostId.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getAllCommentsByPostId.fulfilled, (state, action) => {
+        state.loading = false
+        state.selectedPostComments = action.payload
+      })
+      .addCase(getAllCommentsByPostId.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.error.message
+      })
+  }
 })
 
 export const { updateComment } = commentsSlices.actions

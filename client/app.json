@@ -21,7 +21,7 @@
     "android": {
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/myTreeLogo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.company.mytree"

@@ -7,7 +7,7 @@ export const getAllNotifications = createAsyncThunk(
   async () => {
     try {
       const { data } = await axiosInstance.get('/notification')
-      console.log('data from getAllNotifications: ', data)
+      // console.log('data from getAllNotifications: ', data)
       return data
     } catch (error) {
       throw new Error(error)
@@ -46,7 +46,7 @@ export const getNotificationById = createAsyncThunk(
 export const postNotification = createAsyncThunk(
   'postNotification/notifications',
   async (body) => {
-    console.log('body: ', body)
+    // console.log('body: ', body)
     try {
       const { data } = await axiosInstance.post(`/notification`, body)
       return data
