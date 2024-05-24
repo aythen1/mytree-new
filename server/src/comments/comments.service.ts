@@ -61,7 +61,9 @@ export class CommentsService {
       throw new NotFoundException(`Comment with ID ${id} not found`);
     }
   
-    comment.responses.push(updateCommentDto.responses)
+    // Efficiently add new responses without duplicates
+    const newResponses = [updateCommentDto.responses] || [];
+    comment.responses = [...comment.responses, ...newResponses];
   
     return await this.commentRepository.save(comment);
   }

@@ -14,7 +14,7 @@ export class Comment {
   @Column()
   creatorId: string;
 
-  @Column('jsonb', { nullable: true })
+  @Column('jsonb', { nullable: true,default: '[]' })
   responses:object[];
 
   @Column('simple-array', { nullable: true })
