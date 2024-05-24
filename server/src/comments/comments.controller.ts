@@ -31,6 +31,10 @@ export class CommentsController {
   async update(@Param('id') id: string, @Body() updateCommentDto: CreateCommentDto) {
     return this.commentsService.update(id, updateCommentDto);
   }
+  @Patch(':id/like')
+  async updateLike(@Param('id') id: string, @Body() updateCommentDto: CreateCommentDto) {
+    return this.commentsService.updateLikes(id, updateCommentDto);
+  }
 
   @Delete(':id')
   async remove(@Param('id') id: number) {
