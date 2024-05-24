@@ -43,6 +43,39 @@ export const getCommentById = createAsyncThunk(
   }
 )
 
+// Like comment by id
+export const likeComment = createAsyncThunk(
+  'likeComment/comments',
+  async ({ commentId, body }) => {
+    try {
+      const { data } = await axiosInstance.patch(
+        `/comments/${commentId}/like`,
+        body
+      )
+      return data
+    } catch (error) {
+      console.log('error from like', error)
+      throw new Error(error)
+    }
+  }
+)
+
+// Dislike comment by id
+export const dislikeComment = createAsyncThunk(
+  'dislikeComment/comments',
+  async ({ commentId, body }) => {
+    try {
+      const { data } = await axiosInstance.patch(
+        `/comments/${commentId}/dislike`,
+        body
+      )
+      return data
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+)
+
 // Post comment
 export const postComment = createAsyncThunk(
   'postComment/comments',
@@ -57,6 +90,22 @@ export const postComment = createAsyncThunk(
       return data
     } catch (error) {
       console.log('error from postComment:', error)
+      throw new Error(error)
+    }
+  }
+)
+
+// Send response to comment by id
+export const sendResponseToCommentById = createAsyncThunk(
+  'sendResponseToCommentById/comments',
+  async ({ commentId, commentData }) => {
+    try {
+      const { data } = await axiosInstance.patch(
+        `/comments/${commentId}/response`,
+        commentData
+      )
+      return data
+    } catch (error) {
       throw new Error(error)
     }
   }

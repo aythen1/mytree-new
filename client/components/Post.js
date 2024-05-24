@@ -22,6 +22,7 @@ import { Context } from '../context/Context'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllPosts } from '../redux/actions/posts'
 import { getAllCommentsByPostId } from '../redux/actions/comments'
+import { updateSelectedPostComments } from '../redux/slices/comments.slices'
 
 const Posteo = ({ data, padding }) => {
   const {
