@@ -1,8 +1,15 @@
 import { View, Text, Dimensions, Pressable } from 'react-native'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Image } from 'expo-image'
 import { AntDesign, Ionicons } from '@expo/vector-icons'
 import { Context } from '../context/Context'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  dislikeComment,
+  getAllCommentsByPostId,
+  likeComment,
+  updateCommentById
+} from '../redux/actions/comments'
 
 const SingleComment = ({
   image,
@@ -10,23 +17,61 @@ const SingleComment = ({
   comment,
   createdAt,
   responses,
+  response,
+  commentId,
+  creatorId,
   likes,
   dislikes
 }) => {
-  const { selectedPost } = useContext(Context)
+  const dispatch = useDispatch()
+  const { allUsers } = useSelector((state) => state.users)
+  const {
+    selectedPost,
+    setResponseTo,
+    formatDateDifference,
+    userData,
+    setSelectedComment,
+    showResponses,
+    sortByDate,
+    setShowResponses
+  } = useContext(Context)
 
   const handleLike = () => {
     console.log('handling like on post', selectedPost)
+    console.log('disliked?: ', dislikes.includes(userData.id.toString()))
+    if (dislikes.includes(userData.id.toString())) {
+      dispatch(
+        dislikeComment({
+          commentId,
+          body: { dislikes: [userData.id.toString()] }
+        })
+      )
+    }
+    dispatch(
+      likeComment({ commentId, body: { likes: [userData.id.toString()] } })
+    ).then((data) => dispatch(getAllCommentsByPostId(selectedPost)))
   }
 
   const handleDislike = () => {
     console.log('handling dislike on post', selectedPost)
+    if (likes.includes(userData.id.toString())) {
+      dispatch(
+        likeComment({ commentId, body: { likes: [userData.id.toString()] } })
+      )
+    }
+    dispatch(
+      dislikeComment({
+        commentId,
+        body: { dislikes: [userData.id.toString()] }
+      })
+    ).then((data) => dispatch(getAllCommentsByPostId(selectedPost)))
   }
+  console.log('commment responses', responses)
   return (
     <View
       style={{
         width: '100%',
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingLeft: 22
@@ -73,7 +118,9 @@ const SingleComment = ({
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
-              width: Dimensions.get('screen').width - 92
+              width: response
+                ? Dimensions.get('screen').width - 124
+                : Dimensions.get('screen').width - 92
             }}
           >
             <View
@@ -82,13 +129,30 @@ const SingleComment = ({
               <Text
                 style={{ color: '#787878', fontSize: 11, fontWeight: '500' }}
               >
-                {'1 día'}
+                {formatDateDifference(createdAt)}
               </Text>
-              <Text
-                style={{ color: '#787878', fontSize: 11, fontWeight: '500' }}
-              >
-                {'Responder'}
-              </Text>
+              {!response && (
+                <Pressable
+                  onPress={() => {
+                    setSelectedComment(commentId)
+                    setResponseTo(
+                      allUsers.filter(
+                        (user) => user.id.toString() === creatorId
+                      )[0]
+                    )
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: '#787878',
+                      fontSize: 11,
+                      fontWeight: '500'
+                    }}
+                  >
+                    {'Responder'}
+                  </Text>
+                </Pressable>
+              )}
             </View>
             <View
               style={{
@@ -99,6 +163,7 @@ const SingleComment = ({
               }}
             >
               <Pressable
+                disabled={response}
                 onPress={handleLike}
                 style={{
                   flexDirection: 'row',
@@ -107,39 +172,83 @@ const SingleComment = ({
                   gap: 5
                 }}
               >
-                <Ionicons size={17} name="heart-outline" color={'#787878'} />
+                <Ionicons
+                  size={17}
+                  name="heart-outline"
+                  color={
+                    likes.includes(userData.id.toString())
+                      ? '#e34040'
+                      : '#787878'
+                  }
+                />
                 <Text
-                  style={{ color: '#787878', fontSize: 11, fontWeight: '500' }}
+                  style={{
+                    color: '#787878',
+                    fontSize: 11,
+                    fontWeight: '500'
+                  }}
                 >
                   {likes?.length}
                 </Text>
               </Pressable>
-              <Pressable onPress={handleDislike}>
-                <AntDesign size={17} color={'#787878'} name="dislike2" />
+              <Pressable disabled={response} onPress={handleDislike}>
+                <AntDesign
+                  size={17}
+                  color={
+                    dislikes.includes(userData.id.toString())
+                      ? '#e34040'
+                      : '#787878'
+                  }
+                  name="dislike2"
+                />
               </Pressable>
             </View>
           </View>
 
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 7
-            }}
-          >
-            <View
+          {!response && (
+            <Pressable
+              disabled={responses?.length === 0}
+              onPress={() => setShowResponses(!showResponses)}
               style={{
-                width: 30,
-                borderBottomWidth: 0.5,
-                borderBottomColor: '#787878'
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 7
               }}
-            ></View>
-            <Text
-              style={{ color: '#787878', fontSize: 11, fontWeight: '500' }}
-            >{`Ver ${responses?.length} respuestas`}</Text>
-          </View>
+            >
+              <View
+                style={{
+                  width: 30,
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: '#787878'
+                }}
+              ></View>
+              <Text
+                style={{ color: '#787878', fontSize: 11, fontWeight: '500' }}
+              >{`Ver ${responses?.length} respuestas`}</Text>
+            </Pressable>
+          )}
         </View>
+      </View>
+      <View style={{ gap: 5, paddingLeft: 15, marginTop: 10 }}>
+        {showResponses &&
+          responses &&
+          sortByDate(responses).map((comment, index) => (
+            <SingleComment
+              key={index}
+              commentId={comment?.id || ''}
+              response={true}
+              image={
+                'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716389822/idv5sw3zoyvual6moptl.jpg'
+              }
+              createdAt={comment?.createdAt || new Date()}
+              creatorId={comment?.creatorId || ''}
+              dislikes={comment?.dislikes || []}
+              likes={comment?.likes || []}
+              comment={comment?.response || 'asd'}
+              author={comment?.userName || 'User Test'}
+            />
+          ))}
       </View>
     </View>
   )

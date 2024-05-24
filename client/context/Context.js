@@ -33,6 +33,8 @@ export const ContextProvider = ({ children }) => {
   const { allUsers } = useSelector((state) => state.users)
   const [userData, setUserData] = useState()
   const [selectedPost, setSelectedPost] = useState()
+  const [responseTo, setResponseTo] = useState()
+  const [selectedComment, setSelectedComment] = useState()
 
   const getUser = async () => {
     const usuario = await AsyncStorage.getItem('user')
@@ -193,6 +195,32 @@ export const ContextProvider = ({ children }) => {
     return `${formattedHours}:${formattedMinutes}`
   }
 
+  const formatDateDifference = (date) => {
+    const ahora = new Date()
+    const fecha = new Date(date)
+    const milisegundosDiferencia = ahora - fecha
+    const segundosDiferencia = Math.floor(milisegundosDiferencia / 1000)
+    const minutosDiferencia = Math.floor(segundosDiferencia / 60)
+    const horasDiferencia = Math.floor(minutosDiferencia / 60)
+
+    if (horasDiferencia < 24) {
+      if (horasDiferencia < 0) {
+        return 'Hace 1 segundo'
+      }
+      if (horasDiferencia === 0) {
+        if (minutosDiferencia === 0) {
+          return `Hace ${segundosDiferencia} segundos`
+        }
+        return `Hace ${minutosDiferencia} minuto${minutosDiferencia === 1 ? '' : 's'}`
+      } else {
+        return `Hace ${horasDiferencia} hora${horasDiferencia === 1 ? '' : 's'}`
+      }
+    } else {
+      const diasDiferencia = Math.floor(horasDiferencia / 24)
+      return `Hace ${diasDiferencia} día${diasDiferencia === 1 ? '' : 's'}`
+    }
+  }
+
   const getUsersMessages = () => {
     const getConvMessages = async (user) => {
       try {
@@ -305,6 +333,16 @@ export const ContextProvider = ({ children }) => {
     socket.emit('message', { message, sender, receiver })
   }
 
+  const sortByDate = (array) => {
+    return [...array].sort((a, b) => {
+      const dateA = new Date(a.createdAt)
+      const dateB = new Date(b.createdAt)
+
+      return dateA - dateB
+    })
+  }
+  const [showResponses, setShowResponses] = useState(false)
+
   return (
     <Context.Provider
       value={{
@@ -322,6 +360,9 @@ export const ContextProvider = ({ children }) => {
         getUsersMessages,
         selectedPostTags,
         selectedHashtags,
+        sortByDate,
+        showResponses,
+        setShowResponses,
         selectedRelationType,
         setSelectedRelationType,
         selectedRelationShip,
@@ -344,6 +385,7 @@ export const ContextProvider = ({ children }) => {
         libraryImage,
         setLibraryImage,
         coverImage,
+        formatDateDifference,
         setCoverImage,
         profileImage,
         setProfileImage,
@@ -356,6 +398,10 @@ export const ContextProvider = ({ children }) => {
         userData,
         selectedPost,
         setSelectedPost,
+        responseTo,
+        setResponseTo,
+        selectedComment,
+        setSelectedComment,
         setUserData
       }}
     >

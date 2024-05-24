@@ -13,15 +13,27 @@ import SingleComment from '../SingleComment'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   getAllCommentsByPostId,
-  postComment
+  postComment,
+  sendResponseToCommentById,
+  updateCommentById
 } from '../../redux/actions/comments'
 import { Context } from '../../context/Context'
+import uuid from 'react-native-uuid'
 
 const CommentsModal = ({ onClose }) => {
   const dispatch = useDispatch()
   const { selectedPostComments } = useSelector((state) => state.comments)
   const { allUsers } = useSelector((state) => state.users)
-  const { userData, selectedPost } = useContext(Context)
+  const {
+    userData,
+    selectedPost,
+    setSelectedComment,
+    showResponses,
+    responseTo,
+    sortByDate,
+    setResponseTo,
+    selectedComment
+  } = useContext(Context)
   const [search, setSearch] = useState('')
   const [comment, setComment] = useState('')
   const images = [
@@ -56,13 +68,49 @@ const CommentsModal = ({ onClose }) => {
     ).then((data) => dispatch(getAllCommentsByPostId(selectedPost)))
     setComment('')
     setSearch('')
+    setResponseTo()
+    setSelectedComment()
+  }
+
+  const handleSendResponse = (responseTo, comment) => {
+    console.log(
+      'sending',
+      comment,
+      'to: ',
+      responseTo.username,
+      'on commentId:',
+      selectedComment
+    )
+    dispatch(
+      sendResponseToCommentById({
+        commentId: selectedComment,
+        commentData: {
+          responses: {
+            id: uuid.v1(),
+            response: comment,
+            creatorId: userData.id,
+            email: userData.email,
+            likes: [],
+            dislikes: [],
+            userName: `${userData.username} ${userData.apellido}`,
+            createdAt: new Date()
+          }
+        }
+      })
+    ).then((res) => {
+      dispatch(getAllCommentsByPostId(selectedPost))
+      setComment('')
+      setSearch('')
+      setResponseTo()
+      setSelectedComment()
+    })
   }
 
   useEffect(() => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollToEnd({ animated: true })
     }
-  }, [selectedPostComments])
+  }, [selectedPostComments, showResponses])
 
   return (
     <View
@@ -144,7 +192,8 @@ const CommentsModal = ({ onClose }) => {
               maxHeight: 250,
               overflow: 'hidden',
               flexGrow: 1,
-              marginTop: 12
+              marginTop: 12,
+              width: '100%'
             }}
             contentContainerStyle={{
               width: '100%',
@@ -152,28 +201,31 @@ const CommentsModal = ({ onClose }) => {
               gap: 20
             }}
           >
-            {selectedPostComments.map((comment, index) => (
-              <SingleComment
-                key={index}
-                image={
-                  'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716389822/idv5sw3zoyvual6moptl.jpg'
-                }
-                createdAt={comment.createdAt || new Date()}
-                dislikes={comment.dislikes || []}
-                likes={comment.likes || []}
-                comment={comment.content}
-                author={
-                  allUsers.filter(
-                    (user) => user.id.toString() === comment.creatorId
-                  )[0].username +
-                  ' ' +
-                  allUsers.filter(
-                    (user) => user.id.toString() === comment.creatorId
-                  )[0].apellido
-                }
-                responses={comment.responses || []}
-              />
-            ))}
+            {selectedPostComments &&
+              sortByDate(selectedPostComments).map((comment, index) => (
+                <SingleComment
+                  key={index}
+                  commentId={comment.id}
+                  image={
+                    'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716389822/idv5sw3zoyvual6moptl.jpg'
+                  }
+                  createdAt={comment.createdAt || new Date()}
+                  creatorId={comment.creatorId}
+                  dislikes={comment.dislikes || []}
+                  likes={comment.likes || []}
+                  comment={comment.content}
+                  author={
+                    allUsers.filter(
+                      (user) => user.id.toString() === comment.creatorId
+                    )[0].username +
+                    ' ' +
+                    allUsers.filter(
+                      (user) => user.id.toString() === comment.creatorId
+                    )[0].apellido
+                  }
+                  responses={comment?.responses || []}
+                />
+              ))}
           </ScrollView>
         ) : (
           <Text
@@ -250,6 +302,19 @@ const CommentsModal = ({ onClose }) => {
             alignItems: 'center'
           }}
         >
+          {responseTo && (
+            <Text
+              style={{
+                color: '#303030',
+                fontWeight: 'regular',
+                fontSize: 16,
+                textAlign: 'left',
+                paddingLeft: 10
+              }}
+            >
+              {'@' + responseTo.username + responseTo.apellido}
+            </Text>
+          )}
           <TextInput
             style={{
               color: '#505050',
@@ -257,17 +322,33 @@ const CommentsModal = ({ onClose }) => {
               fontSize: 16,
               textAlign: 'left',
               paddingVertical: 7,
-              paddingHorizontal: 20,
-              maxWidth: '90%'
+              paddingLeft: responseTo ? 7 : 20,
+              paddingRight: 20,
+              flex: 1
             }}
             placeholderTextColor={'#bdbdbd'}
-            placeholder="Añadir comentario..."
-            onChangeText={(text) => setComment(text)}
+            placeholder={responseTo ? '' : 'Añadir comentario...'}
+            onChangeText={(text) => {
+              console.log('text:', text)
+              if (text === '') {
+                setResponseTo()
+                setSelectedComment()
+                setComment(text)
+              } else {
+                setComment(text)
+              }
+            }}
             value={comment}
           />
           <Pressable
             disabled={comment === ''}
-            onPress={() => handleSendComment(comment)}
+            onPress={() => {
+              if (responseTo) {
+                handleSendResponse(responseTo, comment)
+              } else {
+                handleSendComment(comment)
+              }
+            }}
           >
             <Image
               style={{ width: 20, height: 20 }}
