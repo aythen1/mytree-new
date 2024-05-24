@@ -2,14 +2,13 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import {
   View,
   Text,
-  TouchableOpacity,
   ScrollView,
   TextInput,
   Dimensions,
   Pressable
 } from 'react-native'
 import { Image } from 'expo-image'
-import { FontSize, FontFamily, Color, Border } from '../../GlobalStyles'
+import { Border } from '../../GlobalStyles'
 import SingleComment from '../SingleComment'
 import { useDispatch, useSelector } from 'react-redux'
 import {
