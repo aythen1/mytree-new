@@ -42,6 +42,7 @@ import { getAllNotifications } from '../../redux/actions/notifications'
 import { getAllEvents } from '../../redux/actions/events'
 import axiosInstance from '../../apiBackend'
 import CommentsModal from '../../components/modals/CommentsModal'
+import { updateSelectedPostComments } from '../../redux/slices/comments.slices'
 
 const Muro = () => {
   const {
@@ -386,9 +387,17 @@ const Muro = () => {
           >
             <Pressable
               style={{ width: '100%', height: '100%', left: 0, top: 0 }}
-              onPress={() => setShowCommentsModal(false)}
+              onPress={() => {
+                setShowCommentsModal(false)
+                dispatch(updateSelectedPostComments([]))
+              }}
             />
-            <CommentsModal onClose={() => setShowCommentsModal(false)} />
+            <CommentsModal
+              onClose={() => {
+                setShowCommentsModal(false)
+                dispatch(updateSelectedPostComments([]))
+              }}
+            />
           </View>
         </Modal>
       </ScrollView>

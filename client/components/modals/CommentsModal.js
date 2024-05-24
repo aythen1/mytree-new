@@ -137,44 +137,58 @@ const CommentsModal = ({ onClose }) => {
         >
           {`${selectedPostComments.length} comentarios`}
         </Text>
-        <ScrollView
-          ref={scrollViewRef}
-          showsVerticalScrollIndicator={false}
-          style={{
-            maxHeight: 250,
-            overflow: 'hidden',
-            flexGrow: 1,
-            marginTop: 12
-          }}
-          contentContainerStyle={{
-            width: '100%',
-            alignItems: 'center',
-            gap: 20
-          }}
-        >
-          {selectedPostComments.map((comment, index) => (
-            <SingleComment
-              key={index}
-              image={
-                'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716389822/idv5sw3zoyvual6moptl.jpg'
-              }
-              createdAt={comment.createdAt || new Date()}
-              dislikes={comment.dislikes || []}
-              likes={comment.likes || []}
-              comment={comment.content}
-              author={
-                allUsers.filter(
-                  (user) => user.id.toString() === comment.creatorId
-                )[0].username +
-                ' ' +
-                allUsers.filter(
-                  (user) => user.id.toString() === comment.creatorId
-                )[0].apellido
-              }
-              responses={comment.responses || []}
-            />
-          ))}
-        </ScrollView>
+        {selectedPostComments.length > 0 ? (
+          <ScrollView
+            ref={scrollViewRef}
+            showsVerticalScrollIndicator={false}
+            style={{
+              maxHeight: 250,
+              overflow: 'hidden',
+              flexGrow: 1,
+              marginTop: 12
+            }}
+            contentContainerStyle={{
+              width: '100%',
+              alignItems: 'center',
+              gap: 20
+            }}
+          >
+            {selectedPostComments.map((comment, index) => (
+              <SingleComment
+                key={index}
+                image={
+                  'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716389822/idv5sw3zoyvual6moptl.jpg'
+                }
+                createdAt={comment.createdAt || new Date()}
+                dislikes={comment.dislikes || []}
+                likes={comment.likes || []}
+                comment={comment.content}
+                author={
+                  allUsers.filter(
+                    (user) => user.id.toString() === comment.creatorId
+                  )[0].username +
+                  ' ' +
+                  allUsers.filter(
+                    (user) => user.id.toString() === comment.creatorId
+                  )[0].apellido
+                }
+                responses={comment.responses || []}
+              />
+            ))}
+          </ScrollView>
+        ) : (
+          <Text
+            style={{
+              color: '#404040',
+              fontWeight: '400',
+              fontSize: 14,
+              height: 250,
+              paddingTop: 50
+            }}
+          >
+            Esta publicación aun no tiene comentarios!
+          </Text>
+        )}
       </View>
       <View
         style={{
