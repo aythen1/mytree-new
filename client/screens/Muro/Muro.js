@@ -115,7 +115,10 @@ const Muro = () => {
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
     >
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 85 }}
+        showsVerticalScrollIndicator={false}
+      >
         <View
           style={{
             width: '100%',

@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react'
 import {
   Dimensions,
-  Image,
   Modal,
   Pressable,
   TouchableWithoutFeedback,
@@ -23,6 +22,7 @@ import FooterIcon from './FooterIcon'
 import FooterBar from './svgs/FooterBarSVG'
 import TreeSVG from './svgs/TreeSVG'
 import FooterBarSVG from './svgs/FooterBarSVG'
+import { Image } from 'expo-image'
 
 const FooterNavBar = () => {
   const { showCamera } = useContext(Context)
@@ -38,7 +38,7 @@ const FooterNavBar = () => {
   const showModalAdd = () => {
     dispatch(setPanelAddFooter(!panelAddFooter))
   }
-
+  const screenWidth = Dimensions.get('screen').width
   if (!showCamera)
     return (
       <View style={{ backgroundColor: '#f1f1f1' }}>
@@ -51,16 +51,17 @@ const FooterNavBar = () => {
             alignItems: 'center',
             borderTopStartRadius: 7,
             borderTopEndRadius: 7,
-            zIndex: 100,
             position: 'absolute',
-            bottom: 0
+            bottom: 0,
+            zIndex: 999999999
           }}
         >
           <View
             style={{
               flexDirection: 'row',
               gap: Dimensions.get('window').width / 10,
-              marginLeft: '12%'
+              marginLeft: '12%',
+              zIndex: 9999999
             }}
           >
             <Pressable
@@ -76,7 +77,7 @@ const FooterNavBar = () => {
                 navigation.navigate('CALENDARIO')
                 setSelected('Calendario')
               }}
-              style={{}}
+              style={{ zIndex: 9999999 }}
             >
               <CalendarSVG picked={selected === 'Calendario' && true} />
             </Pressable>
@@ -114,12 +115,20 @@ const FooterNavBar = () => {
               height: 60,
               backgroundColor: Color.backgroundGreyBackground,
               position: 'absolute',
-              top: -30,
+              top: -29,
               left: '50%',
               marginLeft: -30,
               borderRadius: 30,
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              shadowOpacity: 1,
+              elevation: 4,
+              shadowRadius: 4,
+              shadowOffset: {
+                width: 2,
+                height: 2
+              },
+              shadowColor: 'black'
             }}
             onPress={showModalAdd}
           >
@@ -136,7 +145,7 @@ const FooterNavBar = () => {
               colors={['#7ec18c', '#dee274']}
             >
               <Image
-                style={{ width: 25, height: 25, borderWidth: 2 }}
+                style={{ width: 25, height: 25 }}
                 contentFit="cover"
                 source={require('../assets/PlusPng.png')}
               />
@@ -144,7 +153,16 @@ const FooterNavBar = () => {
           </Pressable>
         </View>
         <FooterBarSVG />
-
+        <Image
+          style={{
+            width: screenWidth,
+            height: 80,
+            position: 'absolute',
+            bottom: 0
+          }}
+          contentFit="fill"
+          source={require('../assets/bottomBarPng.png')}
+        />
         <Modal
           animationType="slide"
           transparent
@@ -167,7 +185,6 @@ const FooterNavBar = () => {
             />
           </View>
         </Modal>
-
         {panelAddFooter && (
           <Modal transparent={true} animationType="slide">
             <TouchableWithoutFeedback onPress={showModalAdd}>
@@ -180,6 +197,10 @@ const FooterNavBar = () => {
           </Modal>
         )}
       </View>
+      // <Image
+      //   style={{ position: 'absolute', bottom: 0 }}
+      //   source={require('../assets/surface2.png')}
+      // />
     )
 }
 

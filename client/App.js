@@ -108,7 +108,7 @@ const App = () => {
   }, [])
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
       <StatusBar
         hidden={!isFooterShow}
         barStyle={'dark-content'}
