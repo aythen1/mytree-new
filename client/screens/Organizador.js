@@ -30,11 +30,15 @@ import { StatusBar } from 'react-native'
 import Cancion1 from '../components/Cancion1'
 import MapView from 'react-native-maps'
 import { useNavigation } from '@react-navigation/native'
+import { getAllPosts } from '../redux/actions/posts'
+import { getUserPosts } from '../redux/slices/user.slices'
 
 const Organizador = () => {
   const dispatch = useDispatch()
   const [taggedUsers, setTaggedUsers] = useState([])
   const { showPanel } = useSelector((state) => state.panel)
+  const { userData } = useSelector((state) => state.users)
+
   const {
     libraryImage,
     showHashtagsModal,
@@ -161,10 +165,12 @@ const Organizador = () => {
       finalData.description = dataToSend.description
       console.log('sending post...', finalData)
       const res = await axios.post(`${BACKURL}/posts`, finalData)
+      console.log(res.data,"esto daaa")
       if (res.data) {
         setSubmit(true)
         setSelectedHashtags([])
         setTaggedUsers([])
+        dispatch(getUserPosts(userData.id))
       }
     } catch (error) {
       console.log(error)
@@ -696,7 +702,7 @@ const Organizador = () => {
             borderRadius: Border.br_11xl,
             justifyContent: 'center',
             position: 'absolute',
-            bottom: 35,
+            bottom: 100,
             alignSelf: 'center',
             width: '95%',
             alignItems: 'center',

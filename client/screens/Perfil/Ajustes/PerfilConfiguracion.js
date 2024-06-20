@@ -7,7 +7,8 @@ import {
   ScrollView,
   Modal,
   TouchableWithoutFeedback,
-  TextInput
+  TextInput,
+  KeyboardAvoidingView
 } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -78,8 +79,8 @@ const PerfilConfiguracion = () => {
  }
   }
   return (
-    <ScrollView style={styles.frameParent} showsVerticalScrollIndicator={false}>
-      <View style={styles.viewContainer}>
+      <KeyboardAvoidingView behavior='padding'  style={styles.viewContainer}>
+    <ScrollView contentContainerStyle={{paddingBottom:130}} style={styles.frameParent} showsVerticalScrollIndicator={false}>
         <View>
           <View style={styles.parentIcons}>
             <Pressable onPress={() => navigation.navigate('Muro')}>
@@ -136,7 +137,6 @@ const PerfilConfiguracion = () => {
                 style={[styles.brunoPham, styles.brunoPhamTypo]}
                 ref={nombreInputRef}
                 placeholder={usuario.username}
-                editable={input === 'Nombre' ? true : false}
                 onChangeText={(text)=> setDataToSend({...dataToSend,["username"]: text})}
                 value={dataToSend.username}
               />
@@ -163,7 +163,6 @@ const PerfilConfiguracion = () => {
                 style={[styles.brunoPham, styles.brunoPhamTypo]}
                 ref={nombreInputRef}
                 placeholder={usuario.birthDate}
-                editable={input === 'Fecha' ? true : false}
                 onChangeText={(text)=> setDataToSend({...dataToSend,["birthDate"]: text})}
                 value={dataToSend.birthDate}
               />
@@ -190,7 +189,6 @@ const PerfilConfiguracion = () => {
                 style={[styles.brunoPham, styles.brunoPhamTypo]}
                 ref={nombreInputRef}
                 placeholder={usuario.address}
-                editable={input === 'Ubicacion' ? true : false}
                 onChangeText={(text)=> setDataToSend({...dataToSend,["address"]: text})}
                 value={dataToSend.address}
               />
@@ -211,7 +209,7 @@ const PerfilConfiguracion = () => {
           <Image
             style={styles.frameChild}
             contentFit="cover"
-            source={require('../../../assets/line-802.png')}
+            source={require('../../../assets/line-811.png')}
           />
           <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
             <View style={styles.nombreCompletoParent}>
@@ -222,7 +220,6 @@ const PerfilConfiguracion = () => {
                 style={[styles.brunoPham, styles.brunoPhamTypo]}
                 ref={nombreInputRef}
                 placeholder="Mary Jane"
-                editable={input === 'Madre' ? true : false}
               />
             </View>
             <Pressable
@@ -247,7 +244,6 @@ const PerfilConfiguracion = () => {
                 style={[styles.brunoPham, styles.brunoPhamTypo]}
                 ref={nombreInputRef}
                 placeholder="Peter Parker"
-                editable={input === 'Padre' ? true : false}
               />
             </View>
             <Pressable
@@ -267,7 +263,7 @@ const PerfilConfiguracion = () => {
           <Image
             style={styles.frameChild}
             contentFit="cover"
-            source={require('../../../assets/line-802.png')}
+            source={require('../../../assets/line-811.png')}
           />
 
           <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
@@ -279,7 +275,6 @@ const PerfilConfiguracion = () => {
                 style={[styles.brunoPham, styles.brunoPhamTypo]}
                 ref={nombreInputRef}
                 placeholder="Ninguno"
-                editable={input === 'Hermanos' ? true : false}
               />
             </View>
             <Pressable
@@ -298,7 +293,7 @@ const PerfilConfiguracion = () => {
           <Image
             style={styles.frameChild}
             contentFit="cover"
-            source={require('../../../assets/line-802.png')}
+            source={require('../../../assets/line-811.png')}
           />
           <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
             <View style={styles.nombreCompletoParent}>
@@ -309,7 +304,6 @@ const PerfilConfiguracion = () => {
                 style={[styles.brunoPham, styles.brunoPhamTypo]}
                 ref={nombreInputRef}
                 placeholder="Casado con Pirita Garcia"
-                editable={input === 'EstadoCivil' ? true : false}
               />
             </View>
             <Pressable
@@ -328,7 +322,7 @@ const PerfilConfiguracion = () => {
           <Image
             style={styles.frameChild}
             contentFit="cover"
-            source={require('../../../assets/line-802.png')}
+            source={require('../../../assets/line-811.png')}
           />
           {/* <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
             <View style={styles.nombreCompletoParent}>
@@ -383,21 +377,22 @@ const PerfilConfiguracion = () => {
             </TouchableWithoutFeedback>
           </Modal>
         )}
-      </View>
     </ScrollView>
+      </KeyboardAvoidingView>
   )
 }
 
 const styles = StyleSheet.create({
   frameParent: {
-    height: '100%',
-    width: '100%',
+   
     flex: 1,
-    backgroundColor: Color.white
+    backgroundColor: Color.white,
+    paddingHorizontal: Padding.p_xl,
   },
   viewContainer: {
-    paddingHorizontal: Padding.p_xl,
-    paddingBottom: 60
+    backgroundColor: Color.white
+,
+    flex:1,
   },
   parentFlexBox: {
     flexDirection: 'row',
