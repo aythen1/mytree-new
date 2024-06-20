@@ -268,9 +268,11 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   frameParent5: {
-    marginTop: 20,
+    paddingTop: 30,
     flexDirection: 'row',
-    width: '90%'
+    justifyContent: 'space-between',
+    paddingHorizontal:10,
+    width: '100%'
   },
   miInformacinPersonal: {
     fontSize: FontSize.size_5xl,
@@ -280,14 +282,14 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.lato
   },
   lock: {
-    marginLeft: 50,
     height: 30,
     width: 24
   },
   miInformacinPersonalParent: {
     flexDirection: 'row',
-    left: '1.5%',
-    top: '5%',
+  justifyContent:"space-between",
+  paddingHorizontal: 10,
+  paddingVertical: 20,
     alignItems: 'center'
   },
   nombreYApellidos: {
@@ -307,18 +309,16 @@ const styles = StyleSheet.create({
   },
   nombreYApellidosParent: {
     width: '100%',
-    left: '22%'
+    paddingHorizontal:10
   },
   frameWrapper: {
-    top: '10%'
   },
   frameWrapper2: {
-    top: '10%',
     flexDirection: 'row'
   },
   redesSocialesParent: {
     width: '40%',
-    left: '22%'
+  paddingHorizontal:10
   },
   // descripcinParent: {
   //   flexDirection: 'row'
@@ -392,15 +392,12 @@ const styles = StyleSheet.create({
   },
   frameParent: {
     gap: 30,
-    paddingBottom: 220
+    paddingBottom: 180
   },
   perfilMiInfo: {
     borderRadius: Border.br_31xl,
     flex: 1,
-    height: '100%',
-    width: '100%',
-    top: '15%',
-    marginBottom:100,
+ paddingTop:40,
     backgroundColor: Color.white
   }
 })

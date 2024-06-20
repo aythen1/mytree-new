@@ -54,6 +54,20 @@ export class CommentsService {
     return await this.commentRepository.save(comment);
   }
 
+  async updateResponses(id: string, updateCommentDto: UpdateCommentDto): Promise<Comment> {
+    const comment = await this.commentRepository.findOne({ where: { id } });
+  
+    if (!comment) {
+      throw new NotFoundException(`Comment with ID ${id} not found`);
+    }
+  
+    // Efficiently add new responses without duplicates
+    const newResponses = [updateCommentDto.responses] || [];
+    comment.responses = [...comment.responses, ...newResponses];
+  
+    return await this.commentRepository.save(comment);
+  }
+
   async updateLikes(id: string, updateCommentDto: UpdateCommentDto): Promise<Comment> {
     const comment = await this.commentRepository.findOne({ where: { id } });
   
@@ -83,7 +97,35 @@ export class CommentsService {
   
     return await this.commentRepository.save(comment);
   }
-
+  async updateDislikes(id: string, updateCommentDto: UpdateCommentDto): Promise<Comment> {
+    const comment = await this.commentRepository.findOne({ where: { id } });
+  
+    if (!comment) {
+      throw new NotFoundException(`Comment with ID ${id} not found`);
+    }
+  
+    // Update other properties from updateCommentDto if needed
+  
+    // Handle likes array
+    const { dislikes } = updateCommentDto; // Destructure likes from DTO
+    const existingLikes = comment.dislikes || []; // Initialize with empty array if none exists
+  
+    // Combine adding and removing in a single loop for efficiency
+    for (const likeId of dislikes) {
+      if (!existingLikes.includes(likeId)) {
+        existingLikes.push(likeId); // Add new like
+      } else {
+        const indexToRemove = existingLikes.indexOf(likeId);
+        if (indexToRemove !== -1) {
+          existingLikes.splice(indexToRemove, 1); // Remove existing like
+        }
+      }
+    }
+  
+    comment.dislikes = existingLikes;
+  
+    return await this.commentRepository.save(comment);
+  }
   async remove(id: number): Promise<void> {
     const result = await this.commentRepository.delete(id);
     if (result.affected === 0) {
