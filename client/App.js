@@ -125,13 +125,14 @@ const App = () => {
               }}
               drawerContent={(props) => <DrawerContent {...props} />}
             >
-              <Drawer.Screen
-                options={{ headerShown: false }}
-                name="Main"
-                component={() => (
-                  <MainStackNavigator setIsFooterShow={setIsFooterShow} />
+              <Drawer.Screen options={{ headerShown: false }} name="Main">
+                {(props) => (
+                  <MainStackNavigator
+                    {...props}
+                    setIsFooterShow={setIsFooterShow}
+                  />
                 )}
-              />
+              </Drawer.Screen>
             </Drawer.Navigator>
             {isFooterShow && <FooterNavBar />}
           </NavigationContainer>

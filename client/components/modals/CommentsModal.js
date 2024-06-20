@@ -23,6 +23,9 @@ import uuid from 'react-native-uuid'
 const CommentsModal = ({ onClose }) => {
   const dispatch = useDispatch()
   const { selectedPostComments } = useSelector((state) => state.comments)
+  const [filteredComments, setFilteredComments] = useState(
+    selectedPostComments || []
+  )
   const { allUsers } = useSelector((state) => state.users)
   const {
     userData,
@@ -49,16 +52,46 @@ const CommentsModal = ({ onClose }) => {
     require('../../assets/emoji10.png')
   ]
 
+  useEffect(() => {
+    if (search.length) {
+      const actualComments = [...selectedPostComments]
+      setFilteredComments(
+        actualComments.filter((comment) =>
+          comment.content.toLowerCase().includes(search.toLowerCase())
+        )
+      )
+      return
+    } else {
+      setFilteredComments(selectedPostComments)
+    }
+  }, [search])
+
+  useEffect(() => {
+    if (selectedPostComments) {
+      if (search.length) {
+        const actualComments = [...selectedPostComments]
+        setFilteredComments(
+          actualComments.filter((comment) =>
+            comment.content.toLowerCase().includes(search.toLowerCase())
+          )
+        )
+        return
+      } else {
+        setFilteredComments(selectedPostComments)
+      }
+    }
+  }, [selectedPostComments])
+
   const scrollViewRef = useRef(null)
 
   const handleSendComment = (comment) => {
     dispatch(
       postComment({
-        userId: userData.id,
+        userId: userData?.id,
         postId: selectedPost,
         comment: {
           content: comment,
-          creatorId: userData.id.toString(),
+          creatorId: userData?.id.toString(),
           responses: [],
           likes: [],
           dislikes: [],
@@ -88,7 +121,7 @@ const CommentsModal = ({ onClose }) => {
           responses: {
             id: uuid.v1(),
             response: comment,
-            creatorId: userData.id,
+            creatorId: userData?.id,
             email: userData.email,
             likes: [],
             dislikes: [],
@@ -202,10 +235,11 @@ const CommentsModal = ({ onClose }) => {
             }}
           >
             {selectedPostComments &&
-              sortByDate(selectedPostComments).map((comment, index) => (
+              filteredComments &&
+              sortByDate(filteredComments).map((comment, index) => (
                 <SingleComment
                   key={index}
-                  commentId={comment.id}
+                  commentId={comment?.id}
                   image={
                     'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716389822/idv5sw3zoyvual6moptl.jpg'
                   }
@@ -216,11 +250,11 @@ const CommentsModal = ({ onClose }) => {
                   comment={comment.content}
                   author={
                     allUsers.filter(
-                      (user) => user.id.toString() === comment.creatorId
+                      (user) => user?.id.toString() === comment.creatorId
                     )[0].username +
                     ' ' +
                     allUsers.filter(
-                      (user) => user.id.toString() === comment.creatorId
+                      (user) => user?.id.toString() === comment.creatorId
                     )[0].apellido
                   }
                   responses={comment?.responses || []}

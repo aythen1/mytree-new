@@ -165,8 +165,11 @@ const Organizador = () => {
       finalData.description = dataToSend.description
       console.log('sending post...', finalData)
       const res = await axios.post(`${BACKURL}/posts`, finalData)
-      console.log(res.data,"esto daaa")
+
+      console.log('res:', res)
+
       if (res.data) {
+        console.log('res.data: ', res.data)
         setSubmit(true)
         setSelectedHashtags([])
         setTaggedUsers([])
@@ -702,7 +705,7 @@ const Organizador = () => {
             borderRadius: Border.br_11xl,
             justifyContent: 'center',
             position: 'absolute',
-            bottom: 100,
+            bottom: 105,
             alignSelf: 'center',
             width: '95%',
             alignItems: 'center',
