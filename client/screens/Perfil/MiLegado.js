@@ -3,9 +3,11 @@ import { Text, StyleSheet, View, Pressable } from 'react-native'
 import { Image } from 'expo-image'
 import { Color, FontSize, FontFamily } from '../../GlobalStyles'
 import { useNavigation } from '@react-navigation/native'
+import { useSelector } from 'react-redux'
 
 const MiLegado = () => {
   const navigation = useNavigation()
+  const {userPosts}  = useSelector((state) => state.posts)
 
   return (
     <View style={styles.frameParent}>
@@ -35,33 +37,15 @@ const MiLegado = () => {
           source={require('../../assets/line-78.png')}
         />
         <View style={[styles.maskGroupParent, styles.groupParentFlexBox]}>
+          
+         {userPosts.map((e,i)=> (
           <Image
-            style={styles.maskGroupIcon}
-            contentFit="cover"
-            source={require('../../assets/mask-group18.png')}
-          />
-          <Image
-            style={styles.maskGroupIcon}
-            contentFit="cover"
-            source={require('../../assets/mask-group19.png')}
-          />
-          <Image
-            style={styles.maskGroupIcon}
-            contentFit="cover"
-            source={require('../../assets/mask-group20.png')}
-          />
-          <Image
-            style={styles.maskGroupIcon}
-            contentFit="cover"
-            source={require('../../assets/mask-group21.png')}
-          />
-          <Pressable onPress={() => navigation.navigate('CrearLbum')}>
-            <Image
-              style={styles.vectorIcon2}
-              contentFit="cover"
-              source={require('../../assets/vector54.png')}
-            />
-          </Pressable>
+          style={styles.maskGroupIcon}
+          contentFit="cover"
+          source={{uri: e.photos[0]}}
+        />
+         ))}
+        
         </View>
       </View>
 
@@ -109,11 +93,7 @@ const MiLegado = () => {
             contentFit="cover"
             source={require('../../assets/claire.png')}
           />
-          <Image
-            style={styles.vectorIcon2}
-            contentFit="cover"
-            source={require('../../assets/vector54.png')}
-          />
+      
         </View>
       </View>
 
@@ -161,11 +141,7 @@ const MiLegado = () => {
             contentFit="cover"
             source={require('../../assets/claire.png')}
           />
-          <Image
-            style={styles.vectorIcon2}
-            contentFit="cover"
-            source={require('../../assets/vector54.png')}
-          />
+       
         </View>
       </View>
     </View>
@@ -220,11 +196,11 @@ const styles = StyleSheet.create({
     gap: 10
   },
   frameParent: {
-    left: '2%',
-    top: '13%',
-    width: '96%',
+    paddingHorizontal:10,
+    paddingTop:40,
+    width: '100%',
     gap: 30,
-    marginBottom: 230
+    marginBottom: 130
   }
 })
 

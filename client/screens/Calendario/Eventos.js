@@ -26,9 +26,11 @@ const Eventos = () => {
   const navigation = useNavigation()
 
   const [selected, setSelected] = useState(null)
+  const [selected2, setSelected2] = useState(null)
+
 
   return (
-    <ScrollView style={styles.scrollView}>
+    <ScrollView contentContainerStyle={{ paddingBottom: 130 }} style={styles.scrollView}>
       <Image
         style={styles.image6Icon}
         contentFit="cover"
@@ -56,7 +58,13 @@ const Eventos = () => {
               <Text style={styles.subTitle}>Evento 1</Text>
               <Text style={styles.name}>Barbacoa</Text>
             </View>
-            <CalendarCheckSVG />
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 18 }}>
+              {selected ? <Image style={{ width: 20, height: 18 }} contentFit='scale-down' source={require('../../assets/arrow2.png')}></Image>
+                :
+                <Image style={{ width: 20, height: 18 }} contentFit='scale-down' source={require('../../assets/arrow1.png')}></Image>
+              }
+              <CalendarCheckSVG />
+            </View>
           </Pressable>
           {selected && (
             <View style={styles.selected}>
@@ -103,16 +111,104 @@ const Eventos = () => {
               </View>
             </View>
           )}
+          {selected && (
+            <View style={{ flexDirection: "row", paddingBottom: 50, gap: 2 }}>
+              <Image source={require('../../assets/coverpicture.png')} style={{ width: "25%", height: 90 }}></Image>
+              <Image source={require('../../assets/coverpicture.png')} style={{ width: "25%", height: 90 }}></Image>
+              <Image source={require('../../assets/coverpicture.png')} style={{ width: "25%", height: 90 }}></Image>
+              <Image source={require('../../assets/coverpicture.png')} style={{ width: "25%", height: 90 }}></Image>
+              <View style={{ width: "100%", justifyContent: "center", position: "absolute", bottom: 20 }}>
+                <LinearGradient
+                  style={{ ...styles.button, alignSelf: "center" }}
+                  locations={[0, 1]}
+                  colors={['#dee274', '#7ec18c']}
+                >
+                  <Text style={styles.save}>Añadir recuerdos</Text>
+                </LinearGradient>
+              </View>
+            </View>
+          )}
         </View>
 
         <View style={styles.viewContainer}>
-          <Pressable style={styles.boxContainer}>
+          <Pressable
+            onPress={() => setSelected2(!selected2)}
+
+            style={styles.boxContainer}>
             <View style={styles.textContainer}>
               <Text style={styles.subTitle}>Fecha especial</Text>
               <Text style={styles.name}>Pachanga</Text>
             </View>
-            <CalendarCheckSVG />
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 18 }}>
+              {selected2 ? <Image style={{ width: 20, height: 18 }} contentFit='scale-down' source={require('../../assets/arrow2.png')}></Image>
+                :
+                <Image style={{ width: 20, height: 18 }} contentFit='scale-down' source={require('../../assets/arrow1.png')}></Image>
+              }
+              <CalendarCheckSVG />
+            </View>
           </Pressable>
+          {selected2 && (
+            <View style={styles.selected}>
+              <View style={styles.optionContainer}>
+                <Text style={styles.subTitle}>Descripción</Text>
+                <TextInput
+                  placeholder="Partido de fútbol"
+                  style={styles.inputContainer}
+                />
+              </View>
+              <View style={styles.optionContainer}>
+                <Text style={styles.subTitle}>Tus invitados</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput placeholder="Entra a la lista" />
+                  <AñadirUsuarioSVG />
+                </View>
+              </View>
+              <View style={styles.optionContainer}>
+                <Text style={styles.subTitle}>Deseos</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput placeholder="Comprueba la lista" />
+                  <RegaloSVG />
+                </View>
+              </View>
+              <View style={styles.buttonContainer}>
+                <LinearGradient
+                  style={styles.button}
+                  locations={[0, 1]}
+                  colors={['#dee274', '#7ec18c']}
+                >
+                  <Pressable
+                    onPress={() => navigation.navigate('MasDetallesEventos')}
+                  >
+                    <Text style={styles.save}>Más detalles</Text>
+                  </Pressable>
+                </LinearGradient>
+                <LinearGradient
+                  style={styles.button}
+                  locations={[0, 1]}
+                  colors={['#dee274', '#7ec18c']}
+                >
+                  <Text style={styles.save}>Añadir recuerdos</Text>
+                </LinearGradient>
+              </View>
+            </View>
+          )}
+          {selected2 && (
+            <View style={{ flexDirection: "row", paddingBottom: 50, gap: 2 }}>
+              <Image source={require('../../assets/coverpicture.png')} style={{ width: "25%", height: 90 }}></Image>
+              <Image source={require('../../assets/coverpicture.png')} style={{ width: "25%", height: 90 }}></Image>
+              <Image source={require('../../assets/coverpicture.png')} style={{ width: "25%", height: 90 }}></Image>
+              <Image source={require('../../assets/coverpicture.png')} style={{ width: "25%", height: 90 }}></Image>
+              <View style={{ width: "100%", justifyContent: "center", position: "absolute", bottom: 20 }}>
+                <LinearGradient
+                  style={{ ...styles.button, alignSelf: "center" }}
+                  locations={[0, 1]}
+                  colors={['#dee274', '#7ec18c']}
+                >
+                  <Text style={styles.save}>Añadir recuerdos</Text>
+                </LinearGradient>
+              </View>
+            </View>
+          )}
         </View>
       </View>
     </ScrollView>
@@ -148,12 +244,12 @@ const styles = StyleSheet.create({
     fontWeight: '700'
   },
   bottomContainer: {
-    marginTop: '10%'
+    flex: 1
   },
   viewContainer: {
     backgroundColor: Color.colorWhitesmoke_200,
     borderRadius: Border.br_base,
-    marginTop: '10%'
+    marginTop: 10
   },
   boxContainer: {
     height: 100,
@@ -166,7 +262,7 @@ const styles = StyleSheet.create({
   },
   selected: {
     // alignItems: 'center',
-    padding: 20
+    padding: 20,
   },
   textContainer: {
     flexDirection: 'column',
