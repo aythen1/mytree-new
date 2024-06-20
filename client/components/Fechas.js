@@ -6,25 +6,22 @@ import { useNavigation } from '@react-navigation/native'
 import axiosInstance from '../apiBackend'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const Fechas = ({selectedDate,dates , user}) => {
-
+const Fechas = ({ selectedDate, dates, user }) => {
   const [datesFechas, setDatesFechas] = useState([])
 
   useEffect(() => {
     const searchDate = async () => {
       const nuevasDates = dates.filter((e) => {
-        console.log(e.date.slice(0,10),selectedDate,"eee")
+        console.log(e.date.slice(0, 10), selectedDate, 'eee')
         const date = e.date.slice(0, 10)
         if (date === selectedDate) return e
       })
       setDatesFechas(nuevasDates)
     }
     searchDate()
-  }, [selectedDate,dates])
-
+  }, [selectedDate, dates])
 
   const navigation = useNavigation()
-
 
   const renderItem = ({ item }) => (
     <Pressable
@@ -45,15 +42,14 @@ const Fechas = ({selectedDate,dates , user}) => {
       </View>
       <View style={styles.TextWrapper}>
         <Text style={styles.marieContainerTypo}>
-          <Text style={styles.textTypo}>{item.creatorId == user.id ? "Yo" : item.creatorId} </Text>
+          <Text style={styles.textTypo}>
+            {item.creatorId == user.id ? 'Yo' : item.creatorId}{' '}
+          </Text>
           <Text style={styles.cumple28Aos}>{item.title}</Text>
         </Text>
       </View>
     </Pressable>
-  );
-
-
-
+  )
 
   return (
     <View style={styles.frameGroup}>

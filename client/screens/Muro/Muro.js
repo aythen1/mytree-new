@@ -154,9 +154,9 @@ const Muro = () => {
                   ? [
                       <Pressable
                         key={1000}
-                        onPress={async () => {
-                          await dispatch(getAllUsers())
+                        onPress={() => {
                           navigation.navigate('Busqueda')
+                          dispatch(getAllUsers())
                         }}
                       >
                         <LupaSVG />
