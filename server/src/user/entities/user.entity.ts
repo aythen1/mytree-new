@@ -14,7 +14,7 @@ import { Comment } from 'src/comments/entities/comment.entity';
 
 @Entity()
 export class User {
-  @PrimaryColumn('uuid')
+  @PrimaryGeneratedColumn('uuid')
   id: string;
   @Column()
   username: string;
