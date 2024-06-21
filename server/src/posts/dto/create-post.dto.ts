@@ -8,5 +8,5 @@ export class CreatePostDto {
     etiquets?: User[];
     hashtags?: string[];
     tags?: string[];
-    userId: number;
+    userId: string;
 }

@@ -39,7 +39,7 @@ export class HistoriesService {
     return await this.historyRepository.find();
   }
 
-  async findAllByUser(userId: number): Promise<History[]> {
+  async findAllByUser(userId: string): Promise<History[]> {
     const histories = await this.historyRepository.find({ where: { user: { id: userId } } });
     if (!histories || histories.length === 0) {
       throw new NotFoundException(`No histories found for user with ID ${userId}`);

@@ -20,27 +20,27 @@ export class UserController {
 
   @Get(':id')
   async getUserById(@Param('id') id: string) {
-    return this.userService.getUserById(+id);
+    return this.userService.getUserById(id);
   }
 
   @Patch(':id')
   async updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.updateUser(+id, updateUserDto);
+    return this.userService.updateUser(id, updateUserDto);
   }
 
   @Delete(':id')
   async deleteUser(@Param('id') id: string) {
-    return this.userService.deleteUser(+id);
+    return this.userService.deleteUser(id);
   }
   //  agregar amigo
   @Post(':userId/add-friend/:friendId')
-  addFriend(@Param('userId') userId: string, @Param('friendId') friendId: string): Promise<void> {
-    return this.userService.addFriend(+userId, +friendId);
+  addFriend(@Param('userId') userId: string, @Param('friendId') friendId: number): Promise<void> {
+    return this.userService.addFriend(userId, friendId);
   }
   // eliminar amigo
   @Delete(':userId/remove-friend/:friendId')
   async removeFriend(@Param('userId') userId: string, @Param('friendId') friendId: string): Promise<void> {
-    return this.userService.removeFriend(+userId, +friendId);
+    return this.userService.removeFriend(userId, friendId);
   }
  
 
@@ -48,7 +48,7 @@ export class UserController {
   @Post(':userId/add-favorite/:postId')
   addToFavorites(@Param('userId') userId: string, @Param('postId') postId: string): Promise<void> {
     console.log("ENTRA")
-    return this.userService.addToFavorites(+userId, +postId);
+    return this.userService.addToFavorites(userId, +postId);
   }
  
   // LOGIN DE USUARIO
@@ -145,7 +145,7 @@ export class UserController {
   async getUserNotifications(@Param('id') id: string): Promise<any[]> {
     try {
       console.log("entra")
-      return await this.userService.getUserNotifications(+id);
+      return await this.userService.getUserNotifications(id);
     } catch (error) {
       throw new NotFoundException(error.message);
     }
@@ -153,7 +153,7 @@ export class UserController {
 
   @Get(':id/recentSearches')
   async getUserRecentSearches(@Param('id') id: string) {
-    return this.userService.getUserRecentSearches(+id);
+    return this.userService.getUserRecentSearches(id);
   }
 
   @Post(':id/recentSearches/add') // Cambio en la ruta para diferenciarla
@@ -161,7 +161,7 @@ export class UserController {
     @Param('id') id: string,
     @Body('searchTerm') searchTerm: string,
   ) {
-    return this.userService.addRecentSearch(+id, searchTerm);
+    return this.userService.addRecentSearch(id, searchTerm);
   }
 
   @Get(':id/feed')
@@ -172,25 +172,25 @@ export class UserController {
     @Query('param2') param2: string,
     @Query('param3') param3: string,
   ) {
-    return this.userService.getUserFeedWithOptions(+id, option, param1, param2, param3);
+    return this.userService.getUserFeedWithOptions(id, option, param1, param2, param3);
   }
 
 
 
   @Get(':id/favorite')
   async getUserFavorites(@Param('id') id: string) {
-    return this.userService.getUserFavorites(+id);
+    return this.userService.getUserFavorites(id);
   }
 
   @Get(':id/friends')
   async getUserFriends(@Param('id') id: string) {
-    return this.userService.getUserFriends(+id);
+    return this.userService.getUserFriends(id);
   }
 
 
   @Get(':id/posts')
   async getUserPosts(@Param('id') id: string) {
-    return this.userService.getUserPosts(+id);
+    return this.userService.getUserPosts(id);
   }
   
 
@@ -201,7 +201,7 @@ async toggleLike(
   @Param('postId') postId: string,
 ) {
   try {
-    await this.userService.toggleLike(+userId, +postId);
+    await this.userService.toggleLike(userId, +postId);
     return { message: 'La acción posteo se realizó exitosamente.' };
   } catch (error) {
     throw new HttpException(
@@ -216,7 +216,7 @@ async toggleLike(
 
   @Patch(':id/update-password')
   async updatePassword(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: string,
     @Body('newPassword') new_password: string,
     @Body('oldPassword') old_password: string,
   ) {
@@ -266,7 +266,7 @@ async toggleLike(
  
   @Post(':userId/info-relation')
   async findInfoRelation(
-    @Param('userId') userId: number, 
+    @Param('userId') userId: string, 
     @Body() requestBody: { relations: string }
   ): Promise<any[]> {
     // Verificar si se proporcionaron relaciones
@@ -286,7 +286,7 @@ async toggleLike(
   // Ruta para agregar un miembro a la familia (en property va el tipo de familiar, en memberId va el id del familiar a agregar)
   @Post(':userId/family/:property/add/:memberId')
   async addFamilyMember(
-    @Param('userId') userId: number,
+    @Param('userId') userId: string,
     @Param('property') property: string,
     @Param('memberId') memberId: string
   ) {
@@ -296,7 +296,7 @@ async toggleLike(
   // Ruta para eliminar un miembro de la familia
   @Delete(':userId/family/:property/remove/:memberId')
   async removeFamilyMember(
-    @Param('userId') userId: number,
+    @Param('userId') userId: string,
     @Param('property') property: string,
     @Param('memberId') memberId: string
   ) {

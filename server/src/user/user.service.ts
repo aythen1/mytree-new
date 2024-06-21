@@ -19,7 +19,7 @@ export class UserService {
 
 
   // BUSCA UN USUARIO 
-  async findOne(id: number): Promise<User> {
+  async findOne(id: string): Promise<User> {
     console.log(`Buscando usuario con ID ${id}...`);
     try {
       const usuario = await this.userRepository.findOne({
@@ -58,7 +58,7 @@ export class UserService {
   }
 
       // BUSCA UN USUARIO POR ID
-  async getUserById(id: number): Promise<User> {
+  async getUserById(id: string): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id: id } });
     if (!user) {
       throw new NotFoundException('User not found');
@@ -69,7 +69,7 @@ export class UserService {
 
 
       // ACTUALIZA UN USUARIO POR ID
-      async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+      async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
         const user = await this.userRepository.findOne({where: {id:id}});
         if (!user) {
           throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
@@ -80,13 +80,13 @@ export class UserService {
       }
 
         // ELIMINA UN USUARIO POR ID
-  async deleteUser(id: number): Promise<void> {
+  async deleteUser(id: string): Promise<void> {
     const user = await this.getUserById(id);
     await this.userRepository.remove(user);
   }
 
         // AGREGA UN AMIGO A UN USUARIO CON SUS ID
-  async addFriend(userId: number, friendId: number): Promise<void> {
+  async addFriend(userId: string, friendId: number): Promise<void> {
     const user = await this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.friends', 'friends')
@@ -120,7 +120,7 @@ export class UserService {
 
 
 // ELIMINA UN AMIGO DE UN USUARIO POR SUS ID
-  async removeFriend(userId: number, friendId: number): Promise<void> {
+  async removeFriend(userId: string, friendId: string): Promise<void> {
     const user = await this.userRepository.findOne({ where: { id: userId }, relations: ['friends'] });
     const friend = await this.userRepository.findOne({ where: { id: friendId }, relations: ['friends'] });
 
@@ -140,7 +140,7 @@ export class UserService {
 
 
 // ELIMINA UN POST LIKE 
-  async dislikePost(userId: number, postId: number): Promise<void> {
+  async dislikePost(userId: string, postId: number): Promise<void> {
     console.log("si pasa")
     const user = await this.userRepository
       .createQueryBuilder('user')
@@ -162,7 +162,7 @@ export class UserService {
     await this.userRepository.save(user);
   }
 // AGREGA UN POST FAVORITO A UN USUARIO
-  async addToFavorites(userId: number, postId: number): Promise<void> {
+  async addToFavorites(userId: string, postId: number): Promise<void> {
     try {
         // Buscar al usuario por su ID, junto con sus favoritos
         const user = await this.userRepository
@@ -205,7 +205,7 @@ export class UserService {
   
 // ELIMINA UN POST DE LOS FAVORITOS DE UN USUARIO
 
-  async removeFromFavorites(userId: number, postId: number): Promise<void> {
+  async removeFromFavorites(userId: string, postId: number): Promise<void> {
     const user = await this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.favorites', 'favorites')
@@ -257,7 +257,7 @@ async findUserByEmail(email: string): Promise<User> {
 }
 
 // TRAE LAS NOTIFICACIONES DE UN AMIGO
-async getUserNotifications(userId: number): Promise<any[]> {
+async getUserNotifications(userId: string): Promise<any[]> {
   try {
     console.log(`Obteniendo notificaciones para el usuario con ID: ${userId}`);
     
@@ -283,7 +283,7 @@ async getUserNotifications(userId: number): Promise<any[]> {
 
 
 // TRAE LOS AMIGOS DE UN USUARIO
-async getUserFriends(userId: number): Promise<User[]> {
+async getUserFriends(userId: string): Promise<User[]> {
     // Obtener al usuario y cargar sus amigos con las relaciones de favoritos
     const user = await this.userRepository
         .createQueryBuilder('user')
@@ -303,7 +303,7 @@ async getUserFriends(userId: number): Promise<User[]> {
 }
 
 // TRAE LOS POST DE UN USUARIO
-  async getUserPosts(userId: number): Promise<any[]> {
+  async getUserPosts(userId: string): Promise<any[]> {
     const user = await this.userRepository.findOne({ where: { id: userId }, relations: ['posts'] });
     if (!user) {
       throw new NotFoundException('User not found');
@@ -315,7 +315,7 @@ async getUserFriends(userId: number): Promise<User[]> {
  
 
 // TRAE LAS BUSQUEDAS RECIENTES DE UN USUARIO
-  async getUserRecentSearches(userId: number): Promise<string[]> {
+  async getUserRecentSearches(userId: string): Promise<string[]> {
     const user = await this.userRepository.findOne({where: {id:userId}});
     if (!user) {
       throw new NotFoundException('User not found');
@@ -325,7 +325,7 @@ async getUserFriends(userId: number): Promise<User[]> {
 
   // AGREGA LAS BUSQUEDAS RECIENTES DE UN USUARIO
 
-  async addRecentSearch(userId: number, searchTerm: string): Promise<void> {
+  async addRecentSearch(userId: string, searchTerm: string): Promise<void> {
     const user = await this.userRepository.findOne({where: {id:userId}});
     if (!user) {
       throw new NotFoundException('User not found');
@@ -345,7 +345,7 @@ async getUserFriends(userId: number): Promise<User[]> {
   async facebookSignIn(facebookData: any): Promise<any> {
   }
 
-  async getUserFeedWithOptions(userId: number, option: string, param1?: string, param2?: string, param3?: string): Promise<any[]> {
+  async getUserFeedWithOptions(userId: string, option: string, param1?: string, param2?: string, param3?: string): Promise<any[]> {
     // Obtener el usuario por su ID
     const user = await this.userRepository.findOne({ where: { id: userId }, relations: ['posts', 'favorites', 'friends'] });
     if (!user) {
@@ -379,7 +379,7 @@ async getUserFriends(userId: number): Promise<User[]> {
 
   
 
-  async getUserFavorites(userId: number): Promise<any[]> {
+  async getUserFavorites(userId: string): Promise<any[]> {
     const user = await this.userRepository.findOne({ where: { id: userId }, relations: ['favorites'] });
     if (!user) {
       throw new NotFoundException('User not found');
@@ -390,7 +390,7 @@ async getUserFriends(userId: number): Promise<User[]> {
 
   //AGREGA O ELIMINA EN UN USUARIO EL LIKE A UN POST
 
-    async toggleLike(userId: number, postId: number): Promise<void> {
+    async toggleLike(userId: string, postId: number): Promise<void> {
       try {
         // Buscar al usuario y cargar sus likedPosts
         console.log(`Buscando al usuario con ID ${userId} y sus posts que le han gustado...`);
@@ -429,7 +429,7 @@ async getUserFriends(userId: number): Promise<User[]> {
       }
     }
     
-    async findInfoRelation(userId: number, relations: string[]): Promise<any> {
+    async findInfoRelation(userId: string, relations: string[]): Promise<any> {
       const validRelations = this.validateRelations(relations);
   
       // Verificar si hay al menos una relación válida
@@ -467,7 +467,7 @@ async getUserFriends(userId: number): Promise<User[]> {
 
 
 
-    async addFamilyMember(userId: number, property: string, memberId: string) {
+    async addFamilyMember(userId: string, property: string, memberId: string) {
       const user = await this.userRepository.findOne({where: {id:userId}});
       if (!user) {
         throw new NotFoundException('Usuario no encontrado');
@@ -487,7 +487,7 @@ async getUserFriends(userId: number): Promise<User[]> {
       return this.userRepository.save(user);
     }
   
-    async removeFamilyMember(userId: number, property: string, memberId: string) {
+    async removeFamilyMember(userId: string, property: string, memberId: string) {
       const user = await this.userRepository.findOne({where: {id:userId}});
       if (!user) {
         throw new NotFoundException('Usuario no encontrado');

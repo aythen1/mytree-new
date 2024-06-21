@@ -22,7 +22,7 @@ export class HistoriesController {
     return this.historiesService.findOne(+id);
   }
   @Get('/user/:userId')
-  findAllByUser(@Param('userId') userId: any) {
+  findAllByUser(@Param('userId') userId: string) {
     return this.historiesService.findAllByUser(userId);
   }
 
