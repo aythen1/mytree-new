@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum DeleteStatus {
   TRUE = 'true',
@@ -10,7 +10,7 @@ export enum DeleteStatus {
 @Entity({ name: 'message' })
 export class MessageEntity {
 
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ nullable: true, default: null })
