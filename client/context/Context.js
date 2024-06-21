@@ -14,6 +14,8 @@ export const ContextProvider = ({ children }) => {
   const [selectedRelationType, setSelectedRelationType] = useState('Amigos')
   const [selectedRelationShip, setSelectedRelationShip] =
     useState('Amigos íntimos')
+  const [showSelectEventTypeModal, setShowSelectEventTypeModal] =
+    useState(false)
   const [selectedUserToInvite, setSelectedUserToInvite] = useState()
   const [selectedHashtags, setSelectedHashtags] = useState([])
   const [showCommentsModal, setShowCommentsModal] = useState(false)
@@ -35,6 +37,7 @@ export const ContextProvider = ({ children }) => {
   const [selectedPost, setSelectedPost] = useState()
   const [responseTo, setResponseTo] = useState()
   const [selectedComment, setSelectedComment] = useState()
+  const [selectedSection, setSelectedSection] = useState('nube')
 
   const getUser = async () => {
     const usuario = await AsyncStorage.getItem('user')
@@ -277,6 +280,35 @@ export const ContextProvider = ({ children }) => {
       })
   }
 
+  // const getUsersMessages = async () => {
+
+  //   console.log('userData', userData)
+  //   const { data } = await axiosInstance.post('chat/chats', {
+  //     userId: userData?.id
+  //   })
+  //   const convs = Object.keys(data)
+  //   const notReaded = convs
+  //     .map(
+  //       (conv) =>
+  //         data[conv].filter(
+  //           (message) =>
+  //             message.senderId !== userData.id && message.isReaded === false
+  //         ).length
+  //     )
+  //     .reduce((acc, curr) => acc + curr, 0)
+  //   setNotReaded(notReaded)
+  //   if (Object.keys(data).length > 0) {
+  //     const finalInfo = Object.keys(data).map((key) => {
+  //       const otherUserId = key
+  //         .split('_')
+  //         .filter((singleId) => singleId !== userData.id)[0]
+  //       const userData = allUsers.filter((user) => user.id === otherUserId)[0]
+  //       return { room: key, ...userData }
+  //     })
+  //     setUsersWithMessages(finalInfo)
+  //   }
+  // }
+
   const socket = io(
     'http://6f651255-2a5d-4271-a8c7-35730a2de342.pub.instances.scw.cloud:3010',
     {
@@ -356,6 +388,8 @@ export const ContextProvider = ({ children }) => {
         joinRoom,
         showInvitationSendModal,
         formatDate,
+        selectedSection,
+        setSelectedSection,
         setShowInvitationSendModal,
         getUsersMessages,
         selectedPostTags,
@@ -385,6 +419,8 @@ export const ContextProvider = ({ children }) => {
         libraryImage,
         setLibraryImage,
         coverImage,
+        showSelectEventTypeModal,
+        setShowSelectEventTypeModal,
         formatDateDifference,
         setCoverImage,
         profileImage,

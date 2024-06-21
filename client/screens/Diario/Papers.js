@@ -34,7 +34,17 @@ const Papers = () => {
 
   return (
     <>
-      <View style={[styles.miDiarioEntradaTextoPl, styles.iconLayout]}>
+      <View
+        style={{
+          top: 30,
+          paddingHorizontal: 10,
+          overflow: 'hidden',
+          height: '100%',
+          width: '100%',
+          backgroundColor: 'transparent',
+          paddingBottom: 100
+        }}
+      >
         <View>
           <Image
             style={styles.line}

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "MyTree",
-    "slug": "nuevappp",
+    "slug": "mytree",
     "version": "1.0.0",
     "scheme": "mytree",
     "orientation": "portrait",
@@ -12,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -32,7 +30,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "9120196b-3c17-4afd-a7f1-26a9758f23ae"
+        "projectId": "407a2db3-1f4f-459b-9dba-6abc56078216"
       }
     },
     "plugins": [
@@ -45,10 +43,8 @@
           }
         }
       ],
-      [
-        "@react-native-google-signin/google-signin"
-      ]
+      ["@react-native-google-signin/google-signin"]
     ],
-    "owner": "azschiaffino"
+    "owner": "kraa"
   }
 }

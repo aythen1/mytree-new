@@ -8,25 +8,28 @@ import { FontFamily, FontSize, Color, Padding, Border } from '../GlobalStyles'
 const RisaAnecdotas = () => {
   const navigation = useNavigation()
   return (
-    <>
-      <View style={styles.miDiarioEntradaTextoPl}>
-        <Text style={[styles.reflexinDiaria, styles.hoyLoHeFlexBox]}>
-          Risa y anécdotas
-        </Text>
-        <Text
-          style={[styles.hoyLoHe, styles.hoyLoHeFlexBox]}
-        >{`👬 Hoy lo he compartido con... 
-        😄 Hoy me siento/nos sentimos...
-        
-        😂 Anécdota Divertida
-        🤣 Lo que nos ha hecho reír...
-        🥰 El momento más entrañable fue...`}</Text>
+    <View
+      style={{
+        backgroundColor: Color.white,
+        flex: 1,
+        overflow: 'hidden',
+        width: '100%'
+      }}
+    >
+      <Text style={[styles.reflexinDiaria, styles.hoyLoHeFlexBox]}>
+        Risas y anécdotas
+      </Text>
+      <Text
+        style={[styles.hoyLoHe, styles.hoyLoHeFlexBox]}
+      >{`👬 Hoy lo he compartido con... 
+    😄 Hoy me siento/nos sentimos...
+    
+    😂 Anécdota Divertida
+    🤣 Lo que nos ha hecho reír...
+    🥰 El momento más entrañable fue...`}</Text>
 
-        <View
-          style={[styles.miDiarioEntradaTextoPlItem, styles.diarioLayout]}
-        />
-      </View>
-    </>
+      <View style={[styles.miDiarioEntradaTextoPlItem, styles.diarioLayout]} />
+    </View>
   )
 }
 
@@ -383,12 +386,11 @@ const styles = StyleSheet.create({
     position: 'absolute'
   },
   miDiarioEntradaTextoPl: {
-    // borderRadius: Border.br_31xl,
     backgroundColor: Color.white,
     flex: 1,
-    // height: 926,
     overflow: 'hidden',
-    width: '100%'
+    width: '100%',
+    borderWidth: 2
   }
 })
 

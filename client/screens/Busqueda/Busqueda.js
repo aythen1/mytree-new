@@ -116,13 +116,27 @@ const Busqueda = () => {
       end={{ x: 0, y: 1 }}
     >
       <ScrollView
-        style={styles.bsqueda}
+        style={{ width: '100%', flex: 1 }}
         contentContainerStyle={{
           paddingBottom: selectedComponent === 'BusquedaContactos' ? 72 : 100
         }}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.bsquedaContainer}>
+        <View
+          style={{
+            paddingBottom: 10,
+            backgroundColor: '#fff',
+            paddingHorizontal: 20,
+            shadowOpacity: 1,
+            elevation: 5,
+            shadowRadius: 15,
+            shadowOffset: {
+              width: 10,
+              height: 10
+            },
+            shadowColor: 'black'
+          }}
+        >
           <Image
             style={styles.image6Icon}
             contentFit="cover"

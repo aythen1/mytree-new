@@ -17,7 +17,7 @@ import CompartirSVG from '../components/svgs/CompartirSVG'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import { BACKURL } from '../apiBackend'
-import { useFocusEffect } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { Context } from '../context/Context'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllPosts } from '../redux/actions/posts'
@@ -32,8 +32,9 @@ const Posteo = ({ data, padding }) => {
     setSelectedPost,
     setSelectedPostTags
   } = useContext(Context)
-
+  const navigation = useNavigation()
   const dispatch = useDispatch()
+  // console.log('DATA POST ==========', data)
 
   return (
     <View
@@ -123,7 +124,14 @@ const Posteo = ({ data, padding }) => {
               source={require('../assets/iconlyboldchat.png')}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('OpenedChat', {
+                receiverId: data.id,
+                receiverName: data.nameUser
+              })
+            }}
+          >
             <EnviarMensajeSVG />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setShowShareModal(true)}>

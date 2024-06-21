@@ -55,6 +55,10 @@ const OpenedChat = () => {
       allUsers.filter((user) => user.id === route.params.receiverId)[0]
     )
   }, [])
+
+  useEffect(() => {
+    console.log('allMessages changed =====', allMessages)
+  }, [allMessages])
   useEffect(() => {
     joinRoom(userData.id, route.params.receiverId)
     dispatch(
@@ -91,15 +95,17 @@ const OpenedChat = () => {
         overflow: 'hidden',
         paddingTop: 10,
         width: '100%',
-        paddingBottom: 35
+        paddingBottom: 15
       }}
       colors={['#fff', '#f1f1f1']}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
     >
-      {isFocused && (
-        <StatusBar barStyle={'dark-content'} backgroundColor="#fff" />
-      )}
+      <StatusBar
+        hidden={false}
+        barStyle={'dark-content'}
+        backgroundColor="#fff"
+      />
       <View
         style={{
           flexDirection: 'row',
@@ -258,7 +264,7 @@ const OpenedChat = () => {
       </ScrollView>
       <View
         style={{
-          marginTop: 10,
+          marginTop: 15,
           height: 50,
           paddingHorizontal: Dimensions.get('screen').width * 0.025,
           justifyContent: 'space-between',

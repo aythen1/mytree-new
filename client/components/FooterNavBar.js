@@ -25,15 +25,14 @@ import FooterBarSVG from './svgs/FooterBarSVG'
 import { Image } from 'expo-image'
 
 const FooterNavBar = () => {
-  const { showCamera } = useContext(Context)
+  const { showCamera, showSelectEventTypeModal, setShowSelectEventTypeModal } =
+    useContext(Context)
   const navigation = useNavigation()
   const dispatch = useDispatch()
 
   const { panelAddFooter } = useSelector((state) => state.panel)
 
   const [selected, setSelected] = useState('Muro')
-  const [showSelectEventTypeModal, setShowSelectEventTypeModal] =
-    useState(false)
 
   const showModalAdd = () => {
     dispatch(setPanelAddFooter(!panelAddFooter))

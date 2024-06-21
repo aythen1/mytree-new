@@ -23,7 +23,15 @@ const DescubriendoElMundo = ({ showEdit }) => {
               Descubriendo el mundo
             </Text>
             <TextInput
-              style={[styles.hoyLoHe, styles.hoyLoHeFlexBox]}
+              style={{
+                fontSize: FontSize.size_lg,
+                lineHeight: 27,
+                textAlign: 'left',
+                color: Color.negro,
+                marginTop: 20,
+                fontFamily: FontFamily.lato,
+                letterSpacing: 0
+              }}
               multiline
               value={texto}
               onChangeText={handleTextoChange}
