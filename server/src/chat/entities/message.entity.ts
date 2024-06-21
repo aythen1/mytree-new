@@ -1,5 +1,4 @@
-import { BaseEntity } from './base.entity';
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 export enum DeleteStatus {
   TRUE = 'true',
@@ -9,7 +8,11 @@ export enum DeleteStatus {
 
 
 @Entity({ name: 'message' })
-export class MessageEntity extends BaseEntity {
+export class MessageEntity {
+
+  @PrimaryColumn()
+  id: string;
+  
   @Column()
   senderId: string; // El ID del remitente del mensaje
 

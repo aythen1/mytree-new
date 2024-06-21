@@ -13,7 +13,7 @@ import { Server, Socket } from 'socket.io';
 import { MessageService } from './service/message.service';
 import { ChatService } from './service/chat.service';
 
-@WebSocketGateway(3010)
+@WebSocketGateway(3020)
 export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
@@ -34,8 +34,8 @@ export class ChatGateway
   handleConnection(client: Socket) {
     this.connectedUsers++;
     this.server.emit('users online', this.connectedUsers);
-    // console.log('users online', this.connectedUsers);
-    // console.log('Cliente conectado:', client.handshake.headers.userid);
+    console.log('users online', this.connectedUsers);
+    console.log('Cliente conectado:', client.handshake.headers.userid);
   }
 
   handleDisconnect(client: Socket) {
