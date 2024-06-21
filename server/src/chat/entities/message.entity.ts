@@ -13,11 +13,11 @@ export class MessageEntity {
   @PrimaryColumn()
   id: string;
 
-  @Column()
-  createAt: Date;
+  @Column({ nullable: true, default: null })
+  createAt: Date | null;
   
-  @Column()
-  updateAt: Date;
+  @Column({ nullable: true, default: null })
+  updateAt: Date | null;
   
   @Column()
   senderId: string; // El ID del remitente del mensaje
