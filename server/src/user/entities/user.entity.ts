@@ -5,6 +5,7 @@ import {
   ManyToMany,
   JoinTable,
   OneToMany,
+  PrimaryColumn,
 } from 'typeorm';
 import { Post } from '../../posts/entities/post.entity';
 import { Notification } from '../../notification/entities/notification.entity';
@@ -13,9 +14,8 @@ import { Comment } from 'src/comments/entities/comment.entity';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
   @Column()
   username: string;
 

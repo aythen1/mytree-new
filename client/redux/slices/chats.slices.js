@@ -15,7 +15,6 @@ export const chatsSlices = createSlice({
         ...message,
         isReaded: true
       }))
-      console.log('allToReaded', allToReaded)
       state.allMessages = allToReaded
     }
   },
@@ -27,6 +26,17 @@ export const chatsSlices = createSlice({
         state.error = false
       })
       .addCase(getChatHistory.fulfilled, (state, action) => {
+        console.log(
+          '========SETTING ALLMESSAGES TO PAYLOAD',
+          action.payload.map((message) => {
+            return {
+              message: message.message,
+              receiverId: message.receiverId,
+              senderId: message.senderId,
+              roomId: message.room
+            }
+          })
+        )
         state.loading = false
         state.allMessages = action.payload
         state.error = false
@@ -41,7 +51,6 @@ export const chatsSlices = createSlice({
         state.error = false
       })
       .addCase(updateMessages.fulfilled, (state, action) => {
-        console.log('message payload: ', action.payload)
         state.loading = false
         state.allMessages = [action.payload, ...state.allMessages]
         state.error = false

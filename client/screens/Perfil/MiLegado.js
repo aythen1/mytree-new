@@ -38,7 +38,7 @@ const MiLegado = () => {
         />
         <View style={[styles.maskGroupParent, styles.groupParentFlexBox]}>
           
-         {userPosts.map((e,i)=> (
+         {userPosts && userPosts.map((e,i)=> (
           <Image
           style={styles.maskGroupIcon}
           contentFit="cover"

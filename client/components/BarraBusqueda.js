@@ -59,7 +59,7 @@ const BarraBusqueda = ({ navigate, route, fromSearch, search, setSearch }) => {
             }}
             value={search}
             onChangeText={(text) => setSearch(text)}
-            placeholder="Search"
+            placeholder="Buscar"
             placeholderTextColor={Color.textPlaceholder}
           />
         </View>

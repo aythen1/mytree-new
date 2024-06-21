@@ -330,9 +330,16 @@ const CrearFechaEspecial = () => {
       </Modal>
 
       <Modal animationType="slide" transparent visible={calendario}>
-        <View style={styles.iconlyLightOutlineCalendarOverlay}>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(113, 113, 113, 0.3)'
+          }}
+        >
           <Pressable
-            style={styles.iconlyLightOutlineCalendarBg}
+            style={{ width: '100%', height: '100%', left: 0, top: 0 }}
             onPress={closeCalendario}
           />
           <PopUpCalendario

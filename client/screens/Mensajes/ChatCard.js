@@ -16,12 +16,10 @@ const ChatCard = ({ name, selectedUserId }) => {
 
   const getChatMessages = async () => {
     const { data } = await axiosInstance.get(
-      `chat/room?limit=${99999999999}&senderId=${userData.id}&receiverId=${selectedUserId}`
+      `chat/room?senderId=${userData.id}&receiverId=${selectedUserId}`
     )
     setConvMessages(data)
   }
-
-  // console.log('name:',name,'sportmanId: ', sportmanId)
 
   useEffect(() => {
     getChatMessages()
@@ -32,28 +30,13 @@ const ChatCard = ({ name, selectedUserId }) => {
     setLastMessage({ message: messages[0], received })
   }
 
-  const getOtherUserMessages = (messages) => {
-    console.log('userdata.id', userData.id)
-    const filteredMessages = messages.filter((message) => {
-      if (message.senderId.toString() !== userData.id.toString()) {
-        if (message.isReaded === false) {
-          return true
-        }
-        return false
-      }
-      return false
-    })
-    console.log('filteredMessages:', filteredMessages)
-    if (filteredMessages.length > 0) {
-      const notReaded = filteredMessages.length
-      setNotReadedMessages(notReaded)
-    }
-  }
-
   useEffect(() => {
     if (convMessages?.length) {
-      getLastMessage(convMessages)
-      getOtherUserMessages(convMessages)
+      getLastMessage(
+        convMessages.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        )
+      )
     }
   }, [convMessages])
   return (

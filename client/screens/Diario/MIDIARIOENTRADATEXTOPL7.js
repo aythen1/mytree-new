@@ -37,9 +37,11 @@ import { Context } from '../../context/Context'
 import { Entypo } from '@expo/vector-icons'
 import { Camera, CameraView } from 'expo-camera'
 import * as MediaLibrary from 'expo-media-library'
+import PopUpCalendario from '../../components/PopUpCalendario'
+import MasBusquedaSVG from '../../components/svgs/MasBusquedaSVG'
 
 const MIDIARIOENTRADATEXTOPL7 = () => {
-  const { selectedSection, setSelectedSection } = useContext(Context)
+  const { selectedSection, editingDiary, handleAddDiary } = useContext(Context)
   const navigation = useNavigation()
   const [showEdit, setShowEdit] = useState(false)
   const [isSection, setIsSection] = useState('')
@@ -48,10 +50,33 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
   const [images, setImages] = useState([])
   const [selectedImage, setSelectedImage] = useState(null)
   const [cameraType, setCameraType] = useState(Camera?.Constants?.Type?.back)
+  const [selectedDate, setSelectedDate] = useState(new Date())
+  const [showCalendar, setShowCalendar] = useState(false)
+
+  const monthsInSpanish = [
+    'enero',
+    'febrero',
+    'marzo',
+    'abril',
+    'mayo',
+    'junio',
+    'julio',
+    'agosto',
+    'septiembre',
+    'octubre',
+    'noviembre',
+    'diciembre'
+  ]
 
   useEffect(() => {
     obtenerImagenesDeGaleria()
   }, [])
+
+  useEffect(() => {
+    console.log('selectedDate changed to', selectedDate)
+    console.log('selectedSection changed to', selectedSection)
+    // Aca cuando tenga la ruta desarrollo logica de get de diarios por categoria y selectedDate.
+  }, [selectedDate, selectedSection])
 
   const obtenerImagenesDeGaleria = async () => {
     const { status } = await MediaLibrary.requestPermissionsAsync()
@@ -91,7 +116,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
   }
 
   useEffect(() => {
-    console.log('selectedImage changed', selectedImage)
+    // console.log('selectedImage changed', selectedImage)
   }, [selectedImage])
 
   const takePicture = async () => {
@@ -121,7 +146,14 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
       case 'mundo':
         return <DescubriendoElMundo showEdit={showEdit} />
       case 'nube':
-        return <ReflexionDiaria editing={showEdit} />
+        return (
+          <ReflexionDiaria
+            openGroupIcon1={openGroupIcon1}
+            modalCreate={modalCreate}
+            setModalCreate={setModalCreate}
+            editing={showEdit}
+          />
+        )
       case 'logros':
         return <CalebrandoLogros editing={showEdit} />
       case 'desafios':
@@ -262,7 +294,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                 height: Dimensions.get('screen').height * 0.5
               }}
             >
-              {!showEdit ? (
+              {/* {!showEdit ? (
                 <View style={styles.editContainer}>
                   <Pressable
                     onPress={() => setShowEdit(!showEdit)}
@@ -354,16 +386,72 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                     </View>
                   </Modal>
                 </Pressable>
-              )}
+              )} */}
+
+              <View style={styles.editContainer}>
+                <Pressable
+                  onPress={() => setShowCalendar(true)}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                  }}
+                >
+                  <Text style={[styles.text, styles.textTypo]}>
+                    {selectedDate.getDate()}
+                  </Text>
+                  <Text style={[styles.jul2023, styles.textTypo]}>
+                    {`${monthsInSpanish[selectedDate.getMonth()]} ${selectedDate.getFullYear()}`}
+                  </Text>
+                  <Image
+                    style={styles.iconlycurvedarrowDown2}
+                    resizeMode="contain"
+                    source={require('../../assets/iconlycurvedarrowdown2.png')}
+                  />
+                  {/* <Editar2SVG style={{ marginLeft: '45%' }} /> */}
+                </Pressable>
+                <Pressable
+                  onPress={() => handleAddDiary(selectedSection, selectedDate)}
+                >
+                  <MasBusquedaSVG />
+                </Pressable>
+              </View>
 
               {/* renderizado de secciones */}
-              {renderSection(selectedSection)}
+              {/* {renderSection(selectedSection)} */}
+              <ReflexionDiaria
+                openGroupIcon1={openGroupIcon1}
+                modalCreate={modalCreate}
+                setModalCreate={setModalCreate}
+                editing={showEdit}
+              />
 
               {/* -------------------- */}
             </ScrollView>
           </View>
 
-          {showEdit && <NavMedia />}
+          {editingDiary && <NavMedia />}
+          <Modal animationType="slide" transparent visible={showCalendar}>
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(113, 113, 113, 0.3)'
+              }}
+            >
+              <Pressable
+                style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+                onPress={() => setShowCalendar(false)}
+              />
+              <PopUpCalendario
+                fromDiary={true}
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate}
+                setButtonContainer2Visible={() => {}}
+                setCalendario={setShowCalendar}
+              />
+            </View>
+          </Modal>
 
           <Modal animationType="slide" transparent visible={groupIcon1Visible}>
             <View style={styles.arrowDown2Icon1Overlay}>

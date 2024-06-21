@@ -1,7 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient'
 import React, { useState } from 'react'
 import { View, StyleSheet, Text, Pressable } from 'react-native'
-import { Calendar } from 'react-native-calendars'
+import { Calendar, LocaleConfig } from 'react-native-calendars'
 import { Border, Color, FontFamily, FontSize } from '../GlobalStyles'
 
 const PopUpCalendario = ({
@@ -9,9 +9,60 @@ const PopUpCalendario = ({
   setCalendario,
   not,
   selectedDate,
-  setSelectedDate
+  setSelectedDate,
+  fromDiary
 }) => {
+  LocaleConfig.locales['es'] = {
+    monthNames: [
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre'
+    ],
+    monthNamesShort: [
+      'Ene',
+      'Feb',
+      'Mar',
+      'Abr',
+      'May',
+      'Jun',
+      'Jul',
+      'Ago',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dic'
+    ],
+    dayNames: [
+      'Domingo',
+      'Lunes',
+      'Martes',
+      'Miércoles',
+      'Jueves',
+      'Viernes',
+      'Sábado'
+    ],
+    dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+    today: 'Hoy'
+  }
+
+  LocaleConfig.defaultLocale = 'es'
+
   const handleDayPress = (day) => {
+    if (fromDiary) {
+      console.log('day', day)
+      setSelectedDate(new Date(day.year, day.month - 1, day.day))
+      setCalendario(false)
+      return
+    }
     if (selectedDate === day.dateString) {
       setSelectedDate(null)
     } else {
@@ -21,30 +72,36 @@ const PopUpCalendario = ({
 
   return (
     <View style={styles.container}>
-      <View style={{borderWidth:0.2,borderRadius:3,borderColor:"gray",width:"90%",alignSelf:"center"}}>
-      <Calendar
-        onDayPress={handleDayPress}
-        markingType="custom"
-        markedDates={{
-          [selectedDate]: {
-            selected: true,
-            customStyles: {
-              container: {
-                backgroundColor: '#DFE271',
-                width: 32,
-                height: 32,
-                borderRadius: 0
-              },
-              text: {
-                color: 'white'
+      <View
+        style={{
+          width: '90%',
+          alignSelf: 'center'
+        }}
+      >
+        <Calendar
+          onDayPress={handleDayPress}
+          markingType="custom"
+          markedDates={{
+            [selectedDate]: {
+              selected: true,
+              customStyles: {
+                container: {
+                  backgroundColor: '#DFE271',
+                  width: 32,
+                  height: 32,
+                  borderRadius: 0
+                },
+                text: {
+                  color: 'white'
+                }
               }
             }
-          }
-        }}
-        theme={{
-          todayTextColor: 'black'
-        }}
-      />
+          }}
+          theme={{
+            arrowColor: '#7ec18c',
+            todayTextColor: 'black'
+          }}
+        />
       </View>
       <View
         style={{
@@ -78,10 +135,10 @@ const styles = StyleSheet.create({
     width: '90%',
     position: 'absolute',
     bottom: 20,
-    borderRadius:30,
-    overflow:"hidden",
-    backgroundColor:"#FFFF",
-    paddingTop:20
+    borderRadius: 30,
+    overflow: 'hidden',
+    backgroundColor: '#FFFF',
+    paddingTop: 20
   },
   save: {
     letterSpacing: 1,

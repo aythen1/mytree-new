@@ -16,6 +16,7 @@ const MENSAJERA = () => {
   const [search, setSearch] = useState('')
   const { allUsers } = useSelector((state) => state.users)
   const { usersWithMessages, userData, getUsersMessages } = useContext(Context)
+  const [selectedFilter, setSelectedFilter] = useState('All')
 
   useEffect(() => {
     console.log('usersWithMessages changed:', usersWithMessages)
@@ -120,7 +121,10 @@ const MENSAJERA = () => {
             paddingLeft: Dimensions.get('screen').width * 0.05
           }}
         >
-          <ButtonsMensajeria />
+          <ButtonsMensajeria
+            selectedFilter={selectedFilter}
+            setSelectedFilter={setSelectedFilter}
+          />
         </View>
       </View>
       {/* ========================== MENSAJES ======================= */}
@@ -150,14 +154,25 @@ const MENSAJERA = () => {
                 </Text>
               </View>
             )}
-        {search === '' &&
-          usersWithMessages?.map((user) => (
-            <ChatCard
-              key={user.id}
-              name={user.username + ' ' + user.apellido}
-              selectedUserId={user.id}
-            />
-          ))}
+        {search === '' && usersWithMessages.length > 0
+          ? usersWithMessages?.map((user) => (
+              <ChatCard
+                key={user.id}
+                name={user.username + ' ' + user.apellido}
+                selectedUserId={user.id}
+              />
+            ))
+          : search === '' && (
+              <View
+                style={{ width: '100%', alignItems: 'center', paddingTop: 50 }}
+              >
+                <Text
+                  style={{ fontSize: 14, fontWeight: 500, color: '#202020' }}
+                >
+                  Aun no tienes chats, inicia una conversacion!
+                </Text>
+              </View>
+            )}
       </ScrollView>
     </LinearGradient>
   )

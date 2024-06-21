@@ -3,17 +3,14 @@ import { View, StyleSheet, Text, Pressable } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
 import { FontFamily, FontSize, Color, Padding, Border } from '../GlobalStyles'
-import MapView, { Marker, PROVIDER_GOOGLE,Callout } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE, Callout } from 'react-native-maps'
 
 const Lugar3 = ({ onClose }) => {
-  const [x, setX] = React.useState({latitude: 37.78825,
-    longitude: -122.4324})
-    const [markerPosition, setMarkerPosition] = React.useState(null);
-
+  const [x, setX] = React.useState({ latitude: 37.78825, longitude: -122.4324 })
+  const [markerPosition, setMarkerPosition] = React.useState(null)
 
   return (
     <View style={styles.lugar}>
-      
       <View style={styles.header}>
         <View style={[styles.searchBar]}>
           <Image
@@ -22,7 +19,7 @@ const Lugar3 = ({ onClose }) => {
             source={require('../assets/iconlylightoutlinesearch3.png')}
           />
           <View>
-            <Text style={styles.search}>{`Search `}</Text>
+            <Text style={styles.search}>{`Buscar `}</Text>
           </View>
         </View>
         <View style={styles.iconlylightsendCopyWrapper}>
@@ -33,25 +30,28 @@ const Lugar3 = ({ onClose }) => {
           />
         </View>
       </View>
-   
+
       <MapView
-          onPress={(e) => {setMarkerPosition(e.nativeEvent.coordinate);
-            console.log(e.nativeEvent.coordinate,"coo",e.currentTarget)
-          }}
-        provider={PROVIDER_GOOGLE} initialRegion={{
+        onPress={(e) => {
+          setMarkerPosition(e.nativeEvent.coordinate)
+          console.log(e.nativeEvent.coordinate, 'coo', e.currentTarget)
+        }}
+        provider={PROVIDER_GOOGLE}
+        initialRegion={{
           latitude: 37.78825,
           longitude: -122.4324,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421
         }}
-        style={{ width: "100%", height: 300 }} >
-         {markerPosition && (
-        <Marker
-          coordinate={markerPosition}
-          title="Marcador personalizado"
-          description="Ubicación seleccionada por el usuario"
-        />
-      )}
+        style={{ width: '100%', height: 300 }}
+      >
+        {markerPosition && (
+          <Marker
+            coordinate={markerPosition}
+            title="Marcador personalizado"
+            description="Ubicación seleccionada por el usuario"
+          />
+        )}
       </MapView>
       <Pressable onPress={onClose}>
         <LinearGradient
@@ -189,17 +189,17 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_11xl
   },
   lugar: {
-    flex:1,
+    flex: 1,
     width: '90%',
     position: 'absolute',
-    paddingHorizontal:20,
-    paddingTop:3,
+    paddingHorizontal: 20,
+    paddingTop: 3,
     bottom: 20,
     height: 451,
     maxWidth: '100%',
     maxHeight: '100%',
     backgroundColor: Color.white,
-    borderRadius:30
+    borderRadius: 30
   }
 })
 

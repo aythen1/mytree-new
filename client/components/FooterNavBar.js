@@ -1,6 +1,7 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
   Dimensions,
+  Keyboard,
   Modal,
   Pressable,
   TouchableWithoutFeedback,
@@ -37,8 +38,30 @@ const FooterNavBar = () => {
   const showModalAdd = () => {
     dispatch(setPanelAddFooter(!panelAddFooter))
   }
+  const [keyboardVisible, setKeyboardVisible] = useState(false)
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true)
+      }
+    )
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false)
+      }
+    )
+
+    return () => {
+      keyboardDidShowListener.remove()
+      keyboardDidHideListener.remove()
+    }
+  }, [])
   const screenWidth = Dimensions.get('screen').width
-  if (!showCamera)
+  if (!showCamera && !keyboardVisible)
     return (
       <View style={{ backgroundColor: '#f1f1f1' }}>
         <View

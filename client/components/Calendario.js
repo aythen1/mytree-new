@@ -1,10 +1,54 @@
 import React, { useEffect, useState } from 'react'
 import { View, StyleSheet } from 'react-native'
-import { Calendar } from 'react-native-calendars'
+import { Calendar, LocaleConfig } from 'react-native-calendars'
 import { Color } from '../GlobalStyles'
 
 const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
   const [selectedDates, setSelectedDates] = useState([])
+
+  LocaleConfig.locales['es'] = {
+    monthNames: [
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre'
+    ],
+    monthNamesShort: [
+      'Ene',
+      'Feb',
+      'Mar',
+      'Abr',
+      'May',
+      'Jun',
+      'Jul',
+      'Ago',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dic'
+    ],
+    dayNames: [
+      'Domingo',
+      'Lunes',
+      'Martes',
+      'Miércoles',
+      'Jueves',
+      'Viernes',
+      'Sábado'
+    ],
+    dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+    today: 'Hoy'
+  }
+
+  LocaleConfig.defaultLocale = 'es'
 
   const handleDayPress = (day) => {
     if (selectedDate === day.dateString) {
@@ -62,6 +106,7 @@ const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
           }
         }}
         theme={{
+          arrowColor: '#7ec18c',
           todayTextColor: 'black'
         }}
       />

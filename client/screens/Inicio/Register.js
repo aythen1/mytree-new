@@ -14,9 +14,9 @@ import { Path, Svg } from 'react-native-svg'
 import NameRegister from '../../components/NameRegister'
 import CheckRegister from '../../components/CheckRegister'
 import AcceptRegister from '../../components/AcceptRegister'
-import axios from 'axios';
+import axios from 'axios'
 import { BACKURL } from '../../apiBackend'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 const Register = () => {
   const navigation = useNavigation()
 
@@ -29,7 +29,6 @@ const Register = () => {
 
   const [data, setData] = useState(null)
 
-  
   const [dataToSend, setDataToSend] = useState({
     username: '',
     apellido: '',
@@ -40,9 +39,9 @@ const Register = () => {
     email: '',
     password: ''
   })
-useEffect(()=>{
-console.log(dataToSend,"dataToSend")
-},[dataToSend])
+  useEffect(() => {
+    console.log(dataToSend, 'dataToSend')
+  }, [dataToSend])
   const handleChangeText = (input) => {
     const filteredInput = input.replace(/[^0-9/]/g, '')
     let formattedInput = filteredInput
@@ -65,35 +64,32 @@ console.log(dataToSend,"dataToSend")
 
   const next = async () => {
     if (nextField < 3) {
-      console.log("1dasdasdasdsadsa")
+      console.log('1dasdasdasdsadsa')
       setNextField((prev) => prev + 1)
     } else {
       try {
-        console.log("entra aca")
+        console.log('USER POST====', dataToSend)
         const res = await axios.post(`${BACKURL}/user`, dataToSend)
-        console.log("esto es res", res)
-        console.log(res.data, "usuario nuevo")
+        console.log('esto es res', res)
+        console.log(res.data, 'usuario nuevo')
         navigation.navigate('LOGIN')
-      
-     } catch (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an error
-        console.log('Error', error.message);
+      } catch (error) {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          console.log(error.response.data)
+          console.log(error.response.status)
+          console.log(error.response.headers)
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.log(error.request)
+        } else {
+          // Something happened in setting up the request that triggered an error
+          console.log('Error', error.message)
+        }
+        console.log(error.config)
       }
-      console.log(error.config);
-     }
-
     }
   }
-  
 
   const previous = () => {
     if (nextField > 1) {
@@ -316,7 +312,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_5xl
   },
   labelled1: {
-    alignSelf: 'center',
+    alignSelf: 'center'
   },
   frameGroup: {
     marginTop: 10,
@@ -324,8 +320,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15
   },
   registroNombre: {
-    backgroundColor: Color.white
-    ,flex:1
+    backgroundColor: Color.white,
+    flex: 1
   },
   scrollViewContent: {
     flexGrow: 1,

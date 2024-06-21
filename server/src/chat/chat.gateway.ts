@@ -26,16 +26,15 @@ export class ChatGateway
   server: Server;
 
   private connectedUsers: number = 0;
-  // eslint-disable-next-line
   afterInit(server: any) {
     console.log('inicio');
   }
-  // eslint-disable-next-line
+  // eslint-disable-next-lineeeeeee
   handleConnection(client: Socket) {
     this.connectedUsers++;
     this.server.emit('users online', this.connectedUsers);
-    // console.log('users online', this.connectedUsers);
-    // console.log('Cliente conectado:', client.handshake.headers.userid);
+    console.log('users online', this.connectedUsers);
+    console.log('Cliente conectado:', client.handshake.headers.userid);
   }
 
   handleDisconnect(client: Socket) {
@@ -56,6 +55,7 @@ export class ChatGateway
       data.receiver,
       room,
       data.message
+
     );
     this.server.to(room).emit('message-server', newMessage);
     console.log('message', room);
@@ -73,6 +73,7 @@ export class ChatGateway
   @SubscribeMessage('leaveRoom')
   handleRoomLeave(client: Socket, data: { sender: string; receiver: string }) {
     const room = this.chatService.roomIdGenerator(data.sender, data.receiver);
+    //hola
     client.leave(room);
     client.emit('leaveRoom', room);
     console.log('leaveRoom', room);
