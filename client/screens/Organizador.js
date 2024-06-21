@@ -10,7 +10,8 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Keyboard
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import Etiquetar from '../components/Etiquetar'
@@ -64,7 +65,7 @@ const Organizador = () => {
   const [dataToSend, setDataToSend] = useState({
     nameUser: '',
     description: '',
-    fecha: '20/12/2024',
+    fecha: new Date(),
     photos: [],
     tags: [],
     hashtags: [],
@@ -150,6 +151,29 @@ const Organizador = () => {
     setFrameContainer2Visible(false)
   }, [])
 
+  const [keyboardVisible, setKeyboardVisible] = useState(false)
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true)
+      }
+    )
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false)
+      }
+    )
+
+    return () => {
+      keyboardDidShowListener.remove()
+      keyboardDidHideListener.remove()
+    }
+  }, [])
+
   const handleSubmit = async () => {
     const usuario = await AsyncStorage.getItem('user')
     const user = JSON.parse(usuario)
@@ -191,8 +215,9 @@ const Organizador = () => {
       start={{ x: 0, y: 0.6 }}
       end={{ x: 0, y: 1 }}
     >
-      <View
-        style={{
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
           width: '100%',
           flex: 1,
           padding: Padding.p_xl
@@ -285,6 +310,7 @@ const Organizador = () => {
                   setDataToSend({ ...dataToSend, ['description']: des })
                 }
                 value={dataToSend.description}
+                onFocus={() => setKeyboardVisible(true)}
               />
               <View style={{ marginTop: 15 }}>
                 <Text
@@ -698,36 +724,39 @@ const Organizador = () => {
             </View>
           </ScrollView>
         </View>
-        <LinearGradient
-          style={{
-            paddingVertical: Padding.p_sm,
-            backgroundColor: Color.linearBoton,
-            borderRadius: Border.br_11xl,
-            justifyContent: 'center',
-            position: 'absolute',
-            bottom: 105,
-            alignSelf: 'center',
-            width: '95%',
-            alignItems: 'center',
-            flexDirection: 'row'
-          }}
-          locations={[0, 1]}
-          colors={['#dee274', '#7ec18c']}
-        >
-          <Text
-            onPress={handleSubmit}
+        {!keyboardVisible && (
+          <LinearGradient
             style={{
-              letterSpacing: 1,
-              lineHeight: 24,
-              color: Color.white,
-              textAlign: 'center',
-              fontSize: FontSize.size_base,
-              fontFamily: FontFamily.lato
+              paddingVertical: Padding.p_sm,
+              backgroundColor: Color.linearBoton,
+              borderRadius: Border.br_11xl,
+              justifyContent: 'center',
+              position: 'absolute',
+              bottom: 105,
+              alignSelf: 'center',
+              width: '95%',
+              alignItems: 'center',
+              flexDirection: 'row'
             }}
+            locations={[0, 1]}
+            colors={['#dee274', '#7ec18c']}
           >
-            Subir
-          </Text>
-        </LinearGradient>
+            <Text
+              disabled={!libraryImage || dataToSend.description === ''}
+              onPress={handleSubmit}
+              style={{
+                letterSpacing: 1,
+                lineHeight: 24,
+                color: Color.white,
+                textAlign: 'center',
+                fontSize: FontSize.size_base,
+                fontFamily: FontFamily.lato
+              }}
+            >
+              Subir
+            </Text>
+          </LinearGradient>
+        )}
         <Modal animationType="slide" transparent visible={showEtapas}>
           <View
             style={{
@@ -871,7 +900,7 @@ const Organizador = () => {
             />
           </View>
         </Modal>
-      </View>
+      </ScrollView>
     </LinearGradient>
   )
 }

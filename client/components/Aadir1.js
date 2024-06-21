@@ -86,7 +86,7 @@ const Aadir1 = ({ setShowSelectEventTypeModal }) => {
           style={[styles.frameFlexBox]}
           onPress={() => {
             dispatch(setPanelAddFooter(false))
-            navigation.navigate('MUROALERTAS1')
+            navigation.navigate('MENSAJERA')
           }}
         >
           <View style={styles.groupParentFlexBox}>

@@ -7,10 +7,11 @@ import EventCard from './EventCard'
 import { useSelector } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const Eventos = () => {
+const Eventos = ({ search }) => {
   const navigation = useNavigation()
   const { allEvents } = useSelector((state) => state.events)
   const [user, setUser] = useState()
+  const [filteredEvents, setFilteredEvents] = useState(allEvents || [])
   useEffect(() => {
     const getUser = async () => {
       const usuario = await AsyncStorage.getItem('user')
@@ -20,6 +21,21 @@ const Eventos = () => {
     }
     getUser()
   }, [])
+
+  useEffect(() => {
+    if (search.length) {
+      const actualEvents = [...allEvents]
+      setFilteredEvents(
+        actualEvents.filter((event) =>
+          event.title.toLowerCase().includes(search.toLowerCase())
+        )
+      )
+      return
+    } else {
+      setFilteredEvents(allEvents)
+    }
+  }, [search])
+
   if (user)
     return (
       <View style={styles.frameGroup}>
@@ -57,7 +73,7 @@ const Eventos = () => {
         <CalendarCheckSVG />
       </Pressable> */}
 
-        {allEvents
+        {filteredEvents
           .filter((eve) => eve.creatorId.toString() === user.id.toString())
           .map((event) => (
             <EventCard key={event.id} event={event} />

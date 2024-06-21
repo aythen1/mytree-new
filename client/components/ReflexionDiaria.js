@@ -1,28 +1,65 @@
 import React, { useState, useCallback } from 'react'
-import { StyleSheet, View, Pressable, Text, Modal } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  Pressable,
+  Text,
+  Modal,
+  TextInput
+} from 'react-native'
 import { FontFamily, FontSize, Color, Padding, Border } from '../GlobalStyles'
 
-const ReflexionDiaria = () => {
-  return (
-    <>
-      <View style={styles.miDiarioEntradaTextoPl}>
-        <Text style={[styles.reflexinDiaria, styles.hoyLoHeFlexBox]}>
-          Reflexión Diaria
-        </Text>
-        <Text
-          style={[styles.hoyLoHe, styles.hoyLoHeFlexBox]}
-        >{`👥 Hoy lo he compartido con...
+const ReflexionDiaria = ({ editing }) => {
+  const [text, setText] = useState(
+    `👥 Hoy lo he compartido con...
 😌 Hoy me siento/nos sentimos...
 
 💖 El momento más emotivo del día ha sido...
 🙏 Lo que más agradezco/agradecemos del día de hoy...
-🧠 Lo que he aprendido/hemos aprendido hoy…`}</Text>
-
-        <View
-          style={[styles.miDiarioEntradaTextoPlItem, styles.diarioLayout]}
+🧠 Lo que he aprendido/hemos aprendido hoy…`
+  )
+  return (
+    <View
+      style={{
+        backgroundColor: Color.white,
+        width: '100%'
+      }}
+    >
+      <Text style={[styles.reflexinDiaria, styles.hoyLoHeFlexBox]}>
+        Reflexión Diaria
+      </Text>
+      {editing ? (
+        <TextInput
+          style={{
+            fontSize: FontSize.size_lg,
+            lineHeight: 27,
+            textAlign: 'left',
+            color: Color.negro,
+            marginTop: 20,
+            fontFamily: FontFamily.lato,
+            letterSpacing: 0
+          }}
+          multiline
+          value={text}
+          onChangeText={(text) => setText(text)}
         />
-      </View>
-    </>
+      ) : (
+        <Text
+          style={{
+            fontSize: FontSize.size_lg,
+            lineHeight: 27,
+            textAlign: 'left',
+            color: Color.negro,
+            marginTop: 20,
+            fontFamily: FontFamily.lato,
+            letterSpacing: 0
+          }}
+        >
+          {text}
+        </Text>
+      )}
+      <View style={[styles.miDiarioEntradaTextoPlItem, styles.diarioLayout]} />
+    </View>
   )
 }
 

@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import { Calendar } from 'react-native-calendars'
 import { Color } from '../GlobalStyles'
 
-const Calendario = ({selectedDate, setSelectedDate,dates}) => {
+const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
   const [selectedDates, setSelectedDates] = useState([])
 
   const handleDayPress = (day) => {
@@ -14,17 +14,17 @@ const Calendario = ({selectedDate, setSelectedDate,dates}) => {
     }
   }
 
-  const [markedDates, setMarkedDates] = useState({});
+  const [markedDates, setMarkedDates] = useState({})
 
   useEffect(() => {
-    const markerDates = {};
+    const markerDates = {}
     if (Array.isArray(dates)) {
-      dates.forEach(date => {
-        markerDates[date.date.slice(0,10)] = {
+      dates.forEach((date) => {
+        markerDates[date.date.slice(0, 10)] = {
           selected: true,
           customStyles: {
             container: {
-              backgroundColor: date.type === "special"? 'gray' : "lightblue",
+              backgroundColor: date.type === 'special' ? 'gray' : 'lightblue',
               width: 32,
               height: 32,
               borderRadius: 10
@@ -33,12 +33,11 @@ const Calendario = ({selectedDate, setSelectedDate,dates}) => {
               color: 'white'
             }
           }
-        };
-      });
-      setMarkedDates(markerDates);
+        }
+      })
+      setMarkedDates(markerDates)
     }
-  }, [dates]);
-
+  }, [dates])
 
   return (
     <View style={styles.container}>
@@ -61,9 +60,7 @@ const Calendario = ({selectedDate, setSelectedDate,dates}) => {
               }
             }
           }
-          
         }}
-        
         theme={{
           todayTextColor: 'black'
         }}
@@ -81,7 +78,9 @@ const Calendario = ({selectedDate, setSelectedDate,dates}) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%'
+    width: '100%',
+    height: 360,
+    marginTop: 10
   }
 })
 

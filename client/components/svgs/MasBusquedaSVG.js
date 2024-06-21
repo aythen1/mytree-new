@@ -1,11 +1,11 @@
 import React from 'react'
 import { Svg, Path } from 'react-native-svg'
 
-const MasBusquedaSVG = () => {
+const MasBusquedaSVG = ({ diary }) => {
   return (
     <Svg
-      width="35"
-      height="35"
+      width={diary ? '26' : '35'}
+      height={diary ? '26' : '35'}
       viewBox="0 0 35 35"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

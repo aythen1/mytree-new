@@ -1,13 +1,23 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { StyleSheet, View, Pressable } from 'react-native'
 import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
+import { Context } from '../context/Context'
 
 const NavMedia = () => {
-  const navigation = useNavigation()
+  const { setShowCamera } = useContext(Context)
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#B6E4C0',
+        paddingVertical: 20,
+        width: '100%'
+      }}
+    >
       <Image
         source={require('../assets/cam-media.png')}
         style={{
@@ -16,7 +26,12 @@ const NavMedia = () => {
           marginRight: 23
         }}
       />
-      <Pressable onPress={() => navigation.navigate('MIDIARIOENTRADAVIDEO')}>
+      <Pressable
+        onPress={() => {
+          console.log('SETTING SHOWCAMERA TO TRUE')
+          setShowCamera(true)
+        }}
+      >
         <Image
           source={require('../assets/Camera.png')}
           style={{

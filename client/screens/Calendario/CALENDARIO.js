@@ -1,9 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  Text,
+  Pressable,
+  ScrollView,
+  TextInput,
+  Dimensions
+} from 'react-native'
 import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
-import { Color, FontSize, Padding } from '../../GlobalStyles'
+import {
+  Border,
+  Color,
+  FontFamily,
+  FontSize,
+  Padding
+} from '../../GlobalStyles'
 import { setPanel } from '../../redux/slices/panel.slices'
 import Calendario from '../../components/Calendario'
 import BarraBusqueda from '../../components/BarraBusqueda'
@@ -11,10 +25,13 @@ import Fechas from '../../components/Fechas'
 import Eventos from '../../components/Eventos'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axiosInstance from '../../apiBackend'
+import MasBusquedaSVG from '../../components/svgs/MasBusquedaSVG'
+import { Context } from '../../context/Context'
 
 const CALENDARIO = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
+  const { setShowSelectEventTypeModal } = useContext(Context)
 
   const { showPanel } = useSelector((state) => state.panel)
 
@@ -22,6 +39,7 @@ const CALENDARIO = () => {
   const [selectedDate, setSelectedDate] = useState('')
   const [user, setUser] = useState({})
   const [dates, setDates] = useState([])
+  const [search, setSearch] = useState('')
 
   const handleItemPress = (item) => {
     setSelectedItem(item)
@@ -61,9 +79,15 @@ const CALENDARIO = () => {
     }
     return null
   }
+
   return (
     <ScrollView
-      style={styles.calendario3}
+      style={{
+        width: '100%',
+        flex: 1,
+        backgroundColor: Color.white,
+        padding: Padding.p_xl
+      }}
       contentContainerStyle={styles.scrollViewContent}
       showsVerticalScrollIndicator={false}
     >
@@ -85,8 +109,65 @@ const CALENDARIO = () => {
         />
       </View>
 
-      <View style={styles.ionmenuParent}>
+      {/* <View style={{ flexDirection: 'row' }}>
         <BarraBusqueda navigate={navigation.navigate} route={getRoute()} />
+      </View> */}
+      {/* <BarraBusqueda navigate={navigation.navigate} route={getRoute()} /> */}
+
+      <View
+        style={{
+          alignItems: 'center',
+          flexDirection: 'row',
+          width: Dimensions.get('screen').width * 0.9,
+          backgroundColor: Color.white,
+          marginTop: 20,
+          justifyContent: 'space-between'
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: Color.fAFAFA,
+            paddingHorizontal: Padding.p_sm,
+            paddingVertical: 3.5,
+            borderRadius: Border.br_3xs,
+            width: '85%',
+            flexDirection: 'row',
+            alignItems: 'center'
+          }}
+        >
+          <Image
+            style={{ width: 20, height: 20 }}
+            contentFit="cover"
+            source={require('../../assets/iconlylightoutlinesearch4.png')}
+          />
+          <View
+            style={{
+              marginLeft: 6,
+              flexDirection: 'row',
+              flex: 1
+            }}
+          >
+            <TextInput
+              style={{
+                fontSize: FontSize.size_sm,
+                lineHeight: 21,
+                fontStyle: 'italic',
+                fontWeight: '200',
+                fontFamily: FontFamily.nunito,
+                color: Color.textPlaceholder,
+                letterSpacing: 0,
+                textAlign: 'left'
+              }}
+              value={search}
+              onChangeText={(text) => setSearch(text)}
+              placeholder="Search"
+              placeholderTextColor={Color.textPlaceholder}
+            />
+          </View>
+        </View>
+        <Pressable onPress={() => setShowSelectEventTypeModal(true)}>
+          <MasBusquedaSVG />
+        </Pressable>
       </View>
 
       <Calendario
@@ -99,7 +180,7 @@ const CALENDARIO = () => {
           <Pressable
             style={[
               styles.fechasContainer,
-              selectedItem === 'eventos' && styles.eventosContainer
+              selectedItem === 'eventos' && styles.fechasContainerSeleccion
             ]}
             onPress={() => {
               handleItemPress('fechas')
@@ -117,7 +198,7 @@ const CALENDARIO = () => {
           <Pressable
             style={[
               styles.eventosContainer,
-              selectedItem === 'eventos' && styles.fechasContainer
+              selectedItem === 'eventos' && styles.eventosContainerSeleccion
             ]}
             onPress={() => {
               handleItemPress('eventos')
@@ -137,7 +218,7 @@ const CALENDARIO = () => {
       {selectedItem === 'fechas' ? (
         <Fechas user={user} dates={dates} selectedDate={selectedDate} />
       ) : (
-        <Eventos dates={dates} selectedDate={selectedDate} />
+        <Eventos search={search} dates={dates} selectedDate={selectedDate} />
       )}
     </ScrollView>
   )
@@ -210,8 +291,24 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 15,
     borderBottomLeftRadius: 15
   },
+  fechasContainerSeleccion: {
+    backgroundColor: Color.fAFAFA,
+    width: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopLeftRadius: 15,
+    borderBottomLeftRadius: 15
+  },
   eventosContainer: {
     backgroundColor: Color.fAFAFA,
+    width: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopRightRadius: 15,
+    borderBottomRightRadius: 15
+  },
+  eventosContainerSeleccion: {
+    backgroundColor: '#b7e4c0',
     width: '50%',
     alignItems: 'center',
     justifyContent: 'center',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 
 import { Image } from 'expo-image'
@@ -11,65 +11,81 @@ import DesafiosSVG from './svgs/DesafiosSVG'
 import BurbujaAnecdotaSVG from './svgs/BurbujaAnecdotaSVG'
 import AvionSVG from './svgs/AviosSVG'
 import EditarSVG from './svgs/EditarSVG'
+import { Context } from '../context/Context'
 
-const NavBarDiario = ({ setIsSection, isSection }) => {
+const NavBarDiario = () => {
   const navigation = useNavigation()
-  const [clickColor, setClickColor] = useState('')
+  const { selectedSection, setSelectedSection } = useContext(Context)
 
   return (
-    <View style={styles.miDiarioEntradaTextoPl}>
-      <View style={[styles.frameGroup, styles.frameFlexBox]}>
+    <View
+      style={{
+        backgroundColor: Color.white,
+        width: '100%',
+        height: 60,
+        marginBottom: 20
+      }}
+    >
+      <View
+        style={{
+          backgroundColor: Color.colorHoneydew_100,
+          height: 50,
+          paddingHorizontal: Padding.p_xs,
+          justifyContent: 'space-between',
+          flexDirection: 'row',
+          width: '100%',
+          left: 0,
+          top: 20,
+          position: 'absolute',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}
+      >
         <Pressable
-          style={
-            ([styles.frameChild, styles.frameLayout],
-            {
-              backgroundColor:
-                clickColor === 'nube'
-                  ? Color.colorLavenderblush
-                  : Color.secundario,
-              padding: 5,
-              borderRadius: 4
-            })
-          }
+          style={{
+            backgroundColor:
+              selectedSection === 'nube'
+                ? Color.colorLavenderblush
+                : Color.secundario,
+            width: 40,
+            height: 40,
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: 4
+          }}
           onPress={() => {
-            setClickColor('nube')
-            setIsSection('reflexion')
+            setSelectedSection('nube')
           }}
         >
-          <NubeSVG onColor={'#FF5CE8'} clickColor={clickColor} />
+          <NubeSVG onColor={'#FF5CE8'} clickColor={selectedSection} />
         </Pressable>
         <Pressable
           onPress={() => {
-            setClickColor('logros')
-            setIsSection('logros')
+            setSelectedSection('logros')
           }}
         >
           <View
             style={{
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              overflow: 'hidden',
               backgroundColor:
-                clickColor === 'logros'
+                selectedSection === 'logros'
                   ? Color.colorLavender_100
                   : Color.secundario,
-              padding: 5,
-              borderRadius: 4,
-              zIndex: 0,
+              width: 40,
               height: 40,
-              width: 40
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 4
             }}
           />
           <LogrosSVG
             styles={[styles.vectorIcon1, styles.vectorIconPosition1]}
             onColor={'#6342E8'}
-            clickColor={clickColor}
+            clickColor={selectedSection}
           />
         </Pressable>
         <Pressable
           onPress={() => {
-            setClickColor('desafios')
-            setIsSection('desafios')
+            setSelectedSection('desafios')
           }}
         >
           <View
@@ -78,7 +94,7 @@ const NavBarDiario = ({ setIsSection, isSection }) => {
               alignItems: 'center',
               overflow: 'hidden',
               backgroundColor:
-                clickColor === 'desafios'
+                selectedSection === 'desafios'
                   ? Color.colorLightcyan
                   : Color.secundario,
               padding: 5,
@@ -91,14 +107,13 @@ const NavBarDiario = ({ setIsSection, isSection }) => {
           <DesafiosSVG
             styles={[styles.vectorIcon2, styles.vectorIconPosition]}
             onColor={'#53D5FF'}
-            clickColor={clickColor}
+            clickColor={selectedSection}
           />
         </Pressable>
         <Pressable
           style={styles.rectangleParent}
           onPress={() => {
-            setClickColor('risas')
-            setIsSection('risas')
+            setSelectedSection('risas')
           }}
         >
           <View
@@ -107,7 +122,7 @@ const NavBarDiario = ({ setIsSection, isSection }) => {
               alignItems: 'center',
               overflow: 'hidden',
               backgroundColor:
-                clickColor === 'risas'
+                selectedSection === 'risas'
                   ? Color.colorHoneydew_200
                   : Color.secundario,
               padding: 5,
@@ -120,7 +135,7 @@ const NavBarDiario = ({ setIsSection, isSection }) => {
           <BurbujaAnecdotaSVG
             styles={[styles.vectorIcon3, styles.vectorIconPosition]}
             onColor={'#39FD9E'}
-            clickColor={clickColor}
+            clickColor={selectedSection}
           />
         </Pressable>
         <Pressable
@@ -129,7 +144,9 @@ const NavBarDiario = ({ setIsSection, isSection }) => {
             alignItems: 'center',
             overflow: 'hidden',
             backgroundColor:
-              clickColor === 'mundo' ? Color.colorOldlace : Color.secundario,
+              selectedSection === 'mundo'
+                ? Color.colorOldlace
+                : Color.secundario,
             padding: 5,
             borderRadius: 4,
             zIndex: 0,
@@ -137,21 +154,19 @@ const NavBarDiario = ({ setIsSection, isSection }) => {
             width: 40
           }}
           onPress={() => {
-            setClickColor('mundo')
-            setIsSection('mundo')
+            setSelectedSection('mundo')
           }}
         >
           <AvionSVG
             styles={styles.vectorIcon4}
             onColor={'#FFD02F'}
-            clickColor={clickColor}
+            clickColor={selectedSection}
           />
         </Pressable>
         <Pressable
           style={styles.rectangleParent}
           onPress={() => {
-            setClickColor('personalizada')
-            setIsSection('personalizada')
+            setSelectedSection('personalizada')
           }}
         >
           <View
@@ -160,7 +175,7 @@ const NavBarDiario = ({ setIsSection, isSection }) => {
               alignItems: 'center',
               overflow: 'hidden',
               backgroundColor:
-                clickColor === 'personalizada'
+                selectedSection === 'personalizada'
                   ? Color.colorAntiquewhite
                   : Color.secundario,
               padding: 5,
@@ -173,7 +188,7 @@ const NavBarDiario = ({ setIsSection, isSection }) => {
           <EditarSVG
             styles={[styles.vectorIcon5, styles.vectorIconPosition1]}
             onColor={'#FF9860'}
-            clickColor={clickColor}
+            clickColor={selectedSection}
           />
         </Pressable>
       </View>
@@ -230,7 +245,7 @@ const styles = StyleSheet.create({
   },
   frameLayout: {
     zIndex: 0,
-    height: 36,
+    height: 40,
     width: 40,
     backgroundColor: Color.secundario,
     borderRadius: Border.br_8xs
@@ -344,7 +359,7 @@ const styles = StyleSheet.create({
     height: 24
   },
   rectangleParent: {
-    height: 36,
+    height: 40,
     width: 40
   },
   vectorIcon4: {

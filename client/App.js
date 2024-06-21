@@ -78,7 +78,7 @@ import * as Linking from 'expo-linking'
 import OpenedChat from './screens/Mensajes/OpenedChat'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import DrawerContent from './components/DrawerContent'
-import { NavigationContainer } from '@react-navigation/native'
+import { NavigationContainer, useRoute } from '@react-navigation/native'
 
 const Drawer = createDrawerNavigator()
 const Stack = createNativeStackNavigator()
@@ -91,6 +91,7 @@ const linking = {
 
 const App = () => {
   const navigationRef = useRef()
+  const [onConv, setOnConv] = useState(false)
   const [isFooterShow, setIsFooterShow] = useState(null)
   const loadApp = async () => {
     await loadFonts()
@@ -110,7 +111,7 @@ const App = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
       <StatusBar
-        hidden={!isFooterShow}
+        hidden={!isFooterShow && !onConv}
         barStyle={'dark-content'}
         backgroundColor="#fff"
       />
@@ -130,6 +131,7 @@ const App = () => {
                   <MainStackNavigator
                     {...props}
                     setIsFooterShow={setIsFooterShow}
+                    setOnConv={setOnConv}
                   />
                 )}
               </Drawer.Screen>
@@ -154,6 +156,7 @@ const MainStackNavigator = ({ setIsFooterShow }) => {
             route.name !== 'Onboarding' &&
             route.name !== 'Onboarding1' &&
             route.name !== 'Onboarding2' &&
+            route.name !== 'OpenedChat' &&
             route.name !== 'LOGIN'
         )
       })}

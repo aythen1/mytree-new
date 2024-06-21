@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native'
 import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
@@ -10,10 +10,15 @@ import HeaderIcons from '../../components/HeaderIcons'
 import LupaSVG from '../../components/svgs/LupaSVG'
 import SettingMuroSVG from '../../components/svgs/SettingMuroSVG'
 import CamaraSVG from '../../components/svgs/CamaraSVG'
+import { LinearGradient } from 'expo-linear-gradient'
+import MasBusquedaSVG from '../../components/svgs/MasBusquedaSVG'
+import { Context } from '../../context/Context'
 
 const MIDIARIOPANTALLAPERSONAL = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
+  const { setShowSelectEventTypeModal, selectedSection, setSelectedSection } =
+    useContext(Context)
 
   const { showPanel } = useSelector((state) => state.panel)
 
@@ -22,14 +27,113 @@ const MIDIARIOPANTALLAPERSONAL = () => {
   }
 
   return (
-    <>
+    <LinearGradient
+      colors={['#fff', '#f1f1f1']}
+      style={{ flex: 1, paddingBottom: 70 }}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+    >
+      <View
+        style={{
+          paddingBottom: 20,
+          backgroundColor: '#fff',
+          shadowOpacity: 1,
+          elevation: 5,
+          shadowRadius: 15,
+          shadowOffset: {
+            width: 10,
+            height: 10
+          },
+          shadowColor: 'black'
+        }}
+      >
+        <View
+          style={{
+            marginTop: 10,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: 15
+          }}
+        >
+          <Pressable onPress={() => navigation.navigate('Muro')}>
+            <Pressable
+              style={{
+                flexDirection: 'row',
+                gap: 5,
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+              // onPress={() => navigation.goBack()}
+            >
+              {/* <Image
+                style={{
+                  width: 32 * 0.9,
+                  height: 19 * 0.9,
+                  transform: 'rotate(180deg)'
+                }}
+                resizeMode="contain"
+                source={require('../../assets/arrow1.png')}
+              /> */}
+              <Image
+                style={styles.image6Icon}
+                contentFit="cover"
+                source={require('../../assets/image-6.png')}
+              />
+            </Pressable>
+          </Pressable>
+          <View style={styles.iconlylightOutlinesearchParent}>
+            <HeaderIcons
+              icons={[
+                <Pressable
+                  key={1}
+                  onPress={() => navigation.navigate('Busqueda')}
+                >
+                  <LupaSVG />
+                </Pressable>,
+                <Pressable
+                  key={2}
+                  onPress={() => navigation.navigate('MIDIARIOENTRADATEXTOPL7')}
+                >
+                  <Image
+                    style={{
+                      width: 25,
+                      height: 25,
+                      marginRight: 12,
+                      marginLeft: 4
+                    }}
+                    resizeMode="contain"
+                    source={require('../../assets/document12.png')}
+                  />
+                </Pressable>,
+                <SettingMuroSVG key={3} isNavigation={'PerfilAjustes'} />
+
+                // <MasBusquedaSVG diary={true} />
+              ]}
+            />
+          </View>
+        </View>
+        <View style={styles.frameParent12}>
+          <Pressable onPress={() => navigation.openDrawer()}>
+            <Image
+              style={[styles.ionmenuIcon, styles.ionmenuIconLayout]}
+              contentFit="cover"
+              source={require('../../assets/ionmenu2.png')}
+            />
+          </Pressable>
+          <Text style={[styles.miDiario, styles.textTypo]}>
+            Diario Familiar
+          </Text>
+        </View>
+      </View>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 45 }}
-        style={{ flex: 1 }}
+        contentContainerStyle={{
+          paddingHorizontal: 15,
+          paddingTop: 0
+        }}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.miDiarioPantallaPersonal}>
-          <View
+          {/* <View
             style={{
               marginTop: 30,
               flexDirection: 'row',
@@ -67,12 +171,17 @@ const MIDIARIOPANTALLAPERSONAL = () => {
             <Text style={[styles.miDiario, styles.textTypo]}>
               Diario Familiar
             </Text>
-          </View>
+          </View> */}
 
-          <View>
+          <View
+            style={{ paddingHorizontal: 10, backgroundColor: 'transparent' }}
+          >
             <Pressable
               style={styles.rectangleGroup}
-              onPress={() => navigation.navigate('MIDIARIOENTRADATEXTOPL7')}
+              onPress={() => {
+                setSelectedSection('nube')
+                navigation.navigate('MIDIARIOENTRADATEXTOPL7')
+              }}
             >
               <View style={[styles.frameContainer]}>
                 <View>
@@ -97,7 +206,10 @@ const MIDIARIOPANTALLAPERSONAL = () => {
 
             <Pressable
               style={styles.rectangleGroup2}
-              onPress={() => navigation.navigate('MIDIARIOENTRADATEXTOPL7')}
+              onPress={() => {
+                setSelectedSection('logros')
+                navigation.navigate('MIDIARIOENTRADATEXTOPL7')
+              }}
             >
               <View style={[styles.frameContainer]}>
                 <View>
@@ -122,7 +234,10 @@ const MIDIARIOPANTALLAPERSONAL = () => {
 
             <Pressable
               style={styles.rectangleGroup3}
-              onPress={() => navigation.navigate('MIDIARIOENTRADATEXTOPL7')}
+              onPress={() => {
+                setSelectedSection('desafios')
+                navigation.navigate('MIDIARIOENTRADATEXTOPL7')
+              }}
             >
               <View style={[styles.frameContainer]}>
                 <View>
@@ -147,7 +262,10 @@ const MIDIARIOPANTALLAPERSONAL = () => {
 
             <Pressable
               style={styles.rectangleGroup4}
-              onPress={() => navigation.navigate('MIDIARIOENTRADATEXTOPL7')}
+              onPress={() => {
+                setSelectedSection('risas')
+                navigation.navigate('MIDIARIOENTRADATEXTOPL7')
+              }}
             >
               <View style={[styles.frameContainer]}>
                 <View>
@@ -172,7 +290,10 @@ const MIDIARIOPANTALLAPERSONAL = () => {
 
             <Pressable
               style={styles.rectangleGroup5}
-              onPress={() => navigation.navigate('MIDIARIOENTRADATEXTOPL7')}
+              onPress={() => {
+                setSelectedSection('mundo')
+                navigation.navigate('MIDIARIOENTRADATEXTOPL7')
+              }}
             >
               <View style={[styles.frameContainer]}>
                 <View>
@@ -199,7 +320,7 @@ const MIDIARIOPANTALLAPERSONAL = () => {
           <Papers />
         </View>
       </ScrollView>
-    </>
+    </LinearGradient>
   )
 }
 
@@ -230,37 +351,47 @@ const styles = StyleSheet.create({
   },
   rectangleGroup: {
     marginTop: 20,
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     height: 60,
     justifyContent: 'center',
+    borderRadius: 5,
     backgroundColor: Color.colorLavenderblush
   },
   rectangleGroup2: {
     marginTop: 20,
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     height: 60,
     justifyContent: 'center',
+    borderRadius: 5,
     backgroundColor: Color.colorLavender_100
   },
   rectangleGroup3: {
     marginTop: 20,
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     height: 60,
     justifyContent: 'center',
+    borderRadius: 5,
     backgroundColor: Color.colorLightcyan
   },
   rectangleGroup4: {
     marginTop: 20,
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     height: 60,
     justifyContent: 'center',
+    borderRadius: 5,
     backgroundColor: Color.colorOldlace
   },
   rectangleGroup5: {
     marginTop: 20,
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     height: 60,
     justifyContent: 'center',
+    borderRadius: 5,
     backgroundColor: Color.colorAntiquewhite
   },
   vectorIcon1: {
@@ -309,7 +440,7 @@ const styles = StyleSheet.create({
   miDiarioPantallaPersonal: {
     paddingBottom: 50,
     width: '100%',
-    backgroundColor: Color.white
+    backgroundColor: 'transparent'
   }
 })
 
