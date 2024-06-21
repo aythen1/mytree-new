@@ -14,7 +14,7 @@ export class MessageEntity {
   id: string;
 
   @Column({ nullable: true, default: null })
-  createAt: Date | null;
+  createdAt: Date | null;
   
   @Column({ nullable: true, default: null })
   updateAt: Date | null;
