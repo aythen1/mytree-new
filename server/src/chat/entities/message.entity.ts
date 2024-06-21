@@ -12,6 +12,12 @@ export class MessageEntity {
 
   @PrimaryColumn()
   id: string;
+
+  @Column()
+  createAt: Date;
+  
+  @Column()
+  updateAt: Date;
   
   @Column()
   senderId: string; // El ID del remitente del mensaje
