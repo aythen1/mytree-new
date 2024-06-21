@@ -39,6 +39,16 @@ export const ContextProvider = ({ children }) => {
   const [selectedComment, setSelectedComment] = useState()
   const [selectedSection, setSelectedSection] = useState('nube')
 
+  const handleAddDiary = (category, date) => {
+    console.log(
+      'Agregando nuevo diario en categoria',
+      category,
+      'con fecha',
+      date,
+      '...'
+    )
+  }
+
   const getUser = async () => {
     const usuario = await AsyncStorage.getItem('user')
     const user = JSON.parse(usuario)
@@ -224,90 +234,91 @@ export const ContextProvider = ({ children }) => {
     }
   }
 
-  const getUsersMessages = () => {
-    const getConvMessages = async (user) => {
-      try {
-        const { data } = await axiosInstance.get(
-          `chat/room?limit=${10}&senderId=${userData.id}&receiverId=${user.id}`
-        )
-        console.log('data from chat with ', user.id, data)
-        const filterByDelete = data?.filter((message) => {
-          const senderOrReceiver =
-            message.senderId.toString() === userData.id.toString()
-              ? 'sender'
-              : 'receiver'
-          if (senderOrReceiver === 'sender') {
-            if (message.senderDelete === true) {
-              return false
-            }
-            return true
-          }
-          if (senderOrReceiver === 'receiver') {
-            if (message.receiverDelete === true) {
-              return false
-            }
-            return true
-          }
-        })
-        return filterByDelete
-      } catch (error) {
-        console.error('Error fetching data:', error)
-        return []
-      }
-    }
-    Promise.all(
-      allUsers
-        ?.filter((user) => user?.id !== userData.id)
-        ?.map(async (user) => ({
-          user,
-          data: await getConvMessages(user)
-        }))
-    )
-      .then((filteredUsers) => {
-        const usersWithMessages = filteredUsers?.filter(
-          (user) => user?.data && user?.data.length > 0
-        )
-
-        const sortedUsersWithMessages = usersWithMessages?.sort(
-          (a, b) =>
-            new Date(b.data[0].createdAt) - new Date(a.data[0].createdAt)
-        )
-
-        setUsersWithMessages(sortedUsersWithMessages?.map(({ user }) => user))
-      })
-      .catch((error) => {
-        console.error('Error fetching messages for users:', error)
-      })
-  }
-
-  // const getUsersMessages = async () => {
-
-  //   console.log('userData', userData)
-  //   const { data } = await axiosInstance.post('chat/chats', {
-  //     userId: userData?.id
-  //   })
-  //   const convs = Object.keys(data)
-  //   const notReaded = convs
-  //     .map(
-  //       (conv) =>
-  //         data[conv].filter(
-  //           (message) =>
-  //             message.senderId !== userData.id && message.isReaded === false
-  //         ).length
-  //     )
-  //     .reduce((acc, curr) => acc + curr, 0)
-  //   setNotReaded(notReaded)
-  //   if (Object.keys(data).length > 0) {
-  //     const finalInfo = Object.keys(data).map((key) => {
-  //       const otherUserId = key
-  //         .split('_')
-  //         .filter((singleId) => singleId !== userData.id)[0]
-  //       const userData = allUsers.filter((user) => user.id === otherUserId)[0]
-  //       return { room: key, ...userData }
-  //     })
-  //     setUsersWithMessages(finalInfo)
+  // const getUsersMessages = () => {
+  //   const getConvMessages = async (user) => {
+  //     try {
+  //       const { data } = await axiosInstance.get(
+  //         `chat/room?limit=${10}&senderId=${userData.id}&receiverId=${user.id}`
+  //       )
+  //       console.log('data from chat with ', user.id, data)
+  //       const filterByDelete = data?.filter((message) => {
+  //         const senderOrReceiver =
+  //           message.senderId.toString() === userData.id.toString()
+  //             ? 'sender'
+  //             : 'receiver'
+  //         if (senderOrReceiver === 'sender') {
+  //           if (message.senderDelete === true) {
+  //             return false
+  //           }
+  //           return true
+  //         }
+  //         if (senderOrReceiver === 'receiver') {
+  //           if (message.receiverDelete === true) {
+  //             return false
+  //           }
+  //           return true
+  //         }
+  //       })
+  //       return filterByDelete
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error)
+  //       return []
+  //     }
   //   }
+  //   Promise.all(
+  //     allUsers
+  //       ?.filter((user) => user?.id !== userData.id)
+  //       ?.map(async (user) => ({
+  //         user,
+  //         data: await getConvMessages(user)
+  //       }))
+  //   )
+  //     .then((filteredUsers) => {
+  //       const usersWithMessages = filteredUsers?.filter(
+  //         (user) => user?.data && user?.data.length > 0
+  //       )
+
+  //       const sortedUsersWithMessages = usersWithMessages?.sort(
+  //         (a, b) =>
+  //           new Date(b.data[0].createdAt) - new Date(a.data[0].createdAt)
+  //       )
+
+  //       setUsersWithMessages(sortedUsersWithMessages?.map(({ user }) => user))
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error fetching messages for users:', error)
+  //     })
   // }
+
+  const [editingDiary, setEditingDiary] = useState()
+
+  const getUsersMessages = async () => {
+    console.log('userData', userData)
+    const { data } = await axiosInstance.post('chat/chats', {
+      userId: userData?.id
+    })
+    const convs = Object.keys(data)
+    const notReaded = convs
+      .map(
+        (conv) =>
+          data[conv].filter(
+            (message) =>
+              message.senderId !== userData.id && message.isReaded === false
+          ).length
+      )
+      .reduce((acc, curr) => acc + curr, 0)
+    setNotReaded(notReaded)
+    if (Object.keys(data).length > 0) {
+      const finalInfo = Object.keys(data).map((key) => {
+        const otherUserId = key
+          .split('_')
+          .filter((singleId) => singleId !== userData.id)[0]
+        const userData = allUsers.filter((user) => user.id === otherUserId)[0]
+        return { room: key, ...userData }
+      })
+      setUsersWithMessages(finalInfo)
+    }
+  }
 
   const socket = io(
     'http://6f651255-2a5d-4271-a8c7-35730a2de342.pub.instances.scw.cloud:3010',
@@ -362,6 +373,11 @@ export const ContextProvider = ({ children }) => {
 
   const sendMessage = (message, sender, receiver) => {
     console.log('=============SENDING MESSAGE=============')
+    console.log('sending message', {
+      message,
+      sender,
+      receiver
+    })
     socket.emit('message', { message, sender, receiver })
   }
 
@@ -403,6 +419,8 @@ export const ContextProvider = ({ children }) => {
         setSelectedRelationShip,
         selectedUserToInvite,
         setSelectedUserToInvite,
+        editingDiary,
+        setEditingDiary,
         setSelectedHashtags,
         setSelectedPostTags,
         showHashtagsModal,
@@ -431,6 +449,7 @@ export const ContextProvider = ({ children }) => {
         setShowCommentsModal,
         provisoryProfileImage,
         setProvisoryProfileImage,
+        handleAddDiary,
         userData,
         selectedPost,
         setSelectedPost,

@@ -42,17 +42,17 @@ const OpenedChat = () => {
   } = useContext(Context)
 
   const handleSendMessage = () => {
-    sendMessage(message, userData.id, route.params.receiverId)
-    setMessage()
+    sendMessage(message, userData?.id, route.params.receiverId)
+    setMessage('')
   }
 
   useEffect(() => {
     setSelectedUserDetails(
-      allUsers.filter((user) => user.id === route.params.receiverId)[0]
+      allUsers.filter((user) => user?.id === route.params.receiverId)[0]
     )
     console.log(
       'userData',
-      allUsers.filter((user) => user.id === route.params.receiverId)[0]
+      allUsers.filter((user) => user?.id === route.params.receiverId)[0]
     )
   }, [])
 
@@ -60,29 +60,31 @@ const OpenedChat = () => {
     console.log('allMessages changed =====', allMessages)
   }, [allMessages])
   useEffect(() => {
-    joinRoom(userData.id, route.params.receiverId)
+    joinRoom(userData?.id, route.params.receiverId)
     dispatch(
       getChatHistory({
-        sender: userData.id,
+        sender: userData?.id,
         receiver: route.params.receiverId
       })
     )
     return () => {
       dispatch(emptyAllMessages())
-      leaveRoom(userData.id, route.params.receiverId)
+      leaveRoom(userData?.id, route.params.receiverId)
     }
   }, [])
 
   useEffect(() => {
+    console.log('allMessages', allMessages)
     if (allMessages && allMessages.length > 0) {
+      console.log('allMessages', allMessages)
       const messagesToSetReaded = allMessages?.filter(
         (message) =>
-          message.senderId.toString() !== userData.id.toString() &&
+          message.senderId.toString() !== userData?.id.toString() &&
           message.isReaded === false
       )
       // console.log('messagesToSetReaded: ', messagesToSetReaded)
       messagesToSetReaded.forEach((message) => {
-        axiosInstance.put(`chat/readed/${message.id}`)
+        axiosInstance.put(`chat/readed/${message?.id}`)
         dispatch(setAllConversationMessagesToRead())
       })
     }
@@ -254,10 +256,10 @@ const OpenedChat = () => {
           {allMessages?.map((chat) => (
             <SingleMessage
               hour={getTimeFromDate(chat.createdAt)}
-              key={chat.id}
-              text={chat.message}
-              isMy={chat.senderId.toString() === userData.id.toString()}
-              read={chat.isReaded}
+              key={chat?.id}
+              text={chat?.message}
+              isMy={chat?.senderId.toString() === userData?.id.toString()}
+              read={chat?.isReaded}
             />
           ))}
         </View>

@@ -90,6 +90,7 @@ const Organizador = () => {
   const [buttonContainer1Visible, setButtonContainer1Visible] = useState(false)
   const [frameContainer5Visible, setFrameContainer5Visible] = useState(false)
   const [showPrivacidad, setShowPrivacidad] = useState(false)
+  const [selectedDate, setSelectedDate] = useState()
 
   const closeSubmit = () => {
     setSubmit(false)
@@ -183,7 +184,7 @@ const Organizador = () => {
       finalData.tags = taggedUsers
       finalData.hashtags = selectedHashtags
       finalData.userId = user.id
-      finalData.fecha = new Date()
+      finalData.fecha = selectedDate || new Date()
       finalData.nameUser = user.username
       finalData.photos = [libraryImage]
       finalData.description = dataToSend.description
@@ -845,6 +846,8 @@ const Organizador = () => {
             <PopUpCalendario
               setButtonContainer2Visible={() => {}}
               setCalendario={setCalendario}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
             />
           </View>
         </Modal>

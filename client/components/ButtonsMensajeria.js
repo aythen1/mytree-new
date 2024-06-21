@@ -10,11 +10,11 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { useNavigation } from '@react-navigation/native'
 import { Color, FontFamily, FontSize, Border } from '../GlobalStyles'
 
-const ButtonsMensajeria = () => {
+const ButtonsMensajeria = ({ selectedFilter, setSelectedFilter }) => {
   const navigation = useNavigation()
 
   const filterMessagesBy = (filter) => {
-    console.log('Filtering messages by:', filter)
+    setSelectedFilter(filter)
   }
 
   return (
@@ -41,19 +41,30 @@ const ButtonsMensajeria = () => {
               locations={[0, 1]}
               colors={['#dee274', '#7ec18c']}
             >
-              <Text
+              <View
                 style={{
-                  color: Color.white,
-                  textAlign: 'center',
-                  lineHeight: 21,
-                  fontSize: FontSize.size_sm,
-                  fontWeight: '700',
-                  fontFamily: FontFamily.lato,
-                  letterSpacing: 0
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: 46,
+                  width: 98,
+                  borderRadius: 25,
+                  backgroundColor:
+                    selectedFilter === 'All' ? 'transparent' : 'white'
                 }}
               >
-                TODOS
-              </Text>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    lineHeight: 21,
+                    color: selectedFilter === 'All' ? '#fff' : '#7ec18c',
+                    fontSize: FontSize.size_sm,
+                    fontFamily: FontFamily.lato,
+                    letterSpacing: 0
+                  }}
+                >
+                  TODOS
+                </Text>
+              </View>
             </LinearGradient>
           </Pressable>
           <Pressable onPress={() => filterMessagesBy('Family')}>
@@ -67,7 +78,7 @@ const ButtonsMensajeria = () => {
                 zIndex: 0
               }}
               locations={[0, 1]}
-              colors={['#7ec18c', '#dee274']}
+              colors={['#dee274', '#7ec18c']}
             >
               <View
                 style={{
@@ -76,14 +87,15 @@ const ButtonsMensajeria = () => {
                   height: 46,
                   width: 98,
                   borderRadius: 25,
-                  backgroundColor: 'white'
+                  backgroundColor:
+                    selectedFilter === 'Family' ? 'transparent' : 'white'
                 }}
               >
                 <Text
                   style={{
                     textAlign: 'center',
                     lineHeight: 21,
-                    color: '#7ec18c',
+                    color: selectedFilter === 'Family' ? '#fff' : '#7ec18c',
                     fontSize: FontSize.size_sm,
                     fontFamily: FontFamily.lato,
                     letterSpacing: 0
@@ -105,7 +117,7 @@ const ButtonsMensajeria = () => {
                 zIndex: 0
               }}
               locations={[0, 1]}
-              colors={['#7ec18c', '#dee274']}
+              colors={['#dee274', '#7ec18c']}
             >
               <View
                 style={{
@@ -114,14 +126,15 @@ const ButtonsMensajeria = () => {
                   height: 46,
                   width: 98,
                   borderRadius: 25,
-                  backgroundColor: 'white'
+                  backgroundColor:
+                    selectedFilter === 'Friends' ? 'transparent' : 'white'
                 }}
               >
                 <Text
                   style={{
                     textAlign: 'center',
                     lineHeight: 21,
-                    color: '#7ec18c',
+                    color: selectedFilter === 'Friends' ? '#fff' : '#7ec18c',
                     fontSize: FontSize.size_sm,
                     fontFamily: FontFamily.lato,
                     letterSpacing: 0
@@ -143,7 +156,7 @@ const ButtonsMensajeria = () => {
                 zIndex: 0
               }}
               locations={[0, 1]}
-              colors={['#7ec18c', '#dee274']}
+              colors={['#dee274', '#7ec18c']}
             >
               <View
                 style={{
@@ -152,14 +165,15 @@ const ButtonsMensajeria = () => {
                   height: 46,
                   width: 98,
                   borderRadius: 25,
-                  backgroundColor: 'white'
+                  backgroundColor:
+                    selectedFilter === 'Groups' ? 'transparent' : 'white'
                 }}
               >
                 <Text
                   style={{
                     textAlign: 'center',
                     lineHeight: 21,
-                    color: '#7ec18c',
+                    color: selectedFilter === 'Groups' ? '#fff' : '#7ec18c',
                     fontSize: FontSize.size_sm,
                     fontFamily: FontFamily.lato,
                     letterSpacing: 0

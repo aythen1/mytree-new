@@ -17,7 +17,7 @@ const Lugar2 = ({ onClose }) => {
                 source={require('../assets/iconlylightoutlinesearch2.png')}
               />
               <View style={styles.placeholderInput}>
-                <Text style={styles.search}>{`Search `}</Text>
+                <Text style={styles.search}>{`Buscar `}</Text>
               </View>
             </View>
             <View style={styles.iconlylightsendCopyWrapper}>

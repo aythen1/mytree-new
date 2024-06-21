@@ -160,7 +160,7 @@ const CALENDARIO = () => {
               }}
               value={search}
               onChangeText={(text) => setSearch(text)}
-              placeholder="Search"
+              placeholder="Buscar"
               placeholderTextColor={Color.textPlaceholder}
             />
           </View>
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     flexGrow: 1,
-    paddingBottom: 50
+    paddingBottom: 70
   },
   fechasContainer: {
     backgroundColor: '#b7e4c0',

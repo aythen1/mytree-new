@@ -1,6 +1,13 @@
 import React from 'react'
 import { Image } from 'expo-image'
-import { StyleSheet, Pressable, Text, View, ScrollView } from 'react-native'
+import {
+  StyleSheet,
+  Pressable,
+  Text,
+  View,
+  ScrollView,
+  Dimensions
+} from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useNavigation } from '@react-navigation/native'
 import {
@@ -463,7 +470,6 @@ const styles = StyleSheet.create({
     elevation: 25,
     shadowRadius: 25,
     shadowColor: 'rgba(221, 219, 246, 0.25)',
-    width: 388,
     shadowOpacity: 1,
     shadowOffset: {
       width: 0,
@@ -527,7 +533,7 @@ const styles = StyleSheet.create({
     elevation: 4,
     paddingHorizontal: Padding.p_xl,
     paddingBottom: Padding.p_xl,
-    width: 428,
+    width: '100%',
     shadowOpacity: 1,
     shadowOffset: {
       width: 0,
@@ -563,7 +569,8 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: Border.br_11xl,
-    width: 348,
+    width: '95%',
+    alignSelf: 'center',
     paddingHorizontal: Padding.p_5xl,
     paddingVertical: Padding.p_sm,
     backgroundColor: Color.linearBoton,
@@ -605,29 +612,31 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: Border.br_3xs,
     padding: Padding.p_xl,
-    width: 388,
+    width: '100%',
     backgroundColor: Color.white
   },
   div2Cards: {
-    width: 388
+    width: '100%',
+    borderWidth: 2
   },
   emojisExclusivosEn: {
     width: 304
   },
   div2Cards1: {
-    width: 388,
+    width: '100%',
     marginTop: 20
   },
   planEspecialPara2: {
     marginTop: 8
   },
   div2Cards2: {
-    width: 388,
+    width: '100%',
     marginTop: 20
   },
   div2CardsParent: {
-    height: 714,
-    marginTop: 20
+    marginTop: 30,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   frameParent: {
     top: 2,

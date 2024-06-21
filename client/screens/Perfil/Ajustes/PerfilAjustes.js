@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Image } from 'expo-image'
-import { StyleSheet, View, Pressable, Text, ScrollView } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  Pressable,
+  Text,
+  ScrollView,
+  Linking
+} from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useNavigation } from '@react-navigation/native'
 import {
@@ -32,6 +39,15 @@ const PerfilAjustes = () => {
   const handleLogOut = async () => {
     await AsyncStorage.removeItem('user')
     navigation.navigate('Splash')
+  }
+
+  const handlePress = () => {
+    const email = 'mytree@gmail.com'
+    const subject = ''
+    const body = ''
+    const mailtoUrl = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+
+    Linking.openURL(mailtoUrl).catch((err) => console.error('Error:', err))
   }
 
   return (
@@ -176,7 +192,10 @@ const PerfilAjustes = () => {
               Política de Privacidad
             </Text>
           </View>
-          <View style={[styles.frameParent3, styles.parentFlexBox]}>
+          <Pressable
+            onPress={handlePress}
+            style={[styles.frameParent3, styles.parentFlexBox]}
+          >
             <Image
               style={[styles.settingIcon, styles.iconLayout]}
               contentFit="cover"
@@ -185,7 +204,7 @@ const PerfilAjustes = () => {
             <Text style={[styles.polticaDePrivacidad, styles.mytreeTypo]}>
               Contacta con MyTree
             </Text>
-          </View>
+          </Pressable>
         </View>
         <Pressable style={styles.frameWrapper} onPress={handleLogOut}>
           <View style={[styles.logoutParent, styles.parentLayout]}>

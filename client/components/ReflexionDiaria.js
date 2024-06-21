@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useContext } from 'react'
 import {
   StyleSheet,
   View,
@@ -8,16 +8,18 @@ import {
   TextInput
 } from 'react-native'
 import { FontFamily, FontSize, Color, Padding, Border } from '../GlobalStyles'
+import { useSelector } from 'react-redux'
+import SingleDiary from './SingleDiary'
+import { Context } from '../context/Context'
 
-const ReflexionDiaria = ({ editing }) => {
-  const [text, setText] = useState(
-    `👥 Hoy lo he compartido con...
-😌 Hoy me siento/nos sentimos...
-
-💖 El momento más emotivo del día ha sido...
-🙏 Lo que más agradezco/agradecemos del día de hoy...
-🧠 Lo que he aprendido/hemos aprendido hoy…`
-  )
+const ReflexionDiaria = ({
+  editing,
+  modalCreate,
+  setModalCreate,
+  openGroupIcon1
+}) => {
+  const { userDiaries, selectedDiary } = useSelector((state) => state.diaries)
+  const { selectedSection } = useContext(Context)
   return (
     <View
       style={{
@@ -26,38 +28,30 @@ const ReflexionDiaria = ({ editing }) => {
       }}
     >
       <Text style={[styles.reflexinDiaria, styles.hoyLoHeFlexBox]}>
-        Reflexión Diaria
+        {selectedSection === 'nube'
+          ? 'Reflexión Diaria'
+          : selectedSection === 'logros'
+            ? 'Celebrando Logros'
+            : selectedSection === 'desafios'
+              ? 'Desafios Superados'
+              : selectedSection === 'risas'
+                ? 'Risas y anecdotas'
+                : selectedSection === 'mundo'
+                  ? 'Descubriendo el mundo'
+                  : 'Personalizada'}
       </Text>
-      {editing ? (
-        <TextInput
-          style={{
-            fontSize: FontSize.size_lg,
-            lineHeight: 27,
-            textAlign: 'left',
-            color: Color.negro,
-            marginTop: 20,
-            fontFamily: FontFamily.lato,
-            letterSpacing: 0
-          }}
-          multiline
-          value={text}
-          onChangeText={(text) => setText(text)}
+      {userDiaries.map((diary, index) => (
+        <SingleDiary
+          key={index}
+          diary={diary}
+          editing={selectedDiary?.id === diary.id}
+          setModalCreate={setModalCreate}
+          modalCreate={modalCreate}
+          openGroupIcon1={openGroupIcon1}
+          last={index === userDiaries.length - 1}
         />
-      ) : (
-        <Text
-          style={{
-            fontSize: FontSize.size_lg,
-            lineHeight: 27,
-            textAlign: 'left',
-            color: Color.negro,
-            marginTop: 20,
-            fontFamily: FontFamily.lato,
-            letterSpacing: 0
-          }}
-        >
-          {text}
-        </Text>
-      )}
+      ))}
+
       <View style={[styles.miDiarioEntradaTextoPlItem, styles.diarioLayout]} />
     </View>
   )
@@ -250,7 +244,8 @@ const styles = StyleSheet.create({
   },
   reflexinDiaria: {
     lineHeight: 36,
-    fontSize: FontSize.size_5xl
+    fontSize: FontSize.size_5xl,
+    marginBottom: 10
   },
   hoyLoHe: {
     fontSize: FontSize.size_lg,
