@@ -110,7 +110,7 @@ const CommentsModal = ({ onClose }) => {
       'sending',
       comment,
       'to: ',
-      responseTo.username,
+      responseTo?.username,
       'on commentId:',
       selectedComment
     )
@@ -125,7 +125,7 @@ const CommentsModal = ({ onClose }) => {
             email: userData.email,
             likes: [],
             dislikes: [],
-            userName: `${userData.username} ${userData.apellido}`,
+            userName: `${userData?.username} ${userData?.apellido}`,
             createdAt: new Date()
           }
         }
@@ -251,11 +251,11 @@ const CommentsModal = ({ onClose }) => {
                   author={
                     allUsers.filter(
                       (user) => user?.id.toString() === comment.creatorId
-                    )[0].username +
+                    )[0]?.username +
                     ' ' +
                     allUsers.filter(
                       (user) => user?.id.toString() === comment.creatorId
-                    )[0].apellido
+                    )[0]?.apellido
                   }
                   responses={comment?.responses || []}
                 />
@@ -346,7 +346,7 @@ const CommentsModal = ({ onClose }) => {
                 paddingLeft: 10
               }}
             >
-              {'@' + responseTo.username + responseTo.apellido}
+              {'@' + responseTo?.username + responseTo?.apellido}
             </Text>
           )}
           <TextInput
@@ -354,6 +354,7 @@ const CommentsModal = ({ onClose }) => {
               color: '#505050',
               fontWeight: 'regular',
               fontSize: 16,
+              zIndex: 9999999,
               textAlign: 'left',
               paddingVertical: 7,
               paddingLeft: responseTo ? 7 : 20,

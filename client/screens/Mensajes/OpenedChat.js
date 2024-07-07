@@ -25,6 +25,7 @@ const OpenedChat = () => {
   const scrollViewRef = useRef()
   const route = useRoute()
   const dispatch = useDispatch()
+  const [loading, setLoading] = useState(true)
   const { allUsers } = useSelector((state) => state.users)
   const { allMessages } = useSelector((state) => state.chats)
   const [selectedUserDetails, setSelectedUserDetails] = useState()
@@ -42,29 +43,24 @@ const OpenedChat = () => {
   } = useContext(Context)
 
   const handleSendMessage = () => {
-    sendMessage(message, userData?.id, route.params.receiverId)
-    setMessage('')
+    sendMessage(message, userData?.id, route?.params?.receiverId)
+    setMessage()
   }
 
   useEffect(() => {
-    setSelectedUserDetails(
-      allUsers.filter((user) => user?.id === route.params.receiverId)[0]
-    )
-    console.log(
-      'userData',
-      allUsers.filter((user) => user?.id === route.params.receiverId)[0]
-    )
-  }, [])
+    const userrr = allUsers.filter(
+      (user) => user?.id === route?.params?.receiverId
+    )[0]
 
+    setSelectedUserDetails(userrr)
+    console.log(userrr, 'Dettt')
+  }, [])
   useEffect(() => {
-    console.log('allMessages changed =====', allMessages)
-  }, [allMessages])
-  useEffect(() => {
-    joinRoom(userData?.id, route.params.receiverId)
+    joinRoom(userData?.id, route?.params?.receiverId)
     dispatch(
       getChatHistory({
         sender: userData?.id,
-        receiver: route.params.receiverId
+        receiver: route?.params?.receiverId
       })
     )
     return () => {
@@ -73,22 +69,120 @@ const OpenedChat = () => {
     }
   }, [])
 
-  useEffect(() => {
-    console.log('allMessages', allMessages)
-    if (allMessages && allMessages.length > 0) {
-      console.log('allMessages', allMessages)
-      const messagesToSetReaded = allMessages?.filter(
-        (message) =>
-          message.senderId.toString() !== userData?.id.toString() &&
-          message.isReaded === false
-      )
-      // console.log('messagesToSetReaded: ', messagesToSetReaded)
-      messagesToSetReaded.forEach((message) => {
-        axiosInstance.put(`chat/readed/${message?.id}`)
+  // const setAllToRead = async () => {
+  //   console.log('on setAllToRead')
+  //   const messagesToSetReaded = allMessages?.filter(
+  //     (message) =>
+  //       message.senderId !== user?.user?.id && message?.isReaded === false
+  //   )
+  //   console.log('messagesToSetReaded', messagesToSetReaded)
+  //   if (messagesToSetReaded.length > 0) {
+  //     await messagesToSetReaded.forEach((message) => {
+  //       axiosInstance.put(`chat/readed/${message?.id}`)
+  //       dispatch(setAllConversationMessagesToRead())
+  //     })
+  //     getUsersMessages()
+  //   }
+  // }
+
+  const setAllToRead = async () => {
+    console.log('on setAllToRead')
+
+    const messagesToSetReaded = allMessages?.filter(
+      (message) =>
+        message.senderId !== userData?.id && message?.isReaded === false
+    )
+
+    console.log('messagesToSetReaded', messagesToSetReaded)
+
+    if (messagesToSetReaded.length > 0) {
+      try {
+        const promises = messagesToSetReaded.map((message) =>
+          axiosInstance.put(`chat/readed/${message?.id}`)
+        )
+        await Promise.all(promises)
         dispatch(setAllConversationMessagesToRead())
-      })
+        getUsersMessages()
+      } catch (error) {
+        console.error('Error setting messages to read', error)
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (allMessages && allMessages.length > 0) {
+      setAllToRead()
     }
   }, [allMessages])
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 500)
+  }, [])
+
+  const userFollowing = userData?.following || []
+
+  const handleFollow = () => {
+    setShowOptionsModal(false)
+    let actualUser = _.cloneDeep(userData)
+    const actualFollowers =
+      allUsers.filter((user) => user?.id === selectedUserDetails?.id)[0]
+        .followers || []
+    const newFollowers = actualFollowers.includes(userData?.id)
+      ? actualFollowers.filter((follower) => follower !== userData?.id)
+      : [...actualFollowers, userData?.id]
+
+    const newFollowingArray = userFollowing?.includes(selectedUserDetails?.id)
+      ? userFollowing.filter((followed) => followed !== selectedUserDetails?.id)
+      : [...userFollowing, selectedUserDetails?.id]
+    actualUser.user.following = newFollowingArray
+
+    dispatch(
+      updateUserData({
+        id: selectedUserDetails?.id,
+        body: { followers: newFollowers }
+      })
+    )
+      .then((data) => {
+        dispatch(
+          updateUserData({
+            id: userData?.id,
+            body: { following: newFollowingArray }
+          })
+        )
+      })
+      .then((response) => {
+        if (newFollowers.includes(userData?.id)) {
+          dispatch(
+            sendNotification({
+              title: 'Follow',
+              message: `${user.user.nickname} ha comenzado a seguirte`,
+              recipientId: selectedUserDetails?.id,
+              date: new Date(),
+              read: false,
+              prop1: {
+                userId: userData?.id,
+                userData: {
+                  ...userData
+                }
+              }
+            })
+          )
+        }
+        dispatch(getAllUsers())
+        dispatch(updateUser(actualUser))
+      })
+    return
+  }
+
+  const handleRemoveChat = () => {
+    setShowDeletePopUp(false)
+    const body = {
+      senderId: userData?.id.toString(),
+      receiverId: route?.params?.receiverId?.toString(),
+      room: roomId
+    }
+    axiosInstance.post('chat/marcarMensajesComoEliminados', body)
+  }
 
   return (
     <LinearGradient
