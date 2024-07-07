@@ -4,7 +4,7 @@ import { Image } from 'expo-image'
 import { Color, FontFamily } from '../../GlobalStyles'
 
 const SingleMessage = ({ text, isMy, read, hour }) => {
-  console.log(text, isMy, read, hour)
+  // console.log(text, isMy, read, hour)
   return (
     <View
       style={{
