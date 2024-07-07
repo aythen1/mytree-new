@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity } from 'src/config/base.entity';
+import { Entity, Column } from 'typeorm';
 
 export enum DeleteStatus {
   TRUE = 'true',
@@ -8,17 +9,7 @@ export enum DeleteStatus {
 
 
 @Entity({ name: 'message' })
-export class MessageEntity {
-
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @Column({ nullable: true, default: null })
-  createdAt: Date | null;
-  
-  @Column({ nullable: true, default: null })
-  updateAt: Date | null;
-  
+export class MessageEntity extends BaseEntity {
   @Column()
   senderId: string; // El ID del remitente del mensaje
 
