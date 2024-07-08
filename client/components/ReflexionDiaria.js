@@ -20,6 +20,8 @@ const ReflexionDiaria = ({
 }) => {
   const { userDiaries, selectedDiary } = useSelector((state) => state.diaries)
   const { selectedSection } = useContext(Context)
+
+  console.log('userDiaries from reflexion ', userDiaries)
   return (
     <View
       style={{

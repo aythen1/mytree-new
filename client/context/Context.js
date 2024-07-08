@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import io from 'socket.io-client'
 import { updateMessages } from '../redux/actions/chat'
 import axiosInstance from '../apiBackend'
+import { addUserDiary } from '../redux/slices/diaries.slices'
 
 export const Context = createContext()
 
@@ -47,6 +48,19 @@ export const ContextProvider = ({ children }) => {
       'con fecha',
       date,
       '...'
+    )
+    dispatch(
+      addUserDiary({
+        images: [],
+        videos: [],
+        date: new Date(date),
+        category,
+        title: '',
+        creatorId: userData.id,
+        description: '',
+        privacyMode: 'all',
+        taggedUsers: []
+      })
     )
   }
 

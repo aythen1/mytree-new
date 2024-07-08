@@ -7,6 +7,7 @@ import postsSlices from './slices/posts.slices'
 import eventsSlices from './slices/events.slices'
 import commentsSlices from './slices/comments.slices'
 import diariesSlices from './slices/diaries.slices'
+import albumsSlices from './slices/albums.slices'
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     panel: panelSlices,
     comments: commentsSlices,
     notifications: notificationsSlices,
-    diaries: diariesSlices
+    diaries: diariesSlices,
+    albums: albumsSlices
   }
 })

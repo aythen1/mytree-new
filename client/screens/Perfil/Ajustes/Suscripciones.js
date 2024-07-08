@@ -23,10 +23,11 @@ const Suscripciones = () => {
 
   return (
     <ScrollView
+      contentContainerStyle={{ paddingBottom: 40 }}
       style={[styles.suscripciones, styles.iconLayout]}
       showsVerticalScrollIndicator={false}
     >
-      <View style={[styles.frameParent, styles.frameParentPosition]}>
+      <View style={[styles.frameParent]}>
         <View style={styles.image6Parent}>
           <Image
             style={styles.image6Icon}
@@ -47,114 +48,243 @@ const Suscripciones = () => {
             <Text style={styles.suscripciones1}>Suscripciones</Text>
           </View>
         </View>
-        <View style={styles.div2CardsParent}>
-          <View style={[styles.div2Cards, styles.div2ShadowBox]}>
-            <View style={styles.card}>
+        <View style={[styles.div2Cards, styles.div2ShadowBox]}>
+          <View style={styles.card}>
+            <View style={styles.content}>
               <View style={styles.content}>
                 <View style={styles.content}>
-                  <View style={styles.content}>
-                    <View style={[styles.premiumParent, styles.frameFlexBox]}>
-                      <Text style={[styles.premium, styles.mesTypo]}>
-                        Premium
-                      </Text>
-                      <Text style={[styles.mes, styles.mesTypo]}>
-                        €4.99/mes
-                      </Text>
-                    </View>
+                  <View style={[styles.premiumParent, styles.frameFlexBox]}>
+                    <Text style={[styles.premium, styles.mesTypo]}>
+                      Premium
+                    </Text>
+                    <Text style={[styles.mes, styles.mesTypo]}>€4.99/mes</Text>
                   </View>
-                  <Text style={[styles.planEspecialPara, styles.planTypo]}>
-                    Plan especial para un usuario
-                  </Text>
                 </View>
-                <LinearGradient
-                  style={[styles.button, styles.buttonFlexBox]}
-                  locations={[0, 1]}
-                  colors={['#dee274', '#7ec18c']}
-                >
-                  <Text style={styles.signIn}>Adquirir ahora</Text>
-                </LinearGradient>
-                <View style={styles.divider} />
-                <View style={styles.content2}>
-                  <View style={[styles.frameGroup, styles.frameFlexBox]}>
-                    <View style={styles.checkParent}>
-                      <Image
-                        style={styles.checkIcon}
-                        contentFit="cover"
-                        source={require('../../../assets/check.png')}
-                      />
-                      <Text style={styles.soportePrioritarioTypo}>
-                        Soporte Prioritario
-                      </Text>
-                    </View>
+                <Text style={[styles.planEspecialPara, styles.planTypo]}>
+                  Plan especial para un usuario
+                </Text>
+              </View>
+              <LinearGradient
+                style={[styles.button, styles.buttonFlexBox]}
+                locations={[0, 1]}
+                colors={['#dee274', '#7ec18c']}
+              >
+                <Text style={styles.signIn}>Adquirir ahora</Text>
+              </LinearGradient>
+              <View style={styles.divider} />
+              <View style={styles.content2}>
+                <View style={[styles.frameGroup, styles.frameFlexBox]}>
+                  <View style={styles.checkParent}>
                     <Image
-                      style={styles.infoIcon}
+                      style={styles.checkIcon}
                       contentFit="cover"
-                      source={require('../../../assets/info.png')}
+                      source={require('../../../assets/check.png')}
                     />
+                    <Text style={styles.soportePrioritarioTypo}>
+                      Soporte Prioritario
+                    </Text>
                   </View>
-                  <View style={[styles.frameContainer, styles.frameFlexBox]}>
-                    <View style={styles.checkParent}>
-                      <Image
-                        style={styles.checkIcon}
-                        contentFit="cover"
-                        source={require('../../../assets/check1.png')}
-                      />
-                      <Text style={styles.soportePrioritarioTypo}>
-                        5 Fotos alta calidad en perfil
-                      </Text>
-                    </View>
+                  <Image
+                    style={styles.infoIcon}
+                    contentFit="cover"
+                    source={require('../../../assets/info.png')}
+                  />
+                </View>
+                <View style={[styles.frameContainer, styles.frameFlexBox]}>
+                  <View style={styles.checkParent}>
                     <Image
-                      style={styles.infoIcon}
+                      style={styles.checkIcon}
                       contentFit="cover"
-                      source={require('../../../assets/info.png')}
+                      source={require('../../../assets/check1.png')}
                     />
+                    <Text style={styles.soportePrioritarioTypo}>
+                      5 Fotos alta calidad en perfil
+                    </Text>
                   </View>
-                  <View style={[styles.frameContainer, styles.frameFlexBox]}>
-                    <View style={styles.checkParent}>
-                      <Image
-                        style={styles.checkIcon}
-                        contentFit="cover"
-                        source={require('../../../assets/check1.png')}
-                      />
-                      <Text style={styles.soportePrioritarioTypo}>
-                        Copia de seguridad de datos
-                      </Text>
-                    </View>
+                  <Image
+                    style={styles.infoIcon}
+                    contentFit="cover"
+                    source={require('../../../assets/info.png')}
+                  />
+                </View>
+                <View style={[styles.frameContainer, styles.frameFlexBox]}>
+                  <View style={styles.checkParent}>
                     <Image
-                      style={styles.infoIcon}
+                      style={styles.checkIcon}
                       contentFit="cover"
-                      source={require('../../../assets/info.png')}
+                      source={require('../../../assets/check1.png')}
                     />
+                    <Text style={styles.soportePrioritarioTypo}>
+                      Copia de seguridad de datos
+                    </Text>
                   </View>
+                  <Image
+                    style={styles.infoIcon}
+                    contentFit="cover"
+                    source={require('../../../assets/info.png')}
+                  />
                 </View>
               </View>
             </View>
           </View>
-          <View style={[styles.div2Cards1, styles.div2ShadowBox]}>
-            <View style={styles.card}>
+        </View>
+        <View style={[styles.div2Cards1, styles.div2ShadowBox]}>
+          <View style={styles.card}>
+            <View style={styles.content}>
               <View style={styles.content}>
                 <View style={styles.content}>
-                  <View style={styles.content}>
-                    <View style={[styles.premiumParent, styles.frameFlexBox]}>
-                      <Text style={[styles.premium, styles.mesTypo]}>VIP</Text>
-                      <Text style={[styles.mes, styles.mesTypo]}>
-                        €9.99/mes
-                      </Text>
-                    </View>
+                  <View style={[styles.premiumParent, styles.frameFlexBox]}>
+                    <Text style={[styles.premium, styles.mesTypo]}>VIP</Text>
+                    <Text style={[styles.mes, styles.mesTypo]}>€9.99/mes</Text>
                   </View>
-                  <Text style={[styles.planEspecialPara, styles.planTypo]}>
-                    Plan especial para dos usuarios
+                </View>
+                <Text style={[styles.planEspecialPara, styles.planTypo]}>
+                  Plan especial para dos usuarios
+                </Text>
+              </View>
+              <LinearGradient
+                style={[styles.button, styles.buttonFlexBox]}
+                locations={[0, 1]}
+                colors={['#dee274', '#7ec18c']}
+              >
+                <Text style={styles.signIn}>Adquirir ahora</Text>
+              </LinearGradient>
+              <View style={styles.divider} />
+              <View style={[styles.frameContainer, styles.frameFlexBox]}>
+                <View style={styles.checkParent}>
+                  <Image
+                    style={styles.checkIcon}
+                    contentFit="cover"
+                    source={require('../../../assets/check1.png')}
+                  />
+                  <Text style={styles.soportePrioritarioTypo}>
+                    Soporte Avanzado
                   </Text>
                 </View>
-                <LinearGradient
-                  style={[styles.button, styles.buttonFlexBox]}
-                  locations={[0, 1]}
-                  colors={['#dee274', '#7ec18c']}
-                >
-                  <Text style={styles.signIn}>Adquirir ahora</Text>
-                </LinearGradient>
-                <View style={styles.divider} />
-                <View style={[styles.frameContainer, styles.frameFlexBox]}>
+                <Image
+                  style={styles.infoIcon}
+                  contentFit="cover"
+                  source={require('../../../assets/info.png')}
+                />
+              </View>
+              <View style={[styles.frameContainer, styles.frameFlexBox]}>
+                <View style={styles.checkParent}>
+                  <Image
+                    style={styles.checkIcon}
+                    contentFit="cover"
+                    source={require('../../../assets/check1.png')}
+                  />
+                  <Text style={styles.soportePrioritarioTypo}>
+                    Menos anuncios
+                  </Text>
+                </View>
+                <Image
+                  style={styles.infoIcon}
+                  contentFit="cover"
+                  source={require('../../../assets/info.png')}
+                />
+              </View>
+              <View style={[styles.frameContainer, styles.frameFlexBox]}>
+                <View style={styles.checkParent}>
+                  <Image
+                    style={styles.checkIcon}
+                    contentFit="cover"
+                    source={require('../../../assets/check2.png')}
+                  />
+                  <Text
+                    style={[
+                      styles.emojisExclusivosEn,
+                      styles.soportePrioritarioTypo
+                    ]}
+                  >
+                    Emojis exclusivos en toda la plataforma MyDiary, Mensajería,
+                    diseño del muro, etc.
+                  </Text>
+                </View>
+                <Image
+                  style={styles.infoIcon}
+                  contentFit="cover"
+                  source={require('../../../assets/info1.png')}
+                />
+              </View>
+              <View style={[styles.frameContainer, styles.frameFlexBox]}>
+                <View style={styles.checkParent}>
+                  <Image
+                    style={styles.checkIcon}
+                    contentFit="cover"
+                    source={require('../../../assets/check1.png')}
+                  />
+                  <Text style={styles.soportePrioritarioTypo}>
+                    Copia de seguridad de datos
+                  </Text>
+                </View>
+                <Image
+                  style={styles.infoIcon}
+                  contentFit="cover"
+                  source={require('../../../assets/info.png')}
+                />
+              </View>
+              <View style={[styles.frameContainer, styles.frameFlexBox]}>
+                <View style={styles.checkParent}>
+                  <Image
+                    style={styles.checkIcon}
+                    contentFit="cover"
+                    source={require('../../../assets/check1.png')}
+                  />
+                  <Text style={styles.soportePrioritarioTypo}>
+                    Fotos y videos de alta calidad
+                  </Text>
+                </View>
+                <Image
+                  style={styles.infoIcon}
+                  contentFit="cover"
+                  source={require('../../../assets/info.png')}
+                />
+              </View>
+              <View style={[styles.frameContainer, styles.frameFlexBox]}>
+                <View style={styles.checkParent}>
+                  <Image
+                    style={styles.checkIcon}
+                    contentFit="cover"
+                    source={require('../../../assets/check1.png')}
+                  />
+                  <Text style={styles.soportePrioritarioTypo}>
+                    Emojis y filtros exclusivos
+                  </Text>
+                </View>
+                <Image
+                  style={styles.infoIcon}
+                  contentFit="cover"
+                  source={require('../../../assets/info.png')}
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+        <View style={[styles.div2Cards2, styles.div2ShadowBox]}>
+          <View style={styles.card}>
+            <View style={styles.content}>
+              <View style={styles.content}>
+                <View style={[styles.premiumParent, styles.frameFlexBox]}>
+                  <Text style={[styles.premium, styles.mesTypo]}>
+                    Vínculo Infinito
+                  </Text>
+                  <Text style={[styles.mes, styles.mesTypo]}>€19.99/mes</Text>
+                </View>
+                <Text style={[styles.planEspecialPara2, styles.planTypo]}>
+                  Plan especial para cuatro o más usuarios
+                </Text>
+              </View>
+              <LinearGradient
+                style={[styles.button, styles.buttonFlexBox]}
+                locations={[0, 1]}
+                colors={['#dee274', '#7ec18c']}
+              >
+                <Text style={styles.signIn}>Adquirir ahora</Text>
+              </LinearGradient>
+              <View style={styles.divider} />
+              <View style={styles.content2}>
+                <View style={[styles.frameGroup, styles.frameFlexBox]}>
                   <View style={styles.checkParent}>
                     <Image
                       style={styles.checkIcon}
@@ -162,7 +292,7 @@ const Suscripciones = () => {
                       source={require('../../../assets/check1.png')}
                     />
                     <Text style={styles.soportePrioritarioTypo}>
-                      Soporte Avanzado
+                      Sin Anuncios
                     </Text>
                   </View>
                   <Image
@@ -179,7 +309,7 @@ const Suscripciones = () => {
                       source={require('../../../assets/check1.png')}
                     />
                     <Text style={styles.soportePrioritarioTypo}>
-                      Menos anuncios
+                      Soporte VIP
                     </Text>
                   </View>
                   <Image
@@ -193,22 +323,68 @@ const Suscripciones = () => {
                     <Image
                       style={styles.checkIcon}
                       contentFit="cover"
-                      source={require('../../../assets/check2.png')}
+                      source={require('../../../assets/check1.png')}
+                    />
+                    <Text style={styles.soportePrioritarioTypo}>
+                      IA para mejorar tus fotos antiguas
+                    </Text>
+                  </View>
+                  <Image
+                    style={styles.infoIcon}
+                    contentFit="cover"
+                    source={require('../../../assets/info.png')}
+                  />
+                </View>
+                <View style={[styles.frameContainer, styles.frameFlexBox]}>
+                  <View style={styles.checkParent}>
+                    <Image
+                      style={styles.checkIcon}
+                      contentFit="cover"
+                      source={require('../../../assets/check1.png')}
+                    />
+                    <Text style={styles.soportePrioritarioTypo}>
+                      Acceso Anticipado a Funciones Nuevas
+                    </Text>
+                  </View>
+                  <Image
+                    style={styles.infoIcon}
+                    contentFit="cover"
+                    source={require('../../../assets/info.png')}
+                  />
+                </View>
+                <View style={[styles.frameContainer, styles.frameFlexBox]}>
+                  <View style={styles.checkParent}>
+                    <Image
+                      style={styles.checkIcon}
+                      contentFit="cover"
+                      source={require('../../../assets/check1.png')}
+                    />
+                    <Text style={styles.soportePrioritarioTypo}>
+                      Fotos y videos en alta calidad
+                    </Text>
+                  </View>
+                  <Image
+                    style={styles.infoIcon}
+                    contentFit="cover"
+                    source={require('../../../assets/info.png')}
+                  />
+                </View>
+                <View style={[styles.frameContainer, styles.frameFlexBox]}>
+                  <View style={styles.checkParent}>
+                    <Image
+                      style={styles.checkIcon}
+                      contentFit="cover"
+                      source={require('../../../assets/check1.png')}
                     />
                     <Text
-                      style={[
-                        styles.emojisExclusivosEn,
-                        styles.soportePrioritarioTypo
-                      ]}
-                    >
-                      Emojis exclusivos en toda la plataforma MyDiary,
-                      Mensajería, diseño del muro, etc.
-                    </Text>
+                      style={styles.soportePrioritarioTypo}
+                    >{`Fotos y videos ID Infantes y Ancestros
+en alta calidad`}</Text>
                   </View>
                   <Image
                     style={styles.infoIcon}
                     contentFit="cover"
-                    source={require('../../../assets/info1.png')}
+                    source={require('../../../assets/info.png')}
                   />
                 </View>
                 <View style={[styles.frameContainer, styles.frameFlexBox]}>
@@ -236,7 +412,7 @@ const Suscripciones = () => {
                       source={require('../../../assets/check1.png')}
                     />
                     <Text style={styles.soportePrioritarioTypo}>
-                      Fotos y videos de alta calidad
+                      Emojis y filtros exclusivos
                     </Text>
                   </View>
                   <Image
@@ -253,7 +429,7 @@ const Suscripciones = () => {
                       source={require('../../../assets/check1.png')}
                     />
                     <Text style={styles.soportePrioritarioTypo}>
-                      Emojis y filtros exclusivos
+                      Copia de Seguridad
                     </Text>
                   </View>
                   <Image
@@ -261,187 +437,6 @@ const Suscripciones = () => {
                     contentFit="cover"
                     source={require('../../../assets/info.png')}
                   />
-                </View>
-              </View>
-            </View>
-          </View>
-          <View style={[styles.div2Cards2, styles.div2ShadowBox]}>
-            <View style={styles.card}>
-              <View style={styles.content}>
-                <View style={styles.content}>
-                  <View style={[styles.premiumParent, styles.frameFlexBox]}>
-                    <Text style={[styles.premium, styles.mesTypo]}>
-                      Vínculo Infinito
-                    </Text>
-                    <Text style={[styles.mes, styles.mesTypo]}>€19.99/mes</Text>
-                  </View>
-                  <Text style={[styles.planEspecialPara2, styles.planTypo]}>
-                    Plan especial para cuatro o más usuarios
-                  </Text>
-                </View>
-                <LinearGradient
-                  style={[styles.button, styles.buttonFlexBox]}
-                  locations={[0, 1]}
-                  colors={['#dee274', '#7ec18c']}
-                >
-                  <Text style={styles.signIn}>Adquirir ahora</Text>
-                </LinearGradient>
-                <View style={styles.divider} />
-                <View style={styles.content2}>
-                  <View style={[styles.frameGroup, styles.frameFlexBox]}>
-                    <View style={styles.checkParent}>
-                      <Image
-                        style={styles.checkIcon}
-                        contentFit="cover"
-                        source={require('../../../assets/check1.png')}
-                      />
-                      <Text style={styles.soportePrioritarioTypo}>
-                        Sin Anuncios
-                      </Text>
-                    </View>
-                    <Image
-                      style={styles.infoIcon}
-                      contentFit="cover"
-                      source={require('../../../assets/info.png')}
-                    />
-                  </View>
-                  <View style={[styles.frameContainer, styles.frameFlexBox]}>
-                    <View style={styles.checkParent}>
-                      <Image
-                        style={styles.checkIcon}
-                        contentFit="cover"
-                        source={require('../../../assets/check1.png')}
-                      />
-                      <Text style={styles.soportePrioritarioTypo}>
-                        Soporte VIP
-                      </Text>
-                    </View>
-                    <Image
-                      style={styles.infoIcon}
-                      contentFit="cover"
-                      source={require('../../../assets/info.png')}
-                    />
-                  </View>
-                  <View style={[styles.frameContainer, styles.frameFlexBox]}>
-                    <View style={styles.checkParent}>
-                      <Image
-                        style={styles.checkIcon}
-                        contentFit="cover"
-                        source={require('../../../assets/check1.png')}
-                      />
-                      <Text style={styles.soportePrioritarioTypo}>
-                        IA para mejorar tus fotos antiguas
-                      </Text>
-                    </View>
-                    <Image
-                      style={styles.infoIcon}
-                      contentFit="cover"
-                      source={require('../../../assets/info.png')}
-                    />
-                  </View>
-                  <View style={[styles.frameContainer, styles.frameFlexBox]}>
-                    <View style={styles.checkParent}>
-                      <Image
-                        style={styles.checkIcon}
-                        contentFit="cover"
-                        source={require('../../../assets/check1.png')}
-                      />
-                      <Text style={styles.soportePrioritarioTypo}>
-                        Acceso Anticipado a Funciones Nuevas
-                      </Text>
-                    </View>
-                    <Image
-                      style={styles.infoIcon}
-                      contentFit="cover"
-                      source={require('../../../assets/info.png')}
-                    />
-                  </View>
-                  <View style={[styles.frameContainer, styles.frameFlexBox]}>
-                    <View style={styles.checkParent}>
-                      <Image
-                        style={styles.checkIcon}
-                        contentFit="cover"
-                        source={require('../../../assets/check1.png')}
-                      />
-                      <Text style={styles.soportePrioritarioTypo}>
-                        Fotos y videos en alta calidad
-                      </Text>
-                    </View>
-                    <Image
-                      style={styles.infoIcon}
-                      contentFit="cover"
-                      source={require('../../../assets/info.png')}
-                    />
-                  </View>
-                  <View style={[styles.frameContainer, styles.frameFlexBox]}>
-                    <View style={styles.checkParent}>
-                      <Image
-                        style={styles.checkIcon}
-                        contentFit="cover"
-                        source={require('../../../assets/check1.png')}
-                      />
-                      <Text
-                        style={styles.soportePrioritarioTypo}
-                      >{`Fotos y videos ID Infantes y Ancestros
-en alta calidad`}</Text>
-                    </View>
-                    <Image
-                      style={styles.infoIcon}
-                      contentFit="cover"
-                      source={require('../../../assets/info.png')}
-                    />
-                  </View>
-                  <View style={[styles.frameContainer, styles.frameFlexBox]}>
-                    <View style={styles.checkParent}>
-                      <Image
-                        style={styles.checkIcon}
-                        contentFit="cover"
-                        source={require('../../../assets/check1.png')}
-                      />
-                      <Text style={styles.soportePrioritarioTypo}>
-                        Copia de seguridad de datos
-                      </Text>
-                    </View>
-                    <Image
-                      style={styles.infoIcon}
-                      contentFit="cover"
-                      source={require('../../../assets/info.png')}
-                    />
-                  </View>
-                  <View style={[styles.frameContainer, styles.frameFlexBox]}>
-                    <View style={styles.checkParent}>
-                      <Image
-                        style={styles.checkIcon}
-                        contentFit="cover"
-                        source={require('../../../assets/check1.png')}
-                      />
-                      <Text style={styles.soportePrioritarioTypo}>
-                        Emojis y filtros exclusivos
-                      </Text>
-                    </View>
-                    <Image
-                      style={styles.infoIcon}
-                      contentFit="cover"
-                      source={require('../../../assets/info.png')}
-                    />
-                  </View>
-                  <View style={[styles.frameContainer, styles.frameFlexBox]}>
-                    <View style={styles.checkParent}>
-                      <Image
-                        style={styles.checkIcon}
-                        contentFit="cover"
-                        source={require('../../../assets/check1.png')}
-                      />
-                      <Text style={styles.soportePrioritarioTypo}>
-                        Copia de Seguridad
-                      </Text>
-                    </View>
-                    <Image
-                      style={styles.infoIcon}
-                      contentFit="cover"
-                      source={require('../../../assets/info.png')}
-                    />
-                  </View>
                 </View>
               </View>
             </View>
@@ -467,9 +462,11 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   div2ShadowBox: {
+    width: '90%',
+    borderRadius: 10,
     elevation: 25,
     shadowRadius: 25,
-    shadowColor: 'rgba(221, 219, 246, 0.25)',
+    shadowColor: 'rgba(221, 219, 246, 1)',
     shadowOpacity: 1,
     shadowOffset: {
       width: 0,
@@ -496,7 +493,7 @@ const styles = StyleSheet.create({
   soportePrioritarioTypo: {
     marginLeft: 8,
     letterSpacing: 1,
-    fontSize: FontSize.size_base,
+    fontSize: 16,
     color: Color.grisTextosWeb,
     textAlign: 'left',
     fontFamily: FontFamily.lato
@@ -539,7 +536,8 @@ const styles = StyleSheet.create({
       width: 0,
       height: 4
     },
-    backgroundColor: Color.white
+    backgroundColor: Color.white,
+    marginBottom: 20
   },
   premium: {
     fontWeight: '700',
@@ -591,7 +589,8 @@ const styles = StyleSheet.create({
   },
   checkParent: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    maxWidth: '90%'
   },
   infoIcon: {
     width: 16,
@@ -603,7 +602,8 @@ const styles = StyleSheet.create({
   },
   frameContainer: {
     marginTop: 16,
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
   content2: {
     marginTop: 16,
@@ -613,11 +613,10 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_3xs,
     padding: Padding.p_xl,
     width: '100%',
-    backgroundColor: Color.white
+    backgroundColor: '#fff'
   },
   div2Cards: {
-    width: '100%',
-    borderWidth: 2
+    width: '100%'
   },
   emojisExclusivosEn: {
     width: 304
@@ -639,9 +638,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   frameParent: {
-    top: 2,
-    alignItems: 'center',
-    paddingBottom: 650
+    alignItems: 'center'
   },
   navigationIcon: {
     top: 821,

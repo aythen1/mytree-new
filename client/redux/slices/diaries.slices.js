@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import {
+  deleteDiaryById,
   getAllDiaries,
   getAllUserDiaries,
   getUserDiariesByDateOrCategory
@@ -10,14 +11,14 @@ export const diariesSlices = createSlice({
   initialState: {
     allDiaries: [],
     userDiaries: [
-      {
-        id: 'asd',
-        description: `🧠 Lo que he aprendido/hemos aprendido hoy…`
-      },
-      {
-        id: 'asd1',
-        description: `testing diario 2`
-      }
+      // {
+      //   id: 'asd',
+      //   description: `🧠 Lo que he aprendido/hemos aprendido hoy…`
+      // },
+      // {
+      //   id: 'asd1',
+      //   description: `testing diario 2`
+      // }
     ],
     selectedDiary: {},
     loading: false,
@@ -29,6 +30,9 @@ export const diariesSlices = createSlice({
     },
     setSelectedDiary: (state, action) => {
       state.selectedDiary = action.payload
+    },
+    addUserDiary: (state, action) => {
+      state.userDiaries = [...state.userDiaries, action.payload]
     }
   },
   extraReducers: (builder) => {
@@ -51,13 +55,14 @@ export const diariesSlices = createSlice({
       })
       .addCase(getAllUserDiaries.fulfilled, (state, action) => {
         state.loading = false
+        console.log('setting diaries to', action.payload)
         state.userDiaries = action.payload
       })
       .addCase(getAllUserDiaries.rejected, (state, action) => {
         state.loading = false
         state.error = action.error.message
       })
-      // =================== GET ALL USER DIARIES ===================
+      // =================== GET ALL USER DIARIES BY CATEGORY/DATE ===================
       .addCase(getUserDiariesByDateOrCategory.pending, (state) => {
         state.loading = true
       })
@@ -69,9 +74,29 @@ export const diariesSlices = createSlice({
         state.loading = false
         state.error = action.error.message
       })
+      // =================== DELETE DIARY BY ID ===================
+      .addCase(deleteDiaryById.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(deleteDiaryById.fulfilled, (state, action) => {
+        const actualAllDiaries = [...state.allDiaries]
+        const actualUserDiaries = [...state.userDiaries]
+        state.loading = false
+        state.allDiaries = actualAllDiaries.filter(
+          (diary) => diary.id !== action.payload
+        )
+        state.userDiaries = actualUserDiaries.filter(
+          (diary) => diary.id !== action.payload
+        )
+      })
+      .addCase(deleteDiaryById.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.error.message
+      })
   }
 })
 
-export const { updateDiaries, setSelectedDiary } = diariesSlices.actions
+export const { updateDiaries, setSelectedDiary, addUserDiary } =
+  diariesSlices.actions
 
 export default diariesSlices.reducer

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native'
 import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
@@ -13,18 +13,27 @@ import CamaraSVG from '../../components/svgs/CamaraSVG'
 import { LinearGradient } from 'expo-linear-gradient'
 import MasBusquedaSVG from '../../components/svgs/MasBusquedaSVG'
 import { Context } from '../../context/Context'
+import { getAllDiaries, getAllUserDiaries } from '../../redux/actions/diaries'
 
 const MIDIARIOPANTALLAPERSONAL = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
-  const { setShowSelectEventTypeModal, selectedSection, setSelectedSection } =
-    useContext(Context)
+  const {
+    setShowSelectEventTypeModal,
+    userData,
+    selectedSection,
+    setSelectedSection
+  } = useContext(Context)
 
   const { showPanel } = useSelector((state) => state.panel)
 
   const navigateTo = () => {
     navigation.navigate('MIDIARIOEDICINVIDEO')
   }
+
+  useEffect(() => {
+    dispatch(getAllUserDiaries(userData.id))
+  }, [])
 
   return (
     <LinearGradient
