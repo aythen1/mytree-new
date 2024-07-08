@@ -81,9 +81,9 @@ export const ContextProvider = ({ children }) => {
       const profileImageForm = new FormData()
       profileImageForm.append('file', profileImageData)
       profileImageForm.append('upload_preset', 'cfbb_profile_pictures')
-      profileImageForm.append('cloud_name', 'dnewfuuv0')
+      profileImageForm.append('cloud_name', 'dfp6r9aq4')
 
-      await fetch('https://api.cloudinary.com/v1_1/dnewfuuv0/image/upload', {
+      await fetch('https://api.cloudinary.com/v1_1/dfp6r9aq4/image/upload', {
         method: 'post',
         body: profileImageForm
       })

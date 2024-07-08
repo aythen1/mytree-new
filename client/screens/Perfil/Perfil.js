@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { StyleSheet, View, Pressable, Text, ScrollView } from 'react-native'
 import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
@@ -25,6 +25,7 @@ import BarraBusqueda from '../../components/BarraBusqueda'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Camera, CameraView, useCameraPermissions } from 'expo-camera'
 import { getUserPosts } from '../../redux/slices/user.slices'
+import { Context } from '../../context/Context'
 
 
 const Perfil = () => {
@@ -32,9 +33,10 @@ const Perfil = () => {
   const dispatch = useDispatch()
   const [facing, setFacing] = useState('back');
   const { showPanel } = useSelector((state) => state.panel)
-  const {userData}  = useSelector((state) => state.users)
-  const {userPosts}  = useSelector((state) => state.posts)
-  const {allPosts}  = useSelector((state) => state.posts)
+  const { userData } = useSelector((state) => state.users)
+  const { userPosts } = useSelector((state) => state.posts)
+  const { allPosts } = useSelector((state) => state.posts)
+  const { pickImage, provisoryProfileImage } = useContext(Context)
 
 
   const [hasPermission, setHasPermission] = useState(null)
@@ -42,7 +44,7 @@ const Perfil = () => {
   const [showCamera, setShowCamera] = useState(false)
 
   dispatch(getUserPosts(userData.id))
-  
+
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync()
@@ -50,10 +52,10 @@ const Perfil = () => {
     })()
   }, [])
 
-  useEffect(()=>{
-    console.log(userPosts,"dataaaaaaa")
+  useEffect(() => {
+    console.log(userPosts, "dataaaaaaa")
 
-  },[userPosts])
+  }, [userPosts])
 
   const [selectedComponent, setSelectedComponent] = useState('MiLegado')
   const [search, setSearch] = useState(false)
@@ -70,11 +72,11 @@ const Perfil = () => {
       // You can handle the taken photo here, such as displaying it or saving it.
     }
   }
-  
-  
+
+
   const changePictureMode = async () => {
 
-    setFacing((prev)=> prev == "back" ? "front" : "back")
+    setFacing((prev) => prev == "back" ? "front" : "back")
   }
 
 
@@ -106,6 +108,8 @@ const Perfil = () => {
     }
     getUser()
   }, [])
+
+  console.log(userData,"data user")
 
   return (
     <ScrollView
@@ -166,13 +170,18 @@ const Perfil = () => {
 
       {search && <BarraBusqueda />}
 
-      <View style={styles.imageContainer}>
-        <Image
+      <Pressable onPress={() => pickImage("profile")} style={styles.imageContainer}>
+        {!provisoryProfileImage && !userData?.profilePicture && (<Image
           style={styles.perfilItem}
           contentFit="cover"
           source={require('../../assets/group-1171276683.png')}
-        />
-      </View>
+        />)}
+         {userData?.profilePicture && (<Image
+          style={styles.perfilItem}
+          contentFit="cover"
+          source={{uri:userData?.profilePicture}}
+        />)}
+      </Pressable>
 
       <View style={styles.nameContainer}>
         <Text style={styles.brunoPham}> {userData.username}{' '}{userData.apellido}</Text>
@@ -296,7 +305,8 @@ const styles = StyleSheet.create({
     height: 130,
     width: 130
   },
-  nameContainer: {paddingVertical:20
+  nameContainer: {
+    paddingVertical: 20
   },
   brunoPham: {
     textAlign: 'center',

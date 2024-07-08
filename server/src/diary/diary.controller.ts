@@ -38,8 +38,8 @@ export class DiaryController {
   }
 //filtra y trae todos de la misma categoria de un usuario
   @Post('/filter')
-  async findByCategoryAndCreator(@Body() body: { category: string, creatorId: string }) {
-    const { category, creatorId } = body;
-    return this.diaryService.findByCategoryAndCreator(category, creatorId);
+  async findByCategoryAndCreator(@Body() body: { category: string, creatorId: string ,date:Date}) {
+    const { category, creatorId ,date } = body;
+    return this.diaryService.findByCategoryAndCreator(category, creatorId,date);
   }
 }
