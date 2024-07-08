@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn ,CreateDateColumn, UpdateDateColumn} from 'typeorm';
 
 export enum DeleteStatus {
   TRUE = 'true',
@@ -13,14 +13,13 @@ export class MessageEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true, default: null })
-  createdAt: Date | null;
 
-  @Column({ nullable: true, default: null })
-  updateAt: Date | null;
+  @CreateDateColumn({ type: 'timestamp', nullable: true })
+  createdAt: Date;
 
-  @Column({ nullable: true, default: null })
-  updatedat: Date | null;
+  @UpdateDateColumn({ type: 'timestamp', nullable: true })
+  updateAt: Date;
+
 
   @Column()
   senderId: string; // El ID del remitente del mensaje
