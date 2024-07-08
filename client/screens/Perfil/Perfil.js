@@ -26,40 +26,35 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Camera, CameraView, useCameraPermissions } from 'expo-camera'
 import { getUserPosts } from '../../redux/slices/user.slices'
 
-
 const Perfil = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
-  const [facing, setFacing] = useState('back');
+  const [facing, setFacing] = useState('back')
   const { showPanel } = useSelector((state) => state.panel)
-  const {userData}  = useSelector((state) => state.users)
-  const {userPosts}  = useSelector((state) => state.posts)
-  const {allPosts}  = useSelector((state) => state.posts)
-
+  const { userData } = useSelector((state) => state.users)
+  const { userPosts } = useSelector((state) => state.posts)
+  const { allPosts } = useSelector((state) => state.posts)
 
   const [hasPermission, setHasPermission] = useState(null)
   const [selectedImage, setSelectedImage] = useState(null)
   const [showCamera, setShowCamera] = useState(false)
 
   dispatch(getUserPosts(userData.id))
-  
+
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       const { status } = await Camera.requestCameraPermissionsAsync()
       setHasPermission(status === 'granted')
     })()
   }, [])
 
-  useEffect(()=>{
-    console.log(userPosts,"dataaaaaaa")
-
-  },[userPosts])
+  useEffect(() => {
+    console.log(userPosts, 'dataaaaaaa')
+  }, [userPosts])
 
   const [selectedComponent, setSelectedComponent] = useState('MiLegado')
   const [search, setSearch] = useState(false)
   const [usuario, setUsuario] = useState({})
-
-
 
   const takePicture = async () => {
     if (cameraReff) {
@@ -70,13 +65,10 @@ const Perfil = () => {
       // You can handle the taken photo here, such as displaying it or saving it.
     }
   }
-  
-  
+
   const changePictureMode = async () => {
-
-    setFacing((prev)=> prev == "back" ? "front" : "back")
+    setFacing((prev) => (prev == 'back' ? 'front' : 'back'))
   }
-
 
   const renderSelectedComponent = () => {
     switch (selectedComponent) {
@@ -136,19 +128,19 @@ const Perfil = () => {
           icons={
             selectedComponent !== 'PERFILMIINFO'
               ? [
-                <Pressable onPress={() => setSearch(!search)}>
-                  <LupaSVG />
-                </Pressable>,
-                <PlusSVG isNavigation={'CrearAlbum'} />,
-                <SettingMuroSVG isNavigation={'PerfilAjustes'} />
-              ]
+                  <Pressable onPress={() => setSearch(!search)}>
+                    <LupaSVG />
+                  </Pressable>,
+                  <PlusSVG isNavigation={'CrearAlbum'} />,
+                  <SettingMuroSVG isNavigation={'PerfilAjustes'} />
+                ]
               : [
-                <TreeSVG />,
-                <NotificationsMuroSVG
-                  isNavigation={'PERFILNOTIFICACIONES'}
-                />,
-                <SettingMuroSVG isNavigation={'PerfilAjustes'} />
-              ]
+                  <TreeSVG />,
+                  <NotificationsMuroSVG
+                    isNavigation={'PERFILNOTIFICACIONES'}
+                  />,
+                  <SettingMuroSVG isNavigation={'PerfilAjustes'} />
+                ]
           }
         />
       </View>
@@ -175,10 +167,14 @@ const Perfil = () => {
       </View>
 
       <View style={styles.nameContainer}>
-        <Text style={styles.brunoPham}> {userData.username}{' '}{userData.apellido}</Text>
+        <Text style={styles.brunoPham}>
+          {' '}
+          {userData.username} {userData.apellido}
+        </Text>
         <View style={styles.placeContainer}>
           <Text style={[styles.daNangVietnam, styles.miInfoTypo]}>
-            {userData.adress && userData.adress + ','}{userData.city}
+            {userData.adress && userData.adress + ','}
+            {userData.city}
           </Text>
         </View>
       </View>
@@ -187,17 +183,36 @@ const Perfil = () => {
         <Pressable
           style={[
             styles.tabs,
+            selectedComponent === 'MISALBUMES' && styles.miWrapper
+          ]}
+          onPress={() => setSelectedComponent('MISALBUMES')}
+        >
+          <Text
+            style={
+              (styles.miInfo,
+              selectedComponent === 'MISALBUMES' && styles.selectedText)
+            }
+          >
+            Mis álbumes
+          </Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.tabsBar}>
+        <Pressable
+          style={[
+            styles.tabs,
             (selectedComponent === 'MiLegado' ||
               selectedComponent === 'SOLOYO') &&
-            styles.miWrapper
+              styles.miWrapper
           ]}
           onPress={() => setSelectedComponent('MiLegado')}
         >
           <Text
             style={
               (styles.miInfo,
-                (selectedComponent === 'MiLegado' ||
-                  selectedComponent === 'SOLOYO') &&
+              (selectedComponent === 'MiLegado' ||
+                selectedComponent === 'SOLOYO') &&
                 styles.selectedText)
             }
           >
@@ -214,7 +229,7 @@ const Perfil = () => {
           <Text
             style={
               (styles.miInfo,
-                selectedComponent === 'PERFILMIINFO' && styles.selectedText)
+              selectedComponent === 'PERFILMIINFO' && styles.selectedText)
             }
           >
             Mi información
@@ -236,8 +251,7 @@ const styles = StyleSheet.create({
     width: 26,
     height: 20
   },
-  ionmenu: {
-  },
+  ionmenu: {},
   menuPosition: {
     paddingLeft: 10,
     paddingTop: 10
@@ -246,7 +260,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   buttonFlexBox: {
     justifyContent: 'flex-end',
@@ -296,8 +310,7 @@ const styles = StyleSheet.create({
     height: 130,
     width: 130
   },
-  nameContainer: {paddingVertical:20
-  },
+  nameContainer: { paddingVertical: 20 },
   brunoPham: {
     textAlign: 'center',
     color: Color.negro,

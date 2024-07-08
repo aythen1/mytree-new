@@ -56,7 +56,7 @@ const Privacidad = ({ onClose }) => {
                 <Text
                   style={[styles.familiaYAmigos, styles.familiaYAmigosTypo]}
                 >
-                  Familia y amigos
+                  Todos
                 </Text>
               </View>
             </View>
@@ -73,7 +73,7 @@ const Privacidad = ({ onClose }) => {
                 <Text
                   style={[styles.familiaYAmigos, styles.familiaYAmigosTypo]}
                 >
-                  Mi círculo
+                  Amigos y Familiares
                 </Text>
               </View>
             </View>

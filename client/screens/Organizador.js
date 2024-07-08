@@ -265,18 +265,23 @@ const Organizador = () => {
             >
               Subir recuerdo
             </Text>
-            <Text
-              style={{
-                color: Color.primario1,
-                fontWeight: '500',
-                letterSpacing: 0,
-                lineHeight: 22,
-                fontSize: FontSize.size_lg,
-                fontFamily: FontFamily.lato
-              }}
+            <Pressable
+              disabled={!libraryImage || dataToSend.description === ''}
+              onPress={handleSubmit}
             >
-              Subir
-            </Text>
+              <Text
+                style={{
+                  color: Color.primario1,
+                  fontWeight: '500',
+                  letterSpacing: 0,
+                  lineHeight: 22,
+                  fontSize: FontSize.size_lg,
+                  fontFamily: FontFamily.lato
+                }}
+              >
+                Subir
+              </Text>
+            </Pressable>
           </View>
           <ScrollView
             style={{
@@ -547,7 +552,12 @@ const Organizador = () => {
                     </Text>
                   </Pressable>
                   <Image
-                    style={{ width: 9, height: 16 }}
+                    style={{
+                      width: 9,
+                      marginRight: 5,
+                      height: 16,
+                      transform: [{ rotate: añadirAUnAlbum ? '90deg' : '0deg' }]
+                    }}
                     contentFit="cover"
                     source={require('../assets/arrowdown22.png')}
                   />
@@ -717,23 +727,56 @@ const Organizador = () => {
                   </Text>
                 </Pressable>
                 <Image
-                  style={{ marginLeft: 20, width: 9, height: 16 }}
+                  style={{
+                    width: 9,
+                    marginRight: 5,
+                    height: 16,
+                    transform: [{ rotate: showPrivacidad ? '90deg' : '0deg' }]
+                  }}
                   contentFit="cover"
                   source={require('../assets/arrowdown23.png')}
                 />
               </View>
             </View>
+            <LinearGradient
+              style={{
+                marginTop: 30,
+                paddingVertical: Padding.p_sm,
+                backgroundColor: Color.linearBoton,
+                borderRadius: Border.br_11xl,
+                justifyContent: 'center',
+                alignSelf: 'center',
+                width: '95%',
+                alignItems: 'center',
+                flexDirection: 'row'
+              }}
+              locations={[0, 1]}
+              colors={['#dee274', '#7ec18c']}
+            >
+              <Text
+                disabled={!libraryImage || dataToSend.description === ''}
+                onPress={handleSubmit}
+                style={{
+                  letterSpacing: 1,
+                  lineHeight: 24,
+                  color: Color.white,
+                  textAlign: 'center',
+                  fontSize: FontSize.size_base,
+                  fontFamily: FontFamily.lato
+                }}
+              >
+                Subir
+              </Text>
+            </LinearGradient>
           </ScrollView>
         </View>
-        {!keyboardVisible && (
+        {/* {!keyboardVisible && (
           <LinearGradient
             style={{
               paddingVertical: Padding.p_sm,
               backgroundColor: Color.linearBoton,
               borderRadius: Border.br_11xl,
               justifyContent: 'center',
-              position: 'absolute',
-              bottom: 105,
               alignSelf: 'center',
               width: '95%',
               alignItems: 'center',
@@ -757,7 +800,7 @@ const Organizador = () => {
               Subir
             </Text>
           </LinearGradient>
-        )}
+        )} */}
         <Modal animationType="slide" transparent visible={showEtapas}>
           <View
             style={{
