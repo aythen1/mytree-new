@@ -18,7 +18,7 @@ export class MessageEntity {
   createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp', nullable: true })
-  updateAt: Date;
+  updatedAt: Date;
 
 
   @Column()
