@@ -22,6 +22,8 @@ import { InfoEntityModule } from './info-entity/info-entity.module';
 import { Event } from './event/entities/event.entity';
 import { DiaryModule } from './diary/diary.module'; // Importa el módulo de Diary
 import { Diary } from './diary/entities/diary.entity'; // Importa la entidad de Diary
+import { AlbumModule } from './album/album.module'; // Importa el módulo de Diary
+import { Album } from './album/entities/album.entity'; // Importa la entidad de Diary
 
 @Module({
   imports: [
@@ -36,7 +38,7 @@ import { Diary } from './diary/entities/diary.entity'; // Importa la entidad de 
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASS'),
         database: configService.get<string>('DB_NAME'),
-        entities: [User, Post, Notification, History, Comment, Event, MessageEntity,Diary ],
+        entities: [User, Post, Notification, History, Comment,Album, Event, MessageEntity,Diary ],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -48,6 +50,7 @@ import { Diary } from './diary/entities/diary.entity'; // Importa la entidad de 
     UserModule,
     NotificationModule,
     EventModule,
+    AlbumModule,
     ChatModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

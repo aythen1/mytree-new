@@ -28,7 +28,7 @@ export class DiaryController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.diaryService.remove(id);
   }
 
