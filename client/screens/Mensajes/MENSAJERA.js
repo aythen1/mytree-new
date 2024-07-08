@@ -115,17 +115,11 @@ const MENSAJERA = () => {
           navigate={navigation.navigate}
           route="CrearGrupo"
         />
-        <View
-          style={{
-            paddingHorizontal: 0,
-            paddingLeft: Dimensions.get('screen').width * 0.05
-          }}
-        >
-          <ButtonsMensajeria
-            selectedFilter={selectedFilter}
-            setSelectedFilter={setSelectedFilter}
-          />
-        </View>
+
+        <ButtonsMensajeria
+          selectedFilter={selectedFilter}
+          setSelectedFilter={setSelectedFilter}
+        />
       </View>
       {/* ========================== MENSAJES ======================= */}
       <ScrollView
