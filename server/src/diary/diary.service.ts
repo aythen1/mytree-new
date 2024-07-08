@@ -63,6 +63,13 @@ export class DiaryService {
    * @throws NotFoundException si no se encuentra la entrada de diario.
    */
   async remove(id: string): Promise<void> {
+    // Verifica si el diario existe antes de intentar eliminarlo
+    const diary = await this.diaryRepository.findOne({where: {id:id}});
+    if (!diary) {
+      throw new NotFoundException(`Diario con ID ${id} no encontrado`);
+    }
+
+    // Elimina el diario
     const result = await this.diaryRepository.delete(id);
     if (result.affected === 0) {
       throw new NotFoundException(`Diario con ID ${id} no encontrado`);
