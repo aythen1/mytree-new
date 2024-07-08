@@ -31,9 +31,15 @@ export class DiaryController {
   async remove(@Param('id') id: string) {
     return this.diaryService.remove(id);
   }
-
+//trae todos los de un usuario
   @Post('user/diaries')
   findAllByUser(@Body('creatorId') creatorId: string) {
     return this.diaryService.findAllByUser(creatorId);
+  }
+//filtra y trae todos de la misma categoria de un usuario
+  @Post('/filter')
+  async findByCategoryAndCreator(@Body() body: { category: string, creatorId: string }) {
+    const { category, creatorId } = body;
+    return this.diaryService.findByCategoryAndCreator(category, creatorId);
   }
 }
