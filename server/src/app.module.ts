@@ -20,6 +20,8 @@ import { ChatModule } from './chat/chat.module';
 import { EventModule } from './event/event.module';
 import { InfoEntityModule } from './info-entity/info-entity.module';
 import { Event } from './event/entities/event.entity';
+import { DiaryModule } from './diary/diary.module'; // Importa el módulo de Diary
+import { Diary } from './diary/entities/diary.entity'; // Importa la entidad de Diary
 
 @Module({
   imports: [
@@ -34,7 +36,7 @@ import { Event } from './event/entities/event.entity';
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASS'),
         database: configService.get<string>('DB_NAME'),
-        entities: [User, Post, Notification, History, Comment, Event, MessageEntity],
+        entities: [User, Post, Notification, History, Comment, Event, MessageEntity,Diary ],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -42,6 +44,7 @@ import { Event } from './event/entities/event.entity';
     InfoEntityModule,
     PostsModule,
     CommentsModule,
+    DiaryModule,
     UserModule,
     NotificationModule,
     EventModule,
