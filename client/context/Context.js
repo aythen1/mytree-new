@@ -21,6 +21,7 @@ export const ContextProvider = ({ children }) => {
   const [showCommentsModal, setShowCommentsModal] = useState(false)
   const [selectedPostTags, setSelectedPostTags] = useState([])
   const [usersWithMessages, setUsersWithMessages] = useState([])
+  const [notReaded, setNotReaded] = useState(0)
   const [showQrModal, setShowQrModal] = useState(false)
   const [showTaggedsModal, setShowTaggedsModal] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
@@ -338,7 +339,7 @@ export const ContextProvider = ({ children }) => {
         )[0]
         return { room: key, ...userData, lastMessage }
       })
-      // console.log('Setting users with messages to: ', finalInfo)
+      console.log('Setting users with messages to: ', finalInfo)
       setUsersWithMessages(
         finalInfo.sort(
           (a, b) =>
@@ -443,6 +444,8 @@ export const ContextProvider = ({ children }) => {
         showResponses,
         setShowResponses,
         selectedRelationType,
+        notReaded,
+        setNotReaded,
         setSelectedRelationType,
         selectedRelationShip,
         setSelectedRelationShip,
