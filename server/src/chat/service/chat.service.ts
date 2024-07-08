@@ -16,7 +16,7 @@ export class ChatService {
   }
 
   findAll() {
-    return `This action returns all socket`;
+    return `This action retuuuuurns all socket`;
   }
 
   findOne(id: number) {
