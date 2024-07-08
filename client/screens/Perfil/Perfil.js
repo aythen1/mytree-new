@@ -26,6 +26,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Camera, CameraView, useCameraPermissions } from 'expo-camera'
 import { getUserPosts } from '../../redux/slices/user.slices'
 import { Context } from '../../context/Context'
+import axiosInstance from '../../apiBackend'
 
 
 const Perfil = () => {
@@ -36,7 +37,7 @@ const Perfil = () => {
   const { userData } = useSelector((state) => state.users)
   const { userPosts } = useSelector((state) => state.posts)
   const { allPosts } = useSelector((state) => state.posts)
-  const { pickImage, provisoryProfileImage } = useContext(Context)
+  const { pickImage, provisoryProfileImage ,profileImage } = useContext(Context)
 
 
   const [hasPermission, setHasPermission] = useState(null)
@@ -109,6 +110,14 @@ const Perfil = () => {
     getUser()
   }, [])
 
+
+  useEffect(()=>{
+ if(profileImage){
+      console.log("llego")
+      axiosInstance.patch(`/user/${userData.id}`,{profilePicture:profileImage})
+    }
+  },[profileImage])
+
   console.log(userData,"data user")
 
   return (
@@ -176,11 +185,11 @@ const Perfil = () => {
           contentFit="cover"
           source={require('../../assets/group-1171276683.png')}
         />)}
-         {userData?.profilePicture && (<Image
-          style={styles.perfilItem}
+         {/* {userData?.profilePicture || provisoryProfileImage  && (<Image
+          style={{...styles.perfilItem,borderRadius:100}}
           contentFit="cover"
-          source={{uri:userData?.profilePicture}}
-        />)}
+          source={{uri:userData?.profilePicture || provisoryProfileImage}}
+        />)} */}
       </Pressable>
 
       <View style={styles.nameContainer}>
