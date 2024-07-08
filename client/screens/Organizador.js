@@ -39,7 +39,7 @@ const Organizador = () => {
   const dispatch = useDispatch()
   const [taggedUsers, setTaggedUsers] = useState([])
   const { showPanel } = useSelector((state) => state.panel)
-  const { userData } = useSelector((state) => state.users)
+  const { userData, allUsers } = useSelector((state) => state.users)
 
   const {
     libraryImage,
@@ -66,7 +66,7 @@ const Organizador = () => {
   const [dataToSend, setDataToSend] = useState({
     nameUser: '',
     description: '',
-    fecha: new Date(),
+    fecha: '',
     photos: [],
     tags: [],
     hashtags: [],
@@ -91,6 +91,7 @@ const Organizador = () => {
   const [buttonContainer1Visible, setButtonContainer1Visible] = useState(false)
   const [frameContainer5Visible, setFrameContainer5Visible] = useState(false)
   const [showPrivacidad, setShowPrivacidad] = useState(false)
+  const [privacy, setPrivacy] = useState()
   const [location, setLocation] = useState()
   const [selectedDate, setSelectedDate] = useState()
 
@@ -186,7 +187,9 @@ const Organizador = () => {
       finalData.tags = taggedUsers
       finalData.hashtags = selectedHashtags
       finalData.userId = user.id
-      finalData.fecha = selectedDate || new Date()
+      finalData.fecha = selectedDate
+        ? selectedDate.reverse().join('-')
+        : new Date()
       finalData.nameUser = user.username
       finalData.photos = [libraryImage]
       finalData.description = dataToSend.description
@@ -426,15 +429,33 @@ const Organizador = () => {
                     source={require('../assets/iconlyboldadduser.png')}
                   />
                 </View>
-                <Text
-                  style={{
-                    lineHeight: 19,
-                    color: Color.gris,
-                    fontSize: FontSize.size_base
-                  }}
-                >
-                  Etiquetar
-                </Text>
+                {taggedUsers.length === 0 ? (
+                  <Text
+                    style={{
+                      lineHeight: 19,
+                      color: Color.gris,
+                      fontSize: FontSize.size_base
+                    }}
+                  >
+                    Etiquetar
+                  </Text>
+                ) : (
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    style={{
+                      lineHeight: 19,
+                      color: Color.gris,
+                      fontSize: FontSize.size_base,
+                      maxWidth: '85%'
+                    }}
+                  >
+                    {allUsers
+                      .filter((user) => taggedUsers.includes(user.id))
+                      .map((user) => `${user.username} ${user.apellido}`)
+                      .join(', ')}
+                  </Text>
+                )}
               </Pressable>
               <Pressable
                 style={{
@@ -459,15 +480,27 @@ const Organizador = () => {
                     source={require('../assets/vector14.png')}
                   />
                 </View>
-                <Text
-                  style={{
-                    lineHeight: 19,
-                    color: Color.gris,
-                    fontSize: FontSize.size_base
-                  }}
-                >
-                  Fecha
-                </Text>
+                {selectedDate ? (
+                  <Text
+                    style={{
+                      lineHeight: 19,
+                      color: Color.gris,
+                      fontSize: FontSize.size_base
+                    }}
+                  >
+                    {selectedDate.split('-').reverse().join('-')}
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      lineHeight: 19,
+                      color: Color.gris,
+                      fontSize: FontSize.size_base
+                    }}
+                  >
+                    Fecha
+                  </Text>
+                )}
               </Pressable>
               <Pressable
                 style={{
@@ -492,15 +525,28 @@ const Organizador = () => {
                     source={require('../assets/iconlybulklocation.png')}
                   />
                 </View>
-                <Text
-                  style={{
-                    lineHeight: 19,
-                    color: Color.gris,
-                    fontSize: FontSize.size_base
-                  }}
-                >
-                  Lugar
-                </Text>
+
+                {location ? (
+                  <Text
+                    style={{
+                      lineHeight: 19,
+                      color: Color.gris,
+                      fontSize: FontSize.size_base
+                    }}
+                  >
+                    {location}
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      lineHeight: 19,
+                      color: Color.gris,
+                      fontSize: FontSize.size_base
+                    }}
+                  >
+                    Lugar
+                  </Text>
+                )}
               </Pressable>
               {/* =============== ADD TO ALBUM ================= */}
               <View
@@ -848,7 +894,11 @@ const Organizador = () => {
               style={{ width: '100%', height: '100%', left: 0, top: 0 }}
               onPress={closePrivacidad}
             />
-            <Privacidad onClose={closePrivacidad} />
+            <Privacidad
+              privacy={privacy}
+              setPrivacy={setPrivacy}
+              onClose={closePrivacidad}
+            />
           </View>
         </Modal>
         <Modal
@@ -896,30 +946,7 @@ const Organizador = () => {
             />
           </View>
         </Modal>
-        <Modal animationType="fade" transparent visible={lugar}>
-          <View
-            style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)'
-            }}
-          >
-            <Pressable
-              style={{
-                position: 'absolute',
-                width: '100%',
-                height: '100%',
-                left: 0,
-                top: 0
-              }}
-              onPress={() => {
-                setLugar(false)
-              }}
-            />
-            <Maps onClose={() => setLugar(false)} setLocation={setLocation} />
-          </View>
-        </Modal>
+
         {/* <Modal animationType="slide" transparent visible={lugar}>
           <View
             style={{
@@ -973,6 +1000,30 @@ const Organizador = () => {
           </View>
         </Modal>
       </ScrollView>
+      <Modal animationType="fade" transparent visible={lugar}>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(113, 113, 113, 0.3)'
+          }}
+        >
+          <Pressable
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              left: 0,
+              top: 0
+            }}
+            onPress={() => {
+              setLugar(false)
+            }}
+          />
+          <Maps onClose={() => setLugar(false)} setLocation={setLocation} />
+        </View>
+      </Modal>
     </LinearGradient>
   )
 }

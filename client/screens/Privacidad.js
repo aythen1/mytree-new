@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { Color, FontSize, FontFamily, Padding, Border } from '../GlobalStyles'
 import Checkbox from 'expo-checkbox'
 
-const Privacidad = ({ onClose }) => {
+const Privacidad = ({ onClose, setPrivacy, privacy }) => {
   const [check1, setCheck1] = useState(false)
   const [check2, setCheck2] = useState(false)
   const [check3, setCheck3] = useState(false)
@@ -45,7 +45,10 @@ const Privacidad = ({ onClose }) => {
             </Text>
             <View style={[styles.checkParent, styles.parentFlexBox]}>
               <View style={styles.check}>
-                <Checkbox value={check1} onValueChange={setCheck1} />
+                <Checkbox
+                  value={privacy === 'Todos'}
+                  onValueChange={() => setPrivacy('Todos')}
+                />
               </View>
               <View style={[styles.userParent, styles.parentFlexBox]}>
                 <Image
@@ -62,7 +65,10 @@ const Privacidad = ({ onClose }) => {
             </View>
             <View style={[styles.checkParent, styles.parentFlexBox]}>
               <View style={styles.check}>
-                <Checkbox value={check2} onValueChange={setCheck2} />
+                <Checkbox
+                  value={privacy === 'Amigos y Familiares'}
+                  onValueChange={() => setPrivacy('Amigos y Familiares')}
+                />
               </View>
               <View style={[styles.userParent, styles.parentFlexBox]}>
                 <Image
@@ -79,7 +85,10 @@ const Privacidad = ({ onClose }) => {
             </View>
             <View style={[styles.checkParent, styles.parentFlexBox]}>
               <View style={styles.check}>
-                <Checkbox value={check3} onValueChange={setCheck3} />
+                <Checkbox
+                  value={privacy === 'Yo'}
+                  onValueChange={() => setPrivacy('Yo')}
+                />
               </View>
               <View style={[styles.userParent, styles.parentFlexBox]}>
                 <Image
@@ -97,7 +106,7 @@ const Privacidad = ({ onClose }) => {
           </View>
         </View>
       </View>
-      <Pressable onPress={onClose}>
+      <Pressable style={{ marginTop: 40 }} onPress={onClose}>
         <LinearGradient
           style={[styles.button, styles.parentFlexBox]}
           locations={[0, 1]}
@@ -254,7 +263,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: Padding.p_5xl,
     paddingVertical: Padding.p_sm,
     backgroundColor: Color.linearBoton,
-    marginTop: 40,
     width: '100%',
     borderRadius: Border.br_11xl,
     flexDirection: 'row'

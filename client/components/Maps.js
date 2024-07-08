@@ -14,7 +14,7 @@ const Maps = ({ onClose, setLocation }) => {
 
   return (
     <GooglePlacesAutocomplete
-      placeholder={t('buscar')}
+      placeholder={'Buscar'}
       query={{
         key: 'AIzaSyBH0Ey-G2PbWkSCLyGG1A9TCg9LDPlzQpc',
         language: 'es'
