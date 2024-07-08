@@ -1,12 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { getChatHistory, updateMessages } from '../actions/chat'
 
-export const chatsSlices = createSlice({
+const clubSlices = createSlice({
   name: 'chats',
   initialState: {
-    allMessages: []
+    allMessages: [],
+    loading: false,
+    error: false
   },
   reducers: {
+    resetChatsSlices: (state, action) => {
+      state.allMessages = []
+      ;(state.loading = false), (state.error = false)
+    },
     setAllMessages: (state, action) => {
       state.allMessages = action.payload
     },
@@ -62,7 +68,10 @@ export const chatsSlices = createSlice({
   }
 })
 
-export const { setAllMessages, setAllConversationMessagesToRead } =
-  chatsSlices.actions
+export const {
+  setAllMessages,
+  setAllConversationMessagesToRead,
+  resetChatsSlices
+} = clubSlices.actions
 
-export default chatsSlices.reducer
+export default clubSlices.reducer
