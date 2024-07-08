@@ -193,18 +193,27 @@ export const ContextProvider = ({ children }) => {
   }
 
   function getTimeFromDate(dateString) {
+    // Create a new Date object from the UTC string
     const utcDate = new Date(dateString)
 
+    // // Get the local time zone offset in milliseconds
+    // const localOffsetMilliseconds = new Date().getTimezoneOffset() * 60000
+
+    // Convert the UTC time to local time by adding the offset
     const localTime = utcDate
 
+    // Create a new Date object representing the local time
     const localDate = new Date(localTime)
 
+    // Extract local hours and minutes
     const hours = localDate.getHours()
     const minutes = localDate.getMinutes()
 
+    // Format hours and minutes
     const formattedHours = hours < 10 ? '0' + hours : hours
     const formattedMinutes = minutes < 10 ? '0' + minutes : minutes
 
+    // Return formatted time
     return `${formattedHours}:${formattedMinutes}`
   }
 
@@ -291,13 +300,23 @@ export const ContextProvider = ({ children }) => {
   // }
 
   const [editingDiary, setEditingDiary] = useState()
+  const [notReadedMessages, setNotReadedMessages] = useState()
 
   const getUsersMessages = async () => {
-    console.log('userData', userData)
     const { data } = await axiosInstance.post('chat/chats', {
-      userId: userData?.id
+      userId: userData.id
     })
+    // console.log('DATA', data)
     const convs = Object.keys(data)
+    const notReadedConvMessages = convs
+      .map((conv) =>
+        data[conv].filter(
+          (message) =>
+            message.senderId !== userData.id && message.isReaded === false
+        )
+      )
+      .flat()
+    setNotReadedMessages(notReadedConvMessages)
     const notReaded = convs
       .map(
         (conv) =>
@@ -314,9 +333,19 @@ export const ContextProvider = ({ children }) => {
           .split('_')
           .filter((singleId) => singleId !== userData.id)[0]
         const userData = allUsers.filter((user) => user.id === otherUserId)[0]
-        return { room: key, ...userData }
+        const lastMessage = data[key].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        )[0]
+        return { room: key, ...userData, lastMessage }
       })
-      setUsersWithMessages(finalInfo)
+      // console.log('Setting users with messages to: ', finalInfo)
+      setUsersWithMessages(
+        finalInfo.sort(
+          (a, b) =>
+            new Date(b.lastMessage.createdAt) -
+            new Date(a.lastMessage.createdAt)
+        )
+      )
     }
   }
 
@@ -438,6 +467,8 @@ export const ContextProvider = ({ children }) => {
         setLibraryImage,
         coverImage,
         showSelectEventTypeModal,
+        notReadedMessages,
+        setNotReadedMessages,
         setShowSelectEventTypeModal,
         formatDateDifference,
         setCoverImage,

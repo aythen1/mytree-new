@@ -15,10 +15,10 @@ export class MessageEntity {
 
   @Column({ nullable: true, default: null })
   createdAt: Date | null;
-  
+
   @Column({ nullable: true, default: null })
   updateAt: Date | null;
-  
+
   @Column()
   senderId: string; // El ID del remitente del mensaje
 
