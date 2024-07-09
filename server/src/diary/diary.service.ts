@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Between } from 'typeorm';
 import { Diary } from '../diary/entities/diary.entity';
 import { CreateDiaryDto } from './dto/create-diary.dto';
 import { UpdateDiaryDto } from './dto/update-diary.dto';
@@ -86,8 +86,24 @@ export class DiaryService {
   }
 
 //para traer todos los diarios de una categoria de un usuario
-async findByCategoryAndCreator(category: string, creatorId: string, date: Date): Promise<Diary[]> {
-  const diaries = await this.diaryRepository.find({ where: { category, creatorId, date } });
+async findByCategoryAndCreator(category: string, creatorId: string, date?: string): Promise<Diary[]> {
+  let whereClause: any = {
+    category,
+    creatorId,
+  };
+
+  if (date) {
+    // Filtrar por la fecha exacta
+    whereClause = {
+      ...whereClause,
+      date,
+    };
+  }
+
+  const diaries = await this.diaryRepository.find({
+    where: whereClause,
+  });
+
   return diaries || [];
 }
 
