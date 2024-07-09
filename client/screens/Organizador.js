@@ -184,6 +184,7 @@ const Organizador = () => {
       finalData.tags = taggedUsers
       finalData.etiquets = taggedUsers
       finalData.hashtags = selectedHashtags
+      finalData.albums = []
       finalData.userId = userData.id
       finalData.fecha = selectedDate ? selectedDate : new Date()
       finalData.nameUser = userData.username
