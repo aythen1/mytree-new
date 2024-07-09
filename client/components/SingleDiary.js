@@ -10,9 +10,11 @@ import { LinearGradient } from 'expo-linear-gradient'
 import {
   deleteDiaryById,
   getAllUserDiaries,
+  getUserDiariesByDateOrCategory,
   postDiary,
   updateDiaryById
 } from '../redux/actions/diaries'
+import { removeUserDiary } from '../redux/slices/diaries.slices'
 
 const SingleDiary = ({
   diary,
@@ -20,16 +22,22 @@ const SingleDiary = ({
   setModalCreate,
   modalCreate,
   openGroupIcon1,
-  last
+  last,
+  selectedDate
 }) => {
+  const { selectedSection, formatDateToNormal } = useContext(Context)
+  const { userData } = useSelector((state) => state.users)
   const [text, setText] = useState(diary.description)
   const dispatch = useDispatch()
-  const { editingDiary, userData, setEditingDiary } = useContext(Context)
+
+  const { editingDiary, setEditingDiary } = useContext(Context)
   const handleDeleteDiary = (id) => {
     console.log('deleting diary', id, '...')
     dispatch(deleteDiaryById(diary.id))
   }
-
+  useEffect(() => {
+    console.log('userData from singlediary', userData)
+  }, [])
   useEffect(() => {
     console.log('Modal create changed to', modalCreate)
   }, [modalCreate])
@@ -56,7 +64,12 @@ const SingleDiary = ({
           >
             <Pressable
               style={{ height: 18, width: 18 }}
-              onPress={() => setEditingDiary()}
+              onPress={() => {
+                if (diary.id === 'preDiary') {
+                  dispatch(removeUserDiary('preDiary'))
+                }
+                setEditingDiary()
+              }}
             >
               <Image
                 style={{ height: '100%', width: '100%' }}
@@ -97,19 +110,40 @@ const SingleDiary = ({
                     console.log('opening create modal')
                     const preDiary = { ...diary }
                     preDiary.description = text
-                    if (!preDiary.id) {
+                    if (preDiary.id === 'preDiary') {
                       console.log('its a pre diary, posting it..', preDiary)
-                      dispatch(postDiary(preDiary)).then((res) =>
-                        getAllUserDiaries(userData.id)
-                      )
-                    } else if (preDiary.id) {
+                      delete preDiary.id
+                      dispatch(postDiary(preDiary)).then((res) => {
+                        const obj = {
+                          creatorId: userData.id,
+                          category: selectedSection
+                        }
+                        console.log(
+                          'SELECTED DATE BEFORE POSTING',
+                          selectedDate
+                        )
+                        if (selectedDate) {
+                          obj.date = formatDateToNormal(selectedDate)
+                        }
+                        dispatch(getUserDiariesByDateOrCategory(obj))
+                      })
+                    } else {
                       console.log('updating diary...', preDiary)
                       dispatch(
                         updateDiaryById({
                           diaryId: preDiary.id,
                           diaryData: { description: preDiary.description }
                         })
-                      ).then((res) => getAllUserDiaries(userData.id))
+                      ).then((res) => {
+                        const obj = {
+                          creatorId: userData.id,
+                          category: selectedSection
+                        }
+                        if (selectedDate) {
+                          obj.date = formatDateToNormal(selectedDate)
+                        }
+                        dispatch(getUserDiariesByDateOrCategory(obj))
+                      })
                     }
                     setEditingDiary()
                   }}

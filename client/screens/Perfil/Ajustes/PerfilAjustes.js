@@ -22,7 +22,19 @@ import CalendarMuroSVG from '../../../components/svgs/CalendarMuroSVG'
 import BookSVG from '../../../components/svgs/BookSVG'
 import NotificationsMuroSVG from '../../../components/svgs/NotificationsMuroSVG'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { clearAlbums } from '../../../redux/slices/albums.slices'
+import { clearChats } from '../../../redux/slices/chats.slices'
+import { clearComments } from '../../../redux/slices/comments.slices'
+import { clearDiaries } from '../../../redux/slices/diaries.slices'
+import { clearNotifications } from '../../../redux/slices/notifications.slices'
+import { clearPanel } from '../../../redux/slices/panel.slices'
+import { clearPosts } from '../../../redux/slices/posts.slices'
+import { clearStories } from '../../../redux/slices/stories.slices'
+import { clearUser } from '../../../redux/slices/user.slices'
+import { clearEvents } from '../../../redux/slices/events.slices'
+import { useDispatch } from 'react-redux'
 const PerfilAjustes = () => {
+  const dispatch = useDispatch()
   const navigation = useNavigation()
   const [usuario, setUsuario] = useState('')
 
@@ -38,6 +50,16 @@ const PerfilAjustes = () => {
 
   const handleLogOut = async () => {
     await AsyncStorage.removeItem('user')
+    dispatch(clearAlbums())
+    dispatch(clearChats())
+    dispatch(clearComments())
+    dispatch(clearEvents())
+    dispatch(clearDiaries())
+    dispatch(clearNotifications())
+    dispatch(clearPanel())
+    dispatch(clearPosts())
+    dispatch(clearStories())
+    dispatch(clearUser())
     navigation.navigate('Splash')
   }
 

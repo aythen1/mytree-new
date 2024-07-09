@@ -35,7 +35,6 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { Context } from '../../context/Context'
 import Compartir from '../../components/Compartir'
 import Etiquetados from '../../components/Etiquetados'
-import { getUsers } from '../../redux/slices/user.slices'
 import { getAllUsers, getUserData } from '../../redux/actions/user'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getAllNotifications } from '../../redux/actions/notifications'
@@ -58,7 +57,8 @@ const Muro = () => {
   const route = useRoute()
   const queryParams = route.params
   const { showPanel } = useSelector((state) => state.panel)
-  const [user, setUser] = useState()
+  const { userData } = useSelector((state) => state.users)
+  // const [user, setUser] = useState()
   const [showModalRetos, setShowModalRetos] = useState(false)
   const [colorClick, setColorClick] = useState(true)
   const [showRetos, setShowRetos] = useState(false)
@@ -68,11 +68,11 @@ const Muro = () => {
   const handleMenu = () => {
     dispatch(setPanel(false))
   }
-  const getUser = async () => {
-    const usuario = await AsyncStorage.getItem('user')
-    const user = JSON.parse(usuario)
-    setUser(user)
-  }
+  // const getUser = async () => {
+  //   const usuario = await AsyncStorage.getItem('user')
+  //   const user = JSON.parse(usuario)
+  //   setUser(user)
+  // }
   useEffect(() => {
     if (queryParams?.invite && queryParams?.memberId) {
       console.log(user, 'user')
@@ -80,17 +80,17 @@ const Muro = () => {
     }
   }, [queryParams])
 
+  // useEffect(() => {
+  //   getUser()
+  // }, [])
   useEffect(() => {
-    getUser()
-  }, [])
-  useEffect(() => {
-    if (user) {
+    if (userData) {
       dispatch(getAllNotifications())
-      dispatch(getUserData(user.id))
-      dispatch(getAllUsers())
+      dispatch(getUserData(userData.id))
+      // dispatch(getAllUsers())
       dispatch(getAllEvents())
     }
-  }, [user])
+  }, [])
 
   const handleAceptInvitation = async () => {
     try {
@@ -156,7 +156,6 @@ const Muro = () => {
                         key={1000}
                         onPress={() => {
                           navigation.navigate('Busqueda')
-                          dispatch(getAllUsers())
                         }}
                       >
                         <LupaSVG />

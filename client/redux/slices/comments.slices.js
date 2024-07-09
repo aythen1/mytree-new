@@ -16,6 +16,13 @@ export const commentsSlices = createSlice({
     },
     updateSelectedPostComments: (state, action) => {
       state.selectedPostComments = action.payload
+    },
+    clearComments: (state, action) => {
+      ;(state.allComments = []),
+        (state.userComments = []),
+        (state.selectedPostComments = []),
+        (state.loading = false),
+        (state.error = null)
     }
   },
   extraReducers: (builder) => {
@@ -47,7 +54,7 @@ export const commentsSlices = createSlice({
   }
 })
 
-export const { updateComment, updateSelectedPostComments } =
+export const { updateComment, updateSelectedPostComments, clearComments } =
   commentsSlices.actions
 
 export default commentsSlices.reducer

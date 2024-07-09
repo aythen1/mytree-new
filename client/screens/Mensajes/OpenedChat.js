@@ -26,7 +26,7 @@ const OpenedChat = () => {
   const route = useRoute()
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(true)
-  const { allUsers } = useSelector((state) => state.users)
+  const { allUsers, userData } = useSelector((state) => state.users)
   const { allMessages } = useSelector((state) => state.chats)
   const [selectedUserDetails, setSelectedUserDetails] = useState()
   const [message, setMessage] = useState('')
@@ -37,7 +37,6 @@ const OpenedChat = () => {
     getUsersMessages,
     roomId,
     leaveRoom,
-    userData,
     sendMessage,
     getTimeFromDate
   } = useContext(Context)

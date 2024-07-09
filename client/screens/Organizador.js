@@ -179,18 +179,13 @@ const Organizador = () => {
   }, [])
 
   const handleSubmit = async () => {
-    const usuario = await AsyncStorage.getItem('user')
-    const user = JSON.parse(usuario)
     try {
-      console.log('user: ', user)
       const finalData = {}
       finalData.tags = taggedUsers
       finalData.hashtags = selectedHashtags
-      finalData.userId = user.id
-      finalData.fecha = selectedDate
-        ? selectedDate.reverse().join('-')
-        : new Date()
-      finalData.nameUser = user.username
+      finalData.userId = userData.id
+      finalData.fecha = selectedDate ? selectedDate : new Date()
+      finalData.nameUser = userData.username
       finalData.photos = [libraryImage]
       finalData.description = dataToSend.description
       console.log('sending post...', finalData)
@@ -301,28 +296,34 @@ const Organizador = () => {
             showsVerticalScrollIndicator={false}
           >
             <View>
-              <TextInput
-                multiline={true}
-                numberOfLines={3}
-                style={{
-                  color: '#202020',
-                  fontWeight: '500',
-                  fontSize: FontSize.size_lg,
-                  textAlign: 'left',
-                  textAlignVertical: 'top',
-                  borderRadius: Border.br_3xs,
-                  backgroundColor: Color.fAFAFA,
-                  paddingVertical: 5,
-                  paddingHorizontal: 5,
-                  fontFamily: FontFamily.lato
-                }}
-                placeholder=" Describe lo que sientes..."
-                onChangeText={(des) =>
-                  setDataToSend({ ...dataToSend, ['description']: des })
-                }
-                value={dataToSend.description}
-                onFocus={() => setKeyboardVisible(true)}
-              />
+              <LinearGradient
+                locations={[0, 1]}
+                colors={['#7ec18c', '#dee274']}
+                style={{ padding: 2, borderRadius: 12 }}
+              >
+                <TextInput
+                  multiline={true}
+                  numberOfLines={3}
+                  style={{
+                    color: '#202020',
+                    fontWeight: '500',
+                    fontSize: FontSize.size_lg,
+                    textAlign: 'left',
+                    textAlignVertical: 'top',
+                    borderRadius: Border.br_3xs,
+                    backgroundColor: Color.fAFAFA,
+                    paddingVertical: 5,
+                    paddingHorizontal: 5,
+                    fontFamily: FontFamily.lato
+                  }}
+                  placeholder=" Describe lo que sientes..."
+                  onChangeText={(des) =>
+                    setDataToSend({ ...dataToSend, ['description']: des })
+                  }
+                  value={dataToSend.description}
+                  onFocus={() => setKeyboardVisible(true)}
+                />
+              </LinearGradient>
               <View style={{ marginTop: 15 }}>
                 <Text
                   style={{

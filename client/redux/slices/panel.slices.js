@@ -13,10 +13,14 @@ export const panelSlices = createSlice({
 
     setPanelAddFooter: (state, action) => {
       state.panelAddFooter = action.payload
+    },
+
+    clearPanel: (state, action) => {
+      ;(state.showPanel = false), (state.panelAddFooter = false)
     }
   }
 })
 
-export const { setPanelAddFooter, setPanel } = panelSlices.actions
+export const { setPanelAddFooter, setPanel, clearPanel } = panelSlices.actions
 
 export default panelSlices.reducer

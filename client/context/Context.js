@@ -6,6 +6,7 @@ import io from 'socket.io-client'
 import { updateMessages } from '../redux/actions/chat'
 import axiosInstance from '../apiBackend'
 import { addUserDiary } from '../redux/slices/diaries.slices'
+import { getUserData } from '../redux/actions/user'
 
 export const Context = createContext()
 
@@ -34,8 +35,8 @@ export const ContextProvider = ({ children }) => {
   const [libraryImage, setLibraryImage] = useState()
   const [showHashtagsModal, setShowHashtagsModal] = useState(false)
   const [roomId, setRoomId] = useState()
-  const { allUsers } = useSelector((state) => state.users)
-  const [userData, setUserData] = useState()
+  const { allUsers, userData } = useSelector((state) => state.users)
+  // const [userData, setUserData] = useState()
   const [selectedPost, setSelectedPost] = useState()
   const [responseTo, setResponseTo] = useState()
   const [selectedComment, setSelectedComment] = useState()
@@ -55,6 +56,7 @@ export const ContextProvider = ({ children }) => {
         videos: [],
         date: new Date(date),
         category,
+        id: 'preDiary',
         title: '',
         creatorId: userData.id,
         description: '',
@@ -62,12 +64,14 @@ export const ContextProvider = ({ children }) => {
         taggedUsers: []
       })
     )
+    setEditingDiary('preDiary')
   }
 
   const getUser = async () => {
     const usuario = await AsyncStorage.getItem('user')
     const user = JSON.parse(usuario)
-    setUserData(user)
+    // setUserData(user)
+    dispatch(getUserData(user.id))
   }
 
   useEffect(() => {
@@ -104,7 +108,7 @@ export const ContextProvider = ({ children }) => {
         .then((res) => res.json())
         .then((data) => {
           //  console.log('dataUrl from uriImg:', data.url)
-          if(source == 'profile'){
+          if (source == 'profile') {
             setProfileImage(transformHttpToHttps(data.url))
           }
           setLibraryImage(transformHttpToHttps(data.url))
@@ -172,6 +176,16 @@ export const ContextProvider = ({ children }) => {
         }
       }
     }
+  }
+
+  const formatDateToNormal = (date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0') // Months are 0-based
+    const day = String(date.getDate()).padStart(2, '0')
+
+    const formattedDate = `${year}-${month}-${day}`
+    console.log(formattedDate) // Output: '2024-07-08'
+    return formattedDate
   }
 
   function formatDate(dateString) {
@@ -355,6 +369,7 @@ export const ContextProvider = ({ children }) => {
           ).length
       )
       .reduce((acc, curr) => acc + curr, 0)
+    console.log('setting not readed to', notReaded)
     setNotReaded(notReaded)
 
     if (Object.keys(data).length > 0) {
@@ -366,6 +381,7 @@ export const ContextProvider = ({ children }) => {
 
         console.log('other user id', otherUserId)
         const userInfo = allUsers.filter((user) => user.id === otherUserId)[0]
+        console.log('userInfo==========', userInfo)
         const lastMessage = data[key].sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         )[0]
@@ -483,6 +499,7 @@ export const ContextProvider = ({ children }) => {
         selectedRelationShip,
         setSelectedRelationShip,
         selectedUserToInvite,
+        formatDateToNormal,
         setSelectedUserToInvite,
         editingDiary,
         setEditingDiary,
@@ -523,8 +540,8 @@ export const ContextProvider = ({ children }) => {
         responseTo,
         setResponseTo,
         selectedComment,
-        setSelectedComment,
-        setUserData
+        setSelectedComment
+        // setUserData
       }}
     >
       {children}

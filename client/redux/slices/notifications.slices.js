@@ -12,6 +12,12 @@ export const notificationsSlices = createSlice({
   reducers: {
     updateNotifications: (state, action) => {
       state.allNotifications = action.payload
+    },
+    clearNotifications: (state, action) => {
+      ;(state.allNotifications = []),
+        (state.userNotifications = []),
+        (state.loading = false),
+        (state.error = null)
     }
   },
   extraReducers: (builder) => {
@@ -33,6 +39,7 @@ export const notificationsSlices = createSlice({
   }
 })
 
-//  export const { updateNotifications } = notificationsSlices.actions
+export const { updateNotifications, clearNotifications } =
+  notificationsSlices.actions
 
 export default notificationsSlices.reducer

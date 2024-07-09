@@ -29,7 +29,7 @@ export const getNotificationById = createAsyncThunk(
   }
 )
 
-//   // Get all user notifications
+// Get all user notifications
 // export const getAllUserNotifications = createAsyncThunk(
 //     'getAllUserNotifications/notifications',
 //     async (userId) => {

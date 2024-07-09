@@ -17,6 +17,7 @@ export const getAllAlbums = createAsyncThunk(
 // Post an album
 export const postAlbum = createAsyncThunk('postAlbum/albums', async (album) => {
   try {
+    console.log('POSTING ALBUM WITH ', album)
     const { data } = await axiosInstance.post(`/albums`, album)
     return data
   } catch (error) {
@@ -67,10 +68,12 @@ export const deleteAlbumById = createAsyncThunk(
 export const getAllUserAlbums = createAsyncThunk(
   'getAllUserAlbums/albums',
   async (userId) => {
+    console.log('GETTING ALBUMS OF USER', userId)
     try {
       const { data } = await axiosInstance.post(`/albums/by-creator`, {
         creatorId: userId
       })
+      console.log('USER ALBUMS FROM ACTION', data)
       return data
     } catch (error) {
       throw new Error(error)
