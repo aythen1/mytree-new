@@ -344,6 +344,17 @@ export const userSlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userData = action.payload.data.user;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
        // =================== LOAD MESSAGES =================== 
        .addCase(getUserData.pending, (state) => {
         state.loading = true;

@@ -13,6 +13,9 @@ import { Entypo } from '@expo/vector-icons'
 import { Camera, CameraView } from 'expo-camera'
 import * as MediaLibrary from 'expo-media-library'
 import { Context } from '../../context/Context'
+import { Color } from '../../GlobalStyles'
+import PagerView from 'react-native-pager-view'
+import { handleSelect } from './utils/utils'
 
 const UploadMemory = () => {
   const { pickImage, libraryImage, showCamera, setShowCamera } =
@@ -21,9 +24,20 @@ const UploadMemory = () => {
   const [images, setImages] = useState([])
   const [selectedImage, setSelectedImage] = useState(null)
   const [cameraType, setCameraType] = useState(Camera?.Constants?.Type?.back)
+  const [showSelection, setShowSelection] = useState(false)
+  const [hasPermission, setHasPermission] = useState(null)
+  const [cameraRef, setCameraRef] = useState(null)
+  const cameraReff = useRef(null)
+  const [facing, setFacing] = useState('back')
+  const [multiSelect, setMultiSelect] = useState([])
 
   useEffect(() => {
+    ;(async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync()
+      setHasPermission(status === 'granted')
+    })()
     obtenerImagenesDeGaleria()
+
   }, [])
 
   const obtenerImagenesDeGaleria = async () => {
@@ -43,17 +57,6 @@ const UploadMemory = () => {
     setSelectedImage(imagen)
     pickImage('a', imagen.uri)
   }
-  const [hasPermission, setHasPermission] = useState(null)
-  const [cameraRef, setCameraRef] = useState(null)
-  const cameraReff = useRef(null)
-  const [facing, setFacing] = useState('back')
-
-  useEffect(() => {
-    ;(async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync()
-      setHasPermission(status === 'granted')
-    })()
-  }, [])
 
   const changePictureMode = () => {
     console.log(
@@ -63,31 +66,15 @@ const UploadMemory = () => {
     setFacing((prev) => (prev === 'back' ? 'front' : 'back'))
   }
 
-  useEffect(() => {
-    console.log('selectedImage changed', selectedImage)
-  }, [selectedImage])
-
-  // const takePicture = async () => {
-  //   console.log('on takePicture!')
-  //   if (cameraRef) {
-  //     const photo = await cameraRef.takePictureAsync()
-  //     console.log(photo)
-  //     setSelectedImage(photo)
-  //     pickImage('a', photo.uri)
-  //     setShowCamera(false)
-  //   }
-  // }
   const takePicture = async () => {
     if (cameraReff?.current) {
       const photo = await cameraReff.current.takePictureAsync()
       pickImage('a', photo.uri)
       setSelectedImage(photo)
-      // pickImageFromCamera(selectedPicture, photo.uri);
-
       setShowCamera(false)
-      // You can handle the taken photo here, such as displaying it or saving it.
     }
   }
+
 
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -208,7 +195,8 @@ const UploadMemory = () => {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity
+          {multiSelect.length === 0 ? (
+            <View
             style={{ justifyContent: 'center', alignItems: 'center' }}
           >
             <Image
@@ -224,7 +212,31 @@ const UploadMemory = () => {
                   : require('../../assets/frame-1547755266.png')
               }
             />
-          </TouchableOpacity>
+          </View>
+          ) : (
+            <View
+            style={{ justifyContent: 'center', alignItems: 'center',height: "53%" }}
+          >
+              <PagerView
+                  style={{  height:"100%",width:"100%" }}
+                  initialPage={0}
+                >
+                  {multiSelect.map((e, i) => (
+                    <View style={{ width: '100%' }} key={i}>
+                      <Image
+                       style={{
+                        width: Dimensions.get('window').width - 30,
+                        height: Dimensions.get('window').width,
+                        borderRadius: 8
+                      }}
+                        contentFit="cover"
+                        source={{ uri: e?.uri }}
+                      />
+                    </View>
+                  ))}
+                </PagerView>
+          </View>
+          )}
           <View
             style={{
               flexDirection: 'row',
@@ -251,6 +263,11 @@ const UploadMemory = () => {
               style={{ gap: 10, alignItems: 'center', flexDirection: 'row' }}
             >
               <TouchableOpacity
+              onPress={()=> {
+                if(showSelection){
+                  setMultiSelect([])
+                }
+                setShowSelection(!showSelection)}}
                 style={{
                   gap: 5,
                   backgroundColor: '#D9D9D9',
@@ -317,8 +334,32 @@ const UploadMemory = () => {
               {images.map((imagen, index) => (
                 <TouchableOpacity
                   key={index}
-                  onPress={() => handleSeleccionarImagen(imagen)}
+                  onPress={() => {
+                    if (showSelection) {
+                      handleSelect(imagen,setSelectedImage,multiSelect,setMultiSelect)
+                    } else {
+                      handleSeleccionarImagen(imagen)
+                    }
+                  }}
                 >
+                    { multiSelect.find((img, i) => imagen.id === img.id) && (
+                <View
+                  style={{
+                    width: 20,
+                    height: 20,
+                    backgroundColor: Color.secundario,
+                    borderRadius: 100,
+                    position: 'absolute',
+                    top: 10,
+                    right: 10,
+                    zIndex: 800
+                  }}
+                >
+                  <Text style={{ color: 'white', textAlign: 'center' }}>
+                    {multiSelect.indexOf(imagen) + 1}
+                  </Text>
+                </View>
+              )}
                   <Image
                     source={{ uri: imagen.uri }}
                     style={{

@@ -81,15 +81,18 @@ export const ContextProvider = ({ children }) => {
       const profileImageForm = new FormData()
       profileImageForm.append('file', profileImageData)
       profileImageForm.append('upload_preset', 'cfbb_profile_pictures')
-      profileImageForm.append('cloud_name', 'dfp6r9aq4')
+      profileImageForm.append('cloud_name', 'dnewfuuv0')
 
-      await fetch('https://api.cloudinary.com/v1_1/dfp6r9aq4/image/upload', {
+      await fetch('https://api.cloudinary.com/v1_1/dnewfuuv0/image/upload', {
         method: 'post',
         body: profileImageForm
       })
         .then((res) => res.json())
         .then((data) => {
           //  console.log('dataUrl from uriImg:', data.url)
+          if(source == 'profile'){
+            setProfileImage(transformHttpToHttps(data.url))
+          }
           setLibraryImage(transformHttpToHttps(data.url))
         })
     } else {
