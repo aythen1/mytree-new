@@ -3,6 +3,7 @@ import { User } from "../entities/user.entity";
 
 export class UpdateUserDto {
     username?: string;
+    newUser?:boolean;
     email?: string;
     password?: string;
     emailVerified?: boolean;

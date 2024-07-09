@@ -86,7 +86,9 @@ export class DiaryService {
   }
 
 //para traer todos los diarios de una categoria de un usuario
-  async findByCategoryAndCreator(category: string, creatorId: string): Promise<Diary[]> {
-    return this.diaryRepository.find({ where: { category, creatorId } });
-  }
+async findByCategoryAndCreator(category: string, creatorId: string, date: Date): Promise<Diary[]> {
+  const diaries = await this.diaryRepository.find({ where: { category, creatorId, date } });
+  return diaries || [];
+}
+
 }

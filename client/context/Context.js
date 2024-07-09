@@ -90,6 +90,9 @@ export const ContextProvider = ({ children }) => {
         .then((res) => res.json())
         .then((data) => {
           //  console.log('dataUrl from uriImg:', data.url)
+          if(source == 'profile'){
+            setProfileImage(transformHttpToHttps(data.url))
+          }
           setLibraryImage(transformHttpToHttps(data.url))
         })
     } else {
@@ -339,7 +342,8 @@ export const ContextProvider = ({ children }) => {
         )[0]
         return { room: key, ...userData, lastMessage }
       })
-      console.log('Setting users with messages to: ', finalInfo)
+      // console.log('Setting users with messages to: ', finalInfo)
+      //fix
       setUsersWithMessages(
         finalInfo.sort(
           (a, b) =>

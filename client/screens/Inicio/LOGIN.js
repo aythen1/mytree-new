@@ -71,6 +71,9 @@ const LOGIN = () => {
           'user',
           JSON.stringify(result?.payload?.data?.user)
         )
+        if(result?.payload?.data?.user?.newUser){
+          return navigation.navigate('Perfil')
+        }
         navigation.navigate('Muro')
       } else {
         setError('Email o contraseña no validos')

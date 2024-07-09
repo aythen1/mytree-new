@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, Pressable, Text, ScrollView } from 'react-native'
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { StyleSheet, View, Pressable, Text, ScrollView, TouchableOpacity, Modal } from 'react-native'
 import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
 import {
@@ -25,24 +25,37 @@ import BarraBusqueda from '../../components/BarraBusqueda'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Camera, CameraView, useCameraPermissions } from 'expo-camera'
 import { getUserPosts } from '../../redux/slices/user.slices'
-
+import { Context } from '../../context/Context'
+import axiosInstance from '../../apiBackend'
+import SimboloSVG from './SimboloSVG'
+import { Entypo } from '@expo/vector-icons'
+import EmojiSelector, { Categories } from "react-native-emoji-selector";
+import EmojiPicker, { emojiFromUtf16 } from "rn-emoji-picker"
+import { emojis } from "rn-emoji-picker/dist/data"
 
 const Perfil = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const [facing, setFacing] = useState('back');
   const { showPanel } = useSelector((state) => state.panel)
-  const {userData}  = useSelector((state) => state.users)
-  const {userPosts}  = useSelector((state) => state.posts)
-  const {allPosts}  = useSelector((state) => state.posts)
+  const { userData } = useSelector((state) => state.users)
+  const { userPosts } = useSelector((state) => state.posts)
+  const { allPosts } = useSelector((state) => state.posts)
+  const { pickImage, provisoryProfileImage, profileImage } = useContext(Context)
 
 
   const [hasPermission, setHasPermission] = useState(null)
   const [selectedImage, setSelectedImage] = useState(null)
   const [showCamera, setShowCamera] = useState(false)
+  const [showEmojis, setShowEmojis] = useState(false)
+  const [emoji, setEmoji] = useState(false)
+
+
+  const [showImageOptions, setShowImageOptions] = useState(false)
+
 
   dispatch(getUserPosts(userData.id))
-  
+
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync()
@@ -50,14 +63,15 @@ const Perfil = () => {
     })()
   }, [])
 
-  useEffect(()=>{
-    console.log(userPosts,"dataaaaaaa")
+  useEffect(() => {
+    console.log(userPosts, "dataaaaaaa")
 
-  },[userPosts])
+  }, [userPosts])
 
   const [selectedComponent, setSelectedComponent] = useState('MiLegado')
   const [search, setSearch] = useState(false)
   const [usuario, setUsuario] = useState({})
+  const cameraReff = useRef(null)
 
 
 
@@ -65,16 +79,16 @@ const Perfil = () => {
     if (cameraReff) {
       const photo = await cameraReff.current.takePictureAsync()
       setSelectedImage(photo)
-      pickImageFromCamera(selectedPicture, photo.uri)
+      pickImage('profile', photo.uri)
       setShowCamera(false)
       // You can handle the taken photo here, such as displaying it or saving it.
     }
   }
-  
-  
+
+
   const changePictureMode = async () => {
 
-    setFacing((prev)=> prev == "back" ? "front" : "back")
+    setFacing((prev) => prev == "back" ? "front" : "back")
   }
 
 
@@ -105,126 +119,272 @@ const Perfil = () => {
       return JSON.parse(usuario)
     }
     getUser()
+    if (userData?.newUser) {
+      axiosInstance.patch(`/user/${userData?.id}`, { newUser: false })
+    }
   }, [])
 
-  return (
-    <ScrollView
-      style={{
-        flex: 1,
 
-        backgroundColor: Color.white
-      }}
-      showsVerticalScrollIndicator={false}
-    >
-      <View
+  useEffect(() => {
+    if (profileImage) {
+      console.log("llego")
+      axiosInstance.patch(`/user/${userData?.id}`, { profilePicture: profileImage })
+    }
+  }, [profileImage])
+
+  
+
+  console.log(userData, "data user")
+  if (!showCamera) {
+    return (
+      <ScrollView
         style={{
-          justifyContent: 'space-between',
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingTop: 14
+          flex: 1,
+
+          backgroundColor: Color.white
         }}
+        showsVerticalScrollIndicator={false}
       >
-        <Pressable onPress={() => navigation.navigate('Muro')}>
+        <View
+          style={{
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingTop: 14
+          }}
+        >
+          <Pressable onPress={() => navigation.navigate('Muro')}>
+            <Image
+              style={[styles.image6Icon, styles.ionmenu]}
+              contentFit="cover"
+              source={require('../../assets/image-6.png')}
+            />
+          </Pressable>
+
+          <HeaderIcons
+            icons={
+              selectedComponent !== 'PERFILMIINFO'
+                ? [
+                  <Pressable onPress={() => setSearch(!search)}>
+                    <LupaSVG />
+                  </Pressable>,
+                  <PlusSVG isNavigation={'CrearAlbum'} />,
+                  <SettingMuroSVG isNavigation={'PerfilAjustes'} />
+                ]
+                : [
+                  <TreeSVG />,
+                  <NotificationsMuroSVG
+                    isNavigation={'PERFILNOTIFICACIONES'}
+                  />,
+                  <SettingMuroSVG isNavigation={'PerfilAjustes'} />
+                ]
+            }
+          />
+        </View>
+
+        <Pressable
+          onPress={() => navigation.openDrawer()}
+          style={styles.menuPosition}
+        >
           <Image
-            style={[styles.image6Icon, styles.ionmenu]}
+            style={styles.ionmenuIcon}
             contentFit="cover"
-            source={require('../../assets/image-6.png')}
+            source={require('../../assets/ionmenu.png')}
           />
         </Pressable>
 
-        <HeaderIcons
-          icons={
-            selectedComponent !== 'PERFILMIINFO'
-              ? [
-                <Pressable onPress={() => setSearch(!search)}>
-                  <LupaSVG />
-                </Pressable>,
-                <PlusSVG isNavigation={'CrearAlbum'} />,
-                <SettingMuroSVG isNavigation={'PerfilAjustes'} />
-              ]
-              : [
-                <TreeSVG />,
-                <NotificationsMuroSVG
-                  isNavigation={'PERFILNOTIFICACIONES'}
-                />,
-                <SettingMuroSVG isNavigation={'PerfilAjustes'} />
-              ]
-          }
-        />
-      </View>
+        {search && <BarraBusqueda />}
 
-      <Pressable
-        onPress={() => navigation.openDrawer()}
-        style={styles.menuPosition}
-      >
-        <Image
-          style={styles.ionmenuIcon}
-          contentFit="cover"
-          source={require('../../assets/ionmenu.png')}
-        />
-      </Pressable>
+        <View style={{ width: "auto", justifyContent: "center" }}>
+          <Pressable onPress={() => setShowImageOptions(!showImageOptions)} style={{ ...styles.imageContainer }}>
+            {!provisoryProfileImage && !userData?.profilePicture ? (<Image
+              style={{ ...styles.perfilItem, borderRadius: 100 }}
+              contentFit="cover"
+              source={require('../../assets/group-1171276683.png')}
+            />) : (<Image
+              style={{ ...styles.perfilItem, borderRadius: 100 }}
+              contentFit="cover"
+              source={{ uri: profileImage || provisoryProfileImage || userData.profilePicture }}
+            />)}
+            <Pressable onPress={() => setShowEmojis(true)} style={{ width: 30, height: 30, backgroundColor: Color.secundario, position: "absolute", borderRadius: 100, bottom: 0, left: "35%", justifyContent: "center", alignItems: "center" }}>
+              {emoji && <Text>{emoji}</Text>}
+            </Pressable>
+          </Pressable>
+          {showImageOptions && <View style={{ position: "absolute", top: 0, right: "25%", gap: 10 }}>
+            <Pressable onPress={() => pickImage("profile")} style={{ width: 30, height: 30, backgroundColor: Color.secundario, borderRadius: 100, justifyContent: "center", alignItems: "center" }}>
+              <SimboloSVG
+                color={
+                  "#fff"
+                }
+              />
+            </Pressable>
+            <Pressable onPress={() => setShowCamera(true)} style={{ width: 30, height: 30, backgroundColor: Color.secundario, borderRadius: 100, justifyContent: "center", alignItems: "center" }}>
+              <Image
+                style={{ width: 16, height: 16 }}
+                contentFit="cover"
+                source={require('../../assets/cameraIcon.png')}
+              />
+            </Pressable>
 
-      {search && <BarraBusqueda />}
-
-      <View style={styles.imageContainer}>
-        <Image
-          style={styles.perfilItem}
-          contentFit="cover"
-          source={require('../../assets/group-1171276683.png')}
-        />
-      </View>
-
-      <View style={styles.nameContainer}>
-        <Text style={styles.brunoPham}> {userData.username}{' '}{userData.apellido}</Text>
-        <View style={styles.placeContainer}>
-          <Text style={[styles.daNangVietnam, styles.miInfoTypo]}>
-            {userData.adress && userData.adress + ','}{userData.city}
-          </Text>
+          </View>}
         </View>
-      </View>
 
-      <View style={styles.tabsBar}>
-        <Pressable
-          style={[
-            styles.tabs,
-            (selectedComponent === 'MiLegado' ||
-              selectedComponent === 'SOLOYO') &&
-            styles.miWrapper
-          ]}
-          onPress={() => setSelectedComponent('MiLegado')}
-        >
-          <Text
-            style={
-              (styles.miInfo,
-                (selectedComponent === 'MiLegado' ||
-                  selectedComponent === 'SOLOYO') &&
-                styles.selectedText)
-            }
-          >
-            Mi Legado
-          </Text>
-        </Pressable>
-        <Pressable
-          style={[
-            styles.tabs,
-            selectedComponent === 'PERFILMIINFO' && styles.miWrapper
-          ]}
-          onPress={() => setSelectedComponent('PERFILMIINFO')}
-        >
-          <Text
-            style={
-              (styles.miInfo,
-                selectedComponent === 'PERFILMIINFO' && styles.selectedText)
-            }
-          >
-            Mi información
-          </Text>
-        </Pressable>
-      </View>
+        <View style={styles.nameContainer}>
+          <Text style={styles.brunoPham}> {userData.username}{' '}{userData.apellido}</Text>
+          <View style={styles.placeContainer}>
+            <Text style={[styles.daNangVietnam, styles.miInfoTypo]}>
+              {userData.adress && userData.adress + ','}{userData.city}
+            </Text>
+          </View>
+        </View>
 
-      {renderSelectedComponent()}
-    </ScrollView>
-  )
+        <View style={styles.tabsBar}>
+          <Pressable
+            style={[
+              styles.tabs,
+              (selectedComponent === 'MiLegado' ||
+                selectedComponent === 'SOLOYO') &&
+              styles.miWrapper
+            ]}
+            onPress={() => setSelectedComponent('MiLegado')}
+          >
+            <Text
+              style={
+                (styles.miInfo,
+                  (selectedComponent === 'MiLegado' ||
+                    selectedComponent === 'SOLOYO') &&
+                  styles.selectedText)
+              }
+            >
+              Mi Legado
+            </Text>
+          </Pressable>
+          <Pressable
+            style={[
+              styles.tabs,
+              selectedComponent === 'PERFILMIINFO' && styles.miWrapper
+            ]}
+            onPress={() => setSelectedComponent('PERFILMIINFO')}
+          >
+            <Text
+              style={
+                (styles.miInfo,
+                  selectedComponent === 'PERFILMIINFO' && styles.selectedText)
+              }
+            >
+              Mi información
+            </Text>
+          </Pressable>
+        </View>
+
+        {renderSelectedComponent()}
+        <Modal visible={showEmojis}>
+          <View style={{ flex: 1 }}>
+            <EmojiPicker
+              emojis={emojis} // emojis data source see data/emojis
+              // recent={recent} // store of recently used emojis
+              autoFocus={true} // autofocus search input
+              loading={false} // spinner for if your emoji data or recent store is async
+              darkMode={true} // to be or not to be, that is the question
+              perLine={7} // # of emoji's per line
+              onSelect={(e) => {
+                setEmoji(e.emoji)
+                setShowEmojis(false)
+              }} // callback when user selects emoji - returns emoji obj
+            // onChangeRecent={setRecent} // callback to update recent storage - arr of emoji objs
+            // backgroundColor={'#000'} // optional custom bg color
+            // enabledCategories={[ // optional list of enabled category keys
+            //   'recent', 
+            //   'emotion', 
+            //   'emojis', 
+            //   'activities', 
+            //   'flags', 
+            //   'food', 
+            //   'places', 
+            //   'nature'
+            // ]}
+            // defaultCategory={'food'} // optional default category key
+            />
+          </View>
+        </Modal>
+      </ScrollView>
+    )
+  } else {
+    return (
+      <View style={{ zIndex: 9999, height: '100%' }}>
+        <CameraView
+          ref={cameraReff}
+          facing={facing}
+          style={{ flex: 1 }}
+          mode="picture"
+          FocusMode="on"
+          onCameraReady={(e) => console.log(e, 'esto es e')}
+
+        // cameraType="back"
+        >
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'transparent',
+              flexDirection: 'row'
+            }}
+          >
+            <TouchableOpacity
+              style={{ position: 'absolute', top: 49, left: 20 }}
+              onPress={() => setShowCamera(false)}
+            >
+              <Image
+                style={{
+                  height: 16,
+                  width: 16
+                }}
+                contentFit="cover"
+                source={require('../../assets/group-565.png')}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                alignSelf: 'flex-end',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'row',
+                width: '100%',
+                marginBottom: 30,
+                position: 'relative'
+              }}
+            >
+              <TouchableOpacity
+                onPress={takePicture}
+                style={{
+                  width: 60,
+                  height: 60,
+                  bottom: 100,
+                  borderRadius: 100,
+                  backgroundColor: '#cecece',
+
+                  color: 'white'
+                }}
+              ></TouchableOpacity>
+              <TouchableOpacity
+                onPress={changePictureMode}
+                style={{
+                  position: 'absolute',
+                  right: 20,
+                  bottom: 100,
+                  color: 'white',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <Entypo name="cycle" color={'#fff'} size={25} />
+              </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
+        </CameraView>
+      </View>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
@@ -296,7 +456,8 @@ const styles = StyleSheet.create({
     height: 130,
     width: 130
   },
-  nameContainer: {paddingVertical:20
+  nameContainer: {
+    paddingVertical: 20
   },
   brunoPham: {
     textAlign: 'center',
