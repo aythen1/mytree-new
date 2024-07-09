@@ -108,4 +108,8 @@ console.log("options es", options)
 
     return validRelations;
   }
+
+  async findByReceiverId(receiverId: string): Promise<Notification[]> {
+    return await this.notificationRepository.find({ where: { receiverId: receiverId } });
+  }
 }
