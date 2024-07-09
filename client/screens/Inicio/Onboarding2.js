@@ -20,7 +20,11 @@ const Onboarding2 = () => {
 
       // Navega a la pantalla adecuada
       if (usuarioLogueado) {
+        console.log(usuarioLogueado?.newUser,"logeadoooo")
         // Usuario logueado, navega a la pantalla de inicio
+        if(usuarioLogueado){
+          navigation.navigate('Perfil');
+        }
         navigation.replace('Muro');
       } else {
         // Usuario no logueado, navega a la pantalla de registro
