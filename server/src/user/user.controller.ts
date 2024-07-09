@@ -290,6 +290,7 @@ async toggleLike(
     @Param('property') property: string,
     @Param('memberId') memberId: string
   ) {
+    console.log(userId, property, memberId)
     return this.userService.addFamilyMember(userId, property, memberId);
   }
 
@@ -301,6 +302,16 @@ async toggleLike(
     @Param('memberId') memberId: string
   ) {
     return this.userService.removeFamilyMember(userId, property, memberId);
+  }
+
+
+  @Post(':id/friendsAndFamily')
+  async getFriendsAndFamilyInfo(@Param('id') id: string): Promise<any[]> {
+    try {
+      return this.userService.getFriendsAndFamilyInfo(id);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
   
 }

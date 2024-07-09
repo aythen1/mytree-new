@@ -466,47 +466,151 @@ async getUserFriends(userId: string): Promise<User[]> {
     }
 
 
-
-    async addFamilyMember(userId: string, property: string, memberId: string) {
-      const user = await this.userRepository.findOne({where: {id:userId}});
+//agrega a amigos o familiares
+    async addFamilyMember(userId: string, property: string, memberId: string): Promise<User> {
+      const user = await this.userRepository.findOne({where:{id:userId}});
       if (!user) {
         throw new NotFoundException('Usuario no encontrado');
       }
   
-      // Verificar el tipo de propiedad y manejarlo en consecuencia
-      if (typeof user[property] === 'string') {
-        // Si es una propiedad de tipo string, simplemente reemplazarla con el nuevo ID
-        user[property] = memberId;
-      } else if (Array.isArray(user[property])) {
-        // Si es una propiedad de tipo array, agregar el nuevo ID al arreglo
-        user[property].push(memberId);
-      } else {
-        throw new Error('El tipo de propiedad no es compatible');
+      // Verificar si la propiedad es válida y manejarla en consecuencia
+      switch (property) {
+        case 'momId':
+        case 'dadId':
+          user[property] = memberId;
+          break;
+        case 'brotherIds':
+        case 'unclesIds':
+        case 'grandparentsIds':
+        case 'cousinsIds':
+        case 'familyIds':
+        case 'friendsIds':
+          if (Array.isArray(user[property])) {
+            user[property].push(memberId);
+          } else {
+            user[property] = [memberId];
+          }
+          break;
+        default:
+          throw new Error('La propiedad especificada no es válida');
       }
   
-      return this.userRepository.save(user);
+      // Guardar los cambios en la base de datos
+      await this.userRepository.save(user);
+  
+      return user;
     }
   
     async removeFamilyMember(userId: string, property: string, memberId: string) {
-      const user = await this.userRepository.findOne({where: {id:userId}});
-      if (!user) {
-        throw new NotFoundException('Usuario no encontrado');
-      }
-  
-      // Verificar el tipo de propiedad y manejarlo en consecuencia
-      if (typeof user[property] === 'string') {
-        // Si es una propiedad de tipo string, eliminarla si coincide con el ID a eliminar
-        if (user[property] === memberId) {
-          user[property] = null;
+      try {
+        // Buscar al usuario
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+        if (!user) {
+          throw new NotFoundException('Usuario no encontrado');
         }
-      } else if (Array.isArray(user[property])) {
-        // Si es una propiedad de tipo array, filtrar el ID a eliminar del arreglo
-        user[property] = user[property].filter(id => id !== memberId);
-      } else {
-        throw new Error('El tipo de propiedad no es compatible');
+    
+        // Verificar el tipo de propiedad y manejarlo en consecuencia
+        if (typeof user[property] === 'string') {
+          // Si es una propiedad de tipo string, eliminarla si coincide con el ID a eliminar
+          if (user[property] === memberId) {
+            user[property] = null;
+          }
+        } else if (Array.isArray(user[property])) {
+          // Si es una propiedad de tipo array, filtrar el ID a eliminar del arreglo
+          user[property] = user[property].filter(id => id !== memberId);
+        } else {
+          throw new Error('El tipo de propiedad no es compatible');
+        }
+    
+        // Guardar el usuario actualizado
+        await this.userRepository.save(user);
+        return { message: 'Miembro eliminado correctamente' };
+      } catch (error) {
+        throw new Error('Ocurrió un error al eliminar el miembro de la familia');
       }
-  
-      return this.userRepository.save(user);
     }
-  
+    
+
+
+    async getFriendsAndFamilyInfo(userId: string): Promise<any[]> {
+      const user = await this.userRepository.findOne({ where: { id: userId } });
+      if (!user) {
+        throw new NotFoundException(`Usuario con ID ${userId} no encontrado.`);
+      }
+    
+      const usersInfo = [];
+    
+      const getUserInfo = async (id: string) => {
+        const userInfo = await this.userRepository.findOne({ where: { id: id } });
+        if (userInfo) {
+          usersInfo.push({
+            id: userInfo.id,
+            profilePicture: userInfo.profilePicture,
+            username: userInfo.username,
+          });
+        }
+      };
+    
+      // Verificar amigos
+      if (user.friendsIds && user.friendsIds.length > 0) {
+        for (const friendId of user.friendsIds) {
+          await getUserInfo(friendId);
+        }
+      }
+    
+      // Verificar familiares (familyIds)
+      if (user.familyIds && user.familyIds.length > 0) {
+        for (const familyId of user.familyIds) {
+          await getUserInfo(familyId);
+        }
+      }
+    
+      // Verificar madre (momId)
+      if (user.momId) {
+        await getUserInfo(user.momId);
+      }
+    
+      // Verificar padre (dadId)
+      if (user.dadId) {
+        await getUserInfo(user.dadId);
+      }
+    
+      // Verificar hermanos (brotherIds)
+      if (user.brotherIds && user.brotherIds.length > 0) {
+        for (const brotherId of user.brotherIds) {
+          await getUserInfo(brotherId);
+        }
+      }
+    
+      // Verificar tíos (unclesIds)
+      if (user.unclesIds && user.unclesIds.length > 0) {
+        for (const uncleId of user.unclesIds) {
+          await getUserInfo(uncleId);
+        }
+      }
+    
+      // Verificar abuelos (grandparentsIds)
+      if (user.grandparentsIds && user.grandparentsIds.length > 0) {
+        for (const grandparentId of user.grandparentsIds) {
+          await getUserInfo(grandparentId);
+        }
+      }
+    
+      // Verificar primos (cousinsIds)
+      if (user.cousinsIds && user.cousinsIds.length > 0) {
+        for (const cousinId of user.cousinsIds) {
+          await getUserInfo(cousinId);
+        }
+      }
+    
+      // Si no se encontró ningún contacto, devolver mensaje
+      if (usersInfo.length === 0) {
+        usersInfo.push({
+          message: "Aún no tienes contactos."
+        });
+      }
+    
+      return usersInfo;
+    }
+    
 }

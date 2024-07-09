@@ -38,6 +38,7 @@ export class PostsService {
     } catch (error) {
       throw error;
     }
+
   }
 
   async findAll(): Promise<Post[]> {
@@ -45,11 +46,14 @@ export class PostsService {
   }
 
   async findOne(id: number): Promise<Post> {
+    
     const post = await this.postRepository.findOne({where:{id:id}});
     if (!post) {
       throw new NotFoundException(`Post con ID ${id} no encontrado`);
     }
+
     return post;
+
   }
 
   async update(id: number, updatePostDto: UpdatePostDto): Promise<Post> {
