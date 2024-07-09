@@ -33,12 +33,13 @@ import MapView from 'react-native-maps'
 import { useNavigation } from '@react-navigation/native'
 import { getAllPosts } from '../redux/actions/posts'
 import { getUserPosts } from '../redux/slices/user.slices'
+import Maps from '../components/Maps'
 
 const Organizador = () => {
   const dispatch = useDispatch()
   const [taggedUsers, setTaggedUsers] = useState([])
   const { showPanel } = useSelector((state) => state.panel)
-  const { userData } = useSelector((state) => state.users)
+  const { userData, allUsers } = useSelector((state) => state.users)
 
   const {
     libraryImage,
@@ -65,7 +66,7 @@ const Organizador = () => {
   const [dataToSend, setDataToSend] = useState({
     nameUser: '',
     description: '',
-    fecha: new Date(),
+    fecha: '',
     photos: [],
     tags: [],
     hashtags: [],
@@ -90,6 +91,8 @@ const Organizador = () => {
   const [buttonContainer1Visible, setButtonContainer1Visible] = useState(false)
   const [frameContainer5Visible, setFrameContainer5Visible] = useState(false)
   const [showPrivacidad, setShowPrivacidad] = useState(false)
+  const [privacy, setPrivacy] = useState()
+  const [location, setLocation] = useState()
   const [selectedDate, setSelectedDate] = useState()
 
   const closeSubmit = () => {
@@ -184,7 +187,9 @@ const Organizador = () => {
       finalData.tags = taggedUsers
       finalData.hashtags = selectedHashtags
       finalData.userId = user.id
-      finalData.fecha = selectedDate || new Date()
+      finalData.fecha = selectedDate
+        ? selectedDate.reverse().join('-')
+        : new Date()
       finalData.nameUser = user.username
       finalData.photos = [libraryImage]
       finalData.description = dataToSend.description
@@ -265,18 +270,23 @@ const Organizador = () => {
             >
               Subir recuerdo
             </Text>
-            <Text
-              style={{
-                color: Color.primario1,
-                fontWeight: '500',
-                letterSpacing: 0,
-                lineHeight: 22,
-                fontSize: FontSize.size_lg,
-                fontFamily: FontFamily.lato
-              }}
+            <Pressable
+              disabled={!libraryImage || dataToSend.description === ''}
+              onPress={handleSubmit}
             >
-              Subir
-            </Text>
+              <Text
+                style={{
+                  color: Color.primario1,
+                  fontWeight: '500',
+                  letterSpacing: 0,
+                  lineHeight: 22,
+                  fontSize: FontSize.size_lg,
+                  fontFamily: FontFamily.lato
+                }}
+              >
+                Subir
+              </Text>
+            </Pressable>
           </View>
           <ScrollView
             style={{
@@ -419,15 +429,33 @@ const Organizador = () => {
                     source={require('../assets/iconlyboldadduser.png')}
                   />
                 </View>
-                <Text
-                  style={{
-                    lineHeight: 19,
-                    color: Color.gris,
-                    fontSize: FontSize.size_base
-                  }}
-                >
-                  Etiquetar
-                </Text>
+                {taggedUsers.length === 0 ? (
+                  <Text
+                    style={{
+                      lineHeight: 19,
+                      color: Color.gris,
+                      fontSize: FontSize.size_base
+                    }}
+                  >
+                    Etiquetar
+                  </Text>
+                ) : (
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    style={{
+                      lineHeight: 19,
+                      color: Color.gris,
+                      fontSize: FontSize.size_base,
+                      maxWidth: '85%'
+                    }}
+                  >
+                    {allUsers
+                      .filter((user) => taggedUsers.includes(user.id))
+                      .map((user) => `${user.username} ${user.apellido}`)
+                      .join(', ')}
+                  </Text>
+                )}
               </Pressable>
               <Pressable
                 style={{
@@ -452,15 +480,27 @@ const Organizador = () => {
                     source={require('../assets/vector14.png')}
                   />
                 </View>
-                <Text
-                  style={{
-                    lineHeight: 19,
-                    color: Color.gris,
-                    fontSize: FontSize.size_base
-                  }}
-                >
-                  Fecha
-                </Text>
+                {selectedDate ? (
+                  <Text
+                    style={{
+                      lineHeight: 19,
+                      color: Color.gris,
+                      fontSize: FontSize.size_base
+                    }}
+                  >
+                    {selectedDate.split('-').reverse().join('-')}
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      lineHeight: 19,
+                      color: Color.gris,
+                      fontSize: FontSize.size_base
+                    }}
+                  >
+                    Fecha
+                  </Text>
+                )}
               </Pressable>
               <Pressable
                 style={{
@@ -485,15 +525,28 @@ const Organizador = () => {
                     source={require('../assets/iconlybulklocation.png')}
                   />
                 </View>
-                <Text
-                  style={{
-                    lineHeight: 19,
-                    color: Color.gris,
-                    fontSize: FontSize.size_base
-                  }}
-                >
-                  Lugar
-                </Text>
+
+                {location ? (
+                  <Text
+                    style={{
+                      lineHeight: 19,
+                      color: Color.gris,
+                      fontSize: FontSize.size_base
+                    }}
+                  >
+                    {location}
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      lineHeight: 19,
+                      color: Color.gris,
+                      fontSize: FontSize.size_base
+                    }}
+                  >
+                    Lugar
+                  </Text>
+                )}
               </Pressable>
               {/* =============== ADD TO ALBUM ================= */}
               <View
@@ -547,7 +600,12 @@ const Organizador = () => {
                     </Text>
                   </Pressable>
                   <Image
-                    style={{ width: 9, height: 16 }}
+                    style={{
+                      width: 9,
+                      marginRight: 5,
+                      height: 16,
+                      transform: [{ rotate: añadirAUnAlbum ? '90deg' : '0deg' }]
+                    }}
                     contentFit="cover"
                     source={require('../assets/arrowdown22.png')}
                   />
@@ -717,23 +775,56 @@ const Organizador = () => {
                   </Text>
                 </Pressable>
                 <Image
-                  style={{ marginLeft: 20, width: 9, height: 16 }}
+                  style={{
+                    width: 9,
+                    marginRight: 5,
+                    height: 16,
+                    transform: [{ rotate: showPrivacidad ? '90deg' : '0deg' }]
+                  }}
                   contentFit="cover"
                   source={require('../assets/arrowdown23.png')}
                 />
               </View>
             </View>
+            <LinearGradient
+              style={{
+                marginTop: 30,
+                paddingVertical: Padding.p_sm,
+                backgroundColor: Color.linearBoton,
+                borderRadius: Border.br_11xl,
+                justifyContent: 'center',
+                alignSelf: 'center',
+                width: '95%',
+                alignItems: 'center',
+                flexDirection: 'row'
+              }}
+              locations={[0, 1]}
+              colors={['#dee274', '#7ec18c']}
+            >
+              <Text
+                disabled={!libraryImage || dataToSend.description === ''}
+                onPress={handleSubmit}
+                style={{
+                  letterSpacing: 1,
+                  lineHeight: 24,
+                  color: Color.white,
+                  textAlign: 'center',
+                  fontSize: FontSize.size_base,
+                  fontFamily: FontFamily.lato
+                }}
+              >
+                Subir
+              </Text>
+            </LinearGradient>
           </ScrollView>
         </View>
-        {!keyboardVisible && (
+        {/* {!keyboardVisible && (
           <LinearGradient
             style={{
               paddingVertical: Padding.p_sm,
               backgroundColor: Color.linearBoton,
               borderRadius: Border.br_11xl,
               justifyContent: 'center',
-              position: 'absolute',
-              bottom: 105,
               alignSelf: 'center',
               width: '95%',
               alignItems: 'center',
@@ -757,7 +848,7 @@ const Organizador = () => {
               Subir
             </Text>
           </LinearGradient>
-        )}
+        )} */}
         <Modal animationType="slide" transparent visible={showEtapas}>
           <View
             style={{
@@ -803,7 +894,11 @@ const Organizador = () => {
               style={{ width: '100%', height: '100%', left: 0, top: 0 }}
               onPress={closePrivacidad}
             />
-            <Privacidad onClose={closePrivacidad} />
+            <Privacidad
+              privacy={privacy}
+              setPrivacy={setPrivacy}
+              onClose={closePrivacidad}
+            />
           </View>
         </Modal>
         <Modal
@@ -851,6 +946,7 @@ const Organizador = () => {
             />
           </View>
         </Modal>
+
         {/* <Modal animationType="slide" transparent visible={lugar}>
           <View
             style={{
@@ -904,6 +1000,30 @@ const Organizador = () => {
           </View>
         </Modal>
       </ScrollView>
+      <Modal animationType="fade" transparent visible={lugar}>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(113, 113, 113, 0.3)'
+          }}
+        >
+          <Pressable
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              left: 0,
+              top: 0
+            }}
+            onPress={() => {
+              setLugar(false)
+            }}
+          />
+          <Maps onClose={() => setLugar(false)} setLocation={setLocation} />
+        </View>
+      </Modal>
     </LinearGradient>
   )
 }

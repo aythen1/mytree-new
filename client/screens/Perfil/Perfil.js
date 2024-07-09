@@ -1,5 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { StyleSheet, View, Pressable, Text, ScrollView, TouchableOpacity, Modal } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  Pressable,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Modal
+} from 'react-native'
 import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
 import {
@@ -29,20 +37,19 @@ import { Context } from '../../context/Context'
 import axiosInstance from '../../apiBackend'
 import SimboloSVG from './SimboloSVG'
 import { Entypo } from '@expo/vector-icons'
-import EmojiSelector, { Categories } from "react-native-emoji-selector";
-import EmojiPicker, { emojiFromUtf16 } from "rn-emoji-picker"
-import { emojis } from "rn-emoji-picker/dist/data"
+import EmojiSelector, { Categories } from 'react-native-emoji-selector'
+import EmojiPicker, { emojiFromUtf16 } from 'rn-emoji-picker'
+import { emojis } from 'rn-emoji-picker/dist/data'
 
 const Perfil = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
-  const [facing, setFacing] = useState('back');
+  const [facing, setFacing] = useState('back')
   const { showPanel } = useSelector((state) => state.panel)
   const { userData } = useSelector((state) => state.users)
   const { userPosts } = useSelector((state) => state.posts)
   const { allPosts } = useSelector((state) => state.posts)
   const { pickImage, provisoryProfileImage, profileImage } = useContext(Context)
-
 
   const [hasPermission, setHasPermission] = useState(null)
   const [selectedImage, setSelectedImage] = useState(null)
@@ -50,30 +57,25 @@ const Perfil = () => {
   const [showEmojis, setShowEmojis] = useState(false)
   const [emoji, setEmoji] = useState(false)
 
-
   const [showImageOptions, setShowImageOptions] = useState(false)
-
 
   dispatch(getUserPosts(userData.id))
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       const { status } = await Camera.requestCameraPermissionsAsync()
       setHasPermission(status === 'granted')
     })()
   }, [])
 
   useEffect(() => {
-    console.log(userPosts, "dataaaaaaa")
-
+    console.log(userPosts, 'dataaaaaaa')
   }, [userPosts])
 
   const [selectedComponent, setSelectedComponent] = useState('MiLegado')
   const [search, setSearch] = useState(false)
   const [usuario, setUsuario] = useState({})
   const cameraReff = useRef(null)
-
-
 
   const takePicture = async () => {
     if (cameraReff) {
@@ -85,12 +87,9 @@ const Perfil = () => {
     }
   }
 
-
   const changePictureMode = async () => {
-
-    setFacing((prev) => prev == "back" ? "front" : "back")
+    setFacing((prev) => (prev == 'back' ? 'front' : 'back'))
   }
-
 
   const renderSelectedComponent = () => {
     switch (selectedComponent) {
@@ -124,17 +123,16 @@ const Perfil = () => {
     }
   }, [])
 
-
   useEffect(() => {
     if (profileImage) {
-      console.log("llego")
-      axiosInstance.patch(`/user/${userData?.id}`, { profilePicture: profileImage })
+      console.log('llego')
+      axiosInstance.patch(`/user/${userData?.id}`, {
+        profilePicture: profileImage
+      })
     }
   }, [profileImage])
 
-  
-
-  console.log(userData, "data user")
+  console.log(userData, 'data user')
   if (!showCamera) {
     return (
       <ScrollView
@@ -165,19 +163,19 @@ const Perfil = () => {
             icons={
               selectedComponent !== 'PERFILMIINFO'
                 ? [
-                  <Pressable onPress={() => setSearch(!search)}>
-                    <LupaSVG />
-                  </Pressable>,
-                  <PlusSVG isNavigation={'CrearAlbum'} />,
-                  <SettingMuroSVG isNavigation={'PerfilAjustes'} />
-                ]
+                    <Pressable onPress={() => setSearch(!search)}>
+                      <LupaSVG />
+                    </Pressable>,
+                    <PlusSVG isNavigation={'CrearAlbum'} />,
+                    <SettingMuroSVG isNavigation={'PerfilAjustes'} />
+                  ]
                 : [
-                  <TreeSVG />,
-                  <NotificationsMuroSVG
-                    isNavigation={'PERFILNOTIFICACIONES'}
-                  />,
-                  <SettingMuroSVG isNavigation={'PerfilAjustes'} />
-                ]
+                    <TreeSVG />,
+                    <NotificationsMuroSVG
+                      isNavigation={'PERFILNOTIFICACIONES'}
+                    />,
+                    <SettingMuroSVG isNavigation={'PerfilAjustes'} />
+                  ]
             }
           />
         </View>
@@ -195,45 +193,93 @@ const Perfil = () => {
 
         {search && <BarraBusqueda />}
 
-        <View style={{ width: "auto", justifyContent: "center" }}>
-          <Pressable onPress={() => setShowImageOptions(!showImageOptions)} style={{ ...styles.imageContainer }}>
-            {!provisoryProfileImage && !userData?.profilePicture ? (<Image
-              style={{ ...styles.perfilItem, borderRadius: 100 }}
-              contentFit="cover"
-              source={require('../../assets/group-1171276683.png')}
-            />) : (<Image
-              style={{ ...styles.perfilItem, borderRadius: 100 }}
-              contentFit="cover"
-              source={{ uri: profileImage || provisoryProfileImage || userData.profilePicture }}
-            />)}
-            <Pressable onPress={() => setShowEmojis(true)} style={{ width: 30, height: 30, backgroundColor: Color.secundario, position: "absolute", borderRadius: 100, bottom: 0, left: "35%", justifyContent: "center", alignItems: "center" }}>
+        <View style={{ width: 'auto', justifyContent: 'center' }}>
+          <Pressable
+            onPress={() => setShowImageOptions(!showImageOptions)}
+            style={{ ...styles.imageContainer }}
+          >
+            {!provisoryProfileImage && !userData?.profilePicture ? (
+              <Image
+                style={{ ...styles.perfilItem, borderRadius: 100 }}
+                contentFit="cover"
+                source={require('../../assets/group-1171276683.png')}
+              />
+            ) : (
+              <Image
+                style={{ ...styles.perfilItem, borderRadius: 100 }}
+                contentFit="cover"
+                source={{
+                  uri:
+                    profileImage ||
+                    provisoryProfileImage ||
+                    userData.profilePicture
+                }}
+              />
+            )}
+            <Pressable
+              onPress={() => setShowEmojis(true)}
+              style={{
+                width: 30,
+                height: 30,
+                backgroundColor: Color.secundario,
+                position: 'absolute',
+                borderRadius: 100,
+                bottom: 0,
+                left: '35%',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
               {emoji && <Text>{emoji}</Text>}
             </Pressable>
           </Pressable>
-          {showImageOptions && <View style={{ position: "absolute", top: 0, right: "25%", gap: 10 }}>
-            <Pressable onPress={() => pickImage("profile")} style={{ width: 30, height: 30, backgroundColor: Color.secundario, borderRadius: 100, justifyContent: "center", alignItems: "center" }}>
-              <SimboloSVG
-                color={
-                  "#fff"
-                }
-              />
-            </Pressable>
-            <Pressable onPress={() => setShowCamera(true)} style={{ width: 30, height: 30, backgroundColor: Color.secundario, borderRadius: 100, justifyContent: "center", alignItems: "center" }}>
-              <Image
-                style={{ width: 16, height: 16 }}
-                contentFit="cover"
-                source={require('../../assets/cameraIcon.png')}
-              />
-            </Pressable>
-
-          </View>}
+          {showImageOptions && (
+            <View
+              style={{ position: 'absolute', top: 0, right: '25%', gap: 10 }}
+            >
+              <Pressable
+                onPress={() => pickImage('profile')}
+                style={{
+                  width: 30,
+                  height: 30,
+                  backgroundColor: Color.secundario,
+                  borderRadius: 100,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <SimboloSVG color={'#fff'} />
+              </Pressable>
+              <Pressable
+                onPress={() => setShowCamera(true)}
+                style={{
+                  width: 30,
+                  height: 30,
+                  backgroundColor: Color.secundario,
+                  borderRadius: 100,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <Image
+                  style={{ width: 16, height: 16 }}
+                  contentFit="cover"
+                  source={require('../../assets/cameraIcon.png')}
+                />
+              </Pressable>
+            </View>
+          )}
         </View>
 
         <View style={styles.nameContainer}>
-          <Text style={styles.brunoPham}> {userData.username}{' '}{userData.apellido}</Text>
+          <Text style={styles.brunoPham}>
+            {' '}
+            {userData.username} {userData.apellido}
+          </Text>
           <View style={styles.placeContainer}>
             <Text style={[styles.daNangVietnam, styles.miInfoTypo]}>
-              {userData.adress && userData.adress + ','}{userData.city}
+              {userData.adress && userData.adress + ','}
+              {userData.city}
             </Text>
           </View>
         </View>
@@ -244,15 +290,15 @@ const Perfil = () => {
               styles.tabs,
               (selectedComponent === 'MiLegado' ||
                 selectedComponent === 'SOLOYO') &&
-              styles.miWrapper
+                styles.miWrapper
             ]}
             onPress={() => setSelectedComponent('MiLegado')}
           >
             <Text
               style={
                 (styles.miInfo,
-                  (selectedComponent === 'MiLegado' ||
-                    selectedComponent === 'SOLOYO') &&
+                (selectedComponent === 'MiLegado' ||
+                  selectedComponent === 'SOLOYO') &&
                   styles.selectedText)
               }
             >
@@ -269,7 +315,7 @@ const Perfil = () => {
             <Text
               style={
                 (styles.miInfo,
-                  selectedComponent === 'PERFILMIINFO' && styles.selectedText)
+                selectedComponent === 'PERFILMIINFO' && styles.selectedText)
               }
             >
               Mi información
@@ -291,19 +337,19 @@ const Perfil = () => {
                 setEmoji(e.emoji)
                 setShowEmojis(false)
               }} // callback when user selects emoji - returns emoji obj
-            // onChangeRecent={setRecent} // callback to update recent storage - arr of emoji objs
-            // backgroundColor={'#000'} // optional custom bg color
-            // enabledCategories={[ // optional list of enabled category keys
-            //   'recent', 
-            //   'emotion', 
-            //   'emojis', 
-            //   'activities', 
-            //   'flags', 
-            //   'food', 
-            //   'places', 
-            //   'nature'
-            // ]}
-            // defaultCategory={'food'} // optional default category key
+              // onChangeRecent={setRecent} // callback to update recent storage - arr of emoji objs
+              // backgroundColor={'#000'} // optional custom bg color
+              // enabledCategories={[ // optional list of enabled category keys
+              //   'recent',
+              //   'emotion',
+              //   'emojis',
+              //   'activities',
+              //   'flags',
+              //   'food',
+              //   'places',
+              //   'nature'
+              // ]}
+              // defaultCategory={'food'} // optional default category key
             />
           </View>
         </Modal>
@@ -320,7 +366,7 @@ const Perfil = () => {
           FocusMode="on"
           onCameraReady={(e) => console.log(e, 'esto es e')}
 
-        // cameraType="back"
+          // cameraType="back"
         >
           <View
             style={{
@@ -396,8 +442,7 @@ const styles = StyleSheet.create({
     width: 26,
     height: 20
   },
-  ionmenu: {
-  },
+  ionmenu: {},
   menuPosition: {
     paddingLeft: 10,
     paddingTop: 10
@@ -406,7 +451,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   buttonFlexBox: {
     justifyContent: 'flex-end',

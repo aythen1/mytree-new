@@ -137,7 +137,7 @@ const DrawerContent = (props) => {
               <Pressable
                 style={styles.muro}
                 onPress={() => {
-                  navigation.navigate('Organizador')
+                  navigation.navigate('UploadMemory')
                 }}
               >
                 <Text style={styles.muro1Typo}>Crear</Text>

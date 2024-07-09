@@ -6,19 +6,47 @@ import { useSelector } from 'react-redux'
 
 const NotificationsMuroSVG = ({ isNavigation }) => {
   const navigation = useNavigation()
-  const {userData} = useSelector(state=>state.users)
-  const {allNotifications} = useSelector(state=>state.notifications)
-  const userNotifications = allNotifications.filter(notification=>notification?.receiverId === userData?.id?.toString() && notification?.readed === false)
+  const { userData } = useSelector((state) => state.users)
+  const { allNotifications } = useSelector((state) => state.notifications)
+  const userNotifications = allNotifications.filter(
+    (notification) =>
+      notification?.receiverId === userData?.id?.toString() &&
+      notification?.readed === false
+  )
 
   return (
     <Pressable
       onPress={() => isNavigation && navigation.navigate(isNavigation)}
     >
-      {userNotifications.length > 0 && <Text style={{position:'absolute', borderRadius:100, backgroundColor: '#608f6a', width:15,height:15, justifyContent:'center', textAlign:'center',color:'#fff',alignItems:'center',top:-7,left:-5, zIndex:1000, fontSize:10, fontWeight:700}}>{userNotifications?.length}</Text>}
+      {userNotifications?.length > 0 && (
+        <Text
+          style={{
+            position: 'absolute',
+            borderRadius: 100,
+            backgroundColor: '#EB5757',
+            borderWidth: 2,
+            borderColor: '#fff',
+            width: 18,
+            height: 18,
+            justifyContent: 'center',
+            textAlign: 'center',
+            paddingTop: 1.5,
+            color: '#fff',
+            alignItems: 'center',
+            top: -8,
+            right: 2,
+            zIndex: 1000,
+            fontSize: 10,
+            fontWeight: 700
+          }}
+        >
+          {userNotifications?.length}
+        </Text>
+      )}
       <Svg
         style={{ marginRight: 10 }}
-        width="19"
-        height="22"
+        width={19 * 1.1}
+        height={22 * 1.1}
         viewBox="0 0 19 22"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

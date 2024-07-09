@@ -3,10 +3,16 @@ import React, { useContext, useEffect, useState } from 'react'
 import { TextInput } from 'react-native-gesture-handler'
 import { Color, FontFamily, FontSize, Padding } from '../GlobalStyles'
 import Editar2SVG from './svgs/Editar2SVG'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Context } from '../context/Context'
 import ENTRADACREADA from './ENTRADACREADA'
 import { LinearGradient } from 'expo-linear-gradient'
+import {
+  deleteDiaryById,
+  getAllUserDiaries,
+  postDiary,
+  updateDiaryById
+} from '../redux/actions/diaries'
 
 const SingleDiary = ({
   diary,
@@ -17,9 +23,11 @@ const SingleDiary = ({
   last
 }) => {
   const [text, setText] = useState(diary.description)
-  const { editingDiary, setEditingDiary } = useContext(Context)
+  const dispatch = useDispatch()
+  const { editingDiary, userData, setEditingDiary } = useContext(Context)
   const handleDeleteDiary = (id) => {
     console.log('deleting diary', id, '...')
+    dispatch(deleteDiaryById(diary.id))
   }
 
   useEffect(() => {
@@ -87,7 +95,22 @@ const SingleDiary = ({
                   }}
                   onPress={() => {
                     console.log('opening create modal')
-                    setModalCreate(true)
+                    const preDiary = { ...diary }
+                    preDiary.description = text
+                    if (!preDiary.id) {
+                      console.log('its a pre diary, posting it..', preDiary)
+                      dispatch(postDiary(preDiary)).then((res) =>
+                        getAllUserDiaries(userData.id)
+                      )
+                    } else if (preDiary.id) {
+                      console.log('updating diary...', preDiary)
+                      dispatch(
+                        updateDiaryById({
+                          diaryId: preDiary.id,
+                          diaryData: { description: preDiary.description }
+                        })
+                      ).then((res) => getAllUserDiaries(userData.id))
+                    }
                     setEditingDiary()
                   }}
                 >

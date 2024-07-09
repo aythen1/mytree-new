@@ -6,7 +6,7 @@ export const getAllDiaries = createAsyncThunk(
   'getAllDiaries/diaries',
   async () => {
     try {
-      const { data } = await axiosInstance.get(`/diaries`)
+      const { data } = await axiosInstance.get(`/diary`)
       return data
     } catch (error) {
       throw new Error(error)
@@ -18,7 +18,7 @@ export const getDiaryById = createAsyncThunk(
   'getDiaryById/diaries',
   async (diaryId) => {
     try {
-      const { data } = await axiosInstance.get(`/diaries/${diaryId}`)
+      const { data } = await axiosInstance.get(`/diary/${diaryId}`)
       return data
     } catch (error) {
       throw new Error(error)
@@ -30,11 +30,15 @@ export const getDiaryById = createAsyncThunk(
 export const getAllUserDiaries = createAsyncThunk(
   'getAllUserDiaries/diaries',
   async (userId) => {
+    console.log('getting diaries of', userId)
     try {
-      const { data } = await axiosInstance.get(`/diaries/user/${userId}`)
+      const { data } = await axiosInstance.post(`/diary/user/diaries`, {
+        creatorId: userId
+      })
+      console.log('RESPONSE FROM GETALLUSERDIARIES', data)
       return data
     } catch (error) {
-      throw new Error(error)
+      console.log('error from getuserdiaries', error)
     }
   }
 )
@@ -43,9 +47,11 @@ export const getUserDiariesByDateOrCategory = createAsyncThunk(
   'getUserDiariesByDateOrCategory/diaries',
   async (userId, date, category) => {
     try {
-      const { data } = await axiosInstance.get(
-        `/diaries/user/${userId}?category=${category}&date=${date}`
-      )
+      const { data } = await axiosInstance.post(`/diary/filter`, {
+        category,
+        creatorId: userId,
+        date: date
+      })
       return data
     } catch (error) {
       throw new Error(error)
@@ -57,7 +63,8 @@ export const postDiary = createAsyncThunk(
   'postDiary/diaries',
   async (diary) => {
     try {
-      const { data } = await axiosInstance.post(`/diaries`, diary)
+      const { data } = await axiosInstance.post(`/diary`, diary)
+      console.log('RESPONSE FROM POSTDIARY', data)
       return data
     } catch (error) {
       throw new Error(error)
@@ -69,14 +76,13 @@ export const postDiary = createAsyncThunk(
 export const updateDiaryById = createAsyncThunk(
   'updateDiaryById/diaries',
   async ({ diaryId, diaryData }) => {
+    console.log(`updating diary ${diaryId} with `, diaryData)
     try {
-      const { data } = await axiosInstance.patch(
-        `/diaries/${diaryId}`,
-        diaryData
-      )
+      const { data } = await axiosInstance.put(`/diary/${diaryId}`, diaryData)
+      console.log('returning data from updatediary', data)
       return data
     } catch (error) {
-      throw new Error(error)
+      console.log('error from updatediary', error)
     }
   }
 )
@@ -86,8 +92,8 @@ export const deleteDiaryById = createAsyncThunk(
   'deleteDiaryById/diaries',
   async (diaryId) => {
     try {
-      const { data } = await axiosInstance.delete(`/diaries/${diaryId}`)
-      return data
+      const { data } = await axiosInstance.delete(`/diary/${diaryId}`)
+      return diaryId
     } catch (error) {
       throw new Error(error)
     }

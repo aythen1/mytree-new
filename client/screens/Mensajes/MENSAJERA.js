@@ -1,5 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, Text, Pressable, Dimensions, ScrollView } from 'react-native'
+import {
+  View,
+  Text,
+  Pressable,
+  Dimensions,
+  ScrollView,
+  ActivityIndicator
+} from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { Color, FontFamily, FontSize } from '../../GlobalStyles'
 import { Image } from 'expo-image'
@@ -10,53 +17,59 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Context } from '../../context/Context'
 import ChatCard from './ChatCard'
 import { useSelector } from 'react-redux'
+import { isLoading } from 'expo-font'
 
 const MENSAJERA = () => {
   const navigation = useNavigation()
   const [search, setSearch] = useState('')
+  const [loading, setLoading] = useState(true)
+  const { allMessages } = useSelector((state) => state.chats)
   const { allUsers } = useSelector((state) => state.users)
   const { usersWithMessages, userData, getUsersMessages } = useContext(Context)
   const [selectedFilter, setSelectedFilter] = useState('All')
 
-  useEffect(() => {
-    console.log('usersWithMessages changed:', usersWithMessages)
-  }, [usersWithMessages])
-
-  useEffect(() => {
-    if (userData) {
-      getUsersMessages()
-    }
-  }, [])
-
-  // console.log('allUsers: ', allUsers)
-
   const sortUsers = (userA, userB) => {
-    const isInMessagesB =
-      usersWithMessages?.filter((user) => user.id === userA.id).length > 0
-    const isInMessagesA =
-      usersWithMessages?.filter((user) => user.id === userB.id).length > 0
+    const isInMessagesA = usersWithMessages?.some(
+      (user) => user.id === userA.id
+    )
+    const isInMessagesB = usersWithMessages?.some(
+      (user) => user.id === userB.id
+    )
 
     if (isInMessagesA && !isInMessagesB) {
-      return -1 // userA has messages, should come before userB
+      return -1
     } else if (!isInMessagesA && isInMessagesB) {
-      return 1 // userB has messages, should come before userA
+      return 1
     } else {
-      return 0 // maintain current order if both have messages or neither have messages
+      return 0
     }
   }
 
   const filteredUsers = allUsers
-    ?.filter((user) => {
-      if (user.username.toLowerCase()?.includes(search?.toLowerCase())) {
-        return true
-      }
-      if (user.apellido.toLowerCase()?.includes(search?.toLowerCase())) {
-        return true
-      }
-      return false
-    })
+    ?.filter(
+      (user) =>
+        user?.username?.toLowerCase()?.includes(search?.toLowerCase()) ||
+        user?.apellido?.toLowerCase()?.includes(search?.toLowerCase())
+    )
     .sort(sortUsers)
-    .reverse()
+
+  useEffect(() => {
+    console.log('USERSWITHMESSAGES', usersWithMessages.length)
+  }, [usersWithMessages])
+
+  useEffect(() => {
+    getUsersMessages()
+  }, [allMessages])
+
+  useEffect(() => {
+    getUsersMessages()
+  }, [allMessages])
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 700)
+  }, [])
+
+  // console.log('allUsers: ', allUsers)
 
   console.log('usersWithMessages:', usersWithMessages)
 
@@ -115,65 +128,82 @@ const MENSAJERA = () => {
           navigate={navigation.navigate}
           route="CrearGrupo"
         />
-        <View
-          style={{
-            paddingHorizontal: 0,
-            paddingLeft: Dimensions.get('screen').width * 0.05
-          }}
-        >
-          <ButtonsMensajeria
-            selectedFilter={selectedFilter}
-            setSelectedFilter={setSelectedFilter}
-          />
-        </View>
+
+        <ButtonsMensajeria
+          selectedFilter={selectedFilter}
+          setSelectedFilter={setSelectedFilter}
+        />
       </View>
       {/* ========================== MENSAJES ======================= */}
-      <ScrollView
-        contentContainerStyle={{
-          paddingHorizontal: 15,
-          paddingTop: 10
-        }}
-      >
-        {search !== '' && filteredUsers.length > 0
-          ? filteredUsers?.map((user) => (
-              <ChatCard
-                key={user.id}
-                name={user.username + ' ' + user.apellido}
-                selectedUserId={user.id}
-              />
-            ))
-          : search !== '' &&
-            filteredUsers.length === 0 && (
-              <View
-                style={{ width: '100%', alignItems: 'center', paddingTop: 50 }}
-              >
-                <Text
-                  style={{ fontSize: 14, fontWeight: 500, color: '#202020' }}
+      {loading ? (
+        <ActivityIndicator
+          style={{
+            backgroundColor: 'transparent',
+            alignSelf: 'center',
+            marginTop: '20%'
+          }}
+          animating={true}
+          size="xlarge"
+          color={'#B7E4C0'}
+        />
+      ) : (
+        <ScrollView
+          contentContainerStyle={{
+            paddingHorizontal: 15,
+            paddingTop: 10
+          }}
+        >
+          {search !== '' && filteredUsers.length > 0
+            ? filteredUsers?.map((user) => (
+                <ChatCard
+                  value={search}
+                  key={user.id}
+                  name={user.username + ' ' + user.apellido}
+                  selectedUserId={user.id}
+                />
+              ))
+            : search !== '' &&
+              filteredUsers.length === 0 && (
+                <View
+                  style={{
+                    width: '100%',
+                    alignItems: 'center',
+                    paddingTop: 50
+                  }}
                 >
-                  No se han encontrado resultados!
-                </Text>
-              </View>
-            )}
-        {search === '' && usersWithMessages.length > 0
-          ? usersWithMessages?.map((user) => (
-              <ChatCard
-                key={user.id}
-                name={user.username + ' ' + user.apellido}
-                selectedUserId={user.id}
-              />
-            ))
-          : search === '' && (
-              <View
-                style={{ width: '100%', alignItems: 'center', paddingTop: 50 }}
-              >
-                <Text
-                  style={{ fontSize: 14, fontWeight: 500, color: '#202020' }}
+                  <Text
+                    style={{ fontSize: 14, fontWeight: 500, color: '#202020' }}
+                  >
+                    No se han encontrado resultados!
+                  </Text>
+                </View>
+              )}
+          {search === '' && usersWithMessages.length > 0
+            ? usersWithMessages?.map((user) => (
+                <ChatCard
+                  value={search}
+                  key={user.id}
+                  name={user.username + ' ' + user.apellido}
+                  selectedUserId={user.id}
+                />
+              ))
+            : search === '' && (
+                <View
+                  style={{
+                    width: '100%',
+                    alignItems: 'center',
+                    paddingTop: 50
+                  }}
                 >
-                  Aun no tienes chats, inicia una conversacion!
-                </Text>
-              </View>
-            )}
-      </ScrollView>
+                  <Text
+                    style={{ fontSize: 14, fontWeight: 500, color: '#202020' }}
+                  >
+                    Aun no tienes chats, inicia una conversacion!
+                  </Text>
+                </View>
+              )}
+        </ScrollView>
+      )}
     </LinearGradient>
   )
 }

@@ -4,7 +4,8 @@ import {
   Text,
   ScrollView,
   Pressable,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useNavigation } from '@react-navigation/native'
@@ -19,7 +20,14 @@ const ButtonsMensajeria = ({ selectedFilter, setSelectedFilter }) => {
 
   return (
     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-      <View style={{ width: '100%', flexDirection: 'row', marginTop: 20 }}>
+      <View
+        style={{
+          width: '100%',
+          flexDirection: 'row',
+          marginTop: 20,
+          paddingLeft: Dimensions.get('screen').width * 0.04
+        }}
+      >
         <View
           style={{
             flexDirection: 'row',

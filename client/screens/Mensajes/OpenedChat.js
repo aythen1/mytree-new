@@ -295,7 +295,7 @@ const OpenedChat = () => {
               source={require('../../assets/graySword.png')}
             />
           </View>
-          <Pressable onPress={() => navigation.navigate('CALENDARIO')}>
+          <Pressable onPress={() => navigation.navigate('CrearEvento')}>
             <Image
               style={{
                 width: 25,

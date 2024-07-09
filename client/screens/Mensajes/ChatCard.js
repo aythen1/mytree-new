@@ -6,39 +6,55 @@ import { useSelector } from 'react-redux'
 import axiosInstance from '../../apiBackend'
 import { Context } from '../../context/Context'
 
-const ChatCard = ({ name, selectedUserId }) => {
+const ChatCard = ({ name, selectedUserId, value }) => {
   const navigation = useNavigation()
-  const { userData, getTimeFromDate } = useContext(Context)
-  const [notReadedMessages, setNotReadedMessages] = useState()
+  const { userData, getTimeFromDate, notReadedMessages, usersWithMessages } =
+    useContext(Context)
   const [convMessages, setConvMessages] = useState([])
   const [lastMessage, setLastMessage] = useState()
+  const [loading, setLoading] = useState(true)
   const { user, allUsers } = useSelector((state) => state.users)
 
   const getChatMessages = async () => {
-    const { data } = await axiosInstance.get(
-      `chat/room?senderId=${userData.id}&receiverId=${selectedUserId}`
-    )
-    setConvMessages(data)
+    if (userData.id && selectedUserId) {
+      // console.log('getting messages from', user.user.id, 'and', selectedUserId)
+      const { data } = await axiosInstance.get(
+        `chat/room?senderId=${userData.id}&receiverId=${selectedUserId}`
+      )
+      // console.log('====SETTING CONV MESSAGES TO', data)
+      setConvMessages(data)
+    }
   }
 
   useEffect(() => {
     getChatMessages()
+  }, [usersWithMessages, value])
+
+  useEffect(() => {
+    setLoading(true)
+    getChatMessages()
   }, [])
 
   const getLastMessage = (messages) => {
-    const received = messages[0].senderId.toString() === userData.id.toString()
+    const received = messages[0].senderId === userData.id
     setLastMessage({ message: messages[0], received })
+    setLoading(false)
   }
 
   useEffect(() => {
-    if (convMessages?.length) {
+    if (convMessages?.length > 0) {
       getLastMessage(
         convMessages.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         )
       )
+    } else {
+      setLastMessage('')
+      setLoading(false)
     }
   }, [convMessages])
+
+  useEffect(() => {}, [lastMessage])
   return (
     <Pressable
       style={{
@@ -112,7 +128,9 @@ const ChatCard = ({ name, selectedUserId }) => {
         >
           {lastMessage ? getTimeFromDate(lastMessage?.message?.createdAt) : ''}
         </Text>
-        {lastMessage && notReadedMessages && (
+        {notReadedMessages.some(
+          (message) => message.senderId === selectedUserId
+        ) && (
           <View style={{ marginTop: 4, flexDirection: 'row' }}>
             <Image
               style={{ width: 23, height: 23, zIndex: 0 }}
@@ -133,12 +151,16 @@ const ChatCard = ({ name, selectedUserId }) => {
                 fontFamily: FontFamily.lato,
                 fontWeight: '700',
                 letterSpacing: 0,
-                top: 3,
+                top: 2,
                 position: 'absolute',
                 zIndex: 1
               }}
             >
-              {notReadedMessages}
+              {
+                notReadedMessages.filter(
+                  (message) => message.senderId === selectedUserId
+                ).length
+              }
             </Text>
           </View>
         )}

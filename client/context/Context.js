@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import io from 'socket.io-client'
 import { updateMessages } from '../redux/actions/chat'
 import axiosInstance from '../apiBackend'
+import { addUserDiary } from '../redux/slices/diaries.slices'
 
 export const Context = createContext()
 
@@ -47,6 +48,19 @@ export const ContextProvider = ({ children }) => {
       'con fecha',
       date,
       '...'
+    )
+    dispatch(
+      addUserDiary({
+        images: [],
+        videos: [],
+        date: new Date(date),
+        category,
+        title: '',
+        creatorId: userData.id,
+        description: '',
+        privacyMode: 'all',
+        taggedUsers: []
+      })
     )
   }
 
@@ -307,11 +321,19 @@ export const ContextProvider = ({ children }) => {
   const [notReadedMessages, setNotReadedMessages] = useState()
 
   const getUsersMessages = async () => {
+    console.log('userData.id', userData.id)
+    // try {
+
+    // } catch (error) {
+    //   console.log('error', error)
+    // }
     const { data } = await axiosInstance.post('chat/chats', {
       userId: userData.id
     })
-    // console.log('DATA', data)
+    console.log('DATA', data)
     const convs = Object.keys(data)
+    console.log('convs', convs)
+    console.log('userData.id', userData.id)
     const notReadedConvMessages = convs
       .map((conv) =>
         data[conv].filter(
@@ -320,6 +342,9 @@ export const ContextProvider = ({ children }) => {
         )
       )
       .flat()
+
+    console.log('notReaded', notReadedConvMessages)
+
     setNotReadedMessages(notReadedConvMessages)
     const notReaded = convs
       .map(
@@ -331,16 +356,20 @@ export const ContextProvider = ({ children }) => {
       )
       .reduce((acc, curr) => acc + curr, 0)
     setNotReaded(notReaded)
+
     if (Object.keys(data).length > 0) {
+      console.log('has messages')
       const finalInfo = Object.keys(data).map((key) => {
         const otherUserId = key
           .split('_')
           .filter((singleId) => singleId !== userData.id)[0]
-        const userData = allUsers.filter((user) => user.id === otherUserId)[0]
+
+        console.log('other user id', otherUserId)
+        const userInfo = allUsers.filter((user) => user.id === otherUserId)[0]
         const lastMessage = data[key].sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         )[0]
-        return { room: key, ...userData, lastMessage }
+        return { room: key, ...userInfo, lastMessage }
       })
       // console.log('Setting users with messages to: ', finalInfo)
       //fix

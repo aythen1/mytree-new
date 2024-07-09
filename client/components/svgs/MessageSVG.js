@@ -1,12 +1,39 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { Pressable } from 'react-native'
+import { Pressable, Text } from 'react-native'
 import { Path, Svg } from 'react-native-svg'
+import { Context } from '../../context/Context'
 
 const MessageSVG = ({ color }) => {
   const navigation = useNavigation()
+  const { notReaded } = useContext(Context)
   return (
     <Pressable onPress={() => navigation.navigate('MENSAJERA')}>
+      {notReaded > 0 && (
+        <Text
+          style={{
+            position: 'absolute',
+            borderRadius: 100,
+            backgroundColor: '#EB5757',
+            borderWidth: 2,
+            borderColor: '#fff',
+            width: 18,
+            height: 18,
+            justifyContent: 'center',
+            textAlign: 'center',
+            paddingTop: 1.5,
+            color: '#fff',
+            alignItems: 'center',
+            top: -8,
+            right: 3,
+            zIndex: 1000,
+            fontSize: 10,
+            fontWeight: 700
+          }}
+        >
+          {notReaded}
+        </Text>
+      )}
       <Svg
         style={{ marginRight: 10 }}
         width="25"
