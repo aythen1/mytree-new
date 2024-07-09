@@ -42,6 +42,9 @@ export class User {
   @Column({ nullable: true })
   birthDate: string;
 
+  @Column({ nullable: true ,default:true })
+  newUser: boolean ;
+
   @Column({ nullable: true })
   oldPassword: string; // Para cambio de contraseña, almacenar la clave vieja
 

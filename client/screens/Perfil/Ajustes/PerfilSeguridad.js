@@ -6,7 +6,9 @@ import {
   Pressable,
   ScrollView,
   Modal,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  TextInput
 } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -23,15 +25,51 @@ import HeaderIcons from '../../../components/HeaderIcons'
 import CalendarMuroSVG from '../../../components/svgs/CalendarMuroSVG'
 import BookSVG from '../../../components/svgs/BookSVG'
 import NotificationsMuroSVG from '../../../components/svgs/NotificationsMuroSVG'
+import { useDispatch, useSelector } from 'react-redux'
+import axiosInstance from '../../../apiBackend'
+import { getUserData } from '../../../redux/actions/user'
 
 const PerfilConfiguracion = () => {
-  const navigation = useNavigation()
 
+  const navigation = useNavigation()
   const [modalCreate, setModalCreate] = useState(false)
+  const [input, setInput] = useState({
+    password: "",
+    phone: ""
+  })
+const dispatch = useDispatch()
+  const { userData } = useSelector((state) => state.users)
+
+
+  const seterValues = (field, value) => {
+    setInput((prev) => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+
+
+
+
+
 
   const onCloseModalCreate = () => {
     setModalCreate(false)
   }
+
+  console.log(userData, "user data")
+
+  const handleSubmit = async () => {
+    // Filtrar las propiedades que tienen algún valor en el objeto input
+    const filteredInput = Object.fromEntries(
+      Object.entries(input).filter(([_, value]) => value !== "")
+    );
+  
+    const res = await axiosInstance.patch(`/user/${userData?.id}`, filteredInput);
+    console.log("Esto actualizó: ", res.data);
+    dispatch(getUserData(userData?.id))
+    setModalCreate(true);
+  };
 
   return (
     <ScrollView style={styles.frameParent} showsVerticalScrollIndicator={false}>
@@ -43,15 +81,13 @@ const PerfilConfiguracion = () => {
               contentFit="cover"
               source={require('../../../assets/image-6.png')}
             />
-            <View style={styles.iconlylightOutlinecalendarParent}>
-              <HeaderIcons
-                icons={[
-                  <CalendarMuroSVG />,
-                  <BookSVG />,
-                  <NotificationsMuroSVG />
-                ]}
-              />
-            </View>
+            <HeaderIcons
+              icons={[
+                <CalendarMuroSVG />,
+                <BookSVG />,
+                <NotificationsMuroSVG />
+              ]}
+            />
           </View>
           <View style={[styles.backParent, styles.parentFlexBox]}>
             <Pressable
@@ -74,9 +110,9 @@ const PerfilConfiguracion = () => {
               <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
                 Contraseña de MyTree
               </Text>
-              <Text style={[styles.brunoPham, styles.brunoPhamTypo]}>
-                *************************
-              </Text>
+              <TextInput onChangeText={(e)=> seterValues('password',e) }  value={input.password} secureTextEntry placeholder='••••••••••••' style={[styles.brunoPham, styles.brunoPhamTypo]}>
+
+              </TextInput>
             </View>
             <Image
               style={[styles.vectorIcon1, styles.vectorIconLayout]}
@@ -89,9 +125,9 @@ const PerfilConfiguracion = () => {
               <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
                 Contraseña de Mi Privado
               </Text>
-              <Text style={[styles.brunoPham, styles.brunoPhamTypo]}>
-                *************************
-              </Text>
+              <TextInput secureTextEntry placeholder='••••••••••••' style={[styles.brunoPham, styles.brunoPhamTypo]}>
+
+              </TextInput>
             </View>
             <Image
               style={[styles.vectorIcon1, styles.vectorIconLayout]}
@@ -99,29 +135,15 @@ const PerfilConfiguracion = () => {
               source={require('../../../assets/vector47.png')}
             />
           </View>
-          <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
-            <View style={styles.nombreCompletoParent}>
-              <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
-                Verificación en dos pasos
-              </Text>
-              <Text style={[styles.brunoPham, styles.brunoPhamTypo]}>
-                Desactivada
-              </Text>
-            </View>
-            <Image
-              style={[styles.vectorIcon1, styles.vectorIconLayout]}
-              contentFit="cover"
-              source={require('../../../assets/vector47.png')}
-            />
-          </View>
+
           <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
             <View style={styles.nombreCompletoParent}>
               <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
                 Teléfono
               </Text>
-              <Text style={[styles.brunoPham, styles.brunoPhamTypo]}>
-                55523718945
-              </Text>
+              <TextInput onChangeText={(e)=> seterValues('phone',e) } value={input.phone} keyboardType='numeric' placeholder={userData?.phone} style={[styles.brunoPham, styles.brunoPhamTypo]}>
+
+              </TextInput>
             </View>
             <Image
               style={[styles.vectorIcon1, styles.vectorIconLayout]}
@@ -134,9 +156,9 @@ const PerfilConfiguracion = () => {
               <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
                 Correo electrónico
               </Text>
-              <Text style={[styles.brunoPham, styles.brunoPhamTypo]}>
-                johndoe@correo.com
-              </Text>
+              <TextInput editable={false} keyboardType='email-address' placeholder={userData?.email} style={[styles.brunoPham, styles.brunoPhamTypo]}>
+
+              </TextInput>
             </View>
             <Image
               style={[styles.vectorIcon1, styles.vectorIconLayout]}
@@ -150,19 +172,21 @@ const PerfilConfiguracion = () => {
           locations={[0, 1]}
           colors={['#dee274', '#7ec18c']}
         >
-          <Pressable
+          <TouchableOpacity
             style={[styles.pressable, styles.pressableFlexBox]}
-            onPress={() => setModalCreate(true)}
+            onPress={() => {
+              handleSubmit()
+             }}
           >
             <Text style={styles.signIn}>Guardar</Text>
-          </Pressable>
+          </TouchableOpacity>
         </LinearGradient>
 
         {modalCreate && (
           <Modal animationType="fade" transparent={true} visible={modalCreate}>
             <TouchableWithoutFeedback onPress={() => setModalCreate(false)}>
               <View style={styles.modalOverlay}>
-                <View>
+                <View style={{ height: "100%", width: "100%" }}>
                   <ENTRADACREADA
                     onClose={onCloseModalCreate}
                     message={'Guardado!'}
@@ -292,12 +316,8 @@ const styles = StyleSheet.create({
   parentIcons: {
     alignItems: 'center',
     flexDirection: 'row',
+    justifyContent: "space-between",
     top: '5%'
-  },
-  iconlylightOutlinecalendarParent: {
-    width: '100%',
-    left: '45%',
-    flexDirection: 'row'
   },
   iconlylightOutlinecalendar: {
     height: 24,
