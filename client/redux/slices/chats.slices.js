@@ -22,6 +22,9 @@ const clubSlices = createSlice({
         isReaded: true
       }))
       state.allMessages = allToReaded
+    },
+    clearChats: (state, action) => {
+      ;(state.allMessages = []), (state.loading = false), (state.error = false)
     }
   },
   extraReducers: (builder) => {
@@ -71,7 +74,8 @@ const clubSlices = createSlice({
 export const {
   setAllMessages,
   setAllConversationMessagesToRead,
-  resetChatsSlices
+  resetChatsSlices,
+  clearChats
 } = clubSlices.actions
 
 export default clubSlices.reducer

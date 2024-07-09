@@ -11,8 +11,14 @@ export const storiesSlices = createSlice({
     error: null
   },
   reducers: {
-    updateStory: (state, action) => {
-      state.allStories = action.payload
+    updateAlbums: (state, action) => {
+      state.allAlbums = action.payload
+    },
+    clearAlbums: (state, action) => {
+      ;(state.allAlbums = []),
+        (state.userAlbums = []),
+        (state.loading = false),
+        (state.error = null)
     }
   },
   extraReducers: (builder) => {
@@ -44,6 +50,6 @@ export const storiesSlices = createSlice({
   }
 })
 
-export const { updateStory } = storiesSlices.actions
+export const { updateStory, clearAlbums } = storiesSlices.actions
 
 export default storiesSlices.reducer

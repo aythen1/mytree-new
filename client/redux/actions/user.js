@@ -308,7 +308,7 @@ export const getUserData = createAsyncThunk(
     try {
       console.log('on getUserData')
       const { data } = await axiosInstance.get(`/user/${userId}`)
-      // console.log('data from getUserData: ', data)
+      console.log('data from getUserData action ======: ', data)
       return data
     } catch (error) {
       throw new Error(error)

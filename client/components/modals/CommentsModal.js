@@ -26,9 +26,9 @@ const CommentsModal = ({ onClose }) => {
   const [filteredComments, setFilteredComments] = useState(
     selectedPostComments || []
   )
-  const { allUsers } = useSelector((state) => state.users)
+  const { allUsers, userData } = useSelector((state) => state.users)
+
   const {
-    userData,
     selectedPost,
     setSelectedComment,
     showResponses,

@@ -132,7 +132,8 @@ const Perfil = () => {
     }
   }, [profileImage])
 
-  console.log(userData, 'data user')
+  // console.log(userData, 'data user')
+
   if (!showCamera) {
     return (
       <ScrollView

@@ -15,6 +15,12 @@ export const eventsSlices = createSlice({
     },
     updateUserEvents: (state, action) => {
       state.userEvents = action.payload
+    },
+    clearEvents: (state, action) => {
+      ;(state.allEvents = []),
+        (state.userEvents = []),
+        (state.loading = false),
+        (state.error = null)
     }
   },
   extraReducers: (builder) => {
@@ -48,6 +54,7 @@ export const eventsSlices = createSlice({
   }
 })
 
-export const { updateAllEvents, updateUserEvents } = eventsSlices.actions
+export const { updateAllEvents, updateUserEvents, clearEvents } =
+  eventsSlices.actions
 
 export default eventsSlices.reducer

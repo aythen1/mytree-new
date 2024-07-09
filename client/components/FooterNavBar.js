@@ -24,16 +24,29 @@ import FooterBar from './svgs/FooterBarSVG'
 import TreeSVG from './svgs/TreeSVG'
 import FooterBarSVG from './svgs/FooterBarSVG'
 import { Image } from 'expo-image'
+import { getAllPosts } from '../redux/actions/posts'
+import { getAllUsers } from '../redux/actions/user'
 
 const FooterNavBar = () => {
-  const { showCamera, showSelectEventTypeModal, setShowSelectEventTypeModal } =
-    useContext(Context)
+  const {
+    showCamera,
+    getUsersMessages,
+    showSelectEventTypeModal,
+    setShowSelectEventTypeModal
+  } = useContext(Context)
   const navigation = useNavigation()
   const dispatch = useDispatch()
 
   const { panelAddFooter } = useSelector((state) => state.panel)
+  const { userData } = useSelector((state) => state.users)
 
   const [selected, setSelected] = useState('Muro')
+
+  useEffect(() => {
+    getUsersMessages()
+    dispatch(getAllUsers())
+    dispatch(getAllPosts())
+  }, [])
 
   const showModalAdd = () => {
     dispatch(setPanelAddFooter(!panelAddFooter))

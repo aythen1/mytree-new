@@ -22,14 +22,18 @@ const SingleDiary = ({
   openGroupIcon1,
   last
 }) => {
+  const { userData } = useSelector((state) => state.users)
   const [text, setText] = useState(diary.description)
   const dispatch = useDispatch()
-  const { editingDiary, userData, setEditingDiary } = useContext(Context)
+
+  const { editingDiary, setEditingDiary } = useContext(Context)
   const handleDeleteDiary = (id) => {
     console.log('deleting diary', id, '...')
     dispatch(deleteDiaryById(diary.id))
   }
-
+  useEffect(() => {
+    console.log('userData from singlediary', userData)
+  }, [])
   useEffect(() => {
     console.log('Modal create changed to', modalCreate)
   }, [modalCreate])
@@ -100,7 +104,7 @@ const SingleDiary = ({
                     if (!preDiary.id) {
                       console.log('its a pre diary, posting it..', preDiary)
                       dispatch(postDiary(preDiary)).then((res) =>
-                        getAllUserDiaries(userData.id)
+                        getAllUserDiaries(userData?.id)
                       )
                     } else if (preDiary.id) {
                       console.log('updating diary...', preDiary)
@@ -109,7 +113,7 @@ const SingleDiary = ({
                           diaryId: preDiary.id,
                           diaryData: { description: preDiary.description }
                         })
-                      ).then((res) => getAllUserDiaries(userData.id))
+                      ).then((res) => getAllUserDiaries(userData?.id))
                     }
                     setEditingDiary()
                   }}

@@ -71,7 +71,9 @@ const MENSAJERA = () => {
 
   // console.log('allUsers: ', allUsers)
 
-  console.log('usersWithMessages:', usersWithMessages)
+  useEffect(() => {
+    console.log('usersWithMessages:', usersWithMessages)
+  }, [usersWithMessages])
 
   return (
     <LinearGradient

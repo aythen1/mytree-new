@@ -15,6 +15,12 @@ export const postsSlices = createSlice({
     },
     updateUserPosts: (state, action) => {
       state.userPosts = action.payload
+    },
+    clearPosts: (state, action) => {
+      ;(state.allPosts = []),
+        (state.userPosts = []),
+        (state.loading = false),
+        (state.error = null)
     }
   },
   extraReducers: (builder) => {
@@ -47,6 +53,7 @@ export const postsSlices = createSlice({
   }
 })
 
-export const { setMessage, setAllMessagesFromContact } = postsSlices.actions
+export const { setMessage, setAllMessagesFromContact, clearPosts } =
+  postsSlices.actions
 
 export default postsSlices.reducer

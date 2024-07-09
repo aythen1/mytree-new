@@ -18,14 +18,11 @@ import { getAllDiaries, getAllUserDiaries } from '../../redux/actions/diaries'
 const MIDIARIOPANTALLAPERSONAL = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
-  const {
-    setShowSelectEventTypeModal,
-    userData,
-    selectedSection,
-    setSelectedSection
-  } = useContext(Context)
+  const { setShowSelectEventTypeModal, selectedSection, setSelectedSection } =
+    useContext(Context)
 
   const { showPanel } = useSelector((state) => state.panel)
+  const { userData } = useSelector((state) => state.users)
 
   const navigateTo = () => {
     navigation.navigate('MIDIARIOEDICINVIDEO')

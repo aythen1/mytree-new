@@ -187,24 +187,22 @@ const Organizador = () => {
       finalData.tags = taggedUsers
       finalData.hashtags = selectedHashtags
       finalData.userId = user.id
-      finalData.fecha = selectedDate
-        ? selectedDate.reverse().join('-')
-        : new Date()
+      finalData.fecha = selectedDate ? selectedDate : new Date()
       finalData.nameUser = user.username
       finalData.photos = [libraryImage]
       finalData.description = dataToSend.description
       console.log('sending post...', finalData)
-      const res = await axios.post(`${BACKURL}/posts`, finalData)
+      // const res = await axios.post(`${BACKURL}/posts`, finalData)
 
-      console.log('res:', res)
+      // console.log('res:', res)
 
-      if (res.data) {
-        console.log('res.data: ', res.data)
-        setSubmit(true)
-        setSelectedHashtags([])
-        setTaggedUsers([])
-        dispatch(getUserPosts(userData.id))
-      }
+      // if (res.data) {
+      //   console.log('res.data: ', res.data)
+      //   setSubmit(true)
+      //   setSelectedHashtags([])
+      //   setTaggedUsers([])
+      //   dispatch(getUserPosts(userData.id))
+      // }
     } catch (error) {
       console.log(error)
       setSelectedHashtags([])

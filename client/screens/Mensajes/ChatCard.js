@@ -8,12 +8,12 @@ import { Context } from '../../context/Context'
 
 const ChatCard = ({ name, selectedUserId, value }) => {
   const navigation = useNavigation()
-  const { userData, getTimeFromDate, notReadedMessages, usersWithMessages } =
+  const { getTimeFromDate, notReadedMessages, usersWithMessages } =
     useContext(Context)
   const [convMessages, setConvMessages] = useState([])
   const [lastMessage, setLastMessage] = useState()
   const [loading, setLoading] = useState(true)
-  const { user, allUsers } = useSelector((state) => state.users)
+  const { user, allUsers, userData } = useSelector((state) => state.users)
 
   const getChatMessages = async () => {
     if (userData.id && selectedUserId) {
@@ -55,6 +55,7 @@ const ChatCard = ({ name, selectedUserId, value }) => {
   }, [convMessages])
 
   useEffect(() => {}, [lastMessage])
+
   return (
     <Pressable
       style={{
@@ -128,7 +129,7 @@ const ChatCard = ({ name, selectedUserId, value }) => {
         >
           {lastMessage ? getTimeFromDate(lastMessage?.message?.createdAt) : ''}
         </Text>
-        {notReadedMessages.some(
+        {notReadedMessages?.some(
           (message) => message.senderId === selectedUserId
         ) && (
           <View style={{ marginTop: 4, flexDirection: 'row' }}>
@@ -139,15 +140,15 @@ const ChatCard = ({ name, selectedUserId, value }) => {
             />
             <Text
               style={{
-                left: 8,
+                left: 3,
                 color: Color.grisHome,
                 display: 'flex',
-                width: 7,
+                width: 17,
                 height: 17,
                 alignItems: 'center',
                 lineHeight: 18,
                 fontSize: FontSize.size_xs,
-                textAlign: 'justify',
+                textAlign: 'center',
                 fontFamily: FontFamily.lato,
                 fontWeight: '700',
                 letterSpacing: 0,
