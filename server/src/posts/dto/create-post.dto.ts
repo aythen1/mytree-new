@@ -3,6 +3,8 @@ import { User } from '../../user/entities/user.entity'; // Importa la clase User
 export class CreatePostDto {
     nameUser: string;
     fecha: string;
+    privacyMode?: string;
+    albums?: string[];
     description?: string;
     photos?: string[];
     etiquets?: User[];

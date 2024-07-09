@@ -67,5 +67,9 @@ export class NotificationController {
     return this.notificationService.findInfoRelation(notifId, relationsArray);
   }
 
-  
+  @Post('/by-receiver')
+  async findByReceiverId(@Body('receiverId') receiverId: string): Promise<Notification[]> {
+    return this.notificationService.findByReceiverId(receiverId);
+  }
+
 }
