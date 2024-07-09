@@ -47,8 +47,8 @@ const FooterNavBar = () => {
     getUsersMessages()
     dispatch(getAllUsers())
     dispatch(getAllPosts())
-    dispatch(getAllUserAlbums(userData.id))
-  }, [])
+    dispatch(getAllUserAlbums(userData?.id))
+  }, [userData])
 
   const showModalAdd = () => {
     dispatch(setPanelAddFooter(!panelAddFooter))
