@@ -343,6 +343,7 @@ export const ContextProvider = ({ children }) => {
         return { room: key, ...userData, lastMessage }
       })
       // console.log('Setting users with messages to: ', finalInfo)
+      //fix
       setUsersWithMessages(
         finalInfo.sort(
           (a, b) =>
