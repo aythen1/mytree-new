@@ -45,13 +45,11 @@ export const getAllUserDiaries = createAsyncThunk(
 // Get all user diaries by date or category
 export const getUserDiariesByDateOrCategory = createAsyncThunk(
   'getUserDiariesByDateOrCategory/diaries',
-  async (userId, date, category) => {
+  async (body) => {
+    console.log('GETTING DIARIES BASED ON', body)
     try {
-      const { data } = await axiosInstance.post(`/diary/filter`, {
-        category,
-        creatorId: userId,
-        date: date
-      })
+      const { data } = await axiosInstance.post(`/diary/filter`, body)
+      console.log('response from getbycat', data)
       return data
     } catch (error) {
       throw new Error(error)

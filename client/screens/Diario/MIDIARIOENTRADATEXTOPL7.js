@@ -39,14 +39,19 @@ import { Camera, CameraView } from 'expo-camera'
 import * as MediaLibrary from 'expo-media-library'
 import PopUpCalendario from '../../components/PopUpCalendario'
 import MasBusquedaSVG from '../../components/svgs/MasBusquedaSVG'
+import { useDispatch, useSelector } from 'react-redux'
+import { getUserDiariesByDateOrCategory } from '../../redux/actions/diaries'
 
 const MIDIARIOENTRADATEXTOPL7 = () => {
+  const dispatch = useDispatch()
   const { selectedSection, editingDiary, handleAddDiary } = useContext(Context)
   const navigation = useNavigation()
   const [showEdit, setShowEdit] = useState(false)
   const [isSection, setIsSection] = useState('')
+  const { userData } = useSelector((state) => state.users)
   const [modalCreate, setModalCreate] = useState(false)
-  const { pickImage, showCamera, setShowCamera } = useContext(Context)
+  const { pickImage, showCamera, setShowCamera, formatDateToNormal } =
+    useContext(Context)
   const [images, setImages] = useState([])
   const [selectedImage, setSelectedImage] = useState(null)
   const [cameraType, setCameraType] = useState(Camera?.Constants?.Type?.back)
@@ -75,6 +80,11 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
   useEffect(() => {
     console.log('selectedDate changed to', selectedDate)
     console.log('selectedSection changed to', selectedSection)
+    const obj = { creatorId: userData.id, category: selectedSection }
+    if (selectedDate) {
+      obj.date = formatDateToNormal(selectedDate)
+    }
+    dispatch(getUserDiariesByDateOrCategory(obj))
     // Aca cuando tenga la ruta desarrollo logica de get de diarios por categoria y selectedDate.
   }, [selectedDate, selectedSection])
 
@@ -150,6 +160,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
           <ReflexionDiaria
             openGroupIcon1={openGroupIcon1}
             modalCreate={modalCreate}
+            selectedDate={selectedDate}
             setModalCreate={setModalCreate}
             editing={showEdit}
           />
@@ -422,6 +433,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                 openGroupIcon1={openGroupIcon1}
                 modalCreate={modalCreate}
                 setModalCreate={setModalCreate}
+                selectedDate={selectedDate}
                 editing={showEdit}
               />
 

@@ -1,14 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Text, StyleSheet, View, Pressable } from 'react-native'
 import { Image } from 'expo-image'
 import { Color, FontSize, FontFamily } from '../../GlobalStyles'
 import { useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
+import { Context } from '../../context/Context'
 
 const MiLegado = () => {
   const navigation = useNavigation()
-  const {userPosts}  = useSelector((state) => state.posts)
-
+  const { userPosts } = useSelector((state) => state.posts)
+  const { setShowSelectEventTypeModal } = useContext(Context)
   return (
     <View style={styles.frameParent}>
       <View style={styles.frameContainer}>
@@ -17,18 +18,19 @@ const MiLegado = () => {
         >
           <Text style={styles.miBiografaActual}>Mis publicaciones</Text>
           <View style={[styles.vectorGroup, styles.groupParentFlexBox]}>
-            <Pressable onPress={() => navigation.navigate('CrearAlbum')}>
+            <View></View>
+            <Pressable onPress={() => navigation.navigate('UploadMemory')}>
               <Image
                 style={styles.vectorIcon1}
                 contentFit="cover"
                 source={require('../../assets/vector53.png')}
               />
             </Pressable>
-            <Image
+            {/* <Image
               style={styles.vectorIcon1}
               contentFit="cover"
               source={require('../../assets/iconlyboldedit.png')}
-            />
+            /> */}
           </View>
         </View>
         <Image
@@ -37,15 +39,14 @@ const MiLegado = () => {
           source={require('../../assets/line-78.png')}
         />
         <View style={[styles.maskGroupParent, styles.groupParentFlexBox]}>
-          
-         {userPosts && userPosts.map((e,i)=> (
-          <Image
-          style={styles.maskGroupIcon}
-          contentFit="cover"
-          source={{uri: e.photos[0]}}
-        />
-         ))}
-        
+          {userPosts &&
+            userPosts.map((e, i) => (
+              <Image
+                style={styles.maskGroupIcon}
+                contentFit="cover"
+                source={{ uri: e.photos[0] }}
+              />
+            ))}
         </View>
       </View>
 
@@ -55,16 +56,19 @@ const MiLegado = () => {
         >
           <Text style={styles.miBiografaActual}>Mis eventos</Text>
           <View style={[styles.vectorGroup, styles.groupParentFlexBox]}>
-            <Image
-              style={styles.vectorIcon1}
-              contentFit="cover"
-              source={require('../../assets/vector53.png')}
-            />
-            <Image
+            <View></View>
+            <Pressable onPress={() => setShowSelectEventTypeModal(true)}>
+              <Image
+                style={styles.vectorIcon1}
+                contentFit="cover"
+                source={require('../../assets/vector53.png')}
+              />
+            </Pressable>
+            {/* <Image
               style={styles.vectorIcon1}
               contentFit="cover"
               source={require('../../assets/iconlyboldedit.png')}
-            />
+            /> */}
           </View>
         </View>
         <Image
@@ -93,7 +97,6 @@ const MiLegado = () => {
             contentFit="cover"
             source={require('../../assets/claire.png')}
           />
-      
         </View>
       </View>
 
@@ -103,16 +106,22 @@ const MiLegado = () => {
         >
           <Text style={styles.miBiografaActual}>Mis diarios</Text>
           <View style={[styles.vectorGroup, styles.groupParentFlexBox]}>
-            <Image
-              style={styles.vectorIcon1}
-              contentFit="cover"
-              source={require('../../assets/vector53.png')}
-            />
-            <Image
+            <View></View>
+            <Pressable
+              onPress={() => navigation.navigate('MIDIARIOPANTALLAPERSONAL')}
+            >
+              <Image
+                style={styles.vectorIcon1}
+                contentFit="cover"
+                source={require('../../assets/vector53.png')}
+              />
+            </Pressable>
+
+            {/* <Image
               style={styles.vectorIcon1}
               contentFit="cover"
               source={require('../../assets/iconlyboldedit.png')}
-            />
+            /> */}
           </View>
         </View>
         <Image
@@ -141,7 +150,56 @@ const MiLegado = () => {
             contentFit="cover"
             source={require('../../assets/claire.png')}
           />
-       
+        </View>
+      </View>
+      <View style={styles.frameContainer}>
+        <View
+          style={[styles.miBiografaActualParent, styles.groupParentFlexBox]}
+        >
+          <Text style={styles.miBiografaActual}>Mis álbumes</Text>
+          <Pressable
+            onPress={() => navigation.navigate('CrearAlbum')}
+            style={[styles.vectorGroup, styles.groupParentFlexBox]}
+          >
+            {/* <Image
+              style={styles.vectorIcon1}
+              contentFit="cover"
+              source={require('../../assets/iconlyboldedit.png')}
+            /> */}
+            <View></View>
+            <Image
+              style={styles.vectorIcon1}
+              contentFit="cover"
+              source={require('../../assets/vector53.png')}
+            />
+          </Pressable>
+        </View>
+        <Image
+          style={styles.frameChild}
+          contentFit="cover"
+          source={require('../../assets/line-78.png')}
+        />
+        <View style={[styles.maskGroupParent, styles.groupParentFlexBox]}>
+          <Image
+            style={styles.maskGroupIcon}
+            contentFit="cover"
+            source={require('../../assets/farita3.png')}
+          />
+          <Image
+            style={styles.maskGroupIcon}
+            contentFit="cover"
+            source={require('../../assets/marie.png')}
+          />
+          <Image
+            style={styles.maskGroupIcon}
+            contentFit="cover"
+            source={require('../../assets/farita4.png')}
+          />
+          <Image
+            style={styles.maskGroupIcon}
+            contentFit="cover"
+            source={require('../../assets/claire.png')}
+          />
         </View>
       </View>
     </View>
@@ -196,8 +254,8 @@ const styles = StyleSheet.create({
     gap: 10
   },
   frameParent: {
-    paddingHorizontal:10,
-    paddingTop:40,
+    paddingHorizontal: 10,
+    paddingTop: 40,
     width: '100%',
     gap: 30,
     marginBottom: 130

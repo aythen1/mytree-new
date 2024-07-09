@@ -34,6 +34,12 @@ export const diariesSlices = createSlice({
     addUserDiary: (state, action) => {
       state.userDiaries = [...state.userDiaries, action.payload]
     },
+    removeUserDiary: (state, action) => {
+      const prevDiaries = [...state.userDiaries]
+      state.userDiaries = prevDiaries.filter(
+        (diary) => diary.id !== action.payload
+      )
+    },
     clearDiaries: (state, action) => {
       ;(state.allDiaries = []),
         (state.userDiaries = []),
@@ -103,7 +109,12 @@ export const diariesSlices = createSlice({
   }
 })
 
-export const { updateDiaries, setSelectedDiary, clearDiaries, addUserDiary } =
-  diariesSlices.actions
+export const {
+  updateDiaries,
+  setSelectedDiary,
+  clearDiaries,
+  addUserDiary,
+  removeUserDiary
+} = diariesSlices.actions
 
 export default diariesSlices.reducer

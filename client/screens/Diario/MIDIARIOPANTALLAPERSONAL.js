@@ -29,7 +29,7 @@ const MIDIARIOPANTALLAPERSONAL = () => {
   }
 
   useEffect(() => {
-    dispatch(getAllUserDiaries(userData.id))
+    // dispatch(getAllUserDiaries(userData.id))
   }, [])
 
   return (

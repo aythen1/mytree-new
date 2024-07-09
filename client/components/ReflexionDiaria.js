@@ -1,11 +1,12 @@
-import React, { useState, useCallback, useContext } from 'react'
+import React, { useState, useCallback, useContext, useEffect } from 'react'
 import {
   StyleSheet,
   View,
   Pressable,
   Text,
   Modal,
-  TextInput
+  TextInput,
+  ActivityIndicator
 } from 'react-native'
 import { FontFamily, FontSize, Color, Padding, Border } from '../GlobalStyles'
 import { useSelector } from 'react-redux'
@@ -16,12 +17,17 @@ const ReflexionDiaria = ({
   editing,
   modalCreate,
   setModalCreate,
-  openGroupIcon1
+  openGroupIcon1,
+  selectedDate
 }) => {
-  const { userDiaries, selectedDiary } = useSelector((state) => state.diaries)
+  const { userDiaries, selectedDiary, loading } = useSelector(
+    (state) => state.diaries
+  )
   const { selectedSection } = useContext(Context)
 
-  console.log('userDiaries from reflexion ', userDiaries)
+  useEffect(() => {
+    console.log('userDiaries from reflexion ', userDiaries)
+  }, [userDiaries])
   return (
     <View
       style={{
@@ -42,17 +48,43 @@ const ReflexionDiaria = ({
                   ? 'Descubriendo el mundo'
                   : 'Personalizada'}
       </Text>
-      {userDiaries.map((diary, index) => (
-        <SingleDiary
-          key={index}
-          diary={diary}
-          editing={selectedDiary?.id === diary.id}
-          setModalCreate={setModalCreate}
-          modalCreate={modalCreate}
-          openGroupIcon1={openGroupIcon1}
-          last={index === userDiaries.length - 1}
+      {loading ? (
+        <ActivityIndicator
+          style={{
+            backgroundColor: 'transparent',
+            alignSelf: 'center',
+            marginTop: '20%'
+          }}
+          animating={true}
+          size="xlarge"
+          color={'#B7E4C0'}
         />
-      ))}
+      ) : userDiaries.length === 0 ? (
+        <View
+          style={{
+            width: '100%',
+            alignItems: 'center',
+            paddingTop: 50
+          }}
+        >
+          <Text style={{ fontSize: 14, fontWeight: 500, color: '#202020' }}>
+            No hemos encontrado diarios basados en su busqueda!
+          </Text>
+        </View>
+      ) : (
+        userDiaries.map((diary, index) => (
+          <SingleDiary
+            selectedDate={selectedDate}
+            key={diary.id}
+            diary={diary}
+            editing={selectedDiary?.id === diary.id}
+            setModalCreate={setModalCreate}
+            modalCreate={modalCreate}
+            openGroupIcon1={openGroupIcon1}
+            last={index === userDiaries.length - 1}
+          />
+        ))
+      )}
 
       <View style={[styles.miDiarioEntradaTextoPlItem, styles.diarioLayout]} />
     </View>

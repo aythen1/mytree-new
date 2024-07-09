@@ -56,6 +56,7 @@ export const ContextProvider = ({ children }) => {
         videos: [],
         date: new Date(date),
         category,
+        id: 'preDiary',
         title: '',
         creatorId: userData.id,
         description: '',
@@ -63,6 +64,7 @@ export const ContextProvider = ({ children }) => {
         taggedUsers: []
       })
     )
+    setEditingDiary('preDiary')
   }
 
   const getUser = async () => {
@@ -174,6 +176,16 @@ export const ContextProvider = ({ children }) => {
         }
       }
     }
+  }
+
+  const formatDateToNormal = (date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0') // Months are 0-based
+    const day = String(date.getDate()).padStart(2, '0')
+
+    const formattedDate = `${year}-${month}-${day}`
+    console.log(formattedDate) // Output: '2024-07-08'
+    return formattedDate
   }
 
   function formatDate(dateString) {
@@ -487,6 +499,7 @@ export const ContextProvider = ({ children }) => {
         selectedRelationShip,
         setSelectedRelationShip,
         selectedUserToInvite,
+        formatDateToNormal,
         setSelectedUserToInvite,
         editingDiary,
         setEditingDiary,
