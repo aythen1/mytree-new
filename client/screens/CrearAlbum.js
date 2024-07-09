@@ -176,8 +176,12 @@ const CrearAlbum = () => {
       const finalData = {}
       finalData.taggedUsers = taggedUsers
       finalData.creatorId = userData.id
-      finalData.date = selectedDate ? selectedDate : new Date()
-      finalData.images = [libraryImage]
+      finalData.date = selectedDate ? new Date(selectedDate) : new Date()
+      finalData.images = libraryImage
+        ? [libraryImage]
+        : [
+            'https://res.cloudinary.com/dnewfuuv0/image/upload/v1720495158/jpw67qijxqn9hny4jspe.jpg'
+          ]
       finalData.privacyMode = privacy
       finalData.albumCategory = 'general'
       finalData.location = location
@@ -185,7 +189,7 @@ const CrearAlbum = () => {
       finalData.description = dataToSend.description
       finalData.title = ''
       console.log('CREATING ALBUM...', finalData)
-      const res = await axios.post(`${BACKURL}/albums'`, finalData)
+      const res = await axios.post(`${BACKURL}/albums`, finalData)
 
       console.log('res:', res)
 
@@ -261,7 +265,7 @@ const CrearAlbum = () => {
               Crear álbum
             </Text>
             <Pressable
-              disabled={!libraryImage || dataToSend.description === ''}
+              disabled={dataToSend.description === ''}
               onPress={handleSubmit}
             >
               <Text
@@ -597,7 +601,7 @@ const CrearAlbum = () => {
               colors={['#dee274', '#7ec18c']}
             >
               <Text
-                disabled={!libraryImage || dataToSend.description === ''}
+                disabled={dataToSend.description === ''}
                 onPress={handleSubmit}
                 style={{
                   letterSpacing: 1,

@@ -26,6 +26,7 @@ import FooterBarSVG from './svgs/FooterBarSVG'
 import { Image } from 'expo-image'
 import { getAllPosts } from '../redux/actions/posts'
 import { getAllUsers } from '../redux/actions/user'
+import { getAllUserAlbums } from '../redux/actions/albums'
 
 const FooterNavBar = () => {
   const {
@@ -46,6 +47,7 @@ const FooterNavBar = () => {
     getUsersMessages()
     dispatch(getAllUsers())
     dispatch(getAllPosts())
+    dispatch(getAllUserAlbums(userData.id))
   }, [])
 
   const showModalAdd = () => {
