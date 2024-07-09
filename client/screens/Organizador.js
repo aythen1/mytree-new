@@ -182,12 +182,14 @@ const Organizador = () => {
     try {
       const finalData = {}
       finalData.tags = taggedUsers
+      finalData.etiquets = taggedUsers
       finalData.hashtags = selectedHashtags
       finalData.userId = userData.id
       finalData.fecha = selectedDate ? selectedDate : new Date()
       finalData.nameUser = userData.username
       finalData.photos = [libraryImage]
       finalData.description = dataToSend.description
+      finalData.privacyMode = privacy
       console.log('sending post...', finalData)
       const res = await axios.post(`${BACKURL}/posts`, finalData)
 
