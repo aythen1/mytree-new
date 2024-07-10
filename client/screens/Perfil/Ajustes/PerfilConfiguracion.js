@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useContext } from 'react'
 import {
   Text,
   StyleSheet,
@@ -27,21 +27,21 @@ import BookSVG from '../../../components/svgs/BookSVG'
 import NotificationsMuroSVG from '../../../components/svgs/NotificationsMuroSVG'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { BACKURL } from '../../../apiBackend'
+import axiosInstance, { BACKURL } from '../../../apiBackend'
+import { useDispatch, useSelector } from 'react-redux'
+import { getUserData } from '../../../redux/actions/user'
+import { Context } from '../../../context/Context'
+import { CameraView } from 'expo-camera'
+import SimboloSVG from '../SimboloSVG'
 
 const PerfilConfiguracion = () => {
 
-  const [usuario, setUsuario] = useState('')
-
-  useEffect(()=>{
-    const getUser= async()=>{
-    const usuario = await AsyncStorage.getItem('user');
-    console.log(JSON.parse(usuario),"este es")
-    setUsuario(JSON.parse(usuario));
-    return JSON.parse(usuario);
-    }
-    getUser()
-  },[])
+  const { userData: usuario } = useSelector((state) => state.users)
+  const [showImageOptions, setShowImageOptions] = useState(false)
+  const [facing, setFacing] = useState('back')
+  const { pickImage, provisoryProfileImage, profileImage } = useContext(Context)
+  const dispatch = useDispatch()
+  const [showCamera, setShowCamera] = useState(false)
 
 
   const navigation = useNavigation()
@@ -49,13 +49,41 @@ const PerfilConfiguracion = () => {
 
   const [modalCreate, setModalCreate] = useState(false)
 
-  
+
   const [input, setInput] = useState(null)
+  const [inputsBros, setInputsBros] = useState([])
+
   const [dataToSend, setDataToSend] = useState({
-    username:"",
+    username: "",
     birthDate: "",
     address: "",
   })
+
+  const cameraReff = useRef(null)
+
+  const takePicture = async () => {
+    if (cameraReff) {
+      const photo = await cameraReff.current.takePictureAsync()
+      setSelectedImage(photo)
+      pickImage('profile', photo.uri)
+      setShowCamera(false)
+      // You can handle the taken photo here, such as displaying it or saving it.
+    }
+  }
+  useEffect(() => {
+    if (profileImage) {
+      console.log('llego')
+      axiosInstance.patch(`/user/${usuario?.id}`, {
+        profilePicture: profileImage
+      })
+    }
+    dispatch(getUserData(usuario?.id))
+  }, [profileImage])
+
+  const changePictureMode = async () => {
+    setFacing((prev) => (prev == 'back' ? 'front' : 'back'))
+  }
+
 
   const handleInputFocus = () => {
     if (nombreInputRef.current) {
@@ -67,20 +95,24 @@ const PerfilConfiguracion = () => {
     setModalCreate(false)
   }
 
-  const handleSubmit = async ()=>{
-  
- try {
-  const res =  await axios.patch(`${BACKURL}/user/${usuario.id}`,dataToSend)
-  if(res.data){
-    setModalCreate(true)
+  const handleSubmit = async () => {
+    try {
+      const res = await axios.patch(`${BACKURL}/user/${usuario.id}`, dataToSend)
+      if (res.data) {
+        setModalCreate(true)
+        dispatch(getUserData(usuario.id))
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
   }
- } catch (error) {
-  console.log(error)
- }
-  }
+
+
+ if (!showCamera) {
   return (
-      <KeyboardAvoidingView behavior='padding'  style={styles.viewContainer}>
-    <ScrollView contentContainerStyle={{paddingBottom:130}} style={styles.frameParent} showsVerticalScrollIndicator={false}>
+    <KeyboardAvoidingView behavior='padding' style={styles.viewContainer}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 130 }} style={styles.frameParent} showsVerticalScrollIndicator={false}>
         <View>
           <View style={styles.parentIcons}>
             <Pressable onPress={() => navigation.navigate('Muro')}>
@@ -117,16 +149,77 @@ const PerfilConfiguracion = () => {
 
         <View style={styles.centralContainer}>
           <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
-            <View style={styles.nombreCompletoParent}>
+            <View style={{width:"100%"}}>
               <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
                 Cambiar foto de perfil
               </Text>
+              <View style={{ width: "100%",height:200, justifyContent: 'center' }}>
+                <Pressable
+                  onPress={() => setShowImageOptions(!showImageOptions)}
+                  style={{ alignItems: 'center',
+                    justifyContent: 'center',
+                    flex: 1,
+                    flexDirection: 'row' }}
+                >
+                  {!provisoryProfileImage && !usuario?.profilePicture ? (
+                    <Image
+                      style={{ ...styles.perfilItem, borderRadius: 100 }}
+                      contentFit="cover"
+                      source={require('../../../assets/group-1171276683.png')}
+                    />
+                  ) : (
+                    <Image
+                      style={{ ...styles.perfilItem, borderRadius: 100 }}
+                      contentFit="cover"
+                      source={{
+                        uri:
+                          profileImage ||
+                          provisoryProfileImage ||
+                          usuario.profilePicture
+                      }}
+                    />
+                  )}
+                 
+                </Pressable>
+                {showImageOptions && (
+                  <View
+                    style={{ position: 'absolute', top: 0, right: '25%', gap: 10 }}
+                  >
+                    <Pressable
+                      onPress={() => pickImage('profile')}
+                      style={{
+                        width: 30,
+                        height: 30,
+                        backgroundColor: Color.secundario,
+                        borderRadius: 100,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <SimboloSVG color={'#fff'} />
+                    </Pressable>
+                    <Pressable
+                      onPress={() => setShowCamera(true)}
+                      style={{
+                        width: 30,
+                        height: 30,
+                        backgroundColor: Color.secundario,
+                        borderRadius: 100,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <Image
+                        style={{ width: 16, height: 16 }}
+                        contentFit="cover"
+                        source={require('../../../assets/cameraIcon.png')}
+                      />
+                    </Pressable>
+                  </View>
+                )}
+              </View>
             </View>
-            <Image
-              style={[styles.vectorIcon1, styles.vectorIconLayout]}
-              contentFit="cover"
-              source={require('../../../assets/vector47.png')}
-            />
+
           </View>
           <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
             <View style={styles.nombreCompletoParent}>
@@ -137,7 +230,7 @@ const PerfilConfiguracion = () => {
                 style={[styles.brunoPham, styles.brunoPhamTypo]}
                 ref={nombreInputRef}
                 placeholder={usuario.username}
-                onChangeText={(text)=> setDataToSend({...dataToSend,["username"]: text})}
+                onChangeText={(text) => setDataToSend({ ...dataToSend, ["username"]: text })}
                 value={dataToSend.username}
               />
             </View>
@@ -163,7 +256,7 @@ const PerfilConfiguracion = () => {
                 style={[styles.brunoPham, styles.brunoPhamTypo]}
                 ref={nombreInputRef}
                 placeholder={usuario.birthDate}
-                onChangeText={(text)=> setDataToSend({...dataToSend,["birthDate"]: text})}
+                onChangeText={(text) => setDataToSend({ ...dataToSend, ["birthDate"]: text })}
                 value={dataToSend.birthDate}
               />
             </View>
@@ -189,7 +282,7 @@ const PerfilConfiguracion = () => {
                 style={[styles.brunoPham, styles.brunoPhamTypo]}
                 ref={nombreInputRef}
                 placeholder={usuario.address}
-                onChangeText={(text)=> setDataToSend({...dataToSend,["address"]: text})}
+                onChangeText={(text) => setDataToSend({ ...dataToSend, ["address"]: text })}
                 value={dataToSend.address}
               />
             </View>
@@ -219,7 +312,7 @@ const PerfilConfiguracion = () => {
               <TextInput
                 style={[styles.brunoPham, styles.brunoPhamTypo]}
                 ref={nombreInputRef}
-                placeholder="Mary Jane"
+                placeholder="Agregar madre"
               />
             </View>
             <Pressable
@@ -243,7 +336,7 @@ const PerfilConfiguracion = () => {
               <TextInput
                 style={[styles.brunoPham, styles.brunoPhamTypo]}
                 ref={nombreInputRef}
-                placeholder="Peter Parker"
+                placeholder="Agregar padre"
               />
             </View>
             <Pressable
@@ -274,22 +367,35 @@ const PerfilConfiguracion = () => {
               <TextInput
                 style={[styles.brunoPham, styles.brunoPhamTypo]}
                 ref={nombreInputRef}
-                placeholder="Ninguno"
+                placeholder="Agregar hermano"
               />
             </View>
-            <Pressable
-              onPress={() => {
-                handleInputFocus()
-                setInput('Hermanos')
-              }}
-            >
-              <Image
-                style={[styles.vectorIcon1, styles.vectorIconLayout]}
-                contentFit="cover"
-                source={require('../../../assets/vector47.png')}
-              />
-            </Pressable>
+            <View style={{ alignItems: "center", width: "20%" }}>
+              <Pressable
+                onPress={() => {
+                  setInputsBros((prev) => {
+                    return [...prev, { input: "1" }]
+                  })
+                }}
+              >
+                <Text style={{ textAlign: "center", fontSize: 22 }}>+</Text>
+              </Pressable>
+
+            </View>
+
           </View>
+          {inputsBros.length > 0 && inputsBros.map((e, i) => {
+            return (
+              <View key={i} style={styles.nombreCompletoParent}>
+
+                <TextInput
+                  style={[styles.brunoPham, styles.brunoPhamTypo]}
+                  ref={nombreInputRef}
+                  placeholder="Agregar hermano"
+                />
+              </View>
+            )
+          })}
           <Image
             style={styles.frameChild}
             contentFit="cover"
@@ -324,21 +430,6 @@ const PerfilConfiguracion = () => {
             contentFit="cover"
             source={require('../../../assets/line-811.png')}
           />
-          {/* <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
-            <View style={styles.nombreCompletoParent}>
-              <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
-                Añadir al perfil la familia de la pareja
-              </Text>
-              <Text style={[styles.brunoPham, styles.brunoPhamTypo]}>
-                Desactivado
-              </Text>
-            </View>
-            <Image
-              style={[styles.vectorIcon1, styles.vectorIconLayout]}
-              contentFit="cover"
-              source={require('../../../assets/vector47.png')}
-            />
-          </View> */}
           <View style={[styles.deleteParent, styles.parentFlexBox]}>
             <Image
               style={styles.deleteIcon}
@@ -367,7 +458,7 @@ const PerfilConfiguracion = () => {
           <Modal animationType="fade" transparent={true} visible={modalCreate}>
             <TouchableWithoutFeedback onPress={() => setModalCreate(false)}>
               <View style={styles.modalOverlay}>
-                <View>
+                <View style={{ width: "100%", height: "100%" }}>
                   <ENTRADACREADA
                     onClose={onCloseModalCreate}
                     message={'Guardado!'}
@@ -377,22 +468,99 @@ const PerfilConfiguracion = () => {
             </TouchableWithoutFeedback>
           </Modal>
         )}
-    </ScrollView>
-      </KeyboardAvoidingView>
-  )
+      </ScrollView>
+    </KeyboardAvoidingView>
+  )} else {
+    return (
+      <View style={{ zIndex: 9999, height: '100%' }}>
+        <CameraView
+          ref={cameraReff}
+          facing={facing}
+          style={{ flex: 1 }}
+          mode="picture"
+          FocusMode="on"
+          onCameraReady={(e) => console.log(e, 'esto es e')}
+        >
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'transparent',
+              flexDirection: 'row'
+            }}
+          >
+            <TouchableOpacity
+              style={{ position: 'absolute', top: 49, left: 20 }}
+              onPress={() => setShowCamera(false)}
+            >
+              <Image
+                style={{
+                  height: 16,
+                  width: 16
+                }}
+                contentFit="cover"
+                source={require('../../../assets/group-565.png')}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                alignSelf: 'flex-end',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'row',
+                width: '100%',
+                marginBottom: 30,
+                position: 'relative'
+              }}
+            >
+              <TouchableOpacity
+                onPress={takePicture}
+                style={{
+                  width: 60,
+                  height: 60,
+                  bottom: 100,
+                  borderRadius: 100,
+                  backgroundColor: '#cecece',
+
+                  color: 'white'
+                }}
+              ></TouchableOpacity>
+              <TouchableOpacity
+                onPress={changePictureMode}
+                style={{
+                  position: 'absolute',
+                  right: 20,
+                  bottom: 100,
+                  color: 'white',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <Entypo name="cycle" color={'#fff'} size={25} />
+              </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
+        </CameraView>
+      </View>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
   frameParent: {
-   
+
     flex: 1,
     backgroundColor: Color.white,
     paddingHorizontal: Padding.p_xl,
   },
   viewContainer: {
     backgroundColor: Color.white
-,
-    flex:1,
+    ,
+    flex: 1,
+  },
+  perfilItem:{
+    height: 130,
+    width: 130
   },
   parentFlexBox: {
     flexDirection: 'row',
@@ -431,7 +599,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base
   },
   nombreCompletoParent: {
-    width: '80%'
+    width: '80%',
   },
   vectorIcon1: {
     marginLeft: 20

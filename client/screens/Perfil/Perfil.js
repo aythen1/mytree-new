@@ -6,7 +6,8 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  Modal
+  Modal,
+  Share
 } from 'react-native'
 import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
@@ -45,11 +46,11 @@ const Perfil = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const [facing, setFacing] = useState('back')
+  const { pickImage, provisoryProfileImage, profileImage } = useContext(Context)
   const { showPanel } = useSelector((state) => state.panel)
   const { userData } = useSelector((state) => state.users)
   const { userPosts } = useSelector((state) => state.posts)
   const { allPosts } = useSelector((state) => state.posts)
-  const { pickImage, provisoryProfileImage, profileImage } = useContext(Context)
 
   const [hasPermission, setHasPermission] = useState(null)
   const [selectedImage, setSelectedImage] = useState(null)
@@ -111,13 +112,6 @@ const Perfil = () => {
     }
   }
   useEffect(() => {
-    const getUser = async () => {
-      const usuario = await AsyncStorage.getItem('user')
-      console.log(JSON.parse(usuario), 'este es')
-      setUsuario(JSON.parse(usuario))
-      return JSON.parse(usuario)
-    }
-    getUser()
     if (userData?.newUser) {
       axiosInstance.patch(`/user/${userData?.id}`, { newUser: false })
     }
@@ -133,6 +127,37 @@ const Perfil = () => {
   }, [profileImage])
 
   // console.log(userData, 'data user')
+
+  const onShare = async (eventLink) => {
+    try {
+      const result = await Share.share(
+        {
+          message: `Te invito a seguirme en Mytree. Si todavia no te bajaste la app ingresa a este link ! http://app.mytreeoficial.com`,
+          title: 'Compartir perfil'
+        },
+        {
+          // Android only:
+          dialogTitle: 'Te invito a seguirme en Mytree',
+          // iOS only:
+          excludedActivityTypes: ['com.apple.UIKit.activity.PostToTwitter']
+        }
+      )
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // compartido con el tipo de actividad de result.activityType
+          console.log('evento conmpartido con ', result.activityType)
+        } else {
+          // compartido
+          console.log('evento conmpartido')
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // descartado
+      }
+    } catch (error) {
+      alert(error.message)
+    }
+  }
 
   if (!showCamera) {
     return (
@@ -329,7 +354,6 @@ const Perfil = () => {
           <View style={{ flex: 1 }}>
             <EmojiPicker
               emojis={emojis} // emojis data source see data/emojis
-              // recent={recent} // store of recently used emojis
               autoFocus={true} // autofocus search input
               loading={false} // spinner for if your emoji data or recent store is async
               darkMode={true} // to be or not to be, that is the question
@@ -338,19 +362,7 @@ const Perfil = () => {
                 setEmoji(e.emoji)
                 setShowEmojis(false)
               }} // callback when user selects emoji - returns emoji obj
-              // onChangeRecent={setRecent} // callback to update recent storage - arr of emoji objs
-              // backgroundColor={'#000'} // optional custom bg color
-              // enabledCategories={[ // optional list of enabled category keys
-              //   'recent',
-              //   'emotion',
-              //   'emojis',
-              //   'activities',
-              //   'flags',
-              //   'food',
-              //   'places',
-              //   'nature'
-              // ]}
-              // defaultCategory={'food'} // optional default category key
+      
             />
           </View>
         </Modal>
