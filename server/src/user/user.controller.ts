@@ -288,10 +288,11 @@ async toggleLike(
   async addFamilyMember(
     @Param('userId') userId: string,
     @Param('property') property: string,
-    @Param('memberId') memberId: string
+    @Param('memberId') memberId: string,
+    @Body('memberIds') memberIds?: string[] // Permitir memberId como string o array de strings opcional
   ) {
-    console.log(userId, property, memberId)
-    return this.userService.addFamilyMember(userId, property, memberId);
+    const idsToAdd = memberIds || [memberId]; // Usar memberIds si está definido, de lo contrario usar memberId
+    return this.userService.addFamilyMember(userId, property, idsToAdd);
   }
 
   // Ruta para eliminar un miembro de la familia

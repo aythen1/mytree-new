@@ -4,91 +4,67 @@ import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useNavigation } from '@react-navigation/native'
 import { Color, FontFamily, FontSize, Padding, Border } from '../GlobalStyles'
+import useFetchHook from '../utils/useFetchHook'
+import { useSelector } from 'react-redux'
 
 const StoriesVideosDiarios = () => {
+
+  const [users, setUsers] = React.useState()
+  const { userData } = useSelector((state) => state.users)
+
+  const { data, loading, error } = useFetchHook({ url: `/user/${userData?.id}/friendsAndFamily` })
+
   const navigation = useNavigation()
 
+
+  React.useEffect(() => {
+    setUsers(data)
+    console.log(data, "data del hoooksss")
+  }, [data])
+
+
   return (
-   <View style={{ marginTop:15, width:'100%', justifyContent: 'center' }}>
-     <ScrollView style={{}} horizontal={true} showsHorizontalScrollIndicator={false}>
-      <View style={{ width: '100%',
-    height: 100 }}>
-        <View style={styles.storiesLayout}>
-          <View style={{height: 90,
-    width: 70,marginLeft:15}}>
-            <Image
-              style={[styles.aatarIcon, styles.aatarIconPosition]}
-              contentFit="cover"
-              source={require('../assets/aatar3.png')}
-            />
-            <View style={[styles.youWrapper, styles.aatarIconPosition]}>
-              <Text style={[styles.you1, styles.signTypo]}>You</Text>
+    <View style={{ marginTop: 15, width: '100%', justifyContent: 'center' }}>
+      <ScrollView style={{}} horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={{paddingRight:15}}>
+        <View style={{
+          width: '100%',
+          height: 100
+        }}>
+          <View style={styles.storiesLayout}>
+            <View style={{
+              height: 90,
+              width: 70, marginLeft: 15
+            }}>
+              <Image
+                style={[styles.aatarIcon, styles.aatarIconPosition]}
+                contentFit="cover"
+                source={require('../assets/aatar3.png')}
+              />
+              <View style={[styles.youWrapper, styles.aatarIconPosition]}>
+                <Text style={[styles.you1, styles.signTypo]}>You</Text>
+              </View>
             </View>
-          </View>
-          <View style={[styles.benjamin, styles.youLayout]}>
-            <Image
-              style={[styles.aatarIcon, styles.aatarIconPosition]}
-              contentFit="cover"
-              source={require('../assets/aatar4.png')}
-            />
-            <View style={[styles.youWrapper, styles.aatarIconPosition]}>
-              <Text style={[styles.benjamin1, styles.signTypo]}>Benjamin</Text>
-            </View>
-          </View>
-          <View style={[styles.benjamin, styles.youLayout]}>
-            <Image
-              style={[styles.aatarIcon, styles.aatarIconPosition]}
-              contentFit="cover"
-              source={require('../assets/aatar5.png')}
-            />
-            <View style={[styles.youWrapper, styles.aatarIconPosition]}>
-              <Text style={[styles.farita1, styles.signTypo]}>Farita</Text>
-            </View>
-          </View>
-          <View style={[styles.benjamin, styles.youLayout]}>
-            <Image
-              style={[styles.aatarIcon, styles.aatarIconPosition]}
-              contentFit="cover"
-              source={require('../assets/aatar5.png')}
-            />
-            <View style={[styles.youWrapper, styles.aatarIconPosition]}>
-              <Text style={[styles.marie1, styles.signTypo]}>Marie</Text>
-            </View>
-          </View>
-          <View style={[styles.benjamin, styles.youLayout]}>
-            <Image
-              style={[styles.aatarIcon, styles.aatarIconPosition]}
-              contentFit="cover"
-              source={require('../assets/aatar4.png')}
-            />
-            <View style={[styles.youWrapper, styles.aatarIconPosition]}>
-              <Text style={[styles.benjamin1, styles.signTypo]}>Benjamin</Text>
-            </View>
-          </View>
-          <View style={[styles.benjamin, styles.youLayout]}>
-            <Image
-              style={[styles.aatarIcon, styles.aatarIconPosition]}
-              contentFit="cover"
-              source={require('../assets/aatar5.png')}
-            />
-            <View style={[styles.youWrapper, styles.aatarIconPosition]}>
-              <Text style={[styles.farita1, styles.signTypo]}>Farita</Text>
-            </View>
-          </View>
-          <View style={[styles.benjamin, styles.youLayout]}>
-            <Image
-              style={[styles.aatarIcon, styles.aatarIconPosition]}
-              contentFit="cover"
-              source={require('../assets/aatar5.png')}
-            />
-            <View style={[styles.youWrapper, styles.aatarIconPosition]}>
-              <Text style={[styles.farita1, styles.signTypo]}>Claire</Text>
-            </View>
+            {data && data.map((user)=> {
+              return (
+                <View style={{
+                  height: 90,
+                  width: 70, marginLeft: 15
+                }}>
+                  <Image
+                    style={[styles.aatarIcon, styles.aatarIconPosition , {borderRadius:100,borderWidth:3,borderColor: Color.primario1}]}
+                    contentFit="cover"
+                    source={{uri: user.profilePicture}}
+                  />
+                  <View style={[styles.youWrapper, styles.aatarIconPosition]}>
+                    <Text style={[styles.you1, styles.signTypo]}>{user.username}</Text>
+                  </View>
+                </View>
+              )
+            }) }
           </View>
         </View>
-      </View>
-    </ScrollView>
-   </View>
+      </ScrollView>
+    </View>
   )
 }
 
@@ -507,7 +483,7 @@ const styles = StyleSheet.create({
   mensajera: {
     width: '100%',
     height: 100,
-    borderWidth:2
+    borderWidth: 2
   }
 })
 

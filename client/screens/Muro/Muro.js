@@ -68,11 +68,7 @@ const Muro = () => {
   const handleMenu = () => {
     dispatch(setPanel(false))
   }
-  // const getUser = async () => {
-  //   const usuario = await AsyncStorage.getItem('user')
-  //   const user = JSON.parse(usuario)
-  //   setUser(user)
-  // }
+
   useEffect(() => {
     if (queryParams?.invite && queryParams?.memberId) {
       console.log(user, 'user')
@@ -80,9 +76,7 @@ const Muro = () => {
     }
   }, [queryParams])
 
-  // useEffect(() => {
-  //   getUser()
-  // }, [])
+
   useEffect(() => {
     if (userData) {
       dispatch(getAllNotifications())
@@ -134,7 +128,6 @@ const Muro = () => {
               width: 26,
               height: 20
             }}
-            //onPress={() => dispatch(setPanel(!menuVisible))}
             onPress={openDrawer}
           >
             <Image
