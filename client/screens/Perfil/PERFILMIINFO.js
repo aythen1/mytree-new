@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native'
+import { StyleSheet, View, Text, Pressable, ScrollView, Share, TouchableOpacity } from 'react-native'
 import { Image } from 'expo-image'
 // import { LinearGradient } from 'expo-linear-gradient'
 import { useNavigation } from '@react-navigation/native'
@@ -8,6 +8,37 @@ import { FontFamily, Color, Border, FontSize } from '../../GlobalStyles'
 const PERFILMIINFO = ({ setSelectedComponent ,usuario}) => {
   const navigation = useNavigation()
 
+  const onShare = async (eventLink) => {
+    try {
+      const result = await Share.share(
+        {
+          message: `Te invito a seguirme en Mytree. Si todavia no te bajaste la app ingresa a este link ! http://app.mytreeoficial.com`,
+          title: 'Compartir perfil'
+        },
+        {
+          // Android only:
+          dialogTitle: 'Te invito a seguirme en Mytree',
+          // iOS only:
+          excludedActivityTypes: ['com.apple.UIKit.activity.PostToTwitter']
+        }
+      )
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // compartido con el tipo de actividad de result.activityType
+          console.log('evento conmpartido con ', result.activityType)
+        } else {
+          // compartido
+          console.log('evento conmpartido')
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // descartado
+      }
+    } catch (error) {
+      alert(error.message)
+    }
+  }
+
   return (
     <ScrollView
       style={styles.perfilMiInfo}
@@ -15,26 +46,34 @@ const PERFILMIINFO = ({ setSelectedComponent ,usuario}) => {
     >
       <View style={styles.frameView}>
         <View style={styles.image6Parent}>
-          <Image
+         <TouchableOpacity onPress={()=>{ onShare()}}>
+         <Image
             style={[styles.skillIconsinstagram, styles.skillLayout]}
             contentFit="cover"
             source={require('../../assets/skilliconsinstagram4.png')}
           />
-          <Image
+         </TouchableOpacity>
+         <TouchableOpacity onPress={()=>{ onShare()}}>
+         <Image
             style={[styles.skillIconslinkedin, styles.skillLayout]}
             contentFit="cover"
             source={require('../../assets/skilliconslinkedin4.png')}
           />
+         </TouchableOpacity>
+          <TouchableOpacity onPress={()=>{ onShare()}}>
           <Image
             style={[styles.logostiktokIcon, styles.iconLayout]}
             contentFit="cover"
             source={require('../../assets/logostiktokicon3.png')}
           />
-          <Image
+          </TouchableOpacity>
+         <TouchableOpacity onPress={()=>{ onShare()}}>
+         <Image
             style={[styles.skillIconslinkedin, styles.skillLayout]}
             contentFit="cover"
             source={require('../../assets/deviconfacebook4.png')}
           />
+         </TouchableOpacity>
         </View>
 
         <View style={styles.frameParent5}>
@@ -43,13 +82,9 @@ const PERFILMIINFO = ({ setSelectedComponent ,usuario}) => {
               Familiares
             </Text>
             <View style={styles.parent}>
-              <Text style={[styles.text1, styles.text1Typo]}>25</Text>
+              <Text style={[styles.text1, styles.text1Typo]}>0</Text>
               <View style={styles.ellipseGroup}>
-                <Image
-                  style={styles.frameInner}
-                  contentFit="cover"
-                  source={require('../../assets/ellipse-7170.png')}
-                />
+           
                 <Image
                   style={styles.vectorIcon1}
                   contentFit="cover"
@@ -64,13 +99,9 @@ const PERFILMIINFO = ({ setSelectedComponent ,usuario}) => {
           >
             <Text style={[styles.familiares, styles.text1Typo]}>Amigos</Text>
             <View style={styles.parent}>
-              <Text style={[styles.text1, styles.text1Typo]}>5</Text>
+              <Text style={[styles.text1, styles.text1Typo]}>0</Text>
               <View style={styles.ellipseGroup}>
-                <Image
-                  style={styles.frameInner}
-                  contentFit="cover"
-                  source={require('../../assets/ellipse-7170.png')}
-                />
+         
                 <Image
                   style={styles.vectorIcon1}
                   contentFit="cover"
@@ -82,13 +113,9 @@ const PERFILMIINFO = ({ setSelectedComponent ,usuario}) => {
           <View style={styles.amigosParent}>
             <Text style={[styles.logros, styles.text1Typo]}>Logros</Text>
             <View style={styles.parent}>
-              <Text style={[styles.text1, styles.text1Typo]}>40 Tree’s</Text>
+              <Text style={[styles.text1, styles.text1Typo]}>0 Tree’s</Text>
               <View style={styles.ellipseGroup}>
-                <Image
-                  style={styles.frameInner}
-                  contentFit="cover"
-                  source={require('../../assets/ellipse-7170.png')}
-                />
+            
                 <Image
                   style={styles.vectorIcon1}
                   contentFit="cover"
@@ -239,25 +266,18 @@ const styles = StyleSheet.create({
     height: 35,
     zIndex: 0
   },
-  vectorIcon1: {
-    top: 6,
-    left: 6,
-    zIndex: 1,
-    height: 24,
-    width: 24,
-    position: 'absolute'
-  },
+  vectorIcon1: {width:29,height:29},
   ellipseGroup: {
-    marginLeft: 16,
-    flexDirection: 'row'
+    backgroundColor:Color.secundario,padding:5,borderRadius:100
   },
   parent: {
     marginTop: 3,
     flexDirection: 'row',
-    alignItems: 'center'
+    justifyContent:"center",
+    alignItems: 'center',
+    gap:15
   },
   amigosParent: {
-    marginLeft: 40,
     alignItems: 'flex-end'
   },
   logros: {
@@ -320,72 +340,6 @@ const styles = StyleSheet.create({
     width: '40%',
   paddingHorizontal:10
   },
-  // descripcinParent: {
-  //   flexDirection: 'row'
-  // },
-  // quEsLo: {
-  //   fontWeight: '500',
-  //   fontFamily: FontFamily.lato
-  // },
-  // compartirConMi: {
-  //   fontWeight: '300',
-  //   fontFamily: FontFamily.lato,
-  //   marginTop: 10
-  // },
-  // vectorIcon4: {
-  //   width: 15,
-  //   height: 15,
-  //   marginLeft: 20
-  // },
-  // frameWrapper3: {
-  //   height: 64,
-  //   marginTop: 20
-  // },
-  // frameParent8: {
-  //   top: 322,
-  //   height: 113,
-  //   width: 388,
-  //   left: 0
-  // },
-  // lock2: {
-  //   width: 12,
-  //   marginLeft: 90,
-  //   height: 24
-  // },
-  // hoyMeSiento: {
-  //   fontFamily: FontFamily.lato
-  // },
-  // conGripe: {
-  //   fontWeight: '300',
-  //   fontFamily: FontFamily.lato
-  // },
-  // hoyMeSientoContainer: {
-  //   width: 347
-  // },
-  // hoyMeSientoConGripeWrapper: {
-  //   width: 334
-  // },
-  // combinedShapeIcon: {
-  //   width: 25,
-  //   height: 25,
-  //   marginLeft: 20
-  // },
-  // frameWrapper4: {
-  //   height: 82,
-  //   marginTop: 20
-  // },
-  // frameParent10: {
-  //   top: 455,
-  //   left: 0
-  // },
-  // espacioDndeLos: {
-  //   width: 347,
-  //   fontWeight: '300',
-  //   fontFamily: FontFamily.lato
-  // },
-  // frameParent12: {
-  //   left: 0
-  // },
   frameParent6: {
     width: '100%',
     height: '100%'

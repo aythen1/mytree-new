@@ -34,7 +34,7 @@ const Posteo = ({ data, padding }) => {
   } = useContext(Context)
   const navigation = useNavigation()
   const dispatch = useDispatch()
-  // console.log('DATA POST ==========', data)
+  console.log('DATA POST ==========', data)
 
   return (
     <View
@@ -100,10 +100,10 @@ const Posteo = ({ data, padding }) => {
                 }}
               >
                 <Image
-                  contentFit="cover"
-                  style={{ width: 22, height: 16.5, zIndex: 999999999999 }}
+                  contentFit="contain"
+                  style={{ width: "100%", height:"100%",borderRadius:20, zIndex: 999999999999 }}
                   source={{
-                    uri: 'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716419224/bciupv6y3hwccgmtpwoe.png'
+                    uri: data.user.profilePicture || 'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716419224/bciupv6y3hwccgmtpwoe.png'
                   }}
                 />
               </View>
@@ -158,6 +158,10 @@ const Post = ({ padding, posts }) => {
   const { allPosts } = useSelector((state) => state.posts)
   const dispatch = useDispatch()
 
+  console.log(posts,"posrtt")
+  console.log(allPosts,"posrtt2")
+
+
   const toggleModal = () => {
     setShowTagged(!showTagged)
   }
@@ -165,22 +169,13 @@ const Post = ({ padding, posts }) => {
   const toggleIcons = () => {
     setShowIcons((prevShowIcons) => !prevShowIcons)
   }
-  // const fetchPosts = async () => {
-  //   const usuario = await AsyncStorage.getItem('user')
-  //   const user = JSON.parse(usuario)
-  //   const res = await axios.get(`${BACKURL}/user/${user.id}/posts`)
-  //   setPosts(res.data.reverse())
-  // }
+
 
   useEffect(() => {
     dispatch(getAllPosts()) // Realizar la carga inicial de posts
   }, [])
 
-  // useFocusEffect( // Este hook se ejecutará cada vez que la pantalla obtenga foco
-  //   useCallback(() => {
-  //     fetchPosts() // Volver a cargar los posts cuando la pantalla obtenga foco
-  //   }, [])
-  // )
+
   if (posts?.length === 0)
     return (
       <View style={{ width: '100%', alignItems: 'center', paddingTop: 50 }}>

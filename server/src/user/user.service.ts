@@ -467,39 +467,41 @@ async getUserFriends(userId: string): Promise<User[]> {
 
 
 //agrega a amigos o familiares
-    async addFamilyMember(userId: string, property: string, memberId: string): Promise<User> {
-      const user = await this.userRepository.findOne({where:{id:userId}});
-      if (!user) {
-        throw new NotFoundException('Usuario no encontrado');
+async addFamilyMember(userId: string, property: string, memberIds: string[]): Promise<User> {
+  const user = await this.userRepository.findOne({ where: { id: userId } });
+  if (!user) {
+    throw new NotFoundException('Usuario no encontrado');
+  }
+
+  // Verificar si la propiedad es válida y manejarla en consecuencia
+  switch (property) {
+    case 'momId':
+    case 'dadId':
+      user[property] = memberIds[0]; // Tomar solo el primer ID en caso de propiedades únicas
+      break;
+    case 'brotherIds':
+    case 'unclesIds':
+    case 'grandparentsIds':
+    case 'cousinsIds':
+    case 'familyIds':
+    case 'friendsIds':
+      if (Array.isArray(user[property])) {
+        // Filtrar los IDs que ya existen en la propiedad
+        const newMemberIds = memberIds.filter(id => !user[property].includes(id));
+        user[property] = [...user[property], ...newMemberIds]; // Concatenar solo los IDs nuevos
+      } else {
+        user[property] = memberIds; // Asignar directamente el array de IDs
       }
-  
-      // Verificar si la propiedad es válida y manejarla en consecuencia
-      switch (property) {
-        case 'momId':
-        case 'dadId':
-          user[property] = memberId;
-          break;
-        case 'brotherIds':
-        case 'unclesIds':
-        case 'grandparentsIds':
-        case 'cousinsIds':
-        case 'familyIds':
-        case 'friendsIds':
-          if (Array.isArray(user[property])) {
-            user[property].push(memberId);
-          } else {
-            user[property] = [memberId];
-          }
-          break;
-        default:
-          throw new Error('La propiedad especificada no es válida');
-      }
-  
-      // Guardar los cambios en la base de datos
-      await this.userRepository.save(user);
-  
-      return user;
-    }
+      break;
+    default:
+      throw new Error('La propiedad especificada no es válida');
+  }
+
+  // Guardar los cambios en la base de datos
+  await this.userRepository.save(user);
+
+  return user;
+}
   
     async removeFamilyMember(userId: string, property: string, memberId: string) {
       try {

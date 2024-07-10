@@ -23,12 +23,18 @@ export class Post {
     @Column()
     fecha: string;
 
+    @Column()
+    privacyMode: string;
+
     @Column("simple-array", { nullable: true })
     hashtags: string[];
 
     @Column("simple-array", { nullable: true })
+    albums: string[];
+
+    @Column("simple-array", { nullable: true })
     tags: string[];
-    
+
 
     @ManyToOne(() => User, user => user.posts)
     user: User;

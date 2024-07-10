@@ -32,21 +32,17 @@ import { clearPosts } from '../../../redux/slices/posts.slices'
 import { clearStories } from '../../../redux/slices/stories.slices'
 import { clearUser } from '../../../redux/slices/user.slices'
 import { clearEvents } from '../../../redux/slices/events.slices'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+
+
+
 const PerfilAjustes = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation()
-  const [usuario, setUsuario] = useState('')
 
-  useEffect(() => {
-    const getUser = async () => {
-      const usuario = await AsyncStorage.getItem('user')
-      console.log(JSON.parse(usuario), 'este es')
-      setUsuario(JSON.parse(usuario))
-      return JSON.parse(usuario)
-    }
-    getUser()
-  }, [])
+  const { userData: usuario } = useSelector((state) => state.users)
+
+
 
   const handleLogOut = async () => {
     await AsyncStorage.removeItem('user')
@@ -92,16 +88,6 @@ const PerfilAjustes = () => {
                   source={require('../../../assets/image-6.png')}
                 />
               </Pressable>
-              {/* <View style={styles.iconlylightOutlinecalendarParent}>
-                  <HeaderIcons
-                    style={styles.header}
-                    icons={[
-                      // <CalendarMuroSVG />,
-                      <BookSVG />,
-                      <NotificationsMuroSVG />
-                    ]}
-                  />
-                </View> */}
             </View>
             <View style={[styles.backParent, styles.parentFlexBox]}>
               <Pressable
@@ -121,9 +107,9 @@ const PerfilAjustes = () => {
           <View style={styles.frameView}>
             <View style={styles.parentFlexBox}>
               <Image
-                style={styles.frameChild}
+                style={{...styles.frameChild,borderRadius:100}}
                 contentFit="cover"
-                source={require('../../../assets/frame-15477548756.png')}
+                source={usuario.profilePicture || require('../../../assets/frame-15477548756.png')} 
               />
               <View style={styles.brunoPhamWrapper}>
                 <Text style={styles.brunoPham}>{usuario.username}</Text>

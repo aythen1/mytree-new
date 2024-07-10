@@ -107,14 +107,6 @@ const Organizador = () => {
     setSelectedAlbum(false)
   }, [])
 
-  // const openAlbum = useCallback(() => {
-  //   setAñadirAUnAlbum(true)
-  // }, [])
-
-  // const closeAlbum = useCallback(() => {
-  //   setAñadirAUnAlbum(false)
-  // }, [])
-
   const openLugar = useCallback(() => {
     setLugar(true)
   }, [])
