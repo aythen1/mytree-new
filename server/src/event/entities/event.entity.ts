@@ -14,6 +14,9 @@ export class Event {
   
     @Column({ type: 'text', nullable: true })
     description: string;
+
+    @Column({ type: 'text', nullable: true })
+    privacyMode: string;
   
     @Column({ type: 'varchar', nullable: true })
     location: string;
