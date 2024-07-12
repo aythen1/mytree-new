@@ -103,7 +103,7 @@ const Posteo = ({ data, padding }) => {
                   contentFit="contain"
                   style={{ width: "100%", height:"100%",borderRadius:20, zIndex: 999999999999 }}
                   source={{
-                    uri: data.user.profilePicture || 'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716419224/bciupv6y3hwccgmtpwoe.png'
+                    uri: data?.user?.profilePicture || 'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716419224/bciupv6y3hwccgmtpwoe.png'
                   }}
                 />
               </View>
