@@ -140,7 +140,7 @@ const DrawerContent = (props) => {
                   navigation.navigate('UploadMemory')
                 }}
               >
-                <Text style={styles.muro1Typo}>Crear</Text>
+                <Text style={styles.muro1Typo}>Añadir recuerdo</Text>
               </Pressable>
             </View>
 
