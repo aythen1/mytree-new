@@ -11,7 +11,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
-  Keyboard
+  Keyboard,
+  ActivityIndicator
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import Etiquetar from '../components/Etiquetar'
@@ -35,6 +36,7 @@ import { getAllPosts } from '../redux/actions/posts'
 import { getUserPosts } from '../redux/slices/user.slices'
 import Maps from '../components/Maps'
 import { getAllUserAlbums } from '../redux/actions/albums'
+import ImagePickerModal from './Modals/ImagePickerModal'
 
 const CrearAlbum = () => {
   const dispatch = useDispatch()
@@ -94,7 +96,9 @@ const CrearAlbum = () => {
   const [showPrivacidad, setShowPrivacidad] = useState(false)
   const [privacy, setPrivacy] = useState()
   const [location, setLocation] = useState()
+  const [showImagesModal, setShowImagesModal] = useState(false)
   const [selectedDate, setSelectedDate] = useState()
+  const [pickedImages, setPickedImages] = useState([])
 
   const closeSubmit = () => {
     setSubmit(false)
@@ -170,39 +174,70 @@ const CrearAlbum = () => {
       keyboardDidHideListener.remove()
     }
   }, [])
-
+  const [loading, setLoading] = useState(false)
   const handleSubmit = async () => {
     try {
+      setLoading(true) // Set loading state to true at the start of the upload process
+
       const finalData = {}
       finalData.taggedUsers = taggedUsers
       finalData.creatorId = userData.id
       finalData.date = selectedDate ? new Date(selectedDate) : new Date()
-      finalData.images = libraryImage
-        ? [libraryImage]
-        : [
-            'https://res.cloudinary.com/dnewfuuv0/image/upload/v1720495158/jpw67qijxqn9hny4jspe.jpg'
-          ]
       finalData.privacyMode = privacy
       finalData.albumCategory = 'general'
       finalData.location = location
       finalData.videos = []
       finalData.description = dataToSend.description
       finalData.title = ''
-      console.log('CREATING ALBUM...', finalData)
-      const res = await axios.post(`${BACKURL}/albums`, finalData)
 
-      console.log('res:', res)
+      const cloudinaryUrls = []
+
+      for (const image of pickedImages) {
+        const formData = new FormData()
+        formData.append('file', {
+          uri: image.uri,
+          type: 'image/jpeg',
+          name: image.filename
+        })
+        formData.append('upload_preset', 'cfbb_profile_pictures')
+        formData.append('cloud_name', 'dnewfuuv0')
+
+        const response = await fetch(
+          'https://api.cloudinary.com/v1_1/dnewfuuv0/image/upload',
+          {
+            method: 'POST',
+            body: formData
+          }
+        )
+
+        const data = await response.json()
+        if (response.ok) {
+          cloudinaryUrls.push(data.secure_url)
+        } else {
+          console.error('Error uploading image:', data)
+        }
+      }
+
+      finalData.images = cloudinaryUrls
+
+      console.log('CREATING ALBUM...', finalData)
+
+      const res = await axios.post(`${BACKURL}/albums`, finalData)
 
       if (res.data) {
         setSubmit(true)
         setSelectedHashtags([])
+        setPickedImages([])
         setTaggedUsers([])
         dispatch(getAllUserAlbums(userData.id))
       }
     } catch (error) {
       console.log(error)
       setSelectedHashtags([])
+      setPickedImages([])
       setTaggedUsers([])
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -405,10 +440,45 @@ const CrearAlbum = () => {
                 </View>
               </View> */}
             </View>
+            <Pressable
+              style={{
+                alignItems: 'center',
+                flexDirection: 'row',
+                marginTop: 20
+              }}
+              onPress={() => {
+                setShowImagesModal(true)
+              }}
+            >
+              <View
+                style={{
+                  width: 30,
+                  height: 30,
+                  marginRight: 10,
+                  justifyContent: 'center',
+                  alignItems: 'flex-start'
+                }}
+              >
+                <Image
+                  style={{ width: 23, height: 24 }}
+                  contentFit="cover"
+                  source={require('../assets/image3.png')}
+                />
+              </View>
+              <Text
+                style={{
+                  lineHeight: 19,
+                  color: Color.gris,
+                  fontSize: FontSize.size_base
+                }}
+              >
+                {`Añadir imágenes ${pickedImages.length > 0 ? '(' + pickedImages.length + ')' : ''}`}
+              </Text>
+            </Pressable>
             <View style={{ marginTop: 5 }}>
               <Pressable
                 style={{
-                  marginTop: 15,
+                  marginTop: 5,
                   alignItems: 'center',
                   flexDirection: 'row'
                 }}
@@ -585,10 +655,11 @@ const CrearAlbum = () => {
                 />
               </View>
             </View>
+
             <LinearGradient
               style={{
                 marginTop: 30,
-                paddingVertical: Padding.p_sm,
+                height: 50,
                 backgroundColor: Color.linearBoton,
                 borderRadius: Border.br_11xl,
                 justifyContent: 'center',
@@ -600,20 +671,24 @@ const CrearAlbum = () => {
               locations={[0, 1]}
               colors={['#dee274', '#7ec18c']}
             >
-              <Text
-                disabled={dataToSend.description === ''}
-                onPress={handleSubmit}
-                style={{
-                  letterSpacing: 1,
-                  lineHeight: 24,
-                  color: Color.white,
-                  textAlign: 'center',
-                  fontSize: FontSize.size_base,
-                  fontFamily: FontFamily.lato
-                }}
-              >
-                Subir
-              </Text>
+              {loading ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text
+                  disabled={dataToSend.description === ''}
+                  onPress={handleSubmit}
+                  style={{
+                    letterSpacing: 1,
+                    lineHeight: 24,
+                    color: Color.white,
+                    textAlign: 'center',
+                    fontSize: FontSize.size_base,
+                    fontFamily: FontFamily.lato
+                  }}
+                >
+                  Subir
+                </Text>
+              )}
             </LinearGradient>
           </ScrollView>
         </View>
@@ -746,22 +821,24 @@ const CrearAlbum = () => {
           </View>
         </Modal>
 
-        {/* <Modal animationType="slide" transparent visible={lugar}>
+        <Modal animationType="slide" transparent visible={showImagesModal}>
           <View
             style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
+              backgroundColor: 'rgba(113, 113, 113, 0.7)',
               height: '100%'
             }}
           >
             <Pressable
               style={{ width: '100%', height: '100%', left: 0, top: 0 }}
-              onPress={closeLugar}
+              onPress={() => setShowImagesModal(false)}
             />
-            <Lugar3 onClose={closeLugar} />
+            <ImagePickerModal
+              pickedImages={pickedImages}
+              setPickedImages={setPickedImages}
+              onClose={() => setShowImagesModal(false)}
+            />
           </View>
-        </Modal> */}
+        </Modal>
         <Modal animationType="slide" transparent visible={showHashtagsModal}>
           <View
             style={{

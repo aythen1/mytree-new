@@ -91,7 +91,8 @@ const Organizador = () => {
   const [buttonContainer1Visible, setButtonContainer1Visible] = useState(false)
   const [frameContainer5Visible, setFrameContainer5Visible] = useState(false)
   const [showPrivacidad, setShowPrivacidad] = useState(false)
-  const [privacy, setPrivacy] = useState()
+  const [privacy, setPrivacy] = useState('Todos')
+  const [albums, setAlbums] = useState([])
   const [location, setLocation] = useState()
   const [selectedDate, setSelectedDate] = useState()
 
@@ -176,7 +177,7 @@ const Organizador = () => {
       finalData.tags = taggedUsers
       finalData.etiquets = taggedUsers
       finalData.hashtags = selectedHashtags
-      finalData.albums = []
+      finalData.albums = albums
       finalData.userId = userData.id
       finalData.fecha = selectedDate ? selectedDate : new Date()
       finalData.nameUser = userData.username
@@ -193,14 +194,22 @@ const Organizador = () => {
         setSubmit(true)
         setSelectedHashtags([])
         setTaggedUsers([])
-        dispatch(getUserPosts(userData.id))
+        setAlbums([])
+        setAlbum(false)
+        dispatch(getAllPosts(userData.id))
       }
     } catch (error) {
       console.log(error)
       setSelectedHashtags([])
       setTaggedUsers([])
+      setAlbums([])
+      setAlbum(false)
     }
   }
+
+  useEffect(() => {
+    console.log('albums changed', albums)
+  }, [albums])
 
   const navigation = useNavigation()
 
@@ -629,7 +638,7 @@ const Organizador = () => {
                           width: '100%'
                         }}
                       >
-                        <View style={{ flexDirection: 'row', gap: 10 }}>
+                        {/* <View style={{ flexDirection: 'row', gap: 10 }}>
                           <TouchableOpacity onPress={() => setLegado(!legado)}>
                             {legado ? (
                               <Image
@@ -658,8 +667,8 @@ const Organizador = () => {
                           >
                             Añadir a mi legado
                           </Text>
-                        </View>
-                        <Pressable
+                        </View> */}
+                        {/* <Pressable
                         // onPress={openEtapas}
                         >
                           <Text
@@ -677,7 +686,7 @@ const Organizador = () => {
                           >
                             Añadir etapa
                           </Text>
-                        </Pressable>
+                        </Pressable> */}
                       </View>
                     </Pressable>
                     <Pressable
@@ -695,8 +704,17 @@ const Organizador = () => {
                         }}
                       >
                         <View style={{ flexDirection: 'row', gap: 10 }}>
-                          <TouchableOpacity onPress={() => setAlbum(!album)}>
-                            {album ? (
+                          <TouchableOpacity
+                            onPress={() => {
+                              if (albums.length > 0) {
+                                setAlbums([])
+                                setAlbum(false)
+                              } else {
+                                setAlbum(!album)
+                              }
+                            }}
+                          >
+                            {album || albums.length > 0 ? (
                               <Image
                                 contentFit="cover"
                                 style={{ width: 20, height: 20 }}
@@ -874,7 +892,11 @@ const Organizador = () => {
               style={{ width: '100%', height: '100%', left: 0, top: 0 }}
               onPress={closeSelectedAlbum}
             />
-            <Album onClose={closeSelectedAlbum} />
+            <Album
+              setAlbums={setAlbums}
+              albums={albums}
+              onClose={closeSelectedAlbum}
+            />
           </View>
         </Modal>
         <Modal animationType="fade" transparent visible={showPrivacidad}>

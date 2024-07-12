@@ -50,6 +50,7 @@ const Perfil = () => {
   const { showPanel } = useSelector((state) => state.panel)
   const { userData } = useSelector((state) => state.users)
   const { userPosts } = useSelector((state) => state.posts)
+  const { userAlbums } = useSelector((state) => state.albums)
   const { allPosts } = useSelector((state) => state.posts)
 
   const [hasPermission, setHasPermission] = useState(null)
@@ -158,6 +159,10 @@ const Perfil = () => {
       alert(error.message)
     }
   }
+
+  useEffect(() => {
+    console.log('USER ALBUMS', userAlbums)
+  }, [])
 
   if (!showCamera) {
     return (
@@ -362,7 +367,6 @@ const Perfil = () => {
                 setEmoji(e.emoji)
                 setShowEmojis(false)
               }} // callback when user selects emoji - returns emoji obj
-      
             />
           </View>
         </Modal>

@@ -173,7 +173,7 @@ const BOTONInvitarAmigos1 = () => {
               color: Color.negro
             }}
           >
-            Invita familia
+            Añadir familia
           </Text>
         </View>
 

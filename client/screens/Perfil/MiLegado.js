@@ -8,6 +8,7 @@ import { Context } from '../../context/Context'
 
 const MiLegado = () => {
   const navigation = useNavigation()
+  const { userAlbums } = useSelector((state) => state.albums)
   const { userPosts } = useSelector((state) => state.posts)
   const { setShowSelectEventTypeModal } = useContext(Context)
   return (
@@ -161,11 +162,6 @@ const MiLegado = () => {
             onPress={() => navigation.navigate('CrearAlbum')}
             style={[styles.vectorGroup, styles.groupParentFlexBox]}
           >
-            {/* <Image
-              style={styles.vectorIcon1}
-              contentFit="cover"
-              source={require('../../assets/iconlyboldedit.png')}
-            /> */}
             <View></View>
             <Image
               style={styles.vectorIcon1}
@@ -179,27 +175,32 @@ const MiLegado = () => {
           contentFit="cover"
           source={require('../../assets/line-78.png')}
         />
-        <View style={[styles.maskGroupParent, styles.groupParentFlexBox]}>
-          <Image
-            style={styles.maskGroupIcon}
-            contentFit="cover"
-            source={require('../../assets/farita3.png')}
-          />
-          <Image
-            style={styles.maskGroupIcon}
-            contentFit="cover"
-            source={require('../../assets/marie.png')}
-          />
-          <Image
-            style={styles.maskGroupIcon}
-            contentFit="cover"
-            source={require('../../assets/farita4.png')}
-          />
-          <Image
-            style={styles.maskGroupIcon}
-            contentFit="cover"
-            source={require('../../assets/claire.png')}
-          />
+        <View
+          style={{
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            gap: 20,
+            flexDirection: 'row',
+            flexWrap: 'wrap'
+          }}
+        >
+          {userAlbums.map((album) => (
+            <Pressable
+              key={album.id}
+              onPress={() => navigation.navigate('CrearLbum', { album })}
+            >
+              <Image
+                style={{ width: 70, height: 70, borderRadius: 100 }}
+                contentFit="cover"
+                source={
+                  album.images.length > 0
+                    ? { uri: album.images[0] }
+                    : require('../../assets/claire.png')
+                }
+              />
+            </Pressable>
+          ))}
         </View>
       </View>
     </View>

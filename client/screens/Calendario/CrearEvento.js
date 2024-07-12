@@ -29,6 +29,7 @@ import CreateWishListModal from '../../components/CreateWishListModal'
 import { useDispatch, useSelector } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createEvent } from './../../redux/actions/events'
+import ImagePickerModal from '../Modals/ImagePickerModal'
 
 const CrearFechaEspecial = () => {
   const [user, setUser] = useState()
@@ -45,6 +46,8 @@ const CrearFechaEspecial = () => {
   const [calendario, setCalendario] = useState(false)
   const [showTagUsers, setShowTagUsers] = useState(false)
   const [showWishList, setShowWishList] = useState(false)
+  const [showPickImage, setShowPickImage] = useState(false)
+  const [pickedImage, setPickedImage] = useState([])
 
   const getUser = async () => {
     const usuario = await AsyncStorage.getItem('user')
@@ -82,6 +85,8 @@ const CrearFechaEspecial = () => {
         type: 'normal',
         creatorId: user?.id.toString(),
         description,
+        images: [],
+        privacyMode: 'Todos',
         title,
         location,
         shared: false,
@@ -89,6 +94,35 @@ const CrearFechaEspecial = () => {
         date: new Date(selectedDate),
         invitedUsers
       }
+      const cloudinaryUrls = []
+
+      for (const image of pickedImage) {
+        const formData = new FormData()
+        formData.append('file', {
+          uri: image.uri,
+          type: 'image/jpeg',
+          name: image.filename
+        })
+        formData.append('upload_preset', 'cfbb_profile_pictures')
+        formData.append('cloud_name', 'dnewfuuv0')
+
+        const response = await fetch(
+          'https://api.cloudinary.com/v1_1/dnewfuuv0/image/upload',
+          {
+            method: 'POST',
+            body: formData
+          }
+        )
+
+        const data = await response.json()
+        if (response.ok) {
+          cloudinaryUrls.push(data.secure_url)
+        } else {
+          console.error('Error uploading image:', data)
+        }
+      }
+
+      event.coverImage = cloudinaryUrls[0]
       console.log('creating event with values: ', event)
       dispatch(createEvent(event))
     }
@@ -195,6 +229,37 @@ const CrearFechaEspecial = () => {
           </Pressable>
         </View>
 
+        <View>
+          <View style={styles.titleBase}>
+            <Text style={[styles.title, styles.titleTypo]}>
+              Selecciona una foto de portada
+            </Text>
+          </View>
+
+          <Pressable
+            onPress={() => setShowPickImage(true)}
+            style={{
+              paddingVertical: 13,
+              backgroundColor: Color.fAFAFA,
+              borderRadius: Border.br_3xs,
+              paddingHorizontal: Padding.p_xl,
+              flexDirection: 'row',
+              width: '100%',
+              justifyContent: 'space-between'
+            }}
+          >
+            <Text
+              style={{ color: invitedUsers.length > 0 ? '#000' : '#606060' }}
+            >
+              {pickedImage ? 'Cambiar foto' : 'Seleccionar foto'}
+            </Text>
+            <Image
+              style={{ width: 23, height: 24, marginRight: 13 }}
+              contentFit="cover"
+              source={require('../../assets/image3.png')}
+            />
+          </Pressable>
+        </View>
         <View>
           <View style={styles.titleBase}>
             <Text style={[styles.title, styles.titleTypo]}>Ubicación</Text>
@@ -387,6 +452,26 @@ const CrearFechaEspecial = () => {
             wishList={wishList}
             setWishList={setWishList}
             onClose={() => setShowWishList(false)}
+          />
+        </View>
+      </Modal>
+      <Modal animationType="slide" transparent visible={showPickImage}>
+        <View
+          style={{
+            backgroundColor: 'rgba(113, 113, 113, 0.7)',
+            height: '100%'
+          }}
+        >
+          <Pressable
+            style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+            onPress={() => setShowPickImage(false)}
+          />
+          <ImagePickerModal
+            fromEvent={true}
+            s
+            pickedImages={pickedImage}
+            setPickedImages={setPickedImage}
+            onClose={() => setShowPickImage(false)}
           />
         </View>
       </Modal>

@@ -118,7 +118,7 @@ const Busqueda = () => {
       <ScrollView
         style={{ width: '100%', flex: 1 }}
         contentContainerStyle={{
-          paddingBottom: selectedComponent === 'BusquedaContactos' ? 72 : 100
+          paddingBottom: selectedComponent === 'BusquedaContactos' ? 110 : 100
         }}
         showsVerticalScrollIndicator={false}
       >

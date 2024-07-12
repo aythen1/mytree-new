@@ -8,7 +8,11 @@ const Novedades = () => {
   const navigation = useNavigation()
 
   return (
-    <ScrollView style={styles.novedades} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.novedades}
+      contentContainerStyle={{ paddingBottom: 130 }}
+      showsVerticalScrollIndicator={false}
+    >
       <View style={styles.parentPosition}>
         <View style={styles.rectangleParent}>
           <Image

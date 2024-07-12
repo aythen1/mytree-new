@@ -50,7 +50,7 @@ const Aadir1 = ({ setShowSelectEventTypeModal }) => {
               contentFit="cover"
               source={require('../assets/iconlylightoutline3user2.png')}
             />
-            <Text style={styles.aadirRecuerdo}>Invitar familiar</Text>
+            <Text style={styles.aadirRecuerdo}>Añadir familiar</Text>
           </View>
         </Pressable>
 
