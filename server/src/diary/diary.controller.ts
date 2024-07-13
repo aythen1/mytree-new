@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { CreateDiaryDto } from './dto/create-diary.dto';
 import { UpdateDiaryDto } from './dto/update-diary.dto';
 import { DiaryService } from './diary.service';
@@ -31,15 +39,21 @@ export class DiaryController {
   async remove(@Param('id') id: string) {
     return this.diaryService.remove(id);
   }
-//trae todos los de un usuario
+  //trae todos los de un usuario
   @Post('user/diaries')
   findAllByUser(@Body('creatorId') creatorId: string) {
     return this.diaryService.findAllByUser(creatorId);
   }
-//filtra y trae todos de la misma categoria de un usuario
+  //filtra y trae todos de la misma categoria de un usuario
   @Post('/filter')
-  async findByCategoryAndCreator(@Body() body: { category: string; creatorId: string; date?: string }) {
+  async findByCategoryAndCreator(
+    @Body() body: { category: string; creatorId: string; date?: string },
+  ) {
     const { category, creatorId, date } = body;
-    return this.diaryService.findByCategoryAndCreator(category, creatorId, date);
+    return this.diaryService.findByCategoryAndCreator(
+      category,
+      creatorId,
+      date,
+    );
   }
 }

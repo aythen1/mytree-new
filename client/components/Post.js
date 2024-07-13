@@ -101,9 +101,16 @@ const Posteo = ({ data, padding }) => {
               >
                 <Image
                   contentFit="contain"
-                  style={{ width: "100%", height:"100%",borderRadius:20, zIndex: 999999999999 }}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: 20,
+                    zIndex: 999999999999
+                  }}
                   source={{
-                    uri: data?.user?.profilePicture || 'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716419224/bciupv6y3hwccgmtpwoe.png'
+                    uri:
+                      data.user.profilePicture ||
+                      'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716419224/bciupv6y3hwccgmtpwoe.png'
                   }}
                 />
               </View>
@@ -158,10 +165,6 @@ const Post = ({ padding, posts }) => {
   const { allPosts } = useSelector((state) => state.posts)
   const dispatch = useDispatch()
 
-  console.log(posts,"posrtt")
-  console.log(allPosts,"posrtt2")
-
-
   const toggleModal = () => {
     setShowTagged(!showTagged)
   }
@@ -170,12 +173,10 @@ const Post = ({ padding, posts }) => {
     setShowIcons((prevShowIcons) => !prevShowIcons)
   }
 
-
   useEffect(() => {
     dispatch(getAllPosts()) // Realizar la carga inicial de posts
   }, [])
-
-
+  // console.log('POSTST===============', posts)
   if (posts?.length === 0)
     return (
       <View style={{ width: '100%', alignItems: 'center', paddingTop: 50 }}>
@@ -187,13 +188,15 @@ const Post = ({ padding, posts }) => {
   return (
     <Pressable style={styles.rectangleParent} onPress={toggleIcons}>
       {posts
-        ? posts.map((e, i) => (
-            <Posteo padding={padding} data={e} key={i}></Posteo>
-          ))
+        ? [...posts]
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .map((e, i) => <Posteo padding={padding} data={e} key={i}></Posteo>)
         : allPosts &&
-          allPosts.map((e, i) => (
-            <Posteo padding={padding} data={e} key={i}></Posteo>
-          ))}
+          [...allPosts]
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .map((e, i) => (
+              <Posteo padding={padding} data={e} key={i}></Posteo>
+            ))}
     </Pressable>
   )
 }

@@ -64,7 +64,7 @@ export class DiaryService {
    */
   async remove(id: string): Promise<void> {
     // Verifica si el diario existe antes de intentar eliminarlo
-    const diary = await this.diaryRepository.findOne({where: {id:id}});
+    const diary = await this.diaryRepository.findOne({ where: { id: id } });
     if (!diary) {
       throw new NotFoundException(`Diario con ID ${id} no encontrado`);
     }
@@ -85,26 +85,29 @@ export class DiaryService {
     return await this.diaryRepository.find({ where: { creatorId } });
   }
 
-//para traer todos los diarios de una categoria de un usuario
-async findByCategoryAndCreator(category: string, creatorId: string, date?: string): Promise<Diary[]> {
-  let whereClause: any = {
-    category,
-    creatorId,
-  };
-
-  if (date) {
-    // Filtrar por la fecha exacta
-    whereClause = {
-      ...whereClause,
-      date,
+  //para traer todos los diarios de una categoria de un usuario
+  async findByCategoryAndCreator(
+    category: string,
+    creatorId: string,
+    date?: string,
+  ): Promise<Diary[]> {
+    let whereClause: any = {
+      category,
+      creatorId,
     };
+
+    if (date) {
+      // Filtrar por la fecha exacta
+      whereClause = {
+        ...whereClause,
+        date,
+      };
+    }
+
+    const diaries = await this.diaryRepository.find({
+      where: whereClause,
+    });
+
+    return diaries || [];
   }
-
-  const diaries = await this.diaryRepository.find({
-    where: whereClause,
-  });
-
-  return diaries || [];
-}
-
 }

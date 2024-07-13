@@ -1,34 +1,75 @@
-import * as React from 'react'
-import { Text, StyleSheet, View } from 'react-native'
+import React, { useEffect } from 'react'
+import { Text, StyleSheet, View, Pressable } from 'react-native'
 import { Image } from 'expo-image'
 import { FontFamily, FontSize, Color, Border, Padding } from '../GlobalStyles'
+import { useSelector } from 'react-redux'
+import { useNavigation } from '@react-navigation/native'
 
-const Album = () => {
+const Album = ({ albums, setAlbums, onClose }) => {
+  const navigation = useNavigation()
+  const { userAlbums } = useSelector((state) => state.albums)
+  useEffect(() => {
+    console.log('userAlbums from Album', userAlbums)
+  }, [])
+
+  if (userAlbums.length === 0)
+    return (
+      <View style={styles.album}>
+        <Text
+          style={[styles.lbumDeMi, styles.lbumTypo, { paddingVertical: 20 }]}
+        >
+          Todavia no has creado ningun album!
+        </Text>
+        <Pressable onPress={() => navigation.navigate('CrearAlbum')}>
+          <Text style={[styles.aadirLbum, styles.lbumTypo]}>
+            + Añadir álbum
+          </Text>
+        </Pressable>
+      </View>
+    )
+
   return (
     <View style={styles.album}>
-      <Text style={[styles.lbumDeMi, styles.lbumTypo]}>
-        Álbum de mi infancia
-      </Text>
-      <Image
-        style={styles.albumChild}
-        contentFit="cover"
-        source={require('../assets/line-78.png')}
-      />
-      <Text style={[styles.lbumDeMi1, styles.lbumTypo]}>
-        Álbum de mi adolescencia
-      </Text>
-      <Image
-        style={styles.albumChild}
-        contentFit="cover"
-        source={require('../assets/line-78.png')}
-      />
-      <Text style={[styles.lbumDeMi1, styles.lbumTypo]}>Álbum de mi boda</Text>
-      <Image
-        style={styles.albumChild}
-        contentFit="cover"
-        source={require('../assets/line-78.png')}
-      />
-      <Text style={[styles.aadirLbum, styles.lbumTypo]}>+ Añadir álbum</Text>
+      {userAlbums.map((album) => (
+        <Pressable
+          style={{
+            width: '100%',
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+          }}
+          onPress={() => {
+            console.log('triggering album pick')
+            const actualAlbums = [...albums]
+            if (actualAlbums.includes(album.id)) {
+              setAlbums(actualAlbums.filter((alb) => alb.id === album.id))
+              return
+            } else {
+              setAlbums([...actualAlbums, album.id])
+            }
+          }}
+          key={album.id}
+        >
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={[styles.lbumDeMi, styles.lbumTypo, { maxWidth: '50%' }]}
+          >
+            {album.description}
+          </Text>
+          <Image
+            contentFit="cover"
+            style={{ width: 20, height: 20 }}
+            source={
+              albums.includes(album.id)
+                ? require('../assets/checked.png')
+                : require('../assets/notchecked.png')
+            }
+          />
+        </Pressable>
+      ))}
+      <Pressable onPress={() => navigation.navigate('CrearAlbum')}>
+        <Text style={[styles.aadirLbum, styles.lbumTypo]}>+ Añadir álbum</Text>
+      </Pressable>
     </View>
   )
 }
@@ -82,6 +123,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.white,
     position: 'absolute',
     bottom: 0,
+
     width: '100%',
     padding: Padding.p_xl
   }
