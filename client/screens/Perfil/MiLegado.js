@@ -20,6 +20,54 @@ const MiLegado = () => {
 
   return (
     <View style={styles.frameParent}>
+        <View style={styles.frameContainer}>
+        <View
+          style={[styles.miBiografaActualParent, styles.groupParentFlexBox,{justifyContent:"space-between",alignItems:"center"}]}
+        >
+          <Text style={styles.miBiografaActual}>Mis álbumes</Text>
+          <Pressable
+            onPress={() => navigation.navigate('CrearAlbum')}
+          >
+            <Image
+              style={styles.vectorIcon1}
+              contentFit="cover"
+              source={require('../../assets/vector53.png')}
+            />
+          </Pressable>
+        </View>
+        <Image
+          style={styles.frameChild}
+          contentFit="cover"
+          source={require('../../assets/line-78.png')}
+        />
+        <View
+          style={{
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            gap: 20,
+            flexDirection: 'row',
+            flexWrap: 'wrap'
+          }}
+        >
+          {userAlbums.map((album) => (
+            <Pressable
+              key={album.id}
+              onPress={() => navigation.navigate('CrearLbum', { album })}
+            >
+              <Image
+                style={{ width: 70, height: 70, borderRadius: 100 }}
+                contentFit="cover"
+                source={
+                  album.images.length > 0
+                    ? { uri: album.images[0] }
+                    : require('../../assets/claire.png')
+                }
+              />
+            </Pressable>
+          ))}
+        </View>
+      </View>
       <View style={styles.frameContainer}>
         <View
           style={[styles.miBiografaActualParent, styles.groupParentFlexBox,{justifyContent:"space-between",alignItems:"center"}]}
@@ -122,54 +170,7 @@ const MiLegado = () => {
         }) }
         </View>
       </View>
-      <View style={styles.frameContainer}>
-        <View
-          style={[styles.miBiografaActualParent, styles.groupParentFlexBox,{justifyContent:"space-between",alignItems:"center"}]}
-        >
-          <Text style={styles.miBiografaActual}>Mis álbumes</Text>
-          <Pressable
-            onPress={() => navigation.navigate('CrearAlbum')}
-          >
-            <Image
-              style={styles.vectorIcon1}
-              contentFit="cover"
-              source={require('../../assets/vector53.png')}
-            />
-          </Pressable>
-        </View>
-        <Image
-          style={styles.frameChild}
-          contentFit="cover"
-          source={require('../../assets/line-78.png')}
-        />
-        <View
-          style={{
-            width: '100%',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            gap: 20,
-            flexDirection: 'row',
-            flexWrap: 'wrap'
-          }}
-        >
-          {userAlbums.map((album) => (
-            <Pressable
-              key={album.id}
-              onPress={() => navigation.navigate('CrearLbum', { album })}
-            >
-              <Image
-                style={{ width: 70, height: 70, borderRadius: 100 }}
-                contentFit="cover"
-                source={
-                  album.images.length > 0
-                    ? { uri: album.images[0] }
-                    : require('../../assets/claire.png')
-                }
-              />
-            </Pressable>
-          ))}
-        </View>
-      </View>
+    
     </View>
   )
 }

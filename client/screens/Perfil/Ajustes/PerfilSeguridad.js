@@ -114,27 +114,9 @@ const dispatch = useDispatch()
 
               </TextInput>
             </View>
-            <Image
-              style={[styles.vectorIcon1, styles.vectorIconLayout]}
-              contentFit="cover"
-              source={require('../../../assets/vector47.png')}
-            />
+          
           </View>
-          <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
-            <View style={styles.nombreCompletoParent}>
-              <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
-                Contraseña de Mi Privado
-              </Text>
-              <TextInput secureTextEntry placeholder='••••••••••••' style={[styles.brunoPham, styles.brunoPhamTypo]}>
-
-              </TextInput>
-            </View>
-            <Image
-              style={[styles.vectorIcon1, styles.vectorIconLayout]}
-              contentFit="cover"
-              source={require('../../../assets/vector47.png')}
-            />
-          </View>
+    
 
           <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
             <View style={styles.nombreCompletoParent}>
@@ -145,11 +127,7 @@ const dispatch = useDispatch()
 
               </TextInput>
             </View>
-            <Image
-              style={[styles.vectorIcon1, styles.vectorIconLayout]}
-              contentFit="cover"
-              source={require('../../../assets/vector47.png')}
-            />
+          
           </View>
           <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
             <View style={styles.nombreCompletoParent}>
@@ -160,11 +138,7 @@ const dispatch = useDispatch()
 
               </TextInput>
             </View>
-            <Image
-              style={[styles.vectorIcon1, styles.vectorIconLayout]}
-              contentFit="cover"
-              source={require('../../../assets/vector47.png')}
-            />
+          
           </View>
         </View>
         <LinearGradient
