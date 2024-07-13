@@ -14,6 +14,12 @@ export class Event {
   
     @Column({ type: 'text', nullable: true })
     description: string;
+
+    @Column({ type: 'text', nullable: true })
+    privacyMode: string;
+
+    @Column({ type: 'text', nullable: true })
+    coverImage: string;
   
     @Column({ type: 'varchar', nullable: true })
     location: string;
@@ -23,6 +29,9 @@ export class Event {
   
     @Column({ type: 'simple-array', nullable: true })
     invitedUsers: string[];
+
+    @Column({ type: 'simple-array', nullable: true })
+    images: string[];
   
     @Column('jsonb', { nullable: true })
     wishList: any[]; 

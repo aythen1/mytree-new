@@ -19,6 +19,7 @@ export const getUserPosts = createAsyncThunk(
       const { data } = await axiosInstance.get(`/user/${userId}/posts`)
       return data
     } catch (error) {
+      console.log(userId,"dataaaaaaaaaaa")
       throw new Error(error)
     }
   }

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { Comment } from 'src/comments/entities/comment.entity';
 
@@ -40,4 +40,11 @@ export class Post {
     user: User;
     @OneToMany(() => Comment, comment => comment.post)
     comments: Comment[]; // Relación One-to-Many con los comentarios del post
+
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @UpdateDateColumn()
+    updatedAt: Date;
+
 }

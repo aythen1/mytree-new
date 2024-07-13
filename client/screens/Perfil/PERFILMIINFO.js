@@ -1,12 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { StyleSheet, View, Text, Pressable, ScrollView, Share, TouchableOpacity } from 'react-native'
 import { Image } from 'expo-image'
 // import { LinearGradient } from 'expo-linear-gradient'
 import { useNavigation } from '@react-navigation/native'
 import { FontFamily, Color, Border, FontSize } from '../../GlobalStyles'
+import { useSelector } from 'react-redux'
 
 const PERFILMIINFO = ({ setSelectedComponent ,usuario}) => {
   const navigation = useNavigation()
+  const { familyLength , friendLength } = useSelector((state) => state.users)
+
+
+  useEffect(()=>{
+console.log(usuario,"esto tengo")
+  },[usuario])
 
   const onShare = async (eventLink) => {
     try {
@@ -82,7 +89,7 @@ const PERFILMIINFO = ({ setSelectedComponent ,usuario}) => {
               Familiares
             </Text>
             <View style={styles.parent}>
-              <Text style={[styles.text1, styles.text1Typo]}>0</Text>
+              <Text style={[styles.text1, styles.text1Typo]}>{familyLength}</Text>
               <View style={styles.ellipseGroup}>
            
                 <Image
@@ -99,7 +106,7 @@ const PERFILMIINFO = ({ setSelectedComponent ,usuario}) => {
           >
             <Text style={[styles.familiares, styles.text1Typo]}>Amigos</Text>
             <View style={styles.parent}>
-              <Text style={[styles.text1, styles.text1Typo]}>0</Text>
+              <Text style={[styles.text1, styles.text1Typo]}>{friendLength}</Text>
               <View style={styles.ellipseGroup}>
          
                 <Image

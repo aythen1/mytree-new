@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Text, StyleSheet, View, Pressable } from 'react-native'
+import { Text, StyleSheet, View, Pressable, ScrollView } from 'react-native'
 import { Image } from 'expo-image'
 import { Color, FontSize, FontFamily } from '../../GlobalStyles'
 import { useNavigation } from '@react-navigation/native'
@@ -8,18 +8,23 @@ import { Context } from '../../context/Context'
 
 const MiLegado = () => {
   const navigation = useNavigation()
+  
   const { userAlbums } = useSelector((state) => state.albums)
+  const { userEvents } = useSelector((state) => state.events)
+  const { userDiaries } = useSelector((state) => state.diaries)
+
+
   const { userPosts } = useSelector((state) => state.posts)
   const { setShowSelectEventTypeModal } = useContext(Context)
+
+
   return (
     <View style={styles.frameParent}>
       <View style={styles.frameContainer}>
         <View
-          style={[styles.miBiografaActualParent, styles.groupParentFlexBox]}
+          style={[styles.miBiografaActualParent, styles.groupParentFlexBox,{justifyContent:"space-between",alignItems:"center"}]}
         >
           <Text style={styles.miBiografaActual}>Mis publicaciones</Text>
-          <View style={[styles.vectorGroup, styles.groupParentFlexBox]}>
-            <View></View>
             <Pressable onPress={() => navigation.navigate('UploadMemory')}>
               <Image
                 style={styles.vectorIcon1}
@@ -27,19 +32,14 @@ const MiLegado = () => {
                 source={require('../../assets/vector53.png')}
               />
             </Pressable>
-            {/* <Image
-              style={styles.vectorIcon1}
-              contentFit="cover"
-              source={require('../../assets/iconlyboldedit.png')}
-            /> */}
-          </View>
+       
         </View>
         <Image
           style={styles.frameChild}
           contentFit="cover"
           source={require('../../assets/line-78.png')}
         />
-        <View style={[styles.maskGroupParent, styles.groupParentFlexBox]}>
+        <ScrollView horizontal contentContainerStyle={{gap:25}} showsHorizontalScrollIndicator={false} style={[styles.maskGroupParent, styles.groupParentFlexBox]}>
           {userPosts &&
             userPosts.map((e, i) => (
               <Image
@@ -48,16 +48,15 @@ const MiLegado = () => {
                 source={{ uri: e.photos[0] }}
               />
             ))}
-        </View>
+            
+        </ScrollView>
       </View>
 
       <View style={styles.frameContainer}>
         <View
-          style={[styles.miBiografaActualParent, styles.groupParentFlexBox]}
+          style={[styles.miBiografaActualParent, styles.groupParentFlexBox,{justifyContent:"space-between",alignItems:"center"}]}
         >
           <Text style={styles.miBiografaActual}>Mis eventos</Text>
-          <View style={[styles.vectorGroup, styles.groupParentFlexBox]}>
-            <View></View>
             <Pressable onPress={() => setShowSelectEventTypeModal(true)}>
               <Image
                 style={styles.vectorIcon1}
@@ -65,49 +64,33 @@ const MiLegado = () => {
                 source={require('../../assets/vector53.png')}
               />
             </Pressable>
-            {/* <Image
-              style={styles.vectorIcon1}
-              contentFit="cover"
-              source={require('../../assets/iconlyboldedit.png')}
-            /> */}
-          </View>
+         
         </View>
         <Image
           style={styles.frameChild}
           contentFit="cover"
           source={require('../../assets/line-78.png')}
         />
-        <View style={[styles.maskGroupParent, styles.groupParentFlexBox]}>
-          <Image
-            style={styles.maskGroupIcon}
-            contentFit="cover"
-            source={require('../../assets/farita3.png')}
-          />
-          <Image
-            style={styles.maskGroupIcon}
-            contentFit="cover"
-            source={require('../../assets/marie.png')}
-          />
-          <Image
-            style={styles.maskGroupIcon}
-            contentFit="cover"
-            source={require('../../assets/farita4.png')}
-          />
-          <Image
-            style={styles.maskGroupIcon}
-            contentFit="cover"
-            source={require('../../assets/claire.png')}
-          />
-        </View>
+        <ScrollView contentContainerStyle={{gap:25}} showsHorizontalScrollIndicator={false} horizontal style={[styles.maskGroupParent, styles.groupParentFlexBox]}>
+        {userEvents && userEvents.map((e,i)=>{
+          return (
+            <Pressable key={i} >
+              <Image
+                style={{...styles.maskGroupIcon,borderRadius:100}}
+                contentFit="cover"
+                source={e.coverImage ? { uri: e.coverImage }: require('../../assets/thum.png')}
+              />
+            </Pressable>
+          )
+        })}
+        </ScrollView>
       </View>
 
       <View style={styles.frameContainer}>
         <View
-          style={[styles.miBiografaActualParent, styles.groupParentFlexBox]}
+          style={[styles.miBiografaActualParent, styles.groupParentFlexBox,{justifyContent:"space-between",alignItems:"center"}]}
         >
           <Text style={styles.miBiografaActual}>Mis diarios</Text>
-          <View style={[styles.vectorGroup, styles.groupParentFlexBox]}>
-            <View></View>
             <Pressable
               onPress={() => navigation.navigate('MIDIARIOPANTALLAPERSONAL')}
             >
@@ -118,12 +101,7 @@ const MiLegado = () => {
               />
             </Pressable>
 
-            {/* <Image
-              style={styles.vectorIcon1}
-              contentFit="cover"
-              source={require('../../assets/iconlyboldedit.png')}
-            /> */}
-          </View>
+           
         </View>
         <Image
           style={styles.frameChild}
@@ -131,38 +109,27 @@ const MiLegado = () => {
           source={require('../../assets/line-78.png')}
         />
         <View style={[styles.maskGroupParent, styles.groupParentFlexBox]}>
-          <Image
-            style={styles.maskGroupIcon}
-            contentFit="cover"
-            source={require('../../assets/farita3.png')}
-          />
-          <Image
-            style={styles.maskGroupIcon}
-            contentFit="cover"
-            source={require('../../assets/marie.png')}
-          />
-          <Image
-            style={styles.maskGroupIcon}
-            contentFit="cover"
-            source={require('../../assets/farita4.png')}
-          />
-          <Image
-            style={styles.maskGroupIcon}
-            contentFit="cover"
-            source={require('../../assets/claire.png')}
-          />
+       {userDiaries && userDiaries.map((e,i)=>{
+          return (
+            <Pressable key={i} >
+              <Image
+                style={{...styles.maskGroupIcon,borderRadius:100}}
+                contentFit="cover"
+                source={e?.coverImage ? { uri: e?.coverImage }: require('../../assets/thum.png')}
+              />
+            </Pressable>
+          )
+        }) }
         </View>
       </View>
       <View style={styles.frameContainer}>
         <View
-          style={[styles.miBiografaActualParent, styles.groupParentFlexBox]}
+          style={[styles.miBiografaActualParent, styles.groupParentFlexBox,{justifyContent:"space-between",alignItems:"center"}]}
         >
           <Text style={styles.miBiografaActual}>Mis álbumes</Text>
           <Pressable
             onPress={() => navigation.navigate('CrearAlbum')}
-            style={[styles.vectorGroup, styles.groupParentFlexBox]}
           >
-            <View></View>
             <Image
               style={styles.vectorIcon1}
               contentFit="cover"
@@ -209,8 +176,8 @@ const MiLegado = () => {
 
 const styles = StyleSheet.create({
   groupParentFlexBox: {
-    justifyContent: 'space-between',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    gap:25
   },
   miBiografaActual: {
     fontWeight: '500',
@@ -231,15 +198,16 @@ const styles = StyleSheet.create({
   },
   miBiografaActualParent: {
     width: '100%',
-    bottom: '2%'
+    bottom: '2%',
   },
   frameChild: {
     width: '100%',
-    height: 5
+    height: 1
   },
   maskGroupIcon: {
     width: 70,
-    height: 70
+    height: 70,
+    borderRadius:10
   },
   vectorIcon2: {
     width: 30,
@@ -247,7 +215,6 @@ const styles = StyleSheet.create({
   },
   maskGroupParent: {
     width: '100%',
-    alignItems: 'center'
   },
   frameContainer: {
     width: '100%',

@@ -56,6 +56,16 @@ export class EventsController {
     }
   }
 
+  @Get('user/:userId')
+  async findByUser(@Param('user') userId: string) {
+    try {
+      const events = await this.eventsService.findByUser(userId);
+      return events;
+    } catch (error) {
+      return { error: 'No se pudieron recuperar los eventos del usuario' };
+    }
+  }
+
   @Delete('deleteAll')
   async removeAll() {
     try {

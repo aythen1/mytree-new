@@ -28,13 +28,14 @@ const DrawerContent = (props) => {
         style={{
           borderTopRightRadius: Border.br_3xs,
           borderBottomRightRadius: Border.br_3xs,
-          backgroundColor: Color.linearBoton
+          backgroundColor: Color.linearBoton,
         }}
+        
         start={{ x: 0.9, y: 0.6 }}
         end={{ x: 0, y: 0.6 }}
         colors={['#e2e57a', '#7fc08b']}
       >
-        <View style={{ zIndex: 50, padding: 20 }}>
+        <View style={{ zIndex: 999999, padding: 20 , height:"100%" }}>
           <View>
             <View style={styles.parentFlexBox}>
               <Image

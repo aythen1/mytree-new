@@ -214,6 +214,18 @@ export const getUserFriends = createAsyncThunk(
   }
 )
 
+export const getUserFriendsAndFamilyLength = createAsyncThunk(
+  'user/getUserFriendsAndFamilyLength',
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`/user/${userId}/friendsAndFamilyLength`)
+      return response.data
+    } catch (error) {
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 // Alterna el "me gusta" en un post
 export const toggleLike = createAsyncThunk(
   'user/toggleLike',

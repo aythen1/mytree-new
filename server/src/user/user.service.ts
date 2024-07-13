@@ -615,4 +615,101 @@ async addFamilyMember(userId: string, property: string, memberIds: string[]): Pr
       return usersInfo;
     }
     
+
+    async getFriendsAndFamilyLength(userId: string): Promise<any> {
+      const user = await this.userRepository.findOne({ where: { id: userId } });
+      if (!user) {
+        throw new NotFoundException(`Usuario con ID ${userId} no encontrado.`);
+      }
+    
+      const usersInfo = [];
+      let friendsCount = 0;
+      let familyCount = 0;
+    
+      const getUserInfo = async (id: string) => {
+        const userInfo = await this.userRepository.findOne({ where: { id: id } });
+        if (userInfo) {
+          usersInfo.push({
+            id: userInfo.id,
+            profilePicture: userInfo.profilePicture,
+            username: userInfo.username,
+          });
+        }
+      };
+    
+      // Verificar amigos
+      if (user.friendsIds && user.friendsIds.length > 0) {
+        friendsCount += user.friendsIds.length;
+        for (const friendId of user.friendsIds) {
+          await getUserInfo(friendId);
+        }
+      }
+    
+      // Verificar familiares (familyIds)
+      if (user.familyIds && user.familyIds.length > 0) {
+        familyCount += user.familyIds.length;
+        for (const familyId of user.familyIds) {
+          await getUserInfo(familyId);
+        }
+      }
+    
+      // Verificar madre (momId)
+      if (user.momId) {
+        familyCount += 1;
+        await getUserInfo(user.momId);
+      }
+    
+      // Verificar padre (dadId)
+      if (user.dadId) {
+        familyCount += 1;
+        await getUserInfo(user.dadId);
+      }
+    
+      // Verificar hermanos (brotherIds)
+      if (user.brotherIds && user.brotherIds.length > 0) {
+        familyCount += user.brotherIds.length;
+        for (const brotherId of user.brotherIds) {
+          await getUserInfo(brotherId);
+        }
+      }
+    
+      // Verificar tíos (unclesIds)
+      if (user.unclesIds && user.unclesIds.length > 0) {
+        familyCount += user.unclesIds.length;
+        for (const uncleId of user.unclesIds) {
+          await getUserInfo(uncleId);
+        }
+      }
+    
+      // Verificar abuelos (grandparentsIds)
+      if (user.grandparentsIds && user.grandparentsIds.length > 0) {
+        familyCount += user.grandparentsIds.length;
+        for (const grandparentId of user.grandparentsIds) {
+          await getUserInfo(grandparentId);
+        }
+      }
+    
+      // Verificar primos (cousinsIds)
+      if (user.cousinsIds && user.cousinsIds.length > 0) {
+        familyCount += user.cousinsIds.length;
+        for (const cousinId of user.cousinsIds) {
+          await getUserInfo(cousinId);
+        }
+      }
+    
+      // Si no se encontró ningún contacto, devolver mensaje
+      if (usersInfo.length === 0) {
+        usersInfo.push({
+          message: "Aún no tienes contactos."
+        });
+      }
+    
+      return {
+        usersInfo,
+        friendsCount,
+        familyCount
+      };
+    }
+    
+
 }
