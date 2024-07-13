@@ -19,7 +19,6 @@ import {
   FontSize
 } from '../../GlobalStyles'
 import { useDispatch, useSelector } from 'react-redux'
-import { setPanel } from '../../redux/slices/panel.slices'
 import MiLegado from './MiLegado'
 import MisAlbumes from './MisAlbumes'
 import PERFILMIINFO from './PERFILMIINFO'
@@ -31,16 +30,17 @@ import PlusSVG from '../../components/svgs/PlusSVG'
 import NotificationsMuroSVG from '../../components/svgs/NotificationsMuroSVG'
 import LupaSVG from '../../components/svgs/LupaSVG'
 import BarraBusqueda from '../../components/BarraBusqueda'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Camera, CameraView, useCameraPermissions } from 'expo-camera'
-import { getUserPosts } from '../../redux/slices/user.slices'
+import { getUserPosts } from '../../redux/actions/posts'
 import { Context } from '../../context/Context'
 import axiosInstance from '../../apiBackend'
 import SimboloSVG from './SimboloSVG'
 import { Entypo } from '@expo/vector-icons'
-import EmojiSelector, { Categories } from 'react-native-emoji-selector'
 import EmojiPicker, { emojiFromUtf16 } from 'rn-emoji-picker'
 import { emojis } from 'rn-emoji-picker/dist/data'
+import { getAllUserEvents } from '../../redux/actions/events'
+import { getAllUserDiaries } from '../../redux/actions/diaries'
+import { getUserFriendsAndFamilyLength } from '../../redux/actions/user'
 
 const Perfil = () => {
   const navigation = useNavigation()
@@ -61,7 +61,6 @@ const Perfil = () => {
 
   const [showImageOptions, setShowImageOptions] = useState(false)
 
-  dispatch(getUserPosts(userData.id))
 
   useEffect(() => {
     ;(async () => {
@@ -70,13 +69,9 @@ const Perfil = () => {
     })()
   }, [])
 
-  useEffect(() => {
-    console.log(userPosts, 'dataaaaaaa')
-  }, [userPosts])
 
   const [selectedComponent, setSelectedComponent] = useState('MiLegado')
   const [search, setSearch] = useState(false)
-  const [usuario, setUsuario] = useState({})
   const cameraReff = useRef(null)
 
   const takePicture = async () => {
@@ -85,7 +80,6 @@ const Perfil = () => {
       setSelectedImage(photo)
       pickImage('profile', photo.uri)
       setShowCamera(false)
-      // You can handle the taken photo here, such as displaying it or saving it.
     }
   }
 
@@ -112,10 +106,21 @@ const Perfil = () => {
         return null
     }
   }
+
+
   useEffect(() => {
     if (userData?.newUser) {
       axiosInstance.patch(`/user/${userData?.id}`, { newUser: false })
     }
+    
+    dispatch(getUserPosts(userData?.id)).then((res)=>{
+    })
+    dispatch(getAllUserEvents(userData?.id)).then((res)=>{
+    })
+    dispatch(getAllUserDiaries(userData?.id)).then((res)=>{
+    })
+    dispatch(getUserFriendsAndFamilyLength(userData?.id)).then((res)=>{ console.log(res,"asdasdas")})
+
   }, [])
 
   useEffect(() => {
@@ -127,38 +132,6 @@ const Perfil = () => {
     }
   }, [profileImage])
 
-  // console.log(userData, 'data user')
-
-  const onShare = async (eventLink) => {
-    try {
-      const result = await Share.share(
-        {
-          message: `Te invito a seguirme en Mytree. Si todavia no te bajaste la app ingresa a este link ! http://app.mytreeoficial.com`,
-          title: 'Compartir perfil'
-        },
-        {
-          // Android only:
-          dialogTitle: 'Te invito a seguirme en Mytree',
-          // iOS only:
-          excludedActivityTypes: ['com.apple.UIKit.activity.PostToTwitter']
-        }
-      )
-
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // compartido con el tipo de actividad de result.activityType
-          console.log('evento conmpartido con ', result.activityType)
-        } else {
-          // compartido
-          console.log('evento conmpartido')
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // descartado
-      }
-    } catch (error) {
-      alert(error.message)
-    }
-  }
 
   useEffect(() => {
     console.log('USER ALBUMS', userAlbums)
@@ -304,7 +277,6 @@ const Perfil = () => {
 
         <View style={styles.nameContainer}>
           <Text style={styles.brunoPham}>
-            {' '}
             {userData.username} {userData.apellido}
           </Text>
           <View style={styles.placeContainer}>

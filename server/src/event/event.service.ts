@@ -19,6 +19,10 @@ export class EventService {
     return await this.eventRepository.find();
   }
 
+  async findByUser(creatorId: string): Promise<Event[]> {
+    return this.eventRepository.find({ where: { creatorId } });
+  }
+
   async findOne(id: string): Promise<Event> {
     return await this.eventRepository.findOne({where: {id:id}});
   }

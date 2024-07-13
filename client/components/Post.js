@@ -4,27 +4,23 @@ import {
   View,
   Text,
   Pressable,
-  Modal,
   TouchableOpacity,
   ImageBackground
 } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
 import { FontFamily, FontSize, Color } from '../GlobalStyles'
-import Etiquetados from './Etiquetados'
 import EnviarMensajeSVG from '../components/svgs/EnviarMensajeSVG'
 import CompartirSVG from '../components/svgs/CompartirSVG'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import axios from 'axios'
-import { BACKURL } from '../apiBackend'
-import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import { Context } from '../context/Context'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllPosts } from '../redux/actions/posts'
 import { getAllCommentsByPostId } from '../redux/actions/comments'
-import { updateSelectedPostComments } from '../redux/slices/comments.slices'
 
 const Posteo = ({ data, padding }) => {
+
+  
   const {
     setShowShareModal,
     setShowTaggedsModal,
@@ -34,7 +30,7 @@ const Posteo = ({ data, padding }) => {
   } = useContext(Context)
   const navigation = useNavigation()
   const dispatch = useDispatch()
-  console.log('DATA POST ==========', data)
+ 
 
   return (
     <View
@@ -174,9 +170,10 @@ const Post = ({ padding, posts }) => {
   }
 
   useEffect(() => {
-    dispatch(getAllPosts()) // Realizar la carga inicial de posts
+    dispatch(getAllPosts())
   }, [])
-  // console.log('POSTST===============', posts)
+
+
   if (posts?.length === 0)
     return (
       <View style={{ width: '100%', alignItems: 'center', paddingTop: 50 }}>

@@ -314,5 +314,14 @@ async toggleLike(
       throw new NotFoundException(error.message);
     }
   }
+
+  @Get(':id/friendsAndFamilyLength')
+  async getFriendsAndFamilyLength(@Param('id') id: string): Promise<any[]> {
+    try {
+      return this.userService.getFriendsAndFamilyLength(id);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
   
 }

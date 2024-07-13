@@ -11,14 +11,6 @@ export const diariesSlices = createSlice({
   initialState: {
     allDiaries: [],
     userDiaries: [
-      // {
-      //   id: 'asd',
-      //   description: `🧠 Lo que he aprendido/hemos aprendido hoy…`
-      // },
-      // {
-      //   id: 'asd1',
-      //   description: `testing diario 2`
-      // }
     ],
     selectedDiary: {},
     loading: false,

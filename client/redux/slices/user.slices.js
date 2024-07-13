@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { BACKURL } from '../../apiBackend'
-import { getAllUsers, getUserData } from '../actions/user'
+import axiosInstance, { BACKURL } from '../../apiBackend'
+import { getAllUsers, getUserData, getUserFriendsAndFamilyLength } from '../actions/user'
 
 // Actualiza la contraseña del usuario
 export const updatePassword = createAsyncThunk(
@@ -220,7 +220,7 @@ export const getUserPosts = createAsyncThunk(
   'user/getUserPosts',
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/user/${userId}/posts`)
+      const response = await axiosInstance.get(`/user/${userId}/posts`)
       return response.data
     } catch (error) {
       return rejectWithValue(error.response.data)
@@ -311,6 +311,8 @@ export const userSlice = createSlice({
     userData: {},
     allUsers: [],
     data: {},
+    familyLength:0,
+    friendLength:0,
     loading: false,
     error: null
   },
@@ -386,6 +388,20 @@ export const userSlice = createSlice({
         state.userData = action.payload
       })
       .addCase(getUserData.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.error.message
+      })
+       // =================== LOAD Familiy and Friends ===================
+       .addCase(getUserFriendsAndFamilyLength.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getUserFriendsAndFamilyLength.fulfilled, (state, action) => {
+        state.loading = false
+        state.familyLength = action.payload.familyCount
+        state.friendLength = action.payload.friendsCount
+
+      })
+      .addCase(getUserFriendsAndFamilyLength.rejected, (state, action) => {
         state.loading = false
         state.error = action.error.message
       })
