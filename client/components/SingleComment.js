@@ -154,7 +154,7 @@ const SingleComment = ({
                 </Pressable>
               )}
             </View>
-            <View
+            {/* <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -202,7 +202,7 @@ const SingleComment = ({
                   name="dislike2"
                 />
               </Pressable>
-            </View>
+            </View> */}
           </View>
 
           {!response && (

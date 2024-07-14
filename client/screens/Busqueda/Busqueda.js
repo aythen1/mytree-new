@@ -45,6 +45,11 @@ const Busqueda = () => {
     useState('BusquedaContactos')
 
   useEffect(() => {
+    console.log('selectedComponent changed', selectedComponent)
+    setSearch('')
+  }, [selectedComponent])
+
+  useEffect(() => {
     console.log('search changed: ', search)
     if (search.length > 0) {
       if (selectedComponent === 'BusquedaPublicaciones') {
@@ -54,6 +59,7 @@ const Busqueda = () => {
               .map((hashtag) => hashtag.toLowerCase())
               .includes(search.toLowerCase())
           ) {
+            console.log('returning true')
             return true
           }
           if (post.description.toLowerCase().includes(search.toLowerCase())) {
@@ -72,6 +78,25 @@ const Busqueda = () => {
         )
         setFilteredEvents(eventsFilteredBySearch)
       }
+      if (selectedComponent === 'BusquedaHashtags') {
+        console.log('ON BusquedaHashtags')
+
+        const postFilteredBySearch = [...allPosts].filter((post) => {
+          if (post.hashtags && post.hashtags.length > 0) {
+            const hashtagsLowerCase = post.hashtags.map((hashtag) =>
+              hashtag.toLowerCase()
+            )
+            const includesSearch = hashtagsLowerCase.some((hashtag) =>
+              hashtag.includes(search.toLowerCase())
+            )
+            return includesSearch
+          } else {
+            return false
+          }
+        })
+        console.log('setting filtered to', postFilteredBySearch)
+        setFilteredPosts(postFilteredBySearch)
+      }
     } else {
       if (selectedComponent === 'BusquedaPublicaciones') {
         setFilteredPosts(allPosts)
@@ -79,14 +104,14 @@ const Busqueda = () => {
       if (selectedComponent === 'BusquedaEventos') {
         setFilteredEvents(allEvents)
       }
+      if (selectedComponent === 'BusquedaHashtags') {
+        setFilteredEvents([])
+      }
       // if (selectedComponent === 'BusquedaContactos') {
       //   setFilteredContacts(allUsers)
       // }
       // if (selectedComponent === 'BusquedaDiarios') {
       //   setFilteredDiaries(allDiaries)
-      // }
-      // if (selectedComponent === 'BusquedaHashtags') {
-      //   setFilteredHashtags(allHashtags)
       // }
     }
   }, [search])
@@ -98,9 +123,15 @@ const Busqueda = () => {
       case 'BusquedaPublicaciones':
         return <Post posts={filteredPosts} padding={true} />
       case 'BusquedaDiarios':
-        return <BusquedaDiarios />
+        return <BusquedaDiarios search={search} setSearch={setSearch} />
       case 'BusquedaHashtags':
-        return <BusquedaHashtags />
+        return (
+          <BusquedaHashtags
+            search={search}
+            setSearch={setSearch}
+            filteredPosts={filteredPosts}
+          />
+        )
       case 'BusquedaEventos':
         return <BusquedaEventos events={filteredEvents} />
       default:
