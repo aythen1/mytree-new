@@ -198,9 +198,9 @@ const MIDIARIOPANTALLAPERSONAL = () => {
                   </View>
                 </View>
                 <View style={styles.iconContainer}>
-                  <Pressable onPress={navigateTo}>
+                  {/* <Pressable onPress={navigateTo}>
                     <CamaraSVG />
-                  </Pressable>
+                  </Pressable> */}
                   <Image
                     style={styles.vectorIcon}
                     contentFit="cover"
@@ -226,9 +226,9 @@ const MIDIARIOPANTALLAPERSONAL = () => {
                   </View>
                 </View>
                 <View style={styles.iconContainer}>
-                  <Pressable onPress={navigateTo}>
+                  {/* <Pressable onPress={navigateTo}>
                     <CamaraSVG />
-                  </Pressable>
+                  </Pressable> */}
                   <Image
                     style={styles.vectorIcon1}
                     contentFit="cover"
@@ -254,9 +254,9 @@ const MIDIARIOPANTALLAPERSONAL = () => {
                   </View>
                 </View>
                 <View style={styles.iconContainer}>
-                  <Pressable onPress={navigateTo}>
+                  {/* <Pressable onPress={navigateTo}>
                     <CamaraSVG />
-                  </Pressable>
+                  </Pressable> */}
                   <Image
                     style={styles.vectorIcon}
                     contentFit="cover"
@@ -282,9 +282,9 @@ const MIDIARIOPANTALLAPERSONAL = () => {
                   </View>
                 </View>
                 <View style={styles.iconContainer}>
-                  <Pressable onPress={navigateTo}>
+                  {/* <Pressable onPress={navigateTo}>
                     <CamaraSVG />
-                  </Pressable>
+                  </Pressable> */}
                   <Image
                     style={styles.vectorIcon3}
                     contentFit="cover"
@@ -310,9 +310,9 @@ const MIDIARIOPANTALLAPERSONAL = () => {
                   </View>
                 </View>
                 <View style={styles.iconContainer}>
-                  <Pressable onPress={navigateTo}>
+                  {/* <Pressable onPress={navigateTo}>
                     <CamaraSVG />
-                  </Pressable>
+                  </Pressable> */}
                   <Image
                     style={styles.vectorIcon4}
                     contentFit="cover"

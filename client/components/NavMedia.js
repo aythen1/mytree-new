@@ -4,7 +4,7 @@ import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
 import { Context } from '../context/Context'
 
-const NavMedia = () => {
+const NavMedia = ({ setShowImagesModal }) => {
   const { setShowCamera } = useContext(Context)
 
   return (
@@ -18,7 +18,7 @@ const NavMedia = () => {
         width: '100%'
       }}
     >
-      <Image
+      {/* <Image
         source={require('../assets/cam-media.png')}
         style={{
           width: 30,
@@ -88,7 +88,14 @@ const NavMedia = () => {
           width: 40,
           height: 30
         }}
-      />
+      /> */}
+      <Pressable onPress={() => setShowImagesModal(true)}>
+        <Image
+          contentFit="contain"
+          source={require('../assets/clipIcon.png')}
+          style={{ width: 30, height: 30 }}
+        />
+      </Pressable>
     </View>
   )
 }
