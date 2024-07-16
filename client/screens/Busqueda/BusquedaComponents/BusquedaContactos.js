@@ -11,12 +11,10 @@ const BusquedaContactos = () => {
   const userFriends =
     allUsers.filter((user) => user.id === userData.id)[0]?.friendsIds || []
 
-  console.log('USERFIENDS:', userFriends)
-
   return (
-    <View
+    <ScrollView
       style={[styles.bsquedaContactos, styles.iconLayout]}
-      // showsVerticalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
     >
       <View style={styles.frameParent}>
         <View>
@@ -26,59 +24,41 @@ const BusquedaContactos = () => {
             </Text>
             <View style={[styles.frameChild, styles.frameChildLayout]} />
           </View>
-          <ScrollView
-            style={{
-              marginTop: 15,
-              borderWidth: 2,
-              maxHeight: 100
-            }}
-          >
+          <View style={{ marginTop: 15, maxHeight: 100 }}>
             {userFamily.length > 0 ? (
-              <View>
-                {userFamily
-                  .concat(userFamily)
-                  .concat(userFamily)
-                  .concat(userFamily)
-                  .concat(userFamily)
-                  .concat(userFamily)
-                  .concat(userFamily)
-                  .concat(userFamily)
-                  .concat(userFamily)
-                  .concat(userFamily)
-                  .concat(userFamily)
-                  .concat(userFamily)
-                  .map((familyMember, index) => (
-                    <View key={index} style={styles.frameParent1}>
-                      <Image
-                        style={styles.frameItem}
-                        contentFit="cover"
-                        source={require('../../../assets/frame-1547754875.png')}
-                      />
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          color: Color.grisDiscord,
-                          textAlign: 'justify',
-                          marginLeft: 13,
-                          fontSize: FontSize.size_base,
-                          lineHeight: 19,
-                          fontFamily: FontFamily.lato,
-                          fontWeight: '700',
-                          letterSpacing: 0,
-                          width: '80%'
-                        }}
-                      >
-                        {allUsers.filter(
+              <ScrollView style={{ maxHeight: 100 }}>
+                {userFamily.map((familyMember, index) => (
+                  <View key={index} style={styles.frameParent1}>
+                    <Image
+                      style={styles.frameItem}
+                      contentFit="cover"
+                      source={require('../../../assets/frame-1547754875.png')}
+                    />
+                    <Text
+                      numberOfLines={1}
+                      style={{
+                        color: Color.grisDiscord,
+                        textAlign: 'justify',
+                        marginLeft: 13,
+                        fontSize: FontSize.size_base,
+                        lineHeight: 19,
+                        fontFamily: FontFamily.lato,
+                        fontWeight: '700',
+                        letterSpacing: 0,
+                        width: '80%'
+                      }}
+                    >
+                      {allUsers.filter(
+                        (user) => user.id.toString() === familyMember
+                      )[0]?.username +
+                        ' ' +
+                        allUsers.filter(
                           (user) => user.id.toString() === familyMember
-                        )[0]?.username +
-                          ' ' +
-                          allUsers.filter(
-                            (user) => user.id.toString() === familyMember
-                          )[0]?.apellido}
-                      </Text>
-                    </View>
-                  ))}
-              </View>
+                        )[0]?.apellido}
+                    </Text>
+                  </View>
+                ))}
+              </ScrollView>
             ) : (
               <Text
                 style={{
@@ -92,7 +72,7 @@ const BusquedaContactos = () => {
                 Aun no tienes ningun contacto agregado a familiares.
               </Text>
             )}
-          </ScrollView>
+          </View>
 
           <View style={styles.frameParent4}>
             <View>
@@ -101,9 +81,9 @@ const BusquedaContactos = () => {
               </Text>
               <View style={[styles.frameChild, styles.frameChildLayout]} />
             </View>
-            <View style={styles.frameView}>
+            <View style={{ marginTop: 15, maxHeight: 100 }}>
               {userFriends.length > 0 ? (
-                <ScrollView>
+                <ScrollView style={{ maxHeight: 100 }}>
                   {userFriends.map((friendMember, index) => (
                     <View key={index} style={styles.frameParent1}>
                       <Image
@@ -166,7 +146,7 @@ const BusquedaContactos = () => {
           </Text>
         </View>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
@@ -225,9 +205,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   frameView: {
-    marginTop: 15,
-    borderWidth: 2,
-    maxHeight: 100
+    marginTop: 15
   },
   frameParent4: {
     marginTop: 30
