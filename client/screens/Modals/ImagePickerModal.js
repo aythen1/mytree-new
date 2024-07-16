@@ -190,7 +190,7 @@ const ImagePickerModal = ({
       >
         <View style={{ gap: 5, alignItems: 'center', flexDirection: 'row' }}>
           <Text style={{ color: '#787878', fontSize: 18, fontWeight: 500 }}>
-            Recientes
+            Galeria
           </Text>
           <Image
             source={require('../../assets/chevDown.png')}

@@ -7,7 +7,12 @@ import Checkbox from './Checkbox'
 import { useSelector } from 'react-redux'
 
 const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers }) => {
-  const { allUsers } = useSelector((state) => state.users)
+  const { allUsers, userData } = useSelector((state) => state.users)
+
+  const userFamily =
+    allUsers.filter((user) => user.id === userData.id)[0]?.familyIds || []
+  const userFriends =
+    allUsers.filter((user) => user.id === userData.id)[0]?.friendsIds || []
 
   const handleToggleTag = (userId) => {
     if (taggedUsers.includes(userId.toString())) {
@@ -78,9 +83,21 @@ const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers }) => {
             alignItems: 'center'
           }}
         >
-          {allUsers
-            .filter((user) => user.username)
-            .map((user, index) => (
+          {userFriends.length === 0 && (
+            <Text
+              style={{
+                color: '#000',
+                marginTop: 15,
+                fontSize: 16,
+                alignSelf: 'center',
+                fontWeight: 400
+              }}
+            >
+              Aun no tienes ningun contacto agregado a amigos.
+            </Text>
+          )}
+          {userFriends.length > 0 &&
+            userFriends.map((friendMember, index) => (
               <View
                 key={-index}
                 style={{
@@ -109,12 +126,18 @@ const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers }) => {
                       fontSize: FontSize.size_base
                     }}
                   >
-                    {user.username + ' ' + user.apellido}
+                    {allUsers.filter(
+                      (user) => user.id.toString() === friendMember
+                    )[0]?.username +
+                      ' ' +
+                      allUsers.filter(
+                        (user) => user.id.toString() === friendMember
+                      )[0]?.apellido}
                   </Text>
                 </View>
                 <Checkbox
-                  checked={taggedUsers.includes(user.id.toString())}
-                  setChecked={() => handleToggleTag(user.id.toString())}
+                  checked={taggedUsers.includes(friendMember.toString())}
+                  setChecked={() => handleToggleTag(friendMember.toString())}
                 />
               </View>
             ))}
@@ -164,9 +187,21 @@ const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers }) => {
             alignItems: 'center'
           }}
         >
-          {allUsers
-            .filter((user) => user.username)
-            .map((user, index) => (
+          {userFamily.length === 0 && (
+            <Text
+              style={{
+                color: '#000',
+                marginTop: 15,
+                fontSize: 16,
+                alignSelf: 'center',
+                fontWeight: 400
+              }}
+            >
+              Aun no tienes ningun contacto agregado a familiares.
+            </Text>
+          )}
+          {userFamily.length > 0 &&
+            userFamily.map((familyMember, index) => (
               <View
                 key={index}
                 style={{
@@ -195,12 +230,18 @@ const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers }) => {
                       fontSize: FontSize.size_base
                     }}
                   >
-                    {user.username + ' ' + user.apellido}
+                    {allUsers.filter(
+                      (user) => user.id.toString() === familyMember
+                    )[0]?.username +
+                      ' ' +
+                      allUsers.filter(
+                        (user) => user.id.toString() === familyMember
+                      )[0]?.apellido}
                   </Text>
                 </View>
                 <Checkbox
-                  checked={taggedUsers.includes(user.id.toString())}
-                  setChecked={() => handleToggleTag(user.id.toString())}
+                  checked={taggedUsers.includes(familyMember.toString())}
+                  setChecked={() => handleToggleTag(familyMember.toString())}
                 />
               </View>
             ))}

@@ -19,11 +19,13 @@ import { removeUserDiary } from '../redux/slices/diaries.slices'
 const SingleDiary = ({
   diary,
   editing,
+  pickedImages,
   setModalCreate,
   modalCreate,
   openGroupIcon1,
   last,
-  selectedDate
+  selectedDate,
+  setPickedImages
 }) => {
   const { selectedSection, formatDateToNormal } = useContext(Context)
   const { userData } = useSelector((state) => state.users)
@@ -69,6 +71,7 @@ const SingleDiary = ({
                   dispatch(removeUserDiary('preDiary'))
                 }
                 setEditingDiary()
+                setPickedImages([])
               }}
             >
               <Image
@@ -106,10 +109,37 @@ const SingleDiary = ({
                     paddingBottom: Padding.p_5xs,
                     backgroundColor: Color.linearBoton
                   }}
-                  onPress={() => {
+                  onPress={async () => {
                     console.log('opening create modal')
                     const preDiary = { ...diary }
                     preDiary.description = text
+                    const cloudinaryUrls = []
+
+                    for (const image of pickedImages) {
+                      const formData = new FormData()
+                      formData.append('file', {
+                        uri: image.uri,
+                        type: 'image/jpeg',
+                        name: image.filename
+                      })
+                      formData.append('upload_preset', 'cfbb_profile_pictures')
+                      formData.append('cloud_name', 'dnewfuuv0')
+
+                      const response = await fetch(
+                        'https://api.cloudinary.com/v1_1/dnewfuuv0/image/upload',
+                        {
+                          method: 'POST',
+                          body: formData
+                        }
+                      )
+
+                      const data = await response.json()
+                      if (response.ok) {
+                        cloudinaryUrls.push(data.secure_url)
+                      } else {
+                        console.error('Error uploading image:', data)
+                      }
+                    }
                     if (preDiary.id === 'preDiary') {
                       console.log('its a pre diary, posting it..', preDiary)
                       delete preDiary.id
@@ -118,6 +148,7 @@ const SingleDiary = ({
                           creatorId: userData.id,
                           category: selectedSection
                         }
+                        obj.images = cloudinaryUrls
                         console.log(
                           'SELECTED DATE BEFORE POSTING',
                           selectedDate
@@ -129,10 +160,12 @@ const SingleDiary = ({
                       })
                     } else {
                       console.log('updating diary...', preDiary)
+                      const updatedData = { description: preDiary.description }
+                      updatedData.images = [...diary.images, ...cloudinaryUrls]
                       dispatch(
                         updateDiaryById({
                           diaryId: preDiary.id,
-                          diaryData: { description: preDiary.description }
+                          diaryData: updatedData
                         })
                       ).then((res) => {
                         const obj = {
@@ -142,9 +175,11 @@ const SingleDiary = ({
                         if (selectedDate) {
                           obj.date = formatDateToNormal(selectedDate)
                         }
+
                         dispatch(getUserDiariesByDateOrCategory(obj))
                       })
                     }
+                    setPickedImages([])
                     setEditingDiary()
                   }}
                 >
@@ -194,33 +229,82 @@ const SingleDiary = ({
         </View>
       )}
       {editingDiary === diary.id ? (
-        <TextInput
-          style={{
-            fontSize: FontSize.size_lg,
-            lineHeight: 27,
-            textAlign: 'left',
-            color: Color.negro,
-            fontFamily: FontFamily.lato,
-            letterSpacing: 0
-          }}
-          multiline
-          value={text}
-          onChangeText={(text) => setText(text)}
-        />
+        <View>
+          <TextInput
+            style={{
+              fontSize: FontSize.size_lg,
+              lineHeight: 27,
+              textAlign: 'left',
+              color: Color.negro,
+              fontFamily: FontFamily.lato,
+              letterSpacing: 0
+            }}
+            multiline
+            value={text}
+            onChangeText={(text) => setText(text)}
+          />
+          <View
+            style={{
+              width: '100%',
+              flexWrap: 'wrap',
+              flexDirection: 'row',
+              gap: 5
+            }}
+          >
+            {diary.images.length > 0 &&
+              diary.images.map((image, i) => (
+                <Image
+                  key={i}
+                  source={{ uri: image }}
+                  contentFit={'contain'}
+                  style={{ width: 50, height: 50, borderRadius: 3 }}
+                />
+              ))}
+            {pickedImages.length > 0 &&
+              pickedImages.map((image, i) => (
+                <Image
+                  key={i + 500}
+                  source={{ uri: image.uri }}
+                  contentFit={'contain'}
+                  style={{ width: 50, height: 50, borderRadius: 3 }}
+                />
+              ))}
+          </View>
+        </View>
       ) : (
-        <Text
-          style={{
-            fontSize: FontSize.size_lg,
-            lineHeight: 27,
-            textAlign: 'left',
-            color: Color.negro,
-            marginTop: 20,
-            fontFamily: FontFamily.lato,
-            letterSpacing: 0
-          }}
-        >
-          {text}
-        </Text>
+        <View>
+          <Text
+            style={{
+              fontSize: FontSize.size_lg,
+              lineHeight: 27,
+              textAlign: 'left',
+              color: Color.negro,
+              marginTop: 20,
+              fontFamily: FontFamily.lato,
+              letterSpacing: 0
+            }}
+          >
+            {text}
+          </Text>
+          <View
+            style={{
+              width: '100%',
+              flexWrap: 'wrap',
+              flexDirection: 'row',
+              gap: 5
+            }}
+          >
+            {diary.images.length > 0 &&
+              diary.images.map((image, i) => (
+                <Image
+                  key={i}
+                  source={{ uri: image }}
+                  contentFit={'contain'}
+                  style={{ width: 50, height: 50, borderRadius: 3 }}
+                />
+              ))}
+          </View>
+        </View>
       )}
       <Modal animationType="slide" transparent visible={modalCreate}>
         <View

@@ -19,8 +19,6 @@ import { getAllPosts } from '../redux/actions/posts'
 import { getAllCommentsByPostId } from '../redux/actions/comments'
 
 const Posteo = ({ data, padding }) => {
-
-  
   const {
     setShowShareModal,
     setShowTaggedsModal,
@@ -30,7 +28,6 @@ const Posteo = ({ data, padding }) => {
   } = useContext(Context)
   const navigation = useNavigation()
   const dispatch = useDispatch()
- 
 
   return (
     <View
@@ -172,7 +169,6 @@ const Post = ({ padding, posts }) => {
   useEffect(() => {
     dispatch(getAllPosts())
   }, [])
-
 
   if (posts?.length === 0)
     return (

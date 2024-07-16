@@ -29,15 +29,17 @@ import { useDispatch } from 'react-redux'
 import { createEvent } from '../../redux/actions/events'
 import Privacidad from '../Privacidad'
 import ImagePickerModal from '../Modals/ImagePickerModal'
+import Maps from '../../components/Maps'
 
 const CrearFechaEspecial = () => {
   const [user, setUser] = useState()
   const navigation = useNavigation()
   const [description, setDescription] = useState('')
   const [selectedDate, setSelectedDate] = useState('')
-  const [location, setLocation] = useState()
+  const [location, setLocation] = useState('')
   const [invitedUsers, setInvitedUsers] = useState([])
   const [selectedCategory, setSelectedCategory] = useState()
+  const [showLocation, setShowLocation] = useState(false)
 
   const [modalCreate, setModalCreate] = useState(false)
   const [programar, setProgramar] = useState(false)
@@ -127,357 +129,389 @@ const CrearFechaEspecial = () => {
   }
 
   return (
-    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-      <View style={[styles.crearEvento]}>
-        <View>
-          <View style={styles.image6Wrapper}>
-            <Image
-              style={styles.image6Icon}
-              contentFit="cover"
-              source={require('../../assets/image-6.png')}
-            />
-          </View>
-          <View style={[styles.backParent, styles.buttonBarFlexBox]}>
-            <Pressable
-              style={styles.backLayout}
-              onPress={() => navigation.goBack()}
-            >
+    <>
+      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+        <View style={[styles.crearEvento]}>
+          <View>
+            <View style={styles.image6Wrapper}>
               <Image
-                style={styles.iconLayout}
+                style={styles.image6Icon}
                 contentFit="cover"
-                source={require('../../assets/back.png')}
+                source={require('../../assets/image-6.png')}
+              />
+            </View>
+            <View style={[styles.backParent, styles.buttonBarFlexBox]}>
+              <Pressable
+                style={styles.backLayout}
+                onPress={() => navigation.goBack()}
+              >
+                <Image
+                  style={styles.iconLayout}
+                  contentFit="cover"
+                  source={require('../../assets/back.png')}
+                />
+              </Pressable>
+              <Text style={[styles.crearEventoText, styles.titleTypo]}>
+                Crear fecha especial
+              </Text>
+            </View>
+          </View>
+
+          <View>
+            <View style={styles.titleBase}>
+              <Text style={[styles.title, styles.titleTypo]}>Categoría</Text>
+            </View>
+            <Pressable
+              onPress={() => setShowCategoryModal(true)}
+              style={{
+                paddingVertical: 13,
+                backgroundColor: Color.fAFAFA,
+                borderRadius: Border.br_3xs,
+                paddingHorizontal: Padding.p_xl,
+                flexDirection: 'row',
+                width: '100%',
+                justifyContent: 'space-between'
+              }}
+            >
+              <Text style={{ color: selectedCategory ? '#000' : '#606060' }}>
+                {selectedCategory || 'Selecione la categoría'}
+              </Text>
+
+              <Image
+                contentFit="cover"
+                style={{ width: 20, height: 20, marginRight: 10 }}
+                source={require('../../assets/downArrow.png')}
               />
             </Pressable>
-            <Text style={[styles.crearEventoText, styles.titleTypo]}>
-              Crear fecha especial
-            </Text>
           </View>
-        </View>
 
-        <View>
-          <View style={styles.titleBase}>
-            <Text style={[styles.title, styles.titleTypo]}>Categoría</Text>
+          <View>
+            <View style={styles.titleBase}>
+              <Text style={[styles.title, styles.titleTypo]}>Descripción</Text>
+            </View>
+            <TextInput
+              multiline={true}
+              numberOfLines={4}
+              value={description}
+              onChangeText={(text) => setDescription(text)}
+              style={{
+                textAlignVertical: 'top',
+                paddingVertical: Padding.p_smi,
+                backgroundColor: Color.fAFAFA,
+                borderRadius: Border.br_3xs,
+                paddingHorizontal: Padding.p_xl,
+                flexDirection: 'row',
+                width: '100%'
+              }}
+              placeholder="Descripción de la fecha especial"
+            />
           </View>
+
+          <View>
+            <View style={styles.titleBase}>
+              <Text style={[styles.title, styles.titleTypo]}>Fecha</Text>
+            </View>
+
+            <Pressable
+              onPress={openCalendario}
+              style={{
+                paddingVertical: 13,
+                backgroundColor: Color.fAFAFA,
+                borderRadius: Border.br_3xs,
+                paddingHorizontal: Padding.p_xl,
+                flexDirection: 'row',
+                width: '100%',
+                justifyContent: 'space-between'
+              }}
+            >
+              <Text style={{ color: selectedDate ? '#000' : '#606060' }}>
+                {selectedDate || 'Selecciona una fecha'}
+              </Text>
+
+              <Image
+                contentFit="cover"
+                style={{ width: 22, height: 22, marginRight: 13 }}
+                source={require('../../assets/vector14.png')}
+              />
+            </Pressable>
+          </View>
+          <View>
+            <View style={styles.titleBase}>
+              <Text style={[styles.title, styles.titleTypo]}>
+                Selecciona una foto de portada
+              </Text>
+            </View>
+
+            <Pressable
+              onPress={() => setShowPickImage(true)}
+              style={{
+                paddingVertical: 13,
+                backgroundColor: Color.fAFAFA,
+                borderRadius: Border.br_3xs,
+                paddingHorizontal: Padding.p_xl,
+                flexDirection: 'row',
+                width: '100%',
+                justifyContent: 'space-between'
+              }}
+            >
+              <Text
+                style={{ color: invitedUsers.length > 0 ? '#000' : '#606060' }}
+              >
+                {pickedImage ? 'Cambiar foto' : 'Seleccionar foto'}
+              </Text>
+              <Image
+                style={{ width: 23, height: 24, marginRight: 13 }}
+                contentFit="cover"
+                source={require('../../assets/image3.png')}
+              />
+            </Pressable>
+          </View>
+
+          <View>
+            <View style={styles.titleBase}>
+              <Text style={[styles.title, styles.titleTypo]}>Ubicación</Text>
+            </View>
+
+            <Pressable
+              onPress={() => setShowLocation(true)}
+              style={styles.fieldSpaceBlock2}
+            >
+              <Text style={{ color: location.length > 0 ? '#000' : '#606060' }}>
+                {location.length > 0 ? location : 'Ubicación'}
+              </Text>
+              <Pressable>
+                <UbicacionSVG />
+              </Pressable>
+            </Pressable>
+          </View>
+
+          <View>
+            <View style={styles.titleBase}>
+              <Text style={[styles.title, styles.titleTypo]}>
+                Etiqueta a tus invitados
+              </Text>
+            </View>
+
+            <Pressable
+              onPress={() => setShowTagUsers(true)}
+              style={{
+                paddingVertical: 13,
+                backgroundColor: Color.fAFAFA,
+                borderRadius: Border.br_3xs,
+                paddingHorizontal: Padding.p_xl,
+                flexDirection: 'row',
+                width: '100%',
+                justifyContent: 'space-between'
+              }}
+            >
+              <Text
+                style={{ color: invitedUsers.length > 0 ? '#000' : '#606060' }}
+              >
+                {invitedUsers.length === 0
+                  ? 'Agrega invitados'
+                  : 'Ver invitados'}
+              </Text>
+              <AñadirUsuarioSVG />
+            </Pressable>
+          </View>
+
           <Pressable
-            onPress={() => setShowCategoryModal(true)}
+            onPress={() => setShowPrivacidad(true)}
             style={{
-              paddingVertical: 13,
-              backgroundColor: Color.fAFAFA,
-              borderRadius: Border.br_3xs,
-              paddingHorizontal: Padding.p_xl,
-              flexDirection: 'row',
               width: '100%',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              alignItems: 'center'
             }}
           >
-            <Text style={{ color: selectedCategory ? '#000' : '#606060' }}>
-              {selectedCategory || 'Selecione la categoría'}
-            </Text>
-
+            <View style={styles.titleBase}>
+              <Text style={[styles.title, styles.titleTypo]}>
+                Opciones de Privacidad
+              </Text>
+            </View>
             <Image
               contentFit="cover"
               style={{ width: 20, height: 20, marginRight: 10 }}
-              source={require('../../assets/downArrow.png')}
+              source={require('../../assets/grayRightArrow.png')}
             />
           </Pressable>
-        </View>
 
-        <View>
-          <View style={styles.titleBase}>
-            <Text style={[styles.title, styles.titleTypo]}>Descripción</Text>
-          </View>
-          <TextInput
-            multiline={true}
-            numberOfLines={4}
-            value={description}
-            onChangeText={(text) => setDescription(text)}
-            style={{
-              textAlignVertical: 'top',
-              paddingVertical: Padding.p_smi,
-              backgroundColor: Color.fAFAFA,
-              borderRadius: Border.br_3xs,
-              paddingHorizontal: Padding.p_xl,
-              flexDirection: 'row',
-              width: '100%'
-            }}
-            placeholder="Descripción de la fecha especial"
-          />
-        </View>
-
-        <View>
-          <View style={styles.titleBase}>
-            <Text style={[styles.title, styles.titleTypo]}>Fecha</Text>
-          </View>
-
-          <Pressable
-            onPress={openCalendario}
-            style={{
-              paddingVertical: 13,
-              backgroundColor: Color.fAFAFA,
-              borderRadius: Border.br_3xs,
-              paddingHorizontal: Padding.p_xl,
-              flexDirection: 'row',
-              width: '100%',
-              justifyContent: 'space-between'
-            }}
-          >
-            <Text style={{ color: selectedDate ? '#000' : '#606060' }}>
-              {selectedDate || 'Selecciona una fecha'}
-            </Text>
-
-            <Image
-              contentFit="cover"
-              style={{ width: 22, height: 22, marginRight: 13 }}
-              source={require('../../assets/vector14.png')}
-            />
-          </Pressable>
-        </View>
-        <View>
-          <View style={styles.titleBase}>
-            <Text style={[styles.title, styles.titleTypo]}>
-              Selecciona una foto de portada
-            </Text>
-          </View>
-
-          <Pressable
-            onPress={() => setShowPickImage(true)}
-            style={{
-              paddingVertical: 13,
-              backgroundColor: Color.fAFAFA,
-              borderRadius: Border.br_3xs,
-              paddingHorizontal: Padding.p_xl,
-              flexDirection: 'row',
-              width: '100%',
-              justifyContent: 'space-between'
-            }}
-          >
-            <Text
-              style={{ color: invitedUsers.length > 0 ? '#000' : '#606060' }}
+          <View style={styles.button2}>
+            <Pressable
+              style={[styles.button, styles.buttonSpaceBlock]}
+              onPress={() => navigation.navigate('CALENDARIO')}
             >
-              {pickedImage ? 'Cambiar foto' : 'Seleccionar foto'}
-            </Text>
-            <Image
-              style={{ width: 23, height: 24, marginRight: 13 }}
-              contentFit="cover"
-              source={require('../../assets/image3.png')}
-            />
-          </Pressable>
-        </View>
-
-        <View>
-          <View style={styles.titleBase}>
-            <Text style={[styles.title, styles.titleTypo]}>Ubicación</Text>
-          </View>
-
-          <View style={styles.fieldSpaceBlock2}>
-            <TextInput
-              value={location}
-              onChangeText={(text) => setLocation(text)}
-              placeholder="Ubicacion"
-            />
-            <Pressable>
-              <UbicacionSVG />
+              <Text style={[styles.signIn, styles.signTypo]}>Cancelar</Text>
             </Pressable>
           </View>
-        </View>
-
-        <View>
-          <View style={styles.titleBase}>
-            <Text style={[styles.title, styles.titleTypo]}>
-              Etiqueta a tus invitados
-            </Text>
-          </View>
-
-          <Pressable
-            onPress={() => setShowTagUsers(true)}
-            style={{
-              paddingVertical: 13,
-              backgroundColor: Color.fAFAFA,
-              borderRadius: Border.br_3xs,
-              paddingHorizontal: Padding.p_xl,
-              flexDirection: 'row',
-              width: '100%',
-              justifyContent: 'space-between'
-            }}
+          <LinearGradient
+            style={styles.button2}
+            locations={[0, 1]}
+            colors={['#dee274', '#7ec18c']}
           >
-            <Text
-              style={{ color: invitedUsers.length > 0 ? '#000' : '#606060' }}
+            <Pressable
+              style={[styles.pressable1, styles.pressableFlexBox]}
+              onPress={() => {
+                handleCreateEvent()
+                setModalCreate(true)
+              }}
             >
-              {invitedUsers.length === 0 ? 'Agrega invitados' : 'Ver invitados'}
-            </Text>
-            <AñadirUsuarioSVG />
-          </Pressable>
+              <Text style={[styles.signIn2, styles.signTypo]}>Enviar</Text>
+            </Pressable>
+          </LinearGradient>
+
+          <View style={styles.frameChild} />
         </View>
 
-        <Pressable
-          onPress={() => setShowPrivacidad(true)}
-          style={{
-            width: '100%',
-            justifyContent: 'space-between',
-            flexDirection: 'row',
-            alignItems: 'center'
-          }}
-        >
-          <View style={styles.titleBase}>
-            <Text style={[styles.title, styles.titleTypo]}>
-              Opciones de Privacidad
-            </Text>
+        <Modal animationType="slide" transparent visible={modalCreate}>
+          <View style={styles.buttonContainer2Overlay}>
+            <Pressable
+              style={styles.buttonContainer2Bg}
+              onPress={() => setModalCreate(false)}
+            />
+            <ENTRADACREADA
+              onClose={onCloseModalCreate}
+              message={'Enviado!'}
+              isNavigate={'CALENDARIO'}
+            />
           </View>
-          <Image
-            contentFit="cover"
-            style={{ width: 20, height: 20, marginRight: 10 }}
-            source={require('../../assets/grayRightArrow.png')}
-          />
-        </Pressable>
+        </Modal>
 
-        <View style={styles.button2}>
-          <Pressable
-            style={[styles.button, styles.buttonSpaceBlock]}
-            onPress={() => navigation.navigate('CALENDARIO')}
-          >
-            <Text style={[styles.signIn, styles.signTypo]}>Cancelar</Text>
-          </Pressable>
-        </View>
-        <LinearGradient
-          style={styles.button2}
-          locations={[0, 1]}
-          colors={['#dee274', '#7ec18c']}
-        >
-          <Pressable
-            style={[styles.pressable1, styles.pressableFlexBox]}
-            onPress={() => {
-              handleCreateEvent()
-              setModalCreate(true)
+        <Modal animationType="slide" transparent visible={programar}>
+          <View style={styles.buttonContainer2Overlay}>
+            <Pressable
+              style={styles.buttonContainer2Bg}
+              onPress={() => setProgramar(false)}
+            />
+            <PopUpCalendario
+              setButtonContainer2Visible={() => {}}
+              setCalendario={setProgramar}
+            />
+          </View>
+        </Modal>
+
+        <Modal animationType="slide" transparent visible={calendario}>
+          <View style={styles.iconlyLightOutlineCalendarOverlay}>
+            <Pressable
+              style={styles.iconlyLightOutlineCalendarBg}
+              onPress={closeCalendario}
+            />
+            <PopUpCalendario
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+              setButtonContainer2Visible={() => {}}
+              setCalendario={setCalendario}
+            />
+          </View>
+        </Modal>
+        <Modal animationType="slide" transparent visible={showTagUsers}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(113, 113, 113, 0.3)',
+              height: '100%'
             }}
           >
-            <Text style={[styles.signIn2, styles.signTypo]}>Enviar</Text>
-          </Pressable>
-        </LinearGradient>
-
-        <View style={styles.frameChild} />
-      </View>
-
-      <Modal animationType="slide" transparent visible={modalCreate}>
-        <View style={styles.buttonContainer2Overlay}>
-          <Pressable
-            style={styles.buttonContainer2Bg}
-            onPress={() => setModalCreate(false)}
-          />
-          <ENTRADACREADA
-            onClose={onCloseModalCreate}
-            message={'Enviado!'}
-            isNavigate={'CALENDARIO'}
-          />
-        </View>
-      </Modal>
-
-      <Modal animationType="slide" transparent visible={programar}>
-        <View style={styles.buttonContainer2Overlay}>
-          <Pressable
-            style={styles.buttonContainer2Bg}
-            onPress={() => setProgramar(false)}
-          />
-          <PopUpCalendario
-            setButtonContainer2Visible={() => {}}
-            setCalendario={setProgramar}
-          />
-        </View>
-      </Modal>
-
-      <Modal animationType="slide" transparent visible={calendario}>
-        <View style={styles.iconlyLightOutlineCalendarOverlay}>
-          <Pressable
-            style={styles.iconlyLightOutlineCalendarBg}
-            onPress={closeCalendario}
-          />
-          <PopUpCalendario
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-            setButtonContainer2Visible={() => {}}
-            setCalendario={setCalendario}
-          />
-        </View>
-      </Modal>
-      <Modal animationType="slide" transparent visible={showTagUsers}>
+            <Pressable
+              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              onPress={() => setShowTagUsers(false)}
+            />
+            <Etiquetar
+              taggedUsers={invitedUsers}
+              setTaggedUsers={setInvitedUsers}
+              onClose={() => setShowTagUsers(false)}
+            />
+          </View>
+        </Modal>
+        <Modal animationType="slide" transparent visible={showCategoryModal}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(113, 113, 113, 0.3)',
+              height: '100%'
+            }}
+          >
+            <Pressable
+              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              onPress={() => setShowCategoryModal(false)}
+            />
+            <OpcionesCaategora
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+              onClose={() => setShowCategoryModal(false)}
+            />
+          </View>
+        </Modal>
+        <Modal animationType="fade" transparent visible={showPrivacidad}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(113, 113, 113, 0.3)',
+              height: '100%'
+            }}
+          >
+            <Pressable
+              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              onPress={() => setShowPrivacidad(false)}
+            />
+            <Privacidad
+              privacy={privacy}
+              setPrivacy={setPrivacy}
+              onClose={() => setShowPrivacidad(false)}
+            />
+          </View>
+        </Modal>
+        <Modal animationType="slide" transparent visible={showPickImage}>
+          <View
+            style={{
+              backgroundColor: 'rgba(113, 113, 113, 0.7)',
+              height: '100%'
+            }}
+          >
+            <Pressable
+              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              onPress={() => setShowPickImage(false)}
+            />
+            <ImagePickerModal
+              fromEvent={true}
+              pickedImages={pickedImage}
+              setPickedImages={setPickedImage}
+              onClose={() => setShowPickImage(false)}
+            />
+          </View>
+        </Modal>
+      </ScrollView>
+      <Modal animationType="fade" transparent visible={showLocation}>
         <View
           style={{
+            flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(113, 113, 113, 0.3)',
-            height: '100%'
+            backgroundColor: 'rgba(113, 113, 113, 0.3)'
           }}
         >
           <Pressable
-            style={{ width: '100%', height: '100%', left: 0, top: 0 }}
-            onPress={() => setShowTagUsers(false)}
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              left: 0,
+              top: 0
+            }}
+            onPress={() => {
+              setShowLocation(false)
+            }}
           />
-          <Etiquetar
-            taggedUsers={invitedUsers}
-            setTaggedUsers={setInvitedUsers}
-            onClose={() => setShowTagUsers(false)}
-          />
-        </View>
-      </Modal>
-      <Modal animationType="slide" transparent visible={showCategoryModal}>
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(113, 113, 113, 0.3)',
-            height: '100%'
-          }}
-        >
-          <Pressable
-            style={{ width: '100%', height: '100%', left: 0, top: 0 }}
-            onPress={() => setShowCategoryModal(false)}
-          />
-          <OpcionesCaategora
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-            onClose={() => setShowCategoryModal(false)}
+          <Maps
+            onClose={() => setShowLocation(false)}
+            setLocation={setLocation}
           />
         </View>
       </Modal>
-      <Modal animationType="fade" transparent visible={showPrivacidad}>
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(113, 113, 113, 0.3)',
-            height: '100%'
-          }}
-        >
-          <Pressable
-            style={{ width: '100%', height: '100%', left: 0, top: 0 }}
-            onPress={() => setShowPrivacidad(false)}
-          />
-          <Privacidad
-            privacy={privacy}
-            setPrivacy={setPrivacy}
-            onClose={() => setShowPrivacidad(false)}
-          />
-        </View>
-      </Modal>
-      <Modal animationType="slide" transparent visible={showPickImage}>
-        <View
-          style={{
-            backgroundColor: 'rgba(113, 113, 113, 0.7)',
-            height: '100%'
-          }}
-        >
-          <Pressable
-            style={{ width: '100%', height: '100%', left: 0, top: 0 }}
-            onPress={() => setShowPickImage(false)}
-          />
-          <ImagePickerModal
-            fromEvent={true}
-            pickedImages={pickedImage}
-            setPickedImages={setPickedImage}
-            onClose={() => setShowPickImage(false)}
-          />
-        </View>
-      </Modal>
-    </ScrollView>
+    </>
   )
 }
 

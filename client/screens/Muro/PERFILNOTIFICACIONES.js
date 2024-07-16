@@ -229,15 +229,20 @@ const PERFILNOTIFICACIONES = () => {
           />
           <ETIQUETADO
             message={selectedNotification?.message || ''}
-            acceptHandler={() =>
+            acceptHandler={() => {
               handleAcceptFamilyOrFriendRequest(
                 selectedNotification.id,
                 selectedNotification.senderId,
                 selectedNotification.receiverId,
                 selectedNotification.type
               )
-            }
-            cancelHandler={() => handleDeclineRequest()}
+              setShowInvitationModal(false)
+            }}
+            cancelHandler={() => {
+              dispatch(deleteNotificationById(selectedNotification.id))
+              dispatch(getAllNotifications())
+              setShowInvitationModal(false)
+            }}
             onClose={() => setShowInvitationModal(false)}
           />
         </View>

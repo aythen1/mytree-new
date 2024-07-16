@@ -41,6 +41,7 @@ import PopUpCalendario from '../../components/PopUpCalendario'
 import MasBusquedaSVG from '../../components/svgs/MasBusquedaSVG'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserDiariesByDateOrCategory } from '../../redux/actions/diaries'
+import ImagePickerModal from '../Modals/ImagePickerModal'
 
 const MIDIARIOENTRADATEXTOPL7 = () => {
   const dispatch = useDispatch()
@@ -57,6 +58,8 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
   const [cameraType, setCameraType] = useState(Camera?.Constants?.Type?.back)
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [showCalendar, setShowCalendar] = useState(false)
+  const [showImagesModal, setShowImagesModal] = useState(false)
+  const [pickedImages, setPickedImages] = useState([])
 
   const monthsInSpanish = [
     'enero',
@@ -430,6 +433,8 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
               {/* renderizado de secciones */}
               {/* {renderSection(selectedSection)} */}
               <ReflexionDiaria
+                pickedImages={pickedImages}
+                setPickedImages={setPickedImages}
                 openGroupIcon1={openGroupIcon1}
                 modalCreate={modalCreate}
                 setModalCreate={setModalCreate}
@@ -441,7 +446,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
             </ScrollView>
           </View>
 
-          {editingDiary && <NavMedia />}
+          {editingDiary && <NavMedia setShowImagesModal={setShowImagesModal} />}
           <Modal animationType="slide" transparent visible={showCalendar}>
             <View
               style={{
@@ -472,6 +477,24 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                 onPress={closeGroupIcon1}
               />
               <Humor onClose={closeGroupIcon1} />
+            </View>
+          </Modal>
+          <Modal animationType="slide" transparent visible={showImagesModal}>
+            <View
+              style={{
+                backgroundColor: 'rgba(113, 113, 113, 0.7)',
+                height: '100%'
+              }}
+            >
+              <Pressable
+                style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+                onPress={() => setShowImagesModal(false)}
+              />
+              <ImagePickerModal
+                pickedImages={pickedImages}
+                setPickedImages={setPickedImages}
+                onClose={() => setShowImagesModal(false)}
+              />
             </View>
           </Modal>
         </View>

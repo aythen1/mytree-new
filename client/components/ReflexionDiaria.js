@@ -18,7 +18,9 @@ const ReflexionDiaria = ({
   modalCreate,
   setModalCreate,
   openGroupIcon1,
-  selectedDate
+  selectedDate,
+  pickedImages,
+  setPickedImages
 }) => {
   const { userDiaries, selectedDiary, loading } = useSelector(
     (state) => state.diaries
@@ -74,6 +76,8 @@ const ReflexionDiaria = ({
       ) : (
         userDiaries.map((diary, index) => (
           <SingleDiary
+            pickedImages={pickedImages}
+            setPickedImages={setPickedImages}
             selectedDate={selectedDate}
             key={diary.id}
             diary={diary}
