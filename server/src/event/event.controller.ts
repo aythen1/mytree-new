@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Param, Delete, Patch, Body, Query } from '@nestjs/common';
+import { Controller, Post, Get, Param, Delete, Patch, Body, Query, Put } from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 
@@ -97,4 +97,27 @@ export class EventsController {
       return { error: 'No se pudieron recuperar los usuarios invitados' };
     }
   }
+
+//|||||||||||||||||||||||||||||||||||||||||||||||||||||||nuevo|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+  @Post(':eventId/invite')
+  async inviteUser(@Param('eventId') eventId: string, @Body('userId') userId: string) {
+      return this.eventsService.inviteUser(eventId, userId);
+  }
+
+  @Put('invite/:inviteId/respond')
+  async respondToInvite(@Param('inviteId') inviteId: string, @Body('response') response: 'accepted' | 'rejected') {
+      return this.eventsService.respondToInvite(inviteId, response);
+  }
+
+  @Post(':eventId/wishlist')
+  async addWishListItem(@Param('eventId') eventId: string, @Body('description') description: string) {
+      return this.eventsService.addWishListItem(eventId, description);
+  }
+
+  @Put('wishlist/:itemId/take')
+  async takeWishListItem(@Param('itemId') itemId: string, @Body('userId') userId: string) {
+      return this.eventsService.takeWishListItem(itemId, userId);
+  }
+
 }

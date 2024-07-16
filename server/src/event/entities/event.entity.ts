@@ -1,4 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Invitations } from "src/invitations/entities/invitation.entity";
+import { WishListItems } from "src/whish-list-items/entities/whish-list-item.entity";
+
 
 @Entity()
 export class Event {
@@ -44,5 +47,11 @@ export class Event {
 
     @Column('jsonb', { nullable: true })
     extraData: any;
+
+    @OneToMany(() => Invitations, invite => invite.event)
+    invites: Invitations[];
+
+    @OneToMany(() => WishListItems, wishListItem => wishListItem.event)
+    wishListItems: WishListItems[];
 
 }

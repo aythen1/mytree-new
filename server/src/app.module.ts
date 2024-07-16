@@ -24,6 +24,8 @@ import { DiaryModule } from './diary/diary.module'; // Importa el módulo de Dia
 import { Diary } from './diary/entities/diary.entity'; // Importa la entidad de Diary
 import { AlbumModule } from './album/album.module'; // Importa el módulo de Diary
 import { Album } from './album/entities/album.entity'; // Importa la entidad de Diary
+import { InvitationsModule } from './invitations/invitations.module';
+import { WhishListItemsModule } from './whish-list-items/whish-list-items.module';
 
 @Module({
   imports: [
@@ -61,6 +63,8 @@ import { Album } from './album/entities/album.entity'; // Importa la entidad de 
       inject: [ConfigService],
     }),
     HistoriesModule,
+    InvitationsModule,
+    WhishListItemsModule,
   ],
   controllers: [],
   providers: [ MessageService, ChatService],
