@@ -29,11 +29,16 @@ const Suscripciones = () => {
     >
       <View style={[styles.frameParent]}>
         <View style={styles.image6Parent}>
-          <Image
-            style={styles.image6Icon}
-            contentFit="cover"
-            source={require('../../../assets/image-6.png')}
-          />
+        <Pressable onPress={() => navigation.openDrawer()}>
+            <Image
+              style={[{
+                width: 87,
+                height: 55
+              }]}
+              contentFit="cover"
+              source={require('../../../assets/image-6.png')}
+            />
+          </Pressable>
           <View style={[styles.backParent, styles.buttonFlexBox]}>
             <Pressable
               style={styles.back}

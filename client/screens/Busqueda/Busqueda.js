@@ -168,11 +168,16 @@ const Busqueda = () => {
             shadowColor: 'black'
           }}
         >
-          <Image
-            style={styles.image6Icon}
-            contentFit="cover"
-            source={require('../../assets/image-6.png')}
-          />
+              <Pressable onPress={() => navigation.openDrawer()}>
+            <Image
+              style={[{
+                width: 87,
+                height: 55
+              }]}
+              contentFit="cover"
+              source={require('../../assets/image-6.png')}
+            />
+          </Pressable>
           <View style={styles.backParent}>
             <Pressable
               style={styles.back}
@@ -370,7 +375,7 @@ const styles = StyleSheet.create({
   backParent: {
     alignItems: 'center',
     flexDirection: 'row',
-    top: '5%'
+    top: '1%'
   },
   iconlylightsendCopyWrapper: {
     borderRadius: Border.br_xl,

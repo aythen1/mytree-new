@@ -106,13 +106,23 @@ const PerfilConfiguracion = () => {
       <ScrollView contentContainerStyle={{ paddingBottom: 130 }} style={styles.frameParent} showsVerticalScrollIndicator={false}>
         <View>
           <View style={styles.parentIcons}>
-            <Pressable onPress={() => navigation.navigate('Muro')}>
+          <Pressable onPress={() => navigation.openDrawer()}>
+            <Image
+              style={[{
+                width: 87,
+                height: 55
+              }]}
+              contentFit="cover"
+              source={require('../../../assets/image-6.png')}
+            />
+          </Pressable>
+            {/* <Pressable onPress={() => navigation.navigate('Muro')}>
               <Image
                 style={styles.image6Icon}
                 contentFit="cover"
                 source={require('../../../assets/image-6.png')}
               />
-            </Pressable>
+            </Pressable> */}
             <View style={styles.iconlylightOutlinecalendarParent}>
               <HeaderIcons
                 icons={[

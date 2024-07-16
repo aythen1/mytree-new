@@ -76,11 +76,21 @@ const dispatch = useDispatch()
       <View style={styles.viewContainer}>
         <View>
           <View style={styles.parentIcons}>
+          <Pressable onPress={() => navigation.openDrawer()}>
             <Image
-              style={styles.image6Icon}
+              style={[{
+                width: 87,
+                height: 55
+              }]}
               contentFit="cover"
               source={require('../../../assets/image-6.png')}
             />
+          </Pressable>
+            {/* <Image
+              style={styles.image6Icon}
+              contentFit="cover"
+              source={require('../../../assets/image-6.png')}
+            /> */}
             <HeaderIcons
               icons={[
                 <CalendarMuroSVG />,

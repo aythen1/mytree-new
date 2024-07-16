@@ -142,9 +142,22 @@ const Perfil = () => {
             paddingTop: 14
           }}
         >
-          <Pressable onPress={() => navigation.navigate('Muro')}>
+             {/* <Pressable
+          onPress={() => navigation.openDrawer()}
+          style={styles.menuPosition}
+        >
+          <Image
+            style={styles.ionmenuIcon}
+            contentFit="cover"
+            source={require('../../assets/ionmenu.png')}
+          />
+        </Pressable> */}
+          <Pressable onPress={() => navigation.openDrawer()}>
             <Image
-              style={[styles.image6Icon, styles.ionmenu]}
+              style={[{
+                width: 87,
+                height: 55
+              }]}
               contentFit="cover"
               source={require('../../assets/image-6.png')}
             />
@@ -171,16 +184,7 @@ const Perfil = () => {
           />
         </View>
 
-        <Pressable
-          onPress={() => navigation.openDrawer()}
-          style={styles.menuPosition}
-        >
-          <Image
-            style={styles.ionmenuIcon}
-            contentFit="cover"
-            source={require('../../assets/ionmenu.png')}
-          />
-        </Pressable>
+     
 
         {search && <BarraBusqueda />}
 

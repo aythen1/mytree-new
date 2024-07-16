@@ -92,27 +92,18 @@ const CALENDARIO = () => {
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.topContainer}>
-        <Pressable
-          style={styles.ionmenu}
-          onPress={() => navigation.openDrawer()}
-        >
-          <Image
-            style={[styles.icon, styles.iconLayout]}
-            contentFit="cover"
-            source={require('../../assets/ionmenu.png')}
-          />
-        </Pressable>
-        <Image
-          style={styles.image6Icon}
-          contentFit="cover"
-          source={require('../../assets/image-6.png')}
-        />
+      <Pressable onPress={() => navigation.openDrawer()}>
+            <Image
+              style={[{
+                width: 87,
+                height: 55
+              }]}
+              contentFit="cover"
+              source={require('../../assets/image-6.png')}
+            />
+          </Pressable>
+      
       </View>
-
-      {/* <View style={{ flexDirection: 'row' }}>
-        <BarraBusqueda navigate={navigation.navigate} route={getRoute()} />
-      </View> */}
-      {/* <BarraBusqueda navigate={navigation.navigate} route={getRoute()} /> */}
 
       <View
         style={{
@@ -277,7 +268,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-    justifyContent: 'space-between'
+    justifyContent: 'flex-start'
   },
   scrollViewContent: {
     flexGrow: 1,
