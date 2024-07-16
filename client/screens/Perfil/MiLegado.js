@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import { Context } from '../../context/Context'
 
-const MiLegado = ({ albums }) => {
+const MiLegado = ({ albums, posts, events, diaries }) => {
   const navigation = useNavigation()
 
   const { userAlbums } = useSelector((state) => state.albums)
@@ -16,7 +16,7 @@ const MiLegado = ({ albums }) => {
   const { userPosts } = useSelector((state) => state.posts)
   const { setShowSelectEventTypeModal } = useContext(Context)
 
-console.log(userAlbums,"useralbum",albums,"albums")
+  console.log(diaries, 'albums1111111111111111111111')
 
   return (
     <View style={styles.frameParent}>
@@ -28,14 +28,16 @@ console.log(userAlbums,"useralbum",albums,"albums")
             { justifyContent: 'space-between', alignItems: 'center' }
           ]}
         >
-          <Text style={styles.miBiografaActual}>Mis álbumes</Text>
-          <Pressable onPress={() => navigation.navigate('CrearAlbum')}>
+          <Text style={styles.miBiografaActual}>{albums ? 'Álbumes' : 'Mis Álbumes'}</Text>
+        {!albums && (
+            <Pressable onPress={() => navigation.navigate('CrearAlbum')}>
             <Image
               style={styles.vectorIcon1}
               contentFit="cover"
               source={require('../../assets/vector53.png')}
             />
           </Pressable>
+        )}
         </View>
         <Image
           style={styles.frameChild}
@@ -95,14 +97,16 @@ console.log(userAlbums,"useralbum",albums,"albums")
             { justifyContent: 'space-between', alignItems: 'center' }
           ]}
         >
-          <Text style={styles.miBiografaActual}>Mis publicaciones</Text>
-          <Pressable onPress={() => navigation.navigate('UploadMemory')}>
-            <Image
-              style={styles.vectorIcon1}
-              contentFit="cover"
-              source={require('../../assets/vector53.png')}
-            />
-          </Pressable>
+          <Text style={styles.miBiografaActual}>{posts ? 'Publicaciones':'Mis Publicaciones'}</Text>
+         {!posts && (
+           <Pressable onPress={() => navigation.navigate('UploadMemory')}>
+           <Image
+             style={styles.vectorIcon1}
+             contentFit="cover"
+             source={require('../../assets/vector53.png')}
+           />
+         </Pressable>
+         )}
         </View>
         <Image
           style={styles.frameChild}
@@ -115,14 +119,21 @@ console.log(userAlbums,"useralbum",albums,"albums")
           showsHorizontalScrollIndicator={false}
           style={[styles.maskGroupParent, styles.groupParentFlexBox]}
         >
-          {userPosts &&
-            userPosts.map((e, i) => (
-              <Image
-                style={styles.maskGroupIcon}
-                contentFit="cover"
-                source={{ uri: e.photos[0] }}
-              />
-            ))}
+          {posts
+            ? posts.map((e, i) => (
+                <Image
+                  style={styles.maskGroupIcon}
+                  contentFit="cover"
+                  source={{ uri: e.photos[0] }}
+                />
+              ))
+            : userPosts.map((e, i) => (
+                <Image
+                  style={styles.maskGroupIcon}
+                  contentFit="cover"
+                  source={{ uri: e.photos[0] }}
+                />
+              ))}
         </ScrollView>
       </View>
 
@@ -134,14 +145,16 @@ console.log(userAlbums,"useralbum",albums,"albums")
             { justifyContent: 'space-between', alignItems: 'center' }
           ]}
         >
-          <Text style={styles.miBiografaActual}>Mis eventos</Text>
-          <Pressable onPress={() => setShowSelectEventTypeModal(true)}>
-            <Image
-              style={styles.vectorIcon1}
-              contentFit="cover"
-              source={require('../../assets/vector53.png')}
-            />
-          </Pressable>
+          <Text style={styles.miBiografaActual}>Eventos</Text>
+         {!events && (
+           <Pressable onPress={() => setShowSelectEventTypeModal(true)}>
+           <Image
+             style={styles.vectorIcon1}
+             contentFit="cover"
+             source={require('../../assets/vector53.png')}
+           />
+         </Pressable>
+         )}
         </View>
         <Image
           style={styles.frameChild}
@@ -154,22 +167,37 @@ console.log(userAlbums,"useralbum",albums,"albums")
           horizontal
           style={[styles.maskGroupParent, styles.groupParentFlexBox]}
         >
-          {userEvents &&
-            userEvents.map((e, i) => {
-              return (
-                <Pressable key={i}>
-                  <Image
-                    style={{ ...styles.maskGroupIcon, borderRadius: 100 }}
-                    contentFit="cover"
-                    source={
-                      e.coverImage
-                        ? { uri: e.coverImage }
-                        : require('../../assets/mytreelogofinal.png')
-                    }
-                  />
-                </Pressable>
-              )
-            })}
+          {events
+            ? events.map((e, i) => {
+                return (
+                  <Pressable key={i}>
+                    <Image
+                      style={{ ...styles.maskGroupIcon, borderRadius: 100 }}
+                      contentFit="cover"
+                      source={
+                        e.coverImage
+                          ? { uri: e.coverImage }
+                          : require('../../assets/mytreelogofinal.png')
+                      }
+                    />
+                  </Pressable>
+                )
+              })
+            : userEvents.map((e, i) => {
+                return (
+                  <Pressable key={i}>
+                    <Image
+                      style={{ ...styles.maskGroupIcon, borderRadius: 100 }}
+                      contentFit="cover"
+                      source={
+                        e.coverImage
+                          ? { uri: e.coverImage }
+                          : require('../../assets/mytreelogofinal.png')
+                      }
+                    />
+                  </Pressable>
+                )
+              })}
         </ScrollView>
       </View>
       <View style={styles.frameContainer}>
@@ -180,40 +208,62 @@ console.log(userAlbums,"useralbum",albums,"albums")
             { justifyContent: 'space-between', alignItems: 'center' }
           ]}
         >
-          <Text style={styles.miBiografaActual}>Mis diarios</Text>
-          <Pressable
-            onPress={() => navigation.navigate('MIDIARIOPANTALLAPERSONAL')}
-          >
-            <Image
-              style={styles.vectorIcon1}
-              contentFit="cover"
-              source={require('../../assets/vector53.png')}
-            />
-          </Pressable>
+          <Text style={styles.miBiografaActual}>Diarios</Text>
+       {!diaries && (
+           <Pressable
+           onPress={() => navigation.navigate('MIDIARIOPANTALLAPERSONAL')}
+         >
+           <Image
+             style={styles.vectorIcon1}
+             contentFit="cover"
+             source={require('../../assets/vector53.png')}
+           />
+         </Pressable>
+       )}
         </View>
         <Image
           style={styles.frameChild}
           contentFit="cover"
           source={require('../../assets/line-78.png')}
         />
-        <View style={[styles.maskGroupParent, styles.groupParentFlexBox]}>
-          {userDiaries &&
-            userDiaries.map((e, i) => {
-              return (
-                <Pressable key={i}>
-                  <Image
-                    style={{ ...styles.maskGroupIcon, borderRadius: 100 }}
-                    contentFit="cover"
-                    source={
-                      e?.coverImage
-                        ? { uri: e?.coverImage }
-                        : require('../../assets/thum.png')
-                    }
-                  />
-                </Pressable>
-              )
-            })}
-        </View>
+         <ScrollView
+          contentContainerStyle={{ gap: 25 }}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          style={[styles.maskGroupParent, styles.groupParentFlexBox]}
+        >
+          {diaries
+            ? diaries.map((e, i) => {
+                return (
+                  <Pressable key={i}>
+                    <Image
+                      style={{ ...styles.maskGroupIcon, borderRadius: 100 }}
+                      contentFit="cover"
+                      source={
+                        e?.coverImage
+                          ? { uri: e?.coverImage }
+                          : require('../../assets/thum.png')
+                      }
+                    />
+                  </Pressable>
+                )
+              })
+            : userDiaries.map((e, i) => {
+                return (
+                  <Pressable key={i}>
+                    <Image
+                      style={{ ...styles.maskGroupIcon, borderRadius: 100 }}
+                      contentFit="cover"
+                      source={
+                        e?.coverImage
+                          ? { uri: e?.coverImage }
+                          : require('../../assets/thum.png')
+                      }
+                    />
+                  </Pressable>
+                )
+              })}
+        </ScrollView>
       </View>
     </View>
   )

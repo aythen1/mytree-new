@@ -58,6 +58,11 @@ const PerfilExterno = ({ route }) => {
   const [search, setSearch] = useState(false)
   const [userData, setUser] = useState({})
   const [userAlbums, setUserAlbums] = useState([])
+  const [userPosts, setUserPosts] = useState([])
+  const [userEvents, setUserEvents] = useState([])
+  const [userDiaries, setUserDiaries] = useState([])
+
+
 
 
   const cameraReff = useRef(null)
@@ -80,13 +85,35 @@ const PerfilExterno = ({ route }) => {
     const { data } = await axiosInstance.post(`/albums/by-creator`, {
       creatorId: id_user
     })
-    console.log(data,"dataaaaaa")
     setUserAlbums(data)
+  }
+
+  const getPosts =async ()=> {
+    const  {data}  = await axiosInstance.get(`user/${id_user}/posts`)
+
+    setUserPosts(data)
+  }
+
+  const getEvents =async ()=> {
+    const { data } = await axiosInstance.get(`/events/by-creator/${id_user}`)
+    console.log(data,"eventsssssssssssssssssssss")
+    setUserEvents(data)
+  }
+
+  const getDiaries =async ()=> {
+    const { data } = await axiosInstance.post(`/diary/user/diaries`, {
+      creatorId: id_user
+    })
+    console.log(data,"eventsssssssssssssssssssss")
+    setUserDiaries(data)
   }
 
   useEffect(() => {
     getUser()
     getAlbums()
+    getPosts()
+    getEvents()
+    getDiaries()
   }, [id_user])
 
   const takePicture = async () => {
@@ -105,7 +132,7 @@ const PerfilExterno = ({ route }) => {
   const renderSelectedComponent = () => {
     switch (selectedComponent) {
       case 'MiLegado':
-        return <MiLegado albums={userAlbums} />
+        return <MiLegado albums={userAlbums} posts={userPosts} events={userEvents} diaries={userDiaries} />
       case 'MisAlbumes':
         return <MisAlbumes />
       case 'PERFILMIINFO':
