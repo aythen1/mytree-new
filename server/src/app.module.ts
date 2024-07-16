@@ -24,6 +24,10 @@ import { DiaryModule } from './diary/diary.module'; // Importa el módulo de Dia
 import { Diary } from './diary/entities/diary.entity'; // Importa la entidad de Diary
 import { AlbumModule } from './album/album.module'; // Importa el módulo de Diary
 import { Album } from './album/entities/album.entity'; // Importa la entidad de Diary
+import { InvitationsModule } from './invitations/invitations.module';
+import { WhishListItemsModule } from './whish-list-items/whish-list-items.module';
+import { Invitations } from './invitations/entities/invitation.entity';
+import { WishListItems } from './whish-list-items/entities/whish-list-item.entity';
 
 @Module({
   imports: [
@@ -38,7 +42,7 @@ import { Album } from './album/entities/album.entity'; // Importa la entidad de 
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASS'),
         database: configService.get<string>('DB_NAME'),
-        entities: [User, Post, Notification, History, Comment,Album, Event, MessageEntity,Diary ],
+        entities: [User, Post, Notification, History, Comment,Album, Event, MessageEntity,Diary ,Invitations,WishListItems],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -52,6 +56,9 @@ import { Album } from './album/entities/album.entity'; // Importa la entidad de 
     EventModule,
     AlbumModule,
     ChatModule,
+    HistoriesModule,
+    InvitationsModule,
+    WhishListItemsModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -60,7 +67,7 @@ import { Album } from './album/entities/album.entity'; // Importa la entidad de 
       }),
       inject: [ConfigService],
     }),
-    HistoriesModule,
+
   ],
   controllers: [],
   providers: [ MessageService, ChatService],
