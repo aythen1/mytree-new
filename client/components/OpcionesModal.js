@@ -11,7 +11,14 @@ import {
 import { Image } from 'expo-image'
 import { Border, Color } from '../GlobalStyles'
 
-const OpcionesModal = ({ opciones, visible, onClose, onAddOption, isAdd }) => {
+const OpcionesModal = ({
+  opciones,
+  visible,
+  onClose,
+  isAdd,
+  selectedCategory,
+  setSelectedCategory
+}) => {
   const [nuevaOpcion, setNuevaOpcion] = useState('')
   const [modoAgregar, setModoAgregar] = useState(false)
   const inputRef = useRef(null)
@@ -46,7 +53,12 @@ const OpcionesModal = ({ opciones, visible, onClose, onAddOption, isAdd }) => {
             index.toString()
           }}
           renderItem={({ item }) => (
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedCategory(item)
+                onClose()
+              }}
+            >
               <Text style={styles.opcionText}>{item}</Text>
               <Image
                 style={styles.frameChild}
@@ -57,7 +69,7 @@ const OpcionesModal = ({ opciones, visible, onClose, onAddOption, isAdd }) => {
           )}
         />
 
-        {modoAgregar ? (
+        {/* {modoAgregar ? (
           <View style={styles.agregarContainer}>
             <TextInput
               ref={inputRef}
@@ -79,7 +91,7 @@ const OpcionesModal = ({ opciones, visible, onClose, onAddOption, isAdd }) => {
               {isAdd ? '+ Añadir' : null}
             </Text>
           </TouchableOpacity>
-        )}
+        )} */}
       </View>
     </View>
     // </Modal>
