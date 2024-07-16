@@ -5,7 +5,10 @@ import {
   ScrollView,
   StyleSheet,
   Pressable,
-  TextInput
+  TextInput,
+  Modal,
+  TouchableOpacity,
+  TouchableWithoutFeedback
 } from 'react-native'
 import { Image } from 'expo-image'
 import {
@@ -21,16 +24,36 @@ import BarraBusqueda from '../../components/BarraBusqueda'
 import CalendarCheckSVG from '../../components/svgs/CalendarCheckSVG'
 import RegaloSVG from '../../components/svgs/RegaloSVG'
 import AñadirUsuarioSVG from '../../components/svgs/AñadirUsuarioSVG'
+import { useSelector } from 'react-redux'
 
-const Eventos = () => {
+const Eventos = ({ route }) => {
   const navigation = useNavigation()
+  const { allUsers } = useSelector((state) => state.users)
 
+  console.log(allUsers, 'asdasfasfasfas')
   const [selected, setSelected] = useState(null)
-  const [selected2, setSelected2] = useState(null)
+  const [modalVisible, setModalVisible] = useState(false)
+
+  const event_name = route?.params?.title
+  const event_desc = route?.params?.description
+
+
+  const [selectedUsers, setSelectedUsers] = useState([]);
+
+  const toggleUserSelection = (userId) => {
+    if (selectedUsers.includes(userId)) {
+      setSelectedUsers(selectedUsers.filter((id) => id !== userId));
+    } else {
+      setSelectedUsers([...selectedUsers, userId]);
+    }
+  };
 
 
   return (
-    <ScrollView contentContainerStyle={{ paddingBottom: 130 }} style={styles.scrollView}>
+    <ScrollView
+      contentContainerStyle={{ paddingBottom: 130 }}
+      style={styles.scrollView}
+    >
       <Image
         style={styles.image6Icon}
         contentFit="cover"
@@ -55,14 +78,24 @@ const Eventos = () => {
             style={styles.boxContainer}
           >
             <View style={styles.textContainer}>
-              <Text style={styles.subTitle}>Evento 1</Text>
-              <Text style={styles.name}>Barbacoa</Text>
+              <Text style={styles.subTitle}>{event_name}</Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 18 }}>
-              {selected ? <Image style={{ width: 20, height: 18 }} contentFit='scale-down' source={require('../../assets/arrow2.png')}></Image>
-                :
-                <Image style={{ width: 20, height: 18 }} contentFit='scale-down' source={require('../../assets/arrow1.png')}></Image>
-              }
+            <View
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 18 }}
+            >
+              {selected ? (
+                <Image
+                  style={{ width: 20, height: 18 }}
+                  contentFit="scale-down"
+                  source={require('../../assets/arrow2.png')}
+                ></Image>
+              ) : (
+                <Image
+                  style={{ width: 20, height: 18 }}
+                  contentFit="scale-down"
+                  source={require('../../assets/arrow1.png')}
+                ></Image>
+              )}
               <CalendarCheckSVG />
             </View>
           </Pressable>
@@ -71,14 +104,17 @@ const Eventos = () => {
               <View style={styles.optionContainer}>
                 <Text style={styles.subTitle}>Descripción</Text>
                 <TextInput
-                  placeholder="Partido de fútbol"
+                  placeholder={event_desc}
                   style={styles.inputContainer}
                 />
               </View>
               <View style={styles.optionContainer}>
                 <Text style={styles.subTitle}>Tus invitados</Text>
                 <View style={styles.inputContainer}>
-                  <TextInput placeholder="Entra a la lista" />
+                  <TextInput
+                    onFocus={() => setModalVisible(true)}
+                    placeholder="Entra a la lista"
+                  />
                   <AñadirUsuarioSVG />
                 </View>
               </View>
@@ -112,95 +148,33 @@ const Eventos = () => {
             </View>
           )}
           {selected && (
-            <View style={{ flexDirection: "row", paddingBottom: 50, gap: 2 }}>
-              <Image source={require('../../assets/coverpicture.png')} style={{ width: "25%", height: 90 }}></Image>
-              <Image source={require('../../assets/coverpicture.png')} style={{ width: "25%", height: 90 }}></Image>
-              <Image source={require('../../assets/coverpicture.png')} style={{ width: "25%", height: 90 }}></Image>
-              <Image source={require('../../assets/coverpicture.png')} style={{ width: "25%", height: 90 }}></Image>
-              <View style={{ width: "100%", justifyContent: "center", position: "absolute", bottom: 20 }}>
+            <View style={{ flexDirection: 'row', paddingBottom: 50, gap: 2 }}>
+              <Image
+                source={require('../../assets/coverpicture.png')}
+                style={{ width: '25%', height: 90 }}
+              ></Image>
+              <Image
+                source={require('../../assets/coverpicture.png')}
+                style={{ width: '25%', height: 90 }}
+              ></Image>
+              <Image
+                source={require('../../assets/coverpicture.png')}
+                style={{ width: '25%', height: 90 }}
+              ></Image>
+              <Image
+                source={require('../../assets/coverpicture.png')}
+                style={{ width: '25%', height: 90 }}
+              ></Image>
+              <View
+                style={{
+                  width: '100%',
+                  justifyContent: 'center',
+                  position: 'absolute',
+                  bottom: 20
+                }}
+              >
                 <LinearGradient
-                  style={{ ...styles.button, alignSelf: "center" }}
-                  locations={[0, 1]}
-                  colors={['#dee274', '#7ec18c']}
-                >
-                  <Text style={styles.save}>Añadir recuerdos</Text>
-                </LinearGradient>
-              </View>
-            </View>
-          )}
-        </View>
-
-        <View style={styles.viewContainer}>
-          <Pressable
-            onPress={() => setSelected2(!selected2)}
-
-            style={styles.boxContainer}>
-            <View style={styles.textContainer}>
-              <Text style={styles.subTitle}>Fecha especial</Text>
-              <Text style={styles.name}>Pachanga</Text>
-            </View>
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 18 }}>
-              {selected2 ? <Image style={{ width: 20, height: 18 }} contentFit='scale-down' source={require('../../assets/arrow2.png')}></Image>
-                :
-                <Image style={{ width: 20, height: 18 }} contentFit='scale-down' source={require('../../assets/arrow1.png')}></Image>
-              }
-              <CalendarCheckSVG />
-            </View>
-          </Pressable>
-          {selected2 && (
-            <View style={styles.selected}>
-              <View style={styles.optionContainer}>
-                <Text style={styles.subTitle}>Descripción</Text>
-                <TextInput
-                  placeholder="Partido de fútbol"
-                  style={styles.inputContainer}
-                />
-              </View>
-              <View style={styles.optionContainer}>
-                <Text style={styles.subTitle}>Tus invitados</Text>
-                <View style={styles.inputContainer}>
-                  <TextInput placeholder="Entra a la lista" />
-                  <AñadirUsuarioSVG />
-                </View>
-              </View>
-              <View style={styles.optionContainer}>
-                <Text style={styles.subTitle}>Deseos</Text>
-                <View style={styles.inputContainer}>
-                  <TextInput placeholder="Comprueba la lista" />
-                  <RegaloSVG />
-                </View>
-              </View>
-              <View style={styles.buttonContainer}>
-                <LinearGradient
-                  style={styles.button}
-                  locations={[0, 1]}
-                  colors={['#dee274', '#7ec18c']}
-                >
-                  <Pressable
-                    onPress={() => navigation.navigate('MasDetallesEventos')}
-                  >
-                    <Text style={styles.save}>Más detalles</Text>
-                  </Pressable>
-                </LinearGradient>
-                <LinearGradient
-                  style={styles.button}
-                  locations={[0, 1]}
-                  colors={['#dee274', '#7ec18c']}
-                >
-                  <Text style={styles.save}>Añadir recuerdos</Text>
-                </LinearGradient>
-              </View>
-            </View>
-          )}
-          {selected2 && (
-            <View style={{ flexDirection: "row", paddingBottom: 50, gap: 2 }}>
-              <Image source={require('../../assets/coverpicture.png')} style={{ width: "25%", height: 90 }}></Image>
-              <Image source={require('../../assets/coverpicture.png')} style={{ width: "25%", height: 90 }}></Image>
-              <Image source={require('../../assets/coverpicture.png')} style={{ width: "25%", height: 90 }}></Image>
-              <Image source={require('../../assets/coverpicture.png')} style={{ width: "25%", height: 90 }}></Image>
-              <View style={{ width: "100%", justifyContent: "center", position: "absolute", bottom: 20 }}>
-                <LinearGradient
-                  style={{ ...styles.button, alignSelf: "center" }}
+                  style={{ ...styles.button, alignSelf: 'center' }}
                   locations={[0, 1]}
                   colors={['#dee274', '#7ec18c']}
                 >
@@ -211,6 +185,77 @@ const Eventos = () => {
           )}
         </View>
       </View>
+      <Modal
+        visible={modalVisible}
+        transparent
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <ScrollView
+            contentContainerStyle={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 15,
+              gap: 15
+            }}
+            style={{
+              height: 300,
+              width: '100%',
+              backgroundColor: 'white',
+              bottom: 0,
+              position: 'absolute'
+            }}
+          >
+            {allUsers &&
+        allUsers.map((e) => {
+          const isSelected = selectedUsers.includes(e.id); // assuming `e.id` is the unique identifier for the user
+          return (
+            <TouchableOpacity
+              key={e.id} // make sure each child in a list has a unique "key" prop
+              style={{
+                borderBottomWidth: 1,
+                borderColor: 'gray',
+                width: '100%',
+                alignItems: 'center',
+                flexDirection: 'row',
+                paddingBottom: 10,
+                justifyContent: 'space-between'
+              }}
+              onPress={() => toggleUserSelection(e.id)}
+            >
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 8
+                }}
+              >
+                <Image
+                  style={{ width: 40, height: 40, borderRadius: 100 }}
+                  source={
+                    e.profilePicture
+                      ? { uri: e.profilePicture }
+                      : require('../../assets/aatar6.png')
+                  }
+                />
+                <Text>{e.username}</Text>
+              </View>
+              <View
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 100,
+                  backgroundColor: isSelected ? 'green' : 'white',
+                  borderWidth: 1,
+                  borderColor: 'gray'
+                }}
+              />
+            </TouchableOpacity>
+          );
+        })}
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </Modal>
     </ScrollView>
   )
 }
@@ -262,7 +307,7 @@ const styles = StyleSheet.create({
   },
   selected: {
     // alignItems: 'center',
-    padding: 20,
+    padding: 20
   },
   textContainer: {
     flexDirection: 'column',

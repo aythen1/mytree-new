@@ -26,6 +26,8 @@ import { AlbumModule } from './album/album.module'; // Importa el módulo de Dia
 import { Album } from './album/entities/album.entity'; // Importa la entidad de Diary
 import { InvitationsModule } from './invitations/invitations.module';
 import { WhishListItemsModule } from './whish-list-items/whish-list-items.module';
+import { Invitations } from './invitations/entities/invitation.entity';
+import { WishListItems } from './whish-list-items/entities/whish-list-item.entity';
 
 @Module({
   imports: [
@@ -40,7 +42,7 @@ import { WhishListItemsModule } from './whish-list-items/whish-list-items.module
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASS'),
         database: configService.get<string>('DB_NAME'),
-        entities: [User, Post, Notification, History, Comment,Album, Event, MessageEntity,Diary ],
+        entities: [User, Post, Notification, History, Comment,Album, Event, MessageEntity,Diary ,Invitations,WishListItems],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -54,6 +56,9 @@ import { WhishListItemsModule } from './whish-list-items/whish-list-items.module
     EventModule,
     AlbumModule,
     ChatModule,
+    HistoriesModule,
+    InvitationsModule,
+    WhishListItemsModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -62,9 +67,7 @@ import { WhishListItemsModule } from './whish-list-items/whish-list-items.module
       }),
       inject: [ConfigService],
     }),
-    HistoriesModule,
-    InvitationsModule,
-    WhishListItemsModule,
+
   ],
   controllers: [],
   providers: [ MessageService, ChatService],

@@ -19,7 +19,7 @@ const EventCard = ({ event }) => {
         padding: 20,
         marginTop: 15
       }}
-      // onPress={() => navigation.navigate('Eventos')}
+      onPress={() => navigation.navigate('Eventos',event)}
     >
       <View style={{ flexDirection: 'column', gap: 10 }}>
         <Text
