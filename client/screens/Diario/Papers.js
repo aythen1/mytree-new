@@ -7,9 +7,11 @@ import { FontSize, Color, FontFamily, Border } from '../../GlobalStyles'
 import { useDispatch, useSelector } from 'react-redux'
 // import { setPaper } from '../../redux/slices/newspapersPublished.slices'
 import PopUpCalendario from '../../components/PopUpCalendario'
+import SingleDiary from '../../components/SingleDiary'
 
 const Papers = () => {
-  // const { lastPapers } = useSelector((state) => state.papers)
+   const { userDiaries } = useSelector((state) => state.diaries)
+   console.log('USER DIARIES', userDiaries.length)
   const navigation = useNavigation()
   const dispatch = useDispatch()
 
@@ -36,13 +38,11 @@ const Papers = () => {
     <>
       <View
         style={{
-          top: 30,
+          marginTop: 30,
           paddingHorizontal: 10,
           overflow: 'hidden',
-          height: '100%',
           width: '100%',
           backgroundColor: 'transparent',
-          paddingBottom: 100
         }}
       >
         <View>
@@ -100,24 +100,18 @@ const Papers = () => {
             </Pressable>
           ))} */}
           <View style={styles.frameLayout}>
-            <Text style={styles.text}>06/01/2024</Text>
-            <View style={styles.frameContainer}>
-              <Image
-                style={styles.aatarIcon}
-                contentFit="cover"
-                source={require('../../assets/frame-1547755266.png')}
-              />
-              <Image
-                style={styles.aatarIcon}
-                contentFit="cover"
-                source={require('../../assets/frame-1547755266.png')}
-              />
-              <Image
-                style={styles.aatarIcon}
-                contentFit="cover"
-                source={require('../../assets/frame-1547755266.png')}
-              />
-            </View>
+            {/* <Text style={styles.text}>06/01/2024</Text> */}
+           {[...userDiaries].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        ).slice(0,5).map((diary,index)=>
+            <SingleDiary
+            key={diary.id}
+            notEditable={true}
+            diary={diary}
+            editing={false}
+            last={index === userDiaries.length - 1}
+          />
+          )}
           </View>
         </View>
       </View>
@@ -146,9 +140,9 @@ const styles = StyleSheet.create({
   ltimasEntradasParent: {
     paddingHorizontal: 15,
     flexDirection: 'row',
+    paddingVertical:10,
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: '20%'
   },
   textTypo: {
     textAlign: 'left',
@@ -166,7 +160,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     lineHeight: 27,
     fontSize: FontSize.size_lg,
-    marginTop: 20,
     textAlign: 'left',
     color: Color.negro,
     fontFamily: FontFamily.lato,
@@ -174,9 +167,6 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   frameLayout: {
-    height: 150,
-    alignSelf: 'stretch',
-    marginTop: '5%'
   },
   aatarIcon: {
     width: 107,
@@ -189,6 +179,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: FontSize.size_5xl,
     lineHeight: 36,
+    paddingVertical:3,
     color: Color.negro,
     fontFamily: FontFamily.lato,
     fontWeight: '700',

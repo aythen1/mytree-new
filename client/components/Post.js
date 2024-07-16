@@ -1,11 +1,12 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import {
   StyleSheet,
   View,
   Text,
   Pressable,
   TouchableOpacity,
-  ImageBackground
+  ImageBackground,
+  Animated,
 } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -28,128 +29,308 @@ const Posteo = ({ data, padding }) => {
   } = useContext(Context)
   const navigation = useNavigation()
   const dispatch = useDispatch()
+  const opacity = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(300)).current;
 
-  return (
-    <View
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(opacity, {
+        toValue: expanded ? 1 : 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateY, {
+        toValue: expanded ? 0 : 300,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [expanded]);
+
+  const [expanded, setExpanded] = useState(false)
+  if(expanded){
+    return  <View>
+      <View
+    style={{
+      backgroundColor: Color.mytreeClarito,
+      left: 0,
+      top: padding && padding !== false ? 15 : 5,
+      height: 500,
+      marginBottom: 30,
+      borderRadius: 20,
+      transition: 'all 1s ease',
+      marginHorizontal: padding && padding !== false && 15,
+      overflow: 'hidden',
+      // opacity,
+      // transform: [{translateY}]
+    }}
+  >
+    <ImageBackground
       style={{
-        backgroundColor: Color.mytreeClarito,
-        left: 0,
-        top: padding && padding !== false ? 15 : 5,
         height: 500,
-        marginBottom: 30,
-        borderRadius: 20,
-        marginHorizontal: padding && padding !== false && 15,
-        overflow: 'hidden'
+        zIndex: -1000,
+        justifyContent: 'flex-end',
+        resizeMode: 'cover',
+        overflow: 'hidden',
+        justifyContent:'space-between'
       }}
+      source={{ uri: data.photos[0] }}
     >
-      <ImageBackground
-        style={{
-          height: 500,
-          zIndex: -1000,
-          justifyContent: 'flex-end',
-          resizeMode: 'cover',
-          overflow: 'hidden'
-        }}
-        source={{ uri: data.photos[0] }}
-      >
-        <TouchableOpacity
-          onPress={() => {
-            console.log('settings post tags to: ', data.tags || [])
-            setSelectedPostTags(data.tags || [])
-            setShowTaggedsModal(true)
-          }}
-          style={{ position: 'absolute', left: 15, top: 15 }}
-        >
-          <LinearGradient
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: 64,
-              height: 64,
-              borderRadius: 25,
-              zIndex: 0
+       <TouchableOpacity
+            onPress={() => {
+              console.log('settings post tags to: ', data.tags || [])
+              setSelectedPostTags(data.tags || [])
+              setShowTaggedsModal(true)
             }}
-            locations={[0, 1]}
-            colors={['#7ec18c', '#dee274']}
+            style={{ position: 'absolute', zIndex:99999999999, right: 15, top: 15 }}
           >
-            <View
+            <LinearGradient
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                width: 59,
-                borderRadius: 23,
-                backgroundColor: '#c5eacd',
-                height: 59
+                width: 64,
+                height: 64,
+                borderRadius: 25,
+                zIndex: 0
               }}
+              locations={[0, 1]}
+              colors={['#7ec18c', '#dee274']}
             >
               <View
                 style={{
                   justifyContent: 'center',
                   alignItems: 'center',
-                  width: 53,
+                  width: 59,
                   borderRadius: 23,
-                  backgroundColor: '#b7e4c0',
-                  height: 53
+                  backgroundColor: '#c5eacd',
+                  height: 59
                 }}
               >
-                <Image
-                  contentFit="contain"
+                <View
                   style={{
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: 20,
-                    zIndex: 999999999999
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: 53,
+                    borderRadius: 23,
+                    backgroundColor: '#b7e4c0',
+                    height: 53
                   }}
-                  source={{
-                    uri:
-                      data.user.profilePicture ||
-                      'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716419224/bciupv6y3hwccgmtpwoe.png'
-                  }}
-                />
+                >
+                  <Image
+                    contentFit="contain"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: 20,
+                      zIndex: 999999999999
+                    }}
+                    source={{
+                      uri:
+                        data.user.profilePicture ||
+                        'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716419224/bciupv6y3hwccgmtpwoe.png'
+                    }}
+                  />
+                </View>
               </View>
-            </View>
-          </LinearGradient>
-        </TouchableOpacity>
+            </LinearGradient>
+          </TouchableOpacity>
+      <LinearGradient
+        style={{ height:300,justifyContent:'flex-start',padding:15 }}
+        end={{ x: 0.5, y: 1 }}
+        start={{ x: 0.5, y: 0 }}
+        colors={['rgba(0,0,0,0.7)', 'transparent']}
+      >
+       
+       <Text style={{ fontSize: FontSize.size_5xl,
+    color: Color.white,
+    fontWeight: '700'}}>{`${data.user.username} ${data.user.apellido}`}</Text>
+       <Text style={{  marginTop: 10,
+    fontSize: FontSize.size_base,
+    textAlign: 'left',
+    fontFamily: FontFamily.lato,
+    color: Color.white}}>{data.description}</Text>
 
-        <View style={{ gap: 50, position: 'absolute', right: 24, bottom: 100 }}>
-          <TouchableOpacity
-            onPress={() => {
-              setSelectedPost(data.id)
-              dispatch(getAllCommentsByPostId(data.id))
-              setShowCommentsModal(true)
-            }}
-          >
-            <Image
-              style={{ width: 40, height: 40 }}
-              source={require('../assets/iconlyboldchat.png')}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('OpenedChat', {
-                receiverId: data.id,
-                receiverName: data.nameUser
-              })
-            }}
-          >
-            <EnviarMensajeSVG />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setShowShareModal(true)}>
-            <CompartirSVG />
-          </TouchableOpacity>
-        </View>
-        <LinearGradient
-          style={{ padding: 15 }}
-          end={{ x: 0.5, y: 0 }}
-          start={{ x: 0.5, y: 1 }}
-          colors={['rgba(0,0,0,0.9)', 'transparent']}
+    {data.hashtags.length>0 && <View style={{width:'75%',flexDirection:'row',flexWrap:'wrap',gap:5,marginTop:20}}>
+      {data.hashtags.map(hashtag=><View style={{backgroundColor:'#B7E4C0',borderRadius:5,paddingVertical:4,paddingHorizontal:8}}><Text style={{color:'#fafafa',fontWeight:'600'}}>#{hashtag}</Text></View>)}
+    </View>}
+      </LinearGradient>
+      <View style={{ gap: 50, position: 'absolute', right: 24, bottom: 100 }}>
+        <TouchableOpacity
+          onPress={() => {
+            setSelectedPost(data.id)
+            dispatch(getAllCommentsByPostId(data.id))
+            setShowCommentsModal(true)
+          }}
         >
-          <Text style={styles.camila}>{data.nameUser}</Text>
-          <Text style={styles.yendoALa}>{data.description}</Text>
-        </LinearGradient>
-      </ImageBackground>
+          <Image
+            style={{ width: 40, height: 40 }}
+            source={require('../assets/iconlyboldchat.png')}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('OpenedChat', {
+              receiverId: data.id,
+              receiverName: data.nameUser
+            })
+          }}
+        >
+          <EnviarMensajeSVG />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setShowShareModal(true)}>
+          <CompartirSVG />
+        </TouchableOpacity>
+      </View>
+      <LinearGradient
+        style={{ height:130,justifyContent:'flex-end',padding:15 }}
+        end={{ x: 0.5, y: 0 }}
+        start={{ x: 0.5, y: 1 }}
+        colors={['rgba(0,0,0,0.9)', 'transparent']}
+      >
+       
+       <Pressable onPress={()=>setExpanded(false)}>
+       <Text style={{marginTop: 5,
+  fontSize: FontSize.size_base,
+  textAlign: 'right',
+  fontFamily: FontFamily.lato,
+  color: Color.white}}>Ver menos...</Text>
+       </Pressable>
+      </LinearGradient>
+    </ImageBackground>
+  </View>
     </View>
-  )
+  } else {
+    return (
+      <View
+        style={{
+          backgroundColor: Color.mytreeClarito,
+          left: 0,
+          top: padding && padding !== false ? 15 : 5,
+          height: 500,
+          marginBottom: 30,
+          borderRadius: 20,
+          marginHorizontal: padding && padding !== false && 15,
+          overflow: 'hidden'
+        }}
+      >
+        <ImageBackground
+          style={{
+            height: 500,
+            zIndex: -1000,
+            justifyContent: 'flex-end',
+            resizeMode: 'cover',
+            overflow: 'hidden'
+          }}
+          source={{ uri: data.photos[0] }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              console.log('settings post tags to: ', data.tags || [])
+              setSelectedPostTags(data.tags || [])
+              setShowTaggedsModal(true)
+            }}
+            style={{ position: 'absolute', left: 15, top: 15 }}
+          >
+            <LinearGradient
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 64,
+                height: 64,
+                borderRadius: 25,
+                zIndex: 0
+              }}
+              locations={[0, 1]}
+              colors={['#7ec18c', '#dee274']}
+            >
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 59,
+                  borderRadius: 23,
+                  backgroundColor: '#c5eacd',
+                  height: 59
+                }}
+              >
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: 53,
+                    borderRadius: 23,
+                    backgroundColor: '#b7e4c0',
+                    height: 53
+                  }}
+                >
+                  <Image
+                    contentFit="contain"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: 20,
+                      zIndex: 999999999999
+                    }}
+                    source={{
+                      uri:
+                        data.user.profilePicture ||
+                        'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716419224/bciupv6y3hwccgmtpwoe.png'
+                    }}
+                  />
+                </View>
+              </View>
+            </LinearGradient>
+          </TouchableOpacity>
+  
+          <View style={{ gap: 50, position: 'absolute', right: 24, bottom: 100 }}>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedPost(data.id)
+                dispatch(getAllCommentsByPostId(data.id))
+                setShowCommentsModal(true)
+              }}
+            >
+              <Image
+                style={{ width: 40, height: 40 }}
+                source={require('../assets/iconlyboldchat.png')}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('OpenedChat', {
+                  receiverId: data.id,
+                  receiverName: data.nameUser
+                })
+              }}
+            >
+              <EnviarMensajeSVG />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setShowShareModal(true)}>
+              <CompartirSVG />
+            </TouchableOpacity>
+          </View>
+          <LinearGradient
+            style={{ padding: 15,height:130 }}
+            end={{ x: 0.5, y: 0 }}
+            start={{ x: 0.5, y: 1 }}
+            colors={['rgba(0,0,0,0.9)', 'transparent']}
+          >
+            <Text style={styles.camila}>{`${data.user.username} ${data.user.apellido}`}</Text>
+            <Text numberOfLines={1} ellipsizeMode='tail' style={styles.yendoALa}>{data.description}</Text>
+           <Pressable onPress={()=>setExpanded(true)}>
+           <Text style={{marginTop: 5,
+      fontSize: FontSize.size_base,
+      textAlign: 'right',
+      fontFamily: FontFamily.lato,
+      color: Color.white}}>Ver más...</Text>
+           </Pressable>
+          </LinearGradient>
+        </ImageBackground>
+      </View>
+    )
+  }
+
+  
 }
 
 const Post = ({ padding, posts }) => {

@@ -24,6 +24,7 @@ import {
 import PagerView from 'react-native-pager-view'
 import { handleSelect } from '../Memories/utils/utils'
 import { LinearGradient } from 'expo-linear-gradient'
+import {Feather} from 'react-native-vector-icons'
 
 const ImagePickerModal = ({
   onClose,
@@ -31,7 +32,7 @@ const ImagePickerModal = ({
   pickedImages,
   fromEvent
 }) => {
-  const { pickImage, libraryImage, showCamera, setShowCamera } =
+  const { pickImage, libraryImage } =
     useContext(Context)
   const navigation = useNavigation()
   const [images, setImages] = useState([])
@@ -43,6 +44,7 @@ const ImagePickerModal = ({
   const cameraReff = useRef(null)
   const [facing, setFacing] = useState('back')
   const [multiSelect, setMultiSelect] = useState([])
+  const [showCamera, setShowCamera] = useState(false)
 
   useEffect(() => {
     ;(async () => {
@@ -79,10 +81,13 @@ const ImagePickerModal = ({
   }
 
   const takePicture = async () => {
+    console.log('ON TAKE PICTURE')
     if (cameraReff?.current) {
       const photo = await cameraReff.current.takePictureAsync()
-      pickImage('a', photo.uri)
-      setSelectedImage(photo)
+      // pickImage('a', photo.uri)
+      console.log('PHOTO',photo)
+      setPickedImages([...pickedImages,photo])
+      // setSelectedImage(photo)
       setShowCamera(false)
     }
   }
@@ -92,7 +97,7 @@ const ImagePickerModal = ({
       <CameraView
         ref={cameraReff}
         facing={facing}
-        style={{ flex: 1, position: 'absolute', top: 0, left: 0 }}
+        style={{ height:'100%', position: 'absolute', top: 0, left: 0 }}
         mode="picture"
         FocusMode="on"
         onCameraReady={(e) => console.log(e, 'esto es e')}
@@ -156,8 +161,6 @@ const ImagePickerModal = ({
                   height: 70,
                   borderRadius: 100,
                   backgroundColor: '#7EC18C',
-
-                  color: 'white'
                 }}
               ></View>
             </TouchableOpacity>
@@ -188,17 +191,20 @@ const ImagePickerModal = ({
           alignItems: 'center'
         }}
       >
-        <View style={{ gap: 5, alignItems: 'center', flexDirection: 'row' }}>
-          <Text style={{ color: '#787878', fontSize: 18, fontWeight: 500 }}>
-            Galeria
-          </Text>
-          <Image
-            source={require('../../assets/chevDown.png')}
-            style={{
-              width: 13,
-              height: 6
-            }}
-          />
+        <View style={{alignItems: 'center', flexDirection: 'row', width:"100%", paddingRight:10, justifyContent:'space-between' }}>
+          <View style={{flexDirection:'row',alignItems:'center', gap: 5}}>
+            <Text style={{ color: '#787878', fontSize: 18, fontWeight: 500 }}>
+              Galeria
+            </Text>
+            <Image
+              source={require('../../assets/chevDown.png')}
+              style={{
+                width: 13,
+                height: 6,marginTop:2
+              }}
+            />
+          </View>
+          <Pressable onPress={()=>setShowCamera(true)}><Feather size={20} name='camera' color={'#787878'}/></Pressable>
         </View>
         <View style={{ gap: 10, alignItems: 'center', flexDirection: 'row' }}>
           {/* <TouchableOpacity

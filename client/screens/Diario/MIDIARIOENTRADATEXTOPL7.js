@@ -51,8 +51,13 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
   const [isSection, setIsSection] = useState('')
   const { userData } = useSelector((state) => state.users)
   const [modalCreate, setModalCreate] = useState(false)
-  const { pickImage, showCamera, setShowCamera, formatDateToNormal } =
-    useContext(Context)
+  const {
+    pickImage,
+    showCamera,
+    setShowCamera,
+    formatDateToNormal,
+    setEditingDiary
+  } = useContext(Context)
   const [images, setImages] = useState([])
   const [selectedImage, setSelectedImage] = useState(null)
   const [cameraType, setCameraType] = useState(Camera?.Constants?.Type?.back)
@@ -83,6 +88,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
   useEffect(() => {
     console.log('selectedDate changed to', selectedDate)
     console.log('selectedSection changed to', selectedSection)
+    setEditingDiary()
     const obj = { creatorId: userData.id, category: selectedSection }
     if (selectedDate) {
       obj.date = formatDateToNormal(selectedDate)

@@ -27,12 +27,15 @@ const MENSAJERA = () => {
   const { allUsers } = useSelector((state) => state.users)
   const { usersWithMessages, userData, getUsersMessages } = useContext(Context)
   const [selectedFilter, setSelectedFilter] = useState('All')
+  const [filteredUsersWithMessages, setFilteredUsersWithMessages] = useState(
+    usersWithMessages || []
+  )
 
   const sortUsers = (userA, userB) => {
-    const isInMessagesA = usersWithMessages?.some(
+    const isInMessagesA = filteredUsersWithMessages?.some(
       (user) => user.id === userA.id
     )
-    const isInMessagesB = usersWithMessages?.some(
+    const isInMessagesB = filteredUsersWithMessages?.some(
       (user) => user.id === userB.id
     )
 
@@ -62,8 +65,26 @@ const MENSAJERA = () => {
   }, [allMessages])
 
   useEffect(() => {
-    getUsersMessages()
-  }, [allMessages])
+    if (selectedFilter.length > 0) {
+      const userFamily =
+        allUsers.filter((user) => user.id === userData.id)[0]?.familyIds || []
+      const userFriends =
+        allUsers.filter((user) => user.id === userData.id)[0]?.friendsIds || []
+      if (selectedFilter === 'All') {
+        setFilteredUsersWithMessages([...usersWithMessages])
+      } else if (selectedFilter === 'Friends') {
+        setFilteredUsersWithMessages(
+          [...usersWithMessages].filter((user) => userFriends.includes(user.id))
+        )
+      } else if (selectedFilter === 'Family') {
+        setFilteredUsersWithMessages(
+          [...usersWithMessages].filter((user) => userFamily.includes(user.id))
+        )
+      } else if (selectedFilter === 'Groups') {
+        setFilteredUsersWithMessages([])
+      }
+    }
+  }, [selectedFilter])
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 700)
@@ -180,8 +201,8 @@ const MENSAJERA = () => {
                   </Text>
                 </View>
               )}
-          {search === '' && usersWithMessages.length > 0
-            ? usersWithMessages?.map((user) => (
+          {search === '' && filteredUsersWithMessages.length > 0
+            ? filteredUsersWithMessages?.map((user) => (
                 <ChatCard
                   value={search}
                   key={user.id}
