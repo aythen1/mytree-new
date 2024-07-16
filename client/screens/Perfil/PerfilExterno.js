@@ -42,12 +42,12 @@ import { getAllUserEvents } from '../../redux/actions/events'
 import { getAllUserDiaries } from '../../redux/actions/diaries'
 import { getUserFriendsAndFamilyLength } from '../../redux/actions/user'
 
-const Perfil = () => {
+const PerfilExterno = ({ route }) => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const [facing, setFacing] = useState('back')
   const { pickImage, provisoryProfileImage, profileImage } = useContext(Context)
-  const { userData } = useSelector((state) => state.users)
+  // const { userData } = useSelector((state) => state.users)
   const [hasPermission, setHasPermission] = useState(null)
   const [selectedImage, setSelectedImage] = useState(null)
   const [showCamera, setShowCamera] = useState(false)
@@ -56,14 +56,38 @@ const Perfil = () => {
   const [showImageOptions, setShowImageOptions] = useState(false)
   const [selectedComponent, setSelectedComponent] = useState('MiLegado')
   const [search, setSearch] = useState(false)
+  const [userData, setUser] = useState({})
+  const [userAlbums, setUserAlbums] = useState([])
+
+
   const cameraReff = useRef(null)
 
+  // const user_name = route.params.username
+  console.log(route.params, 'Asdasdasdas')
+
+  const id_user = route.params.id
+  const user_img = route.params.profilePicture
+  const user_name = route.params.username
+
+
+  const getUser =async ()=> {
+    const  {data}  = await axiosInstance.get(`user/${id_user}`)
+    console.log(data,"dataaaaaa")
+    setUser(data)
+  }
+
+  const getAlbums =async ()=> {
+    const { data } = await axiosInstance.post(`/albums/by-creator`, {
+      creatorId: id_user
+    })
+    console.log(data,"dataaaaaa")
+    setUserAlbums(data)
+  }
+
   useEffect(() => {
-    ;(async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync()
-      setHasPermission(status === 'granted')
-    })()
-  }, [])
+    getUser()
+    getAlbums()
+  }, [id_user])
 
   const takePicture = async () => {
     if (cameraReff) {
@@ -81,7 +105,7 @@ const Perfil = () => {
   const renderSelectedComponent = () => {
     switch (selectedComponent) {
       case 'MiLegado':
-        return <MiLegado />
+        return <MiLegado albums={userAlbums} />
       case 'MisAlbumes':
         return <MisAlbumes />
       case 'PERFILMIINFO':
@@ -142,22 +166,14 @@ const Perfil = () => {
             paddingTop: 14
           }}
         >
-             {/* <Pressable
-          onPress={() => navigation.openDrawer()}
-          style={styles.menuPosition}
-        >
-          <Image
-            style={styles.ionmenuIcon}
-            contentFit="cover"
-            source={require('../../assets/ionmenu.png')}
-          />
-        </Pressable> */}
           <Pressable onPress={() => navigation.openDrawer()}>
             <Image
-              style={[{
-                width: 87,
-                height: 55
-              }]}
+              style={[
+                {
+                  width: 87,
+                  height: 55
+                }
+              ]}
               contentFit="cover"
               source={require('../../assets/image-6.png')}
             />
@@ -184,8 +200,6 @@ const Perfil = () => {
           />
         </View>
 
-     
-
         {search && <BarraBusqueda />}
 
         <View
@@ -205,27 +219,7 @@ const Perfil = () => {
               position: 'relative'
             }}
           >
-            <Pressable
-              onPress={() => setShowCamera(true)}
-              style={{
-                width: 30,
-                height: 30,
-                backgroundColor: Color.secundario,
-                borderRadius: 100,
-                justifyContent: 'center',
-                alignItems: 'center',
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                zIndex: 999
-              }}
-            >
-              <Image
-                style={{ width: 16, height: 16 }}
-                contentFit="cover"
-                source={require('../../assets/cameraIcon.png')}
-              />
-            </Pressable>
+          
             {!provisoryProfileImage && !userData?.profilePicture ? (
               <Image
                 style={{ ...styles.perfilItem, borderRadius: 100 }}
@@ -240,61 +234,17 @@ const Perfil = () => {
                   uri:
                     profileImage ||
                     provisoryProfileImage ||
-                    userData.profilePicture
+                    user_img
                 }}
               />
             )}
-
-            {/* <Pressable
-                onPress={() => pickImage('profile')}
-                style={{
-                  width: 30,
-                  height: 30,
-                  backgroundColor: Color.secundario,
-                  borderRadius: 100,
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-              >
-                <SimboloSVG color={'#fff'} />
-              </Pressable> */}
-
-            {/* <Pressable
-              onPress={() => setShowEmojis(true)}
-              style={{
-                width: 30,
-                height: 30,
-                backgroundColor: Color.secundario,
-                position: 'absolute',
-                borderRadius: 100,
-                bottom: 0,
-                left: '35%',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              {emoji && <Text>{emoji}</Text>}
-            </Pressable> */}
           </Pressable>
-          <TouchableOpacity
-            onPress={() => pickImage('profile')}
-            style={{
-              width: 120,
-              height: 30,
-              backgroundColor: Color.secundario,
-              borderRadius: 100,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: 20
-            }}
-          >
-            <Text style={{ color: 'white' }}>Subir imagen</Text>
-          </TouchableOpacity>
+     
         </View>
 
         <View style={styles.nameContainer}>
           <Text style={styles.brunoPham}>
-            {userData.username} {userData.apellido}
+            {user_name} {userData.apellido}
           </Text>
           <View style={styles.placeContainer}>
             <Text style={[styles.daNangVietnam, styles.miInfoTypo]}>
@@ -322,7 +272,7 @@ const Perfil = () => {
                   styles.selectedText)
               }
             >
-              Mi Legado
+              Legado
             </Text>
           </Pressable>
           <Pressable
@@ -338,7 +288,7 @@ const Perfil = () => {
                 selectedComponent === 'PERFILMIINFO' && styles.selectedText)
               }
             >
-              Mi información
+              Información
             </Text>
           </Pressable>
         </View>
@@ -604,4 +554,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Perfil
+export default PerfilExterno

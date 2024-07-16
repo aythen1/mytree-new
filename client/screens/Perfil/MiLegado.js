@@ -6,28 +6,30 @@ import { useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import { Context } from '../../context/Context'
 
-const MiLegado = () => {
+const MiLegado = ({ albums }) => {
   const navigation = useNavigation()
-  
+
   const { userAlbums } = useSelector((state) => state.albums)
   const { userEvents } = useSelector((state) => state.events)
   const { userDiaries } = useSelector((state) => state.diaries)
 
-
   const { userPosts } = useSelector((state) => state.posts)
   const { setShowSelectEventTypeModal } = useContext(Context)
 
+console.log(userAlbums,"useralbum",albums,"albums")
 
   return (
     <View style={styles.frameParent}>
-        <View style={styles.frameContainer}>
+      <View style={styles.frameContainer}>
         <View
-          style={[styles.miBiografaActualParent, styles.groupParentFlexBox,{justifyContent:"space-between",alignItems:"center"}]}
+          style={[
+            styles.miBiografaActualParent,
+            styles.groupParentFlexBox,
+            { justifyContent: 'space-between', alignItems: 'center' }
+          ]}
         >
           <Text style={styles.miBiografaActual}>Mis álbumes</Text>
-          <Pressable
-            onPress={() => navigation.navigate('CrearAlbum')}
-          >
+          <Pressable onPress={() => navigation.navigate('CrearAlbum')}>
             <Image
               style={styles.vectorIcon1}
               contentFit="cover"
@@ -50,44 +52,69 @@ const MiLegado = () => {
             flexWrap: 'wrap'
           }}
         >
-          {userAlbums.map((album) => (
-            <Pressable
-              key={album.id}
-              onPress={() => navigation.navigate('CrearLbum', { album })}
-            >
-              <Image
-                style={{ width: 70, height: 70, borderRadius: 100 }}
-                contentFit="cover"
-                source={
-                  album.images.length > 0
-                    ? { uri: album.images[0] }
-                    : require('../../assets/claire.png')
-                }
-              />
-            </Pressable>
-          ))}
+          {albums
+            ? albums.map((album) => (
+                <Pressable
+                  key={album.id}
+                  onPress={() => navigation.navigate('CrearLbum', { album })}
+                >
+                  <Image
+                    style={{ width: 70, height: 70, borderRadius: 100 }}
+                    contentFit="cover"
+                    source={
+                      album?.images?.length > 0
+                        ? { uri: album.images[0] }
+                        : require('../../assets/claire.png')
+                    }
+                  />
+                </Pressable>
+              ))
+            : userAlbums.map((album) => (
+                <Pressable
+                  key={album.id}
+                  onPress={() => navigation.navigate('CrearLbum', { album })}
+                >
+                  <Image
+                    style={{ width: 70, height: 70, borderRadius: 100 }}
+                    contentFit="cover"
+                    source={
+                      album.images.length > 0
+                        ? { uri: album.images[0] }
+                        : require('../../assets/claire.png')
+                    }
+                  />
+                </Pressable>
+              ))}
         </View>
       </View>
       <View style={styles.frameContainer}>
         <View
-          style={[styles.miBiografaActualParent, styles.groupParentFlexBox,{justifyContent:"space-between",alignItems:"center"}]}
+          style={[
+            styles.miBiografaActualParent,
+            styles.groupParentFlexBox,
+            { justifyContent: 'space-between', alignItems: 'center' }
+          ]}
         >
           <Text style={styles.miBiografaActual}>Mis publicaciones</Text>
-            <Pressable onPress={() => navigation.navigate('UploadMemory')}>
-              <Image
-                style={styles.vectorIcon1}
-                contentFit="cover"
-                source={require('../../assets/vector53.png')}
-              />
-            </Pressable>
-       
+          <Pressable onPress={() => navigation.navigate('UploadMemory')}>
+            <Image
+              style={styles.vectorIcon1}
+              contentFit="cover"
+              source={require('../../assets/vector53.png')}
+            />
+          </Pressable>
         </View>
         <Image
           style={styles.frameChild}
           contentFit="cover"
           source={require('../../assets/line-78.png')}
         />
-        <ScrollView horizontal contentContainerStyle={{gap:25}} showsHorizontalScrollIndicator={false} style={[styles.maskGroupParent, styles.groupParentFlexBox]}>
+        <ScrollView
+          horizontal
+          contentContainerStyle={{ gap: 25 }}
+          showsHorizontalScrollIndicator={false}
+          style={[styles.maskGroupParent, styles.groupParentFlexBox]}
+        >
           {userPosts &&
             userPosts.map((e, i) => (
               <Image
@@ -96,59 +123,73 @@ const MiLegado = () => {
                 source={{ uri: e.photos[0] }}
               />
             ))}
-            
         </ScrollView>
       </View>
 
       <View style={styles.frameContainer}>
         <View
-          style={[styles.miBiografaActualParent, styles.groupParentFlexBox,{justifyContent:"space-between",alignItems:"center"}]}
+          style={[
+            styles.miBiografaActualParent,
+            styles.groupParentFlexBox,
+            { justifyContent: 'space-between', alignItems: 'center' }
+          ]}
         >
           <Text style={styles.miBiografaActual}>Mis eventos</Text>
-            <Pressable onPress={() => setShowSelectEventTypeModal(true)}>
-              <Image
-                style={styles.vectorIcon1}
-                contentFit="cover"
-                source={require('../../assets/vector53.png')}
-              />
-            </Pressable>
-         
+          <Pressable onPress={() => setShowSelectEventTypeModal(true)}>
+            <Image
+              style={styles.vectorIcon1}
+              contentFit="cover"
+              source={require('../../assets/vector53.png')}
+            />
+          </Pressable>
         </View>
         <Image
           style={styles.frameChild}
           contentFit="cover"
           source={require('../../assets/line-78.png')}
         />
-        <ScrollView contentContainerStyle={{gap:25}} showsHorizontalScrollIndicator={false} horizontal style={[styles.maskGroupParent, styles.groupParentFlexBox]}>
-        {userEvents && userEvents.map((e,i)=>{
-          return (
-            <Pressable key={i} >
-              <Image
-                style={{...styles.maskGroupIcon,borderRadius:100}}
-                contentFit="cover"
-                source={e.coverImage ? { uri: e.coverImage }: require('../../assets/mytreelogofinal.png')}
-              />
-            </Pressable>
-          )
-        })}
+        <ScrollView
+          contentContainerStyle={{ gap: 25 }}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          style={[styles.maskGroupParent, styles.groupParentFlexBox]}
+        >
+          {userEvents &&
+            userEvents.map((e, i) => {
+              return (
+                <Pressable key={i}>
+                  <Image
+                    style={{ ...styles.maskGroupIcon, borderRadius: 100 }}
+                    contentFit="cover"
+                    source={
+                      e.coverImage
+                        ? { uri: e.coverImage }
+                        : require('../../assets/mytreelogofinal.png')
+                    }
+                  />
+                </Pressable>
+              )
+            })}
         </ScrollView>
       </View>
       <View style={styles.frameContainer}>
         <View
-          style={[styles.miBiografaActualParent, styles.groupParentFlexBox,{justifyContent:"space-between",alignItems:"center"}]}
+          style={[
+            styles.miBiografaActualParent,
+            styles.groupParentFlexBox,
+            { justifyContent: 'space-between', alignItems: 'center' }
+          ]}
         >
           <Text style={styles.miBiografaActual}>Mis diarios</Text>
-            <Pressable
-              onPress={() => navigation.navigate('MIDIARIOPANTALLAPERSONAL')}
-            >
-              <Image
-                style={styles.vectorIcon1}
-                contentFit="cover"
-                source={require('../../assets/vector53.png')}
-              />
-            </Pressable>
-
-           
+          <Pressable
+            onPress={() => navigation.navigate('MIDIARIOPANTALLAPERSONAL')}
+          >
+            <Image
+              style={styles.vectorIcon1}
+              contentFit="cover"
+              source={require('../../assets/vector53.png')}
+            />
+          </Pressable>
         </View>
         <Image
           style={styles.frameChild}
@@ -156,20 +197,24 @@ const MiLegado = () => {
           source={require('../../assets/line-78.png')}
         />
         <View style={[styles.maskGroupParent, styles.groupParentFlexBox]}>
-       {userDiaries && userDiaries.map((e,i)=>{
-          return (
-            <Pressable key={i} >
-              <Image
-                style={{...styles.maskGroupIcon,borderRadius:100}}
-                contentFit="cover"
-                source={e?.coverImage ? { uri: e?.coverImage }: require('../../assets/thum.png')}
-              />
-            </Pressable>
-          )
-        }) }
+          {userDiaries &&
+            userDiaries.map((e, i) => {
+              return (
+                <Pressable key={i}>
+                  <Image
+                    style={{ ...styles.maskGroupIcon, borderRadius: 100 }}
+                    contentFit="cover"
+                    source={
+                      e?.coverImage
+                        ? { uri: e?.coverImage }
+                        : require('../../assets/thum.png')
+                    }
+                  />
+                </Pressable>
+              )
+            })}
         </View>
       </View>
-    
     </View>
   )
 }
@@ -177,7 +222,7 @@ const MiLegado = () => {
 const styles = StyleSheet.create({
   groupParentFlexBox: {
     flexDirection: 'row',
-    gap:25
+    gap: 25
   },
   miBiografaActual: {
     fontWeight: '500',
@@ -198,7 +243,7 @@ const styles = StyleSheet.create({
   },
   miBiografaActualParent: {
     width: '100%',
-    bottom: '2%',
+    bottom: '2%'
   },
   frameChild: {
     width: '100%',
@@ -207,14 +252,14 @@ const styles = StyleSheet.create({
   maskGroupIcon: {
     width: 70,
     height: 70,
-    borderRadius:10
+    borderRadius: 10
   },
   vectorIcon2: {
     width: 30,
     height: 30
   },
   maskGroupParent: {
-    width: '100%',
+    width: '100%'
   },
   frameContainer: {
     width: '100%',

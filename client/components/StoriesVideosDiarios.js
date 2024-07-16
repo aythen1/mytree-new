@@ -46,7 +46,9 @@ const StoriesVideosDiarios = () => {
             </View>
             {data && data.map((user)=> {
               return (
-                <View style={{
+                <Pressable
+                onPress={()=> navigation.navigate('PerfilExterno',user)}
+                style={{
                   height: 90,
                   width: 70, marginLeft: 15
                 }}>
@@ -58,7 +60,7 @@ const StoriesVideosDiarios = () => {
                   <View style={[styles.youWrapper, styles.aatarIconPosition]}>
                     <Text style={[styles.you1, styles.signTypo]}>{user.username}</Text>
                   </View>
-                </View>
+                </Pressable>
               )
             }) }
           </View>
