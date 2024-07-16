@@ -25,7 +25,7 @@ console.log('selectedPostTags: ',selectedPostTags)
         source={require('../assets/line-94.png')}
       />
      
-     {selectedPostTags.map((tag,index)=> <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
+     {selectedPostTags.length > 0 ?selectedPostTags.map((tag,index)=> <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
         <View key={index + 999999} style={styles.frameContainer}>
           <Image
             style={styles.frameItem}
@@ -34,7 +34,7 @@ console.log('selectedPostTags: ',selectedPostTags)
           />
           <Text style={styles.brunoPham}>{allUsers.filter(user=>user.id.toString()===tag)[0].username + ' ' +allUsers.filter(user=>user.id.toString()===tag)[0].apellido }</Text>
         </View>
-      </View>)}
+      </View>):<Text style={{color:'#404040',fontSize:15,marginTop:16}}>La publicación no tiene etiquetados.</Text>}
       <Image
         style={styles.image}
         contentFit="cover"

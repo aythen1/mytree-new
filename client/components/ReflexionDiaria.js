@@ -43,9 +43,9 @@ const ReflexionDiaria = ({
           : selectedSection === 'logros'
             ? 'Celebrando Logros'
             : selectedSection === 'desafios'
-              ? 'Desafios Superados'
+              ? 'Desafíos Superados'
               : selectedSection === 'risas'
-                ? 'Risas y anecdotas'
+                ? 'Risas y anécdotas'
                 : selectedSection === 'mundo'
                   ? 'Descubriendo el mundo'
                   : 'Personalizada'}

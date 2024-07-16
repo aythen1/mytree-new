@@ -9,8 +9,7 @@ const DesafiosSuperados = () => {
   return (
     <>
       <View style={styles.miDiarioEntradaTextoPl}>
-        <Text style={[styles.reflexinDiaria, styles.hoyLoHeFlexBox]}>
-          Desafios Superados
+        <Text style={[styles.reflexinDiaria, styles.hoyLoHeFlexBox]}>Desafíos Superados
         </Text>
         <Text
           style={[styles.hoyLoHe, styles.hoyLoHeFlexBox]}
