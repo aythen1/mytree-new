@@ -22,15 +22,21 @@ import { setPanel } from '../../redux/slices/panel.slices'
 import OpcionesModal from '../../components/OpcionesModal'
 import ENTRADACREADA from '../../components/ENTRADACREADA'
 import { useNavigation } from '@react-navigation/native'
+import AddGroupMembersModal from '../../components/AddGroupMembersModal'
 
 const CrearGrupo = () => {
   const dispatch = useDispatch()
 
   const { showPanel } = useSelector((state) => state.panel)
+  const { allUsers } = useSelector((state) => state.users)
 
+  const [taggedUsers, setTaggedUsers] = useState([])
   const [modalCreate, setModalCreate] = useState(false)
+  const [showAddMembers, setShowAddMembers] = useState(false)
   const [modalOpcionesVisible, setModalOpcionesVisible] = useState(false)
   const [currentOptionsIndex, setCurrentOptionsIndex] = useState(0)
+  const [selectedCategory, setSelectedCategory] = useState('')
+  const [name, setName] = useState('')
 
   const options = [['Familia', 'Amigos']]
 
@@ -46,7 +52,11 @@ const CrearGrupo = () => {
   const navigation = useNavigation()
 
   return (
-    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={{ flex: 1, backgroundColor: '#fff' }}
+      contentContainerStyle={{ paddingBottom: 110 }}
+      showsVerticalScrollIndicator={false}
+    >
       <View style={[styles.crearEvento]}>
         <View style={styles.image6Wrapper}>
           <Image
@@ -78,7 +88,11 @@ const CrearGrupo = () => {
             </Text>
           </View>
           <View style={[styles.field, styles.fieldSpaceBlock]}>
-            <TextInput placeholder="Nombre de tu grupo" />
+            <TextInput
+              onChangeText={(text) => setName(text)}
+              placeholderTextColor={'#BCBCBC'}
+              placeholder="Nombre de tu grupo"
+            />
           </View>
         </View>
 
@@ -86,9 +100,21 @@ const CrearGrupo = () => {
           <View style={styles.titleBase}>
             <Text style={[styles.title, styles.titleTypo]}>Invitados</Text>
           </View>
-          <View style={[styles.field, styles.fieldSpaceBlock]}>
-            <TextInput placeholder="Selecciona tus contactos" />
-          </View>
+          <Pressable
+            onPress={() => setShowAddMembers(true)}
+            style={[styles.field, styles.fieldSpaceBlock]}
+          >
+            <Text
+              style={{ color: taggedUsers.length > 0 ? '#000' : '#bcbcbc' }}
+            >
+              {taggedUsers.length > 0
+                ? allUsers
+                    .filter((user) => taggedUsers.includes(user.id))
+                    .map((user) => `${user.username} ${user.apellido}`)
+                    .join(', ')
+                : 'Selecciona tus contactos'}
+            </Text>
+          </Pressable>
         </View>
 
         <View>
@@ -102,7 +128,10 @@ const CrearGrupo = () => {
             onPress={() => showOptionsArray(0)}
           >
             <View style={styles.placeholderInput}>
-              <TextInput placeholder="Elige" />
+              <TextInput
+                placeholderTextColor={selectedCategory ? '#000' : '#BCBCBC'}
+                placeholder={selectedCategory || 'Elige'}
+              />
             </View>
           </Pressable>
         </View>
@@ -150,14 +179,36 @@ const CrearGrupo = () => {
             onPress={() => setModalOpcionesVisible(false)}
           />
           <OpcionesModal
+            setSelectedCategory={setSelectedCategory}
+            selectedCategory={selectedCategory}
             opciones={options[currentOptionsIndex]}
             visible={modalOpcionesVisible}
             onClose={() => setModalOpcionesVisible(false)}
-            onAddOption={(nuevaOpcion) => {
-              options[currentOptionsIndex].push(nuevaOpcion)
-              onCloseModalOpciones()
-            }}
+            // onAddOption={(nuevaOpcion) => {
+            //   options[currentOptionsIndex].push(nuevaOpcion)
+            //   onCloseModalOpciones()
+            // }}
             isAdd={true}
+          />
+        </View>
+      </Modal>
+      <Modal animationType="slide" transparent visible={showAddMembers}>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(113, 113, 113, 0.3)',
+            height: '100%'
+          }}
+        >
+          <Pressable
+            style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+            onPress={() => setShowAddMembers(false)}
+          />
+          <AddGroupMembersModal
+            taggedUsers={taggedUsers}
+            setTaggedUsers={setTaggedUsers}
+            onClose={() => setShowAddMembers(false)}
           />
         </View>
       </Modal>
@@ -208,7 +259,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   fieldSpaceBlock: {
-    paddingVertical: Padding.p_smi,
+    height: 50,
     backgroundColor: Color.fAFAFA,
     borderRadius: Border.br_3xs,
     paddingHorizontal: Padding.p_xl,
