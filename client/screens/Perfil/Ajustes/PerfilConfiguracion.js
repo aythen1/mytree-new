@@ -280,11 +280,7 @@ const PerfilConfiguracion = () => {
                 onChangeText={(text) => setDataToSend({ ...dataToSend, ["birthDate"]: text })}
                 value={dataToSend.birthDate}
               />
-                <Image
-                style={[styles.vectorIcon1, styles.vectorIconLayout]}
-                contentFit="cover"
-                source={require('../../../assets/vector47.png')}
-              />
+         
               </View>
             </View>
           
@@ -303,11 +299,7 @@ const PerfilConfiguracion = () => {
                 onChangeText={(text) => setDataToSend({ ...dataToSend, ["address"]: text })}
                 value={dataToSend.address}
               />
-                  <Image
-                style={[styles.vectorIcon1, styles.vectorIconLayout]}
-                contentFit="cover"
-                source={require('../../../assets/vector47.png')}
-              />
+              
               </View>
             </View>
         
@@ -329,11 +321,7 @@ const PerfilConfiguracion = () => {
                 ref={nombreInputRef}
                 placeholder="Agregar madre"
               />
-                        <Image
-                style={[styles.vectorIcon1, styles.vectorIconLayout]}
-                contentFit="cover"
-                source={require('../../../assets/vector47.png')}
-              />
+          
               </View>
             </View>
            
@@ -350,11 +338,7 @@ const PerfilConfiguracion = () => {
                 ref={nombreInputRef}
                 placeholder="Agregar padre"
               />
-                                <Image
-                style={[styles.vectorIcon1, styles.vectorIconLayout]}
-                contentFit="cover"
-                source={require('../../../assets/vector47.png')}
-              />
+        
               </View>
             </View>
          
@@ -421,11 +405,7 @@ const PerfilConfiguracion = () => {
                 ref={nombreInputRef}
                 placeholder="Agregar estado civíl"
               />
-                                  <Image
-                style={[styles.vectorIcon1, styles.vectorIconLayout]}
-                contentFit="cover"
-                source={require('../../../assets/vector47.png')}
-              />
+       
               </View>
             </View>
             

@@ -126,14 +126,13 @@ const MiLegado = () => {
               <Image
                 style={{...styles.maskGroupIcon,borderRadius:100}}
                 contentFit="cover"
-                source={e.coverImage ? { uri: e.coverImage }: require('../../assets/thum.png')}
+                source={e.coverImage ? { uri: e.coverImage }: require('../../assets/mytreelogofinal.png')}
               />
             </Pressable>
           )
         })}
         </ScrollView>
       </View>
-
       <View style={styles.frameContainer}>
         <View
           style={[styles.miBiografaActualParent, styles.groupParentFlexBox,{justifyContent:"space-between",alignItems:"center"}]}
