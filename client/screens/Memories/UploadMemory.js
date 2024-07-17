@@ -5,7 +5,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
-  Touchable
+  Touchable,
+  Pressable
 } from 'react-native'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
@@ -157,11 +158,16 @@ const UploadMemory = () => {
       ) : (
         <View style={{ gap: 15, paddingHorizontal: 15 }}>
           <View>
+          <Pressable onPress={() => navigation.openDrawer()}>
             <Image
+              style={[{
+                width: 87,
+                height: 55
+              }]}
               contentFit="cover"
-              style={{ width: 87 * 0.8, height: 65 * 0.8 }}
               source={require('../../assets/image-6.png')}
             />
+          </Pressable>
           </View>
 
           <View

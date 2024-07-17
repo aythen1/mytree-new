@@ -189,7 +189,8 @@ console.log(usuario,"esto tengo")
                 Redes Sociales
               </Text>
               <Text style={[styles.brunoPham1, styles.quEsLoTypo1]}>
-                @BrunoPham
+              Sin especificar
+
               </Text>
             </View>
             <View style={styles.redesSocialesParent}>

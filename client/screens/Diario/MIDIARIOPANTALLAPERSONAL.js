@@ -62,30 +62,16 @@ const MIDIARIOPANTALLAPERSONAL = () => {
           }}
         >
           <Pressable onPress={() => navigation.navigate('Muro')}>
-            <Pressable
-              style={{
-                flexDirection: 'row',
-                gap: 5,
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-              // onPress={() => navigation.goBack()}
-            >
-              {/* <Image
-                style={{
-                  width: 32 * 0.9,
-                  height: 19 * 0.9,
-                  transform: 'rotate(180deg)'
-                }}
-                resizeMode="contain"
-                source={require('../../assets/arrow1.png')}
-              /> */}
-              <Image
-                style={styles.image6Icon}
-                contentFit="cover"
-                source={require('../../assets/image-6.png')}
-              />
-            </Pressable>
+          <Pressable onPress={() => navigation.openDrawer()}>
+            <Image
+              style={[{
+                width: 87,
+                height: 55
+              }]}
+              contentFit="cover"
+              source={require('../../assets/image-6.png')}
+            />
+          </Pressable>
           </Pressable>
           <View style={styles.iconlylightOutlinesearchParent}>
             <HeaderIcons
@@ -119,13 +105,7 @@ const MIDIARIOPANTALLAPERSONAL = () => {
           </View>
         </View>
         <View style={styles.frameParent12}>
-          <Pressable onPress={() => navigation.openDrawer()}>
-            <Image
-              style={[styles.ionmenuIcon, styles.ionmenuIconLayout]}
-              contentFit="cover"
-              source={require('../../assets/ionmenu2.png')}
-            />
-          </Pressable>
+         
           <Text style={[styles.miDiario, styles.textTypo]}>
             Diario Familiar
           </Text>
@@ -425,10 +405,10 @@ const styles = StyleSheet.create({
     width: 26
   },
   miDiario: {
-    marginLeft: '25%',
     fontWeight: '700',
     fontSize: FontSize.size_5xl,
     color: Color.negro,
+    textAlign:"center",
     fontFamily: FontFamily.lato
   },
   iconContainer: {
@@ -441,6 +421,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 15,
     alignItems: 'center',
+    justifyContent:"center",
     marginBottom: 20
   },
   miDiarioPantallaPersonal: {

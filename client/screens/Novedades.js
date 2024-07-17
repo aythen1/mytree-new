@@ -15,11 +15,21 @@ const Novedades = () => {
     >
       <View style={styles.parentPosition}>
         <View style={styles.rectangleParent}>
-          <Image
+          {/* <Image
             style={styles.image6Icon}
             contentFit="cover"
             source={require('../assets/image-6.png')}
-          />
+          /> */}
+               <Pressable onPress={() => navigation.openDrawer()}>
+            <Image
+              style={[{
+                width: 87,
+                height: 55
+              }]}
+              contentFit="cover"
+              source={require('../assets/image-6.png')}
+            />
+          </Pressable>
           <View style={styles.backParent}>
             <Pressable
               style={styles.back}

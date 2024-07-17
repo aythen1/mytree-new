@@ -106,13 +106,23 @@ const PerfilConfiguracion = () => {
       <ScrollView contentContainerStyle={{ paddingBottom: 130 }} style={styles.frameParent} showsVerticalScrollIndicator={false}>
         <View>
           <View style={styles.parentIcons}>
-            <Pressable onPress={() => navigation.navigate('Muro')}>
+          <Pressable onPress={() => navigation.openDrawer()}>
+            <Image
+              style={[{
+                width: 87,
+                height: 55
+              }]}
+              contentFit="cover"
+              source={require('../../../assets/image-6.png')}
+            />
+          </Pressable>
+            {/* <Pressable onPress={() => navigation.navigate('Muro')}>
               <Image
                 style={styles.image6Icon}
                 contentFit="cover"
                 source={require('../../../assets/image-6.png')}
               />
-            </Pressable>
+            </Pressable> */}
             <View style={styles.iconlylightOutlinecalendarParent}>
               <HeaderIcons
                 icons={[
@@ -280,11 +290,7 @@ const PerfilConfiguracion = () => {
                 onChangeText={(text) => setDataToSend({ ...dataToSend, ["birthDate"]: text })}
                 value={dataToSend.birthDate}
               />
-                <Image
-                style={[styles.vectorIcon1, styles.vectorIconLayout]}
-                contentFit="cover"
-                source={require('../../../assets/vector47.png')}
-              />
+         
               </View>
             </View>
           
@@ -303,11 +309,7 @@ const PerfilConfiguracion = () => {
                 onChangeText={(text) => setDataToSend({ ...dataToSend, ["address"]: text })}
                 value={dataToSend.address}
               />
-                  <Image
-                style={[styles.vectorIcon1, styles.vectorIconLayout]}
-                contentFit="cover"
-                source={require('../../../assets/vector47.png')}
-              />
+              
               </View>
             </View>
         
@@ -329,11 +331,7 @@ const PerfilConfiguracion = () => {
                 ref={nombreInputRef}
                 placeholder="Agregar madre"
               />
-                        <Image
-                style={[styles.vectorIcon1, styles.vectorIconLayout]}
-                contentFit="cover"
-                source={require('../../../assets/vector47.png')}
-              />
+          
               </View>
             </View>
            
@@ -350,11 +348,7 @@ const PerfilConfiguracion = () => {
                 ref={nombreInputRef}
                 placeholder="Agregar padre"
               />
-                                <Image
-                style={[styles.vectorIcon1, styles.vectorIconLayout]}
-                contentFit="cover"
-                source={require('../../../assets/vector47.png')}
-              />
+        
               </View>
             </View>
          
@@ -421,11 +415,7 @@ const PerfilConfiguracion = () => {
                 ref={nombreInputRef}
                 placeholder="Agregar estado civíl"
               />
-                                  <Image
-                style={[styles.vectorIcon1, styles.vectorIconLayout]}
-                contentFit="cover"
-                source={require('../../../assets/vector47.png')}
-              />
+       
               </View>
             </View>
             

@@ -146,11 +146,23 @@ const PERFILNOTIFICACIONES = () => {
                 justifyContent: 'space-between'
               }}
             >
-              <Image
+              {/* <Image
                 style={styles.image6Icon}
                 contentFit="cover"
                 source={require('../../assets/image-6.png')}
-              />
+              /> */}
+              <Pressable onPress={() => navigation.openDrawer()}>
+                <Image
+                  style={[
+                    {
+                      width: 87,
+                      height: 55
+                    }
+                  ]}
+                  contentFit="cover"
+                  source={require('../../assets/image-6.png')}
+                />
+              </Pressable>
 
               <HeaderIcons
                 icons={[
@@ -215,7 +227,7 @@ const PERFILNOTIFICACIONES = () => {
                 fontWeight: 400
               }}
             >
-              No tienes ninguna notificación!
+              ¡No tienes ninguna notificación!
             </Text>
           )}
         </View>
