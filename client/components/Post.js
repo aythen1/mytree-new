@@ -264,7 +264,7 @@ const Posteo = ({ data, padding }) => {
                   }}
                 >
                   <Image
-                    contentFit="contain"
+                    contentFit="cover"
                     style={{
                       width: '100%',
                       height: '100%',
