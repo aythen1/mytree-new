@@ -163,39 +163,20 @@ const CommentsModal = ({ onClose }) => {
           alignItems: 'center'
         }}
       >
-        <View
+        <Pressable
+        onPress={onClose}
           style={{
-            width: '100%',
+            width: 60,
+            height:10,
+            borderRadius:50,
             flexDirection: 'row',
             paddingHorizontal: 28,
+            backgroundColor:"white",
             alignItems: 'center'
           }}
         >
-          <Text
-            style={{
-              color: '#fff',
-              fontSize: 16,
-              marginRight: 5,
-              fontWeight: '600'
-            }}
-          >
-            Buscar :
-          </Text>
-          <TextInput
-            style={{
-              color: '#fff',
-              fontWeight: '600',
-              fontSize: 16,
-              textAlign: 'left',
-              maxWidth: '80%',
-              minWidth: '50%'
-            }}
-            placeholderTextColor={'#fff'}
-            placeholder="Tema relacionado"
-            onChangeText={(text) => setSearch(text)}
-            value={search}
-          />
-        </View>
+          
+        </Pressable>
         <View
           style={{
             borderColor: '#787878',
@@ -271,7 +252,7 @@ const CommentsModal = ({ onClose }) => {
               paddingTop: 50
             }}
           >
-            Esta publicación aun no tiene comentarios!
+            ¡Esta publicación aún no tiene comentarios!
           </Text>
         )}
       </View>

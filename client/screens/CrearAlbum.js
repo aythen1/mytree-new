@@ -258,24 +258,27 @@ const CrearAlbum = () => {
           padding: Padding.p_xl
         }}
       >
-        <Image
-          style={{
-            width: 87,
-            height: 55
-          }}
-          contentFit="cover"
-          source={require('../assets/image-6.png')}
-        />
+             <Pressable onPress={() => navigation.openDrawer()}>
+            <Image
+              style={[{
+                width: 87,
+                height: 55
+              }]}
+              contentFit="cover"
+              source={require('../assets/image-6.png')}
+            />
+          </Pressable>
         <View style={{ width: '100%' }}>
           <View
             style={{
               height: 29,
               flexDirection: 'row',
-              justifyContent: 'space-between',
+              justifyContent: 'center',
+              alignItems:"flex-end",
               width: '100%'
             }}
           >
-            <Pressable onPress={() => navigation.openDrawer()}>
+            {/* <Pressable onPress={() => navigation.openDrawer()}>
               <Image
                 style={{
                   top: 5,
@@ -286,7 +289,7 @@ const CrearAlbum = () => {
                 contentFit="cover"
                 source={require('../assets/ionmenu2.png')}
               />
-            </Pressable>
+            </Pressable> */}
             <Text
               style={{
                 fontSize: FontSize.size_5xl,
@@ -299,7 +302,7 @@ const CrearAlbum = () => {
             >
               Crear álbum
             </Text>
-            <Pressable
+            {/* <Pressable
               disabled={dataToSend.description === ''}
               onPress={handleSubmit}
             >
@@ -308,14 +311,13 @@ const CrearAlbum = () => {
                   color: Color.primario1,
                   fontWeight: '500',
                   letterSpacing: 0,
-                  lineHeight: 22,
                   fontSize: FontSize.size_lg,
                   fontFamily: FontFamily.lato
                 }}
               >
                 Subir
               </Text>
-            </Pressable>
+            </Pressable> */}
           </View>
           <ScrollView
             style={{
@@ -664,7 +666,7 @@ const CrearAlbum = () => {
                 borderRadius: Border.br_11xl,
                 justifyContent: 'center',
                 alignSelf: 'center',
-                width: '95%',
+                width: '100%',
                 alignItems: 'center',
                 flexDirection: 'row'
               }}

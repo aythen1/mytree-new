@@ -24,6 +24,7 @@ import {
 import PagerView from 'react-native-pager-view'
 import { handleSelect } from '../Memories/utils/utils'
 import { LinearGradient } from 'expo-linear-gradient'
+import { Picker } from '@react-native-picker/picker'
 import {Feather} from 'react-native-vector-icons'
 
 const ImagePickerModal = ({
@@ -44,13 +45,12 @@ const ImagePickerModal = ({
   const cameraReff = useRef(null)
   const [facing, setFacing] = useState('back')
   const [multiSelect, setMultiSelect] = useState([])
+  const [album, setAlbum] = useState([])
+  const [albumData, setAlbumData] = useState([])
+  const [selectedAlbum, setSelectedAlbum] = useState({ title: 'Camera' })
   const [showCamera, setShowCamera] = useState(false)
 
   useEffect(() => {
-    ;(async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync()
-      setHasPermission(status === 'granted')
-    })()
     obtenerImagenesDeGaleria()
   }, [])
 
@@ -61,10 +61,34 @@ const ImagePickerModal = ({
       return
     }
 
-    const assets = await MediaLibrary.getAssetsAsync()
+    const assets = await MediaLibrary.getAlbumsAsync({
+      includeSmartAlbums: true
+    })
+    const arr = []
+    const arr2 = []
+    assets.map((e) => arr.push(e.title))
+    assets.map((e) => arr2.push(e))
+    setAlbum(arr)
+    setAlbumData(arr2)
+  }
+
+  const obtenerImagenesDeGalerias = async () => {
+    const { status } = await MediaLibrary.requestPermissionsAsync()
+    if (status !== 'granted') {
+      console.error('Permiso denegado para acceder a la galería de imágenes.')
+      return
+    }
+    const filtro = albumData.filter((e) => e?.title == selectedAlbum?.title)
+    const assets = await MediaLibrary.getAssetsAsync({ album: filtro[0] })
     const imagesArray = assets?.assets ?? []
     setImages(imagesArray)
   }
+
+  useEffect(() => {
+    if (selectedAlbum !== '') {
+      obtenerImagenesDeGalerias()
+    }
+  }, [selectedAlbum])
 
   const handleSeleccionarImagen = (imagen) => {
     console.log('imagen: ', imagen)
@@ -191,72 +215,26 @@ const ImagePickerModal = ({
           alignItems: 'center'
         }}
       >
-        <View style={{alignItems: 'center', flexDirection: 'row', width:"100%", paddingRight:10, justifyContent:'space-between' }}>
-          <View style={{flexDirection:'row',alignItems:'center', gap: 5}}>
-            <Text style={{ color: '#787878', fontSize: 18, fontWeight: 500 }}>
-              Galeria
-            </Text>
-            <Image
-              source={require('../../assets/chevDown.png')}
-              style={{
-                width: 13,
-                height: 6,marginTop:2
-              }}
-            />
-          </View>
-          <Pressable onPress={()=>setShowCamera(true)}><Feather size={20} name='camera' color={'#787878'}/></Pressable>
-        </View>
-        <View style={{ gap: 10, alignItems: 'center', flexDirection: 'row' }}>
-          {/* <TouchableOpacity
-            onPress={() => {
-              if (showSelection) {
-                setMultiSelect([])
-              }
-              setShowSelection(!showSelection)
-            }}
-            style={{
-              gap: 5,
-              backgroundColor: '#D9D9D9',
-              alignItems: 'center',
-              flexDirection: 'row',
-              borderRadius: 5,
-              paddingHorizontal: 12,
-              height: 32
+        <TouchableOpacity
+          style={{ gap: 5, alignItems: 'center', flexDirection: 'row' }}
+        >
+          <Picker
+            style={{ width: '100%', height: 40, justifyContent: 'flex-start' }}
+            selectedValue={selectedAlbum}
+            onValueChange={(itemValue, itemIndex) => {
+              console.log(itemValue, 'value')
+              setSelectedAlbum(itemValue)
             }}
           >
-            <Image
-              source={require('../../assets/multi-select-icon.png')}
-              style={{
-                width: 19,
-                height: 16
-              }}
-            />
-            <Text style={{ color: '#fff', fontSize: 12, fontWeight: 500 }}>
-              SELECCIONAR VARIOS
-            </Text>
-          </TouchableOpacity> */}
-          {/* <TouchableOpacity
-            onPress={() => setShowCamera(true)}
-            style={{
-              gap: 5,
-              backgroundColor: '#D9D9D9',
-              alignItems: 'center',
-              flexDirection: 'row',
-              borderRadius: 5,
-              width: 32,
-              height: 32,
-              justifyContent: 'center'
-            }}
-          >
-            <Image
-              source={require('../../assets/cameraIcon.png')}
-              style={{
-                width: 21.5,
-                height: 19.5
-              }}
-            />
-          </TouchableOpacity> */}
-        </View>
+            {albumData &&
+              albumData.map((e, i) => {
+                return <Picker.Item key={i} label={e.title} value={e} />
+              })}
+          </Picker>
+        </TouchableOpacity>
+        <View
+          style={{ gap: 10, alignItems: 'center', flexDirection: 'row' }}
+        ></View>
       </View>
       <ScrollView
         showsVerticalScrollIndicator={false}

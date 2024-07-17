@@ -76,7 +76,6 @@ const Muro = () => {
     }
   }, [queryParams])
 
-
   useEffect(() => {
     if (userData) {
       dispatch(getAllNotifications())
@@ -98,9 +97,6 @@ const Muro = () => {
     }
   }
 
-  const openDrawer = () => {
-    navigation.openDrawer()
-  }
 
   return (
     <LinearGradient
@@ -120,24 +116,19 @@ const Muro = () => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             paddingHorizontal: 15,
-            alignItems: 'flex-end'
+            alignItems: 'center'
           }}
         >
-          <Pressable
-            style={{
-              width: 26,
-              height: 20
-            }}
-            onPress={openDrawer}
-          >
+          <Pressable onPress={() => navigation.openDrawer()}>
             <Image
-              style={{
-                overflow: 'hidden',
-                height: '100%',
-                width: '100%'
-              }}
+              style={[
+                {
+                  width: 87,
+                  height: 55
+                }
+              ]}
               contentFit="cover"
-              source={require('../../assets/ionmenu1.png')}
+              source={require('../../assets/image-6.png')}
             />
           </Pressable>
           <View>
@@ -172,7 +163,7 @@ const Muro = () => {
         <View>
           <View
             style={{
-              marginTop: 20,
+              marginTop: 10,
               flexDirection: 'row',
               width: '95%',
               alignSelf: 'center',

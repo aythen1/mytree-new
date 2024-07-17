@@ -117,12 +117,25 @@ const MENSAJERA = () => {
           shadowColor: 'black'
         }}
       >
+        <View style={{ width: '100%' }}>
+          <Pressable onPress={() => navigation.openDrawer()}>
+            <Image
+              style={[
+                {
+                  width: 87,
+                  height: 55
+                }
+              ]}
+              contentFit="cover"
+              source={require('../../assets/image-6.png')}
+            />
+          </Pressable>
+        </View>
         <View
           style={{
             flexDirection: 'row',
             gap: 20,
             alignItems: 'center',
-            marginTop: 30,
             paddingHorizontal: Dimensions.get('screen').width * 0.05
           }}
         >

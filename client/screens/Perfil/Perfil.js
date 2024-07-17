@@ -47,20 +47,16 @@ const Perfil = () => {
   const dispatch = useDispatch()
   const [facing, setFacing] = useState('back')
   const { pickImage, provisoryProfileImage, profileImage } = useContext(Context)
-  const { showPanel } = useSelector((state) => state.panel)
   const { userData } = useSelector((state) => state.users)
-  const { userPosts } = useSelector((state) => state.posts)
-  const { userAlbums } = useSelector((state) => state.albums)
-  const { allPosts } = useSelector((state) => state.posts)
-
   const [hasPermission, setHasPermission] = useState(null)
   const [selectedImage, setSelectedImage] = useState(null)
   const [showCamera, setShowCamera] = useState(false)
   const [showEmojis, setShowEmojis] = useState(false)
   const [emoji, setEmoji] = useState(false)
-
   const [showImageOptions, setShowImageOptions] = useState(false)
-
+  const [selectedComponent, setSelectedComponent] = useState('MiLegado')
+  const [search, setSearch] = useState(false)
+  const cameraReff = useRef(null)
 
   useEffect(() => {
     ;(async () => {
@@ -68,11 +64,6 @@ const Perfil = () => {
       setHasPermission(status === 'granted')
     })()
   }, [])
-
-
-  const [selectedComponent, setSelectedComponent] = useState('MiLegado')
-  const [search, setSearch] = useState(false)
-  const cameraReff = useRef(null)
 
   const takePicture = async () => {
     if (cameraReff) {
@@ -107,20 +98,21 @@ const Perfil = () => {
     }
   }
 
+  const iniciar = () => {
+    dispatch(getUserPosts(userData?.id)).then((res) => {})
+    dispatch(getAllUserEvents(userData?.id)).then((res) => {})
+    dispatch(getAllUserDiaries(userData?.id)).then((res) => {})
+    dispatch(getUserFriendsAndFamilyLength(userData?.id)).then((res) => {
+      console.log(res, 'asdasdas')
+    })
+  }
 
   useEffect(() => {
     if (userData?.newUser) {
       axiosInstance.patch(`/user/${userData?.id}`, { newUser: false })
     }
-    
-    dispatch(getUserPosts(userData?.id)).then((res)=>{
-    })
-    dispatch(getAllUserEvents(userData?.id)).then((res)=>{
-    })
-    dispatch(getAllUserDiaries(userData?.id)).then((res)=>{
-    })
-    dispatch(getUserFriendsAndFamilyLength(userData?.id)).then((res)=>{ console.log(res,"asdasdas")})
 
+    iniciar()
   }, [])
 
   useEffect(() => {
@@ -131,11 +123,6 @@ const Perfil = () => {
       })
     }
   }, [profileImage])
-
-
-  useEffect(() => {
-    console.log('USER ALBUMS', userAlbums)
-  }, [])
 
   if (!showCamera) {
     return (
@@ -155,9 +142,22 @@ const Perfil = () => {
             paddingTop: 14
           }}
         >
-          <Pressable onPress={() => navigation.navigate('Muro')}>
+             {/* <Pressable
+          onPress={() => navigation.openDrawer()}
+          style={styles.menuPosition}
+        >
+          <Image
+            style={styles.ionmenuIcon}
+            contentFit="cover"
+            source={require('../../assets/ionmenu.png')}
+          />
+        </Pressable> */}
+          <Pressable onPress={() => navigation.openDrawer()}>
             <Image
-              style={[styles.image6Icon, styles.ionmenu]}
+              style={[{
+                width: 87,
+                height: 55
+              }]}
               contentFit="cover"
               source={require('../../assets/image-6.png')}
             />
@@ -184,24 +184,48 @@ const Perfil = () => {
           />
         </View>
 
-        <Pressable
-          onPress={() => navigation.openDrawer()}
-          style={styles.menuPosition}
-        >
-          <Image
-            style={styles.ionmenuIcon}
-            contentFit="cover"
-            source={require('../../assets/ionmenu.png')}
-          />
-        </Pressable>
+     
 
         {search && <BarraBusqueda />}
 
-        <View style={{ width: 'auto', justifyContent: 'center' }}>
+        <View
+          style={{
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
           <Pressable
             onPress={() => setShowImageOptions(!showImageOptions)}
-            style={{ ...styles.imageContainer }}
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              flex: 1,
+              flexDirection: 'row',
+              position: 'relative'
+            }}
           >
+            <Pressable
+              onPress={() => setShowCamera(true)}
+              style={{
+                width: 30,
+                height: 30,
+                backgroundColor: Color.secundario,
+                borderRadius: 100,
+                justifyContent: 'center',
+                alignItems: 'center',
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                zIndex: 999
+              }}
+            >
+              <Image
+                style={{ width: 16, height: 16 }}
+                contentFit="cover"
+                source={require('../../assets/cameraIcon.png')}
+              />
+            </Pressable>
             {!provisoryProfileImage && !userData?.profilePicture ? (
               <Image
                 style={{ ...styles.perfilItem, borderRadius: 100 }}
@@ -220,7 +244,22 @@ const Perfil = () => {
                 }}
               />
             )}
-            <Pressable
+
+            {/* <Pressable
+                onPress={() => pickImage('profile')}
+                style={{
+                  width: 30,
+                  height: 30,
+                  backgroundColor: Color.secundario,
+                  borderRadius: 100,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <SimboloSVG color={'#fff'} />
+              </Pressable> */}
+
+            {/* <Pressable
               onPress={() => setShowEmojis(true)}
               style={{
                 width: 30,
@@ -235,44 +274,22 @@ const Perfil = () => {
               }}
             >
               {emoji && <Text>{emoji}</Text>}
-            </Pressable>
+            </Pressable> */}
           </Pressable>
-          {showImageOptions && (
-            <View
-              style={{ position: 'absolute', top: 0, right: '25%', gap: 10 }}
-            >
-              <Pressable
-                onPress={() => pickImage('profile')}
-                style={{
-                  width: 30,
-                  height: 30,
-                  backgroundColor: Color.secundario,
-                  borderRadius: 100,
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-              >
-                <SimboloSVG color={'#fff'} />
-              </Pressable>
-              <Pressable
-                onPress={() => setShowCamera(true)}
-                style={{
-                  width: 30,
-                  height: 30,
-                  backgroundColor: Color.secundario,
-                  borderRadius: 100,
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-              >
-                <Image
-                  style={{ width: 16, height: 16 }}
-                  contentFit="cover"
-                  source={require('../../assets/cameraIcon.png')}
-                />
-              </Pressable>
-            </View>
-          )}
+          <TouchableOpacity
+            onPress={() => pickImage('profile')}
+            style={{
+              width: 120,
+              height: 30,
+              backgroundColor: Color.secundario,
+              borderRadius: 100,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 20
+            }}
+          >
+            <Text style={{ color: 'white' }}>Subir imagen</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.nameContainer}>
