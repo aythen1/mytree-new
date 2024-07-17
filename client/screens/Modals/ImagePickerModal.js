@@ -25,6 +25,7 @@ import PagerView from 'react-native-pager-view'
 import { handleSelect } from '../Memories/utils/utils'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Picker } from '@react-native-picker/picker'
+import {Feather} from 'react-native-vector-icons'
 
 const ImagePickerModal = ({
   onClose,
@@ -32,7 +33,7 @@ const ImagePickerModal = ({
   pickedImages,
   fromEvent
 }) => {
-  const { pickImage, libraryImage, showCamera, setShowCamera } =
+  const { pickImage, libraryImage } =
     useContext(Context)
   const navigation = useNavigation()
   const [images, setImages] = useState([])
@@ -47,6 +48,7 @@ const ImagePickerModal = ({
   const [album, setAlbum] = useState([])
   const [albumData, setAlbumData] = useState([])
   const [selectedAlbum, setSelectedAlbum] = useState({ title: 'Camera' })
+  const [showCamera, setShowCamera] = useState(false)
 
   useEffect(() => {
     obtenerImagenesDeGaleria()
@@ -103,10 +105,13 @@ const ImagePickerModal = ({
   }
 
   const takePicture = async () => {
+    console.log('ON TAKE PICTURE')
     if (cameraReff?.current) {
       const photo = await cameraReff.current.takePictureAsync()
-      pickImage('a', photo.uri)
-      setSelectedImage(photo)
+      // pickImage('a', photo.uri)
+      console.log('PHOTO',photo)
+      setPickedImages([...pickedImages,photo])
+      // setSelectedImage(photo)
       setShowCamera(false)
     }
   }
@@ -116,7 +121,7 @@ const ImagePickerModal = ({
       <CameraView
         ref={cameraReff}
         facing={facing}
-        style={{ flex: 1, position: 'absolute', top: 0, left: 0 }}
+        style={{ height:'100%', position: 'absolute', top: 0, left: 0 }}
         mode="picture"
         FocusMode="on"
         onCameraReady={(e) => console.log(e, 'esto es e')}
@@ -180,8 +185,6 @@ const ImagePickerModal = ({
                   height: 70,
                   borderRadius: 100,
                   backgroundColor: '#7EC18C',
-
-                  color: 'white'
                 }}
               ></View>
             </TouchableOpacity>

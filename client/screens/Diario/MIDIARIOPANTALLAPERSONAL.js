@@ -34,7 +34,7 @@ const MIDIARIOPANTALLAPERSONAL = () => {
 
   return (
     <LinearGradient
-      colors={['#fff', '#f1f1f1']}
+      colors={['#fff', '#fff']}
       style={{ flex: 1, paddingBottom: 70 }}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}

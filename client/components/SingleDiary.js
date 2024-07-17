@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Image, Modal } from 'react-native'
+import { View, Text, Pressable, Image, Modal, Dimensions } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { TextInput } from 'react-native-gesture-handler'
 import { Color, FontFamily, FontSize, Padding } from '../GlobalStyles'
@@ -15,6 +15,7 @@ import {
   updateDiaryById
 } from '../redux/actions/diaries'
 import { removeUserDiary } from '../redux/slices/diaries.slices'
+import Humor from './Humor'
 
 const SingleDiary = ({
   diary,
@@ -25,28 +26,37 @@ const SingleDiary = ({
   openGroupIcon1,
   last,
   selectedDate,
-  setPickedImages
+  setPickedImages,
+  notEditable
 }) => {
   const { selectedSection, formatDateToNormal } = useContext(Context)
   const { userData } = useSelector((state) => state.users)
+  const [diaryImages, setDiaryImages] = useState(diary.images || [])
   const [text, setText] = useState(diary.description)
+  const [showEmojisModal, setShowEmojisModal] = useState(false)
   const dispatch = useDispatch()
 
   const { editingDiary, setEditingDiary } = useContext(Context)
+
   const handleDeleteDiary = (id) => {
     console.log('deleting diary', id, '...')
     dispatch(deleteDiaryById(diary.id))
   }
+
+  const getFileName = (filePath) => {
+    const parts = filePath.split('/')
+    const fileName = parts[parts.length - 1]
+    return fileName
+  }
+
   useEffect(() => {
     console.log('userData from singlediary', userData)
   }, [])
-  useEffect(() => {
-    console.log('Modal create changed to', modalCreate)
-  }, [modalCreate])
+
   return (
     <View
       style={{
-        paddingTop: 20,
+        paddingTop: !notEditable ? 20 : 5,
         paddingBottom: 5,
         borderTopWidth: 1,
         borderBottomWidth: last ? 1 : 0,
@@ -54,32 +64,16 @@ const SingleDiary = ({
         borderTopColor: '#B7E4C0'
       }}
     >
-      {editingDiary === diary.id && (
+      {!notEditable && editingDiary === diary.id && (
         <View style={{ width: '100%', marginTop: -15 }}>
           <View
             style={{
               flexDirection: 'row',
-              justifyContent: 'space-between',
+              justifyContent: 'flex-end',
               paddingHorizontal: 5,
               alignItems: 'center'
             }}
           >
-            <Pressable
-              style={{ height: 18, width: 18 }}
-              onPress={() => {
-                if (diary.id === 'preDiary') {
-                  dispatch(removeUserDiary('preDiary'))
-                }
-                setEditingDiary()
-                setPickedImages([])
-              }}
-            >
-              <Image
-                style={{ height: '100%', width: '100%' }}
-                contentFit="cover"
-                source={require('../assets/group-68463.png')}
-              />
-            </Pressable>
             <View
               style={{
                 justifyContent: 'center',
@@ -89,7 +83,7 @@ const SingleDiary = ({
             >
               <Pressable
                 style={{ height: 24, width: 24 }}
-                onPress={openGroupIcon1}
+                onPress={() => setShowEmojisModal(true)}
               >
                 <Image
                   style={{ height: '100%', width: '100%' }}
@@ -121,6 +115,8 @@ const SingleDiary = ({
                         uri: image.uri,
                         type: 'image/jpeg',
                         name: image.filename
+                          ? image.filename
+                          : getFileName(image.uri)
                       })
                       formData.append('upload_preset', 'cfbb_profile_pictures')
                       formData.append('cloud_name', 'dnewfuuv0')
@@ -161,7 +157,7 @@ const SingleDiary = ({
                     } else {
                       console.log('updating diary...', preDiary)
                       const updatedData = { description: preDiary.description }
-                      updatedData.images = [...diary.images, ...cloudinaryUrls]
+                      updatedData.images = [...diaryImages, ...cloudinaryUrls]
                       dispatch(
                         updateDiaryById({
                           diaryId: preDiary.id,
@@ -202,7 +198,7 @@ const SingleDiary = ({
           </View>
         </View>
       )}
-      {editingDiary !== diary.id && (
+      {!notEditable && editingDiary !== diary.id && (
         <View
           style={{
             position: 'absolute',
@@ -215,60 +211,137 @@ const SingleDiary = ({
             alignItems: 'center'
           }}
         >
-          <Pressable onPress={() => handleDeleteDiary(diary.id)}>
-            <Image
-              style={{ width: 25, height: 25 }}
-              resizeMode="contain"
-              source={require('../assets/trash.png')}
-            />
-          </Pressable>
+          {!notEditable && (
+            <Pressable onPress={() => handleDeleteDiary(diary.id)}>
+              <Image
+                style={{ width: 25, height: 25 }}
+                resizeMode="contain"
+                source={require('../assets/trash.png')}
+              />
+            </Pressable>
+          )}
 
-          <Pressable onPress={() => setEditingDiary(diary.id)}>
-            <Editar2SVG />
-          </Pressable>
+          {!notEditable && (
+            <Pressable onPress={() => setEditingDiary(diary.id)}>
+              <Editar2SVG />
+            </Pressable>
+          )}
         </View>
       )}
-      {editingDiary === diary.id ? (
-        <View>
-          <TextInput
-            style={{
-              fontSize: FontSize.size_lg,
-              lineHeight: 27,
-              textAlign: 'left',
-              color: Color.negro,
-              fontFamily: FontFamily.lato,
-              letterSpacing: 0
-            }}
-            multiline
-            value={text}
-            onChangeText={(text) => setText(text)}
-          />
-          <View
-            style={{
-              width: '100%',
-              flexWrap: 'wrap',
-              flexDirection: 'row',
-              gap: 5
+      {!notEditable && editingDiary === diary.id ? (
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+            gap: 15,
+            paddingRight: 5
+          }}
+        >
+          <Pressable
+            style={{ height: 13, width: 13, marginTop: 8 }}
+            onPress={() => {
+              if (diary.id === 'preDiary') {
+                dispatch(removeUserDiary('preDiary'))
+              }
+              setEditingDiary()
+              setPickedImages([])
             }}
           >
-            {diary.images.length > 0 &&
-              diary.images.map((image, i) => (
-                <Image
-                  key={i}
-                  source={{ uri: image }}
-                  contentFit={'contain'}
-                  style={{ width: 50, height: 50, borderRadius: 3 }}
-                />
-              ))}
-            {pickedImages.length > 0 &&
-              pickedImages.map((image, i) => (
-                <Image
-                  key={i + 500}
-                  source={{ uri: image.uri }}
-                  contentFit={'contain'}
-                  style={{ width: 50, height: 50, borderRadius: 3 }}
-                />
-              ))}
+            <Image
+              style={{ height: '100%', width: '100%' }}
+              contentFit="cover"
+              source={require('../assets/group-68463.png')}
+            />
+          </Pressable>
+          <View style={{}}>
+            <TextInput
+              style={{
+                fontSize: FontSize.size_lg,
+                lineHeight: 27,
+                width: Dimensions.get('screen').width * 0.8,
+                textAlign: 'left',
+                color: Color.negro,
+                fontFamily: FontFamily.lato,
+                letterSpacing: 0,
+                marginBottom: 8
+              }}
+              multiline
+              value={text}
+              onChangeText={(text) => setText(text)}
+            />
+            <View
+              style={{
+                width: '100%',
+                flexWrap: 'wrap',
+                flexDirection: 'row',
+                gap: 5
+              }}
+            >
+              {diaryImages.length > 0 &&
+                diaryImages.map((image, i) => (
+                  <View>
+                    <Image
+                      key={i}
+                      source={{ uri: image }}
+                      contentFit={'contain'}
+                      style={{ width: 50, height: 50, borderRadius: 3 }}
+                    />
+                    <Pressable
+                      onPress={() =>
+                        setDiaryImages(
+                          [...diaryImages].filter((img) => img !== image)
+                        )
+                      }
+                      style={{
+                        position: 'absolute',
+                        top: 3,
+                        right: 3,
+                        borderRadius: 3,
+                        backgroundColor: '#fff',
+                        padding: 3.5
+                      }}
+                    >
+                      <Image
+                        contentFit="cover"
+                        style={{ width: 7, height: 7 }}
+                        source={require('../assets/group-68463.png')}
+                      />
+                    </Pressable>
+                  </View>
+                ))}
+              {pickedImages.length > 0 &&
+                pickedImages.map((image, i) => (
+                  <View>
+                    <Image
+                      key={i + 500}
+                      source={{ uri: image.uri }}
+                      contentFit={'contain'}
+                      style={{ width: 50, height: 50, borderRadius: 3 }}
+                    />
+                    <Pressable
+                      onPress={() => {
+                        setPickedImages(
+                          pickedImages.filter((img) => img.uri !== image.uri)
+                        )
+                      }}
+                      style={{
+                        position: 'absolute',
+                        top: 3,
+                        right: 3,
+                        borderRadius: 3,
+                        backgroundColor: '#fff',
+                        padding: 3.5
+                      }}
+                    >
+                      <Image
+                        contentFit="cover"
+                        style={{ width: 7, height: 7 }}
+                        source={require('../assets/group-68463.png')}
+                      />
+                    </Pressable>
+                  </View>
+                ))}
+            </View>
           </View>
         </View>
       ) : (
@@ -279,9 +352,10 @@ const SingleDiary = ({
               lineHeight: 27,
               textAlign: 'left',
               color: Color.negro,
-              marginTop: 20,
+              marginTop: !notEditable && 20,
               fontFamily: FontFamily.lato,
-              letterSpacing: 0
+              letterSpacing: 0,
+              marginBottom: 8
             }}
           >
             {text}
@@ -294,8 +368,8 @@ const SingleDiary = ({
               gap: 5
             }}
           >
-            {diary.images.length > 0 &&
-              diary.images.map((image, i) => (
+            {diaryImages.length > 0 &&
+              diaryImages.map((image, i) => (
                 <Image
                   key={i}
                   source={{ uri: image }}
@@ -306,32 +380,62 @@ const SingleDiary = ({
           </View>
         </View>
       )}
-      <Modal animationType="slide" transparent visible={modalCreate}>
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(113, 113, 113, 0.3)'
-          }}
-        >
-          <Pressable
+      {!notEditable && (
+        <Modal animationType="slide" transparent visible={modalCreate}>
+          <View
             style={{
-              position: 'absolute',
-              width: '100%',
-              height: '100%',
-              left: 0,
-              top: 0
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(113, 113, 113, 0.3)'
             }}
-            onPress={() => setModalCreate(false)}
-          />
-          <ENTRADACREADA
-            onClose={() => setModalCreate(false)}
-            message={'Entrada Creada'}
-            isNavigate={'MIDIARIOPANTALLAPERSONAL'}
-          />
-        </View>
-      </Modal>
+          >
+            <Pressable
+              style={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                left: 0,
+                top: 0
+              }}
+              onPress={() => setModalCreate(false)}
+            />
+            <ENTRADACREADA
+              onClose={() => setModalCreate(false)}
+              message={'Entrada Creada'}
+              isNavigate={'MIDIARIOPANTALLAPERSONAL'}
+            />
+          </View>
+        </Modal>
+      )}
+      {!notEditable && (
+        <Modal animationType="slide" transparent visible={showEmojisModal}>
+          <View
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(113, 113, 113, 0.3)'
+            }}
+          >
+            <Pressable
+              style={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                left: 0,
+                top: 0
+              }}
+              onPress={() => setShowEmojisModal(false)}
+            />
+            <Humor
+              text={text}
+              setText={setText}
+              onClose={() => setShowEmojisModal(false)}
+            />
+          </View>
+        </Modal>
+      )}
     </View>
   )
 }

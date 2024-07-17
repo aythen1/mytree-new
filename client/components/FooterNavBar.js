@@ -27,6 +27,7 @@ import { Image } from 'expo-image'
 import { getAllPosts } from '../redux/actions/posts'
 import { getAllUsers } from '../redux/actions/user'
 import { getAllUserAlbums } from '../redux/actions/albums'
+import { getAllUserDiaries } from '../redux/actions/diaries'
 
 const FooterNavBar = () => {
   const {
@@ -130,6 +131,7 @@ const FooterNavBar = () => {
             <Pressable
               onPress={() => {
                 navigation.navigate('MIDIARIOPANTALLAPERSONAL')
+                dispatch(getAllUserDiaries(userData.id))
                 setSelected('MiDiario')
               }}
               style={{}}
