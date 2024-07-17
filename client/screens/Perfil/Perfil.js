@@ -142,16 +142,7 @@ const Perfil = () => {
             paddingTop: 14
           }}
         >
-             {/* <Pressable
-          onPress={() => navigation.openDrawer()}
-          style={styles.menuPosition}
-        >
-          <Image
-            style={styles.ionmenuIcon}
-            contentFit="cover"
-            source={require('../../assets/ionmenu.png')}
-          />
-        </Pressable> */}
+
           <Pressable onPress={() => navigation.openDrawer()}>
             <Image
               style={[{

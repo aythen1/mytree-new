@@ -52,6 +52,9 @@ export class User {
   city: string;
 
   @Column({ nullable: true })
+  fixedChat: string;
+
+  @Column({ nullable: true })
   achievements: string;
 
   @ManyToMany(() => User)

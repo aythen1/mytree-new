@@ -26,7 +26,7 @@ import HeaderIcons from '../../../components/HeaderIcons'
 import CalendarMuroSVG from '../../../components/svgs/CalendarMuroSVG'
 import BookSVG from '../../../components/svgs/BookSVG'
 import NotificationsMuroSVG from '../../../components/svgs/NotificationsMuroSVG'
-import axios from 'axios';
+import axios from 'axios'
 import axiosInstance, { BACKURL } from '../../../apiBackend'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserData } from '../../../redux/actions/user'
@@ -36,7 +36,6 @@ import SimboloSVG from '../SimboloSVG'
 import { Entypo } from '@expo/vector-icons'
 
 const PerfilConfiguracion = () => {
-
   const { userData: usuario } = useSelector((state) => state.users)
   const [showImageOptions, setShowImageOptions] = useState(false)
   const [facing, setFacing] = useState('back')
@@ -44,15 +43,16 @@ const PerfilConfiguracion = () => {
   const dispatch = useDispatch()
   const [showCamera, setShowCamera] = useState(false)
 
-
   const navigation = useNavigation()
   const nombreInputRef = useRef(null)
   const [modalCreate, setModalCreate] = useState(false)
   const [inputsBros, setInputsBros] = useState([])
+  const [editable, setEditable] = useState(false)
+
   const [dataToSend, setDataToSend] = useState({
-    username: "",
-    birthDate: "",
-    address: "",
+    username: '',
+    birthDate: '',
+    address: ''
   })
 
   const cameraReff = useRef(null)
@@ -79,8 +79,6 @@ const PerfilConfiguracion = () => {
     setFacing((prev) => (prev == 'back' ? 'front' : 'back'))
   }
 
-
-
   const onCloseModalCreate = () => {
     setModalCreate(false)
   }
@@ -92,76 +90,89 @@ const PerfilConfiguracion = () => {
         setModalCreate(true)
         dispatch(getUserData(usuario.id))
       }
-
     } catch (error) {
       console.log(error)
     }
   }
 
-  
-
- if (!showCamera) {
-  return (
-    <KeyboardAvoidingView behavior='padding' style={styles.viewContainer}>
-      <ScrollView contentContainerStyle={{ paddingBottom: 130 }} style={styles.frameParent} showsVerticalScrollIndicator={false}>
-        <View>
-          <View style={styles.parentIcons}>
-          <Pressable onPress={() => navigation.openDrawer()}>
-            <Image
-              style={[{
-                width: 87,
-                height: 55
-              }]}
-              contentFit="cover"
-              source={require('../../../assets/image-6.png')}
-            />
-          </Pressable>
-            {/* <Pressable onPress={() => navigation.navigate('Muro')}>
+  if (!showCamera) {
+    return (
+      <KeyboardAvoidingView behavior="padding" style={styles.viewContainer}>
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: 130 }}
+          style={styles.frameParent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View>
+            <View style={styles.parentIcons}>
+              <Pressable onPress={() => navigation.openDrawer()}>
+                <Image
+                  style={[
+                    {
+                      width: 87,
+                      height: 55
+                    }
+                  ]}
+                  contentFit="cover"
+                  source={require('../../../assets/image-6.png')}
+                />
+              </Pressable>
+              {/* <Pressable onPress={() => navigation.navigate('Muro')}>
               <Image
                 style={styles.image6Icon}
                 contentFit="cover"
                 source={require('../../../assets/image-6.png')}
               />
             </Pressable> */}
-            <View style={styles.iconlylightOutlinecalendarParent}>
-              <HeaderIcons
-                icons={[
-                  <CalendarMuroSVG />,
-                  <BookSVG />,
-                  <NotificationsMuroSVG />
-                ]}
-              />
+              <View style={styles.iconlylightOutlinecalendarParent}>
+                <HeaderIcons
+                  icons={[
+                    <CalendarMuroSVG />,
+                    <BookSVG />,
+                    <NotificationsMuroSVG />
+                  ]}
+                />
+              </View>
+            </View>
+            <View style={[styles.backParent, styles.parentFlexBox]}>
+              <Pressable
+                style={styles.iconlylightOutlinecalendar}
+                onPress={() => navigation.navigate('PerfilAjustes')}
+              >
+                <Image
+                  style={[styles.icon, styles.iconLayout1]}
+                  contentFit="cover"
+                  source={require('../../../assets/back.png')}
+                />
+              </Pressable>
+              <Text style={styles.ajustes}>Configuración</Text>
             </View>
           </View>
-          <View style={[styles.backParent, styles.parentFlexBox]}>
-            <Pressable
-              style={styles.iconlylightOutlinecalendar}
-              onPress={() => navigation.navigate('PerfilAjustes')}
-            >
-              <Image
-                style={[styles.icon, styles.iconLayout1]}
-                contentFit="cover"
-                source={require('../../../assets/back.png')}
-              />
-            </Pressable>
-            <Text style={styles.ajustes}>Configuración</Text>
-          </View>
-        </View>
 
-        <View style={styles.centralContainer}>
-          <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
-            <View style={{width:"100%"}}>
-              <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
-                Cambiar foto de perfil
-              </Text>
-              <View style={{ width: "100%",height:200, justifyContent: 'center',alignItems:"center" }}>
-                <Pressable
-                  onPress={() => setShowImageOptions(!showImageOptions)}
-                  style={{ alignItems: 'center',
+          <View style={styles.centralContainer}>
+            <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
+              <View style={{ width: '100%' }}>
+                <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
+                  Cambiar foto de perfil
+                </Text>
+                <View
+                  style={{
+                    width: '100%',
+                    height: 200,
                     justifyContent: 'center',
-                    flex: 1,
-                    flexDirection: 'row' , position:"relative"}}
+                    alignItems: 'center'
+                  }}
                 >
+                  <Pressable
+                    onPress={() => setShowImageOptions(!showImageOptions)}
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flex: 1,
+                      flexDirection: 'row',
+                      position: 'relative'
+                    }}
+                  >
                     <Pressable
                       onPress={() => setShowCamera(true)}
                       style={{
@@ -171,7 +182,10 @@ const PerfilConfiguracion = () => {
                         borderRadius: 100,
                         justifyContent: 'center',
                         alignItems: 'center',
-                        position:"absolute",top: 30,right:0,zIndex:999
+                        position: 'absolute',
+                        top: 30,
+                        right: 0,
+                        zIndex: 999
                       }}
                     >
                       <Image
@@ -180,292 +194,358 @@ const PerfilConfiguracion = () => {
                         source={require('../../../assets/cameraIcon.png')}
                       />
                     </Pressable>
-                  {!provisoryProfileImage && !usuario?.profilePicture ? (
-                    <Image
-                      style={{ ...styles.perfilItem, borderRadius: 100 }}
-                      contentFit="cover"
-                      source={require('../../../assets/group-1171276683.png')}
-                    />
-                  ) : (
-                    <Image
-                      style={{ ...styles.perfilItem, borderRadius: 100 }}
-                      contentFit="cover"
-                      source={{
-                        uri:
-                          profileImage ||
-                          provisoryProfileImage ||
-                          usuario.profilePicture
+                    {!provisoryProfileImage && !usuario?.profilePicture ? (
+                      <Image
+                        style={{ ...styles.perfilItem, borderRadius: 100 }}
+                        contentFit="cover"
+                        source={require('../../../assets/group-1171276683.png')}
+                      />
+                    ) : (
+                      <Image
+                        style={{ ...styles.perfilItem, borderRadius: 100 }}
+                        contentFit="cover"
+                        source={{
+                          uri:
+                            profileImage ||
+                            provisoryProfileImage ||
+                            usuario.profilePicture
+                        }}
+                      />
+                    )}
+                  </Pressable>
+                  {showImageOptions && (
+                    <View
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        right: '25%',
+                        gap: 10
                       }}
-                    />
+                    >
+                      <Pressable
+                        onPress={() => pickImage('profile')}
+                        style={{
+                          width: 30,
+                          height: 30,
+                          backgroundColor: Color.secundario,
+                          borderRadius: 100,
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <SimboloSVG color={'#fff'} />
+                      </Pressable>
+                      <Pressable
+                        onPress={() => setShowCamera(true)}
+                        style={{
+                          width: 30,
+                          height: 30,
+                          backgroundColor: Color.secundario,
+                          borderRadius: 100,
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <Image
+                          style={{ width: 16, height: 16 }}
+                          contentFit="cover"
+                          source={require('../../../assets/cameraIcon.png')}
+                        />
+                      </Pressable>
+                    </View>
                   )}
-                 
-                </Pressable>
-                {showImageOptions && (
-                  <View
-                    style={{ position: 'absolute', top: 0, right: '25%', gap: 10 }}
+                  <TouchableOpacity
+                    onPress={() => pickImage('profile')}
+                    style={{
+                      width: 120,
+                      height: 30,
+                      backgroundColor: Color.secundario,
+                      borderRadius: 100,
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
                   >
-                    <Pressable
-                      onPress={() => pickImage('profile')}
-                      style={{
-                        width: 30,
-                        height: 30,
-                        backgroundColor: Color.secundario,
-                        borderRadius: 100,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                    >
-                      <SimboloSVG color={'#fff'} />
-                    </Pressable>
-                    <Pressable
-                      onPress={() => setShowCamera(true)}
-                      style={{
-                        width: 30,
-                        height: 30,
-                        backgroundColor: Color.secundario,
-                        borderRadius: 100,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                    >
-                      <Image
-                        style={{ width: 16, height: 16 }}
-                        contentFit="cover"
-                        source={require('../../../assets/cameraIcon.png')}
-                      />
-                    </Pressable>
-                    
-                  </View>
-                )}
-                 <TouchableOpacity
-                      onPress={() => pickImage('profile')}
-                      style={{
-                        width: 120,
-                        height: 30,
-                        backgroundColor: Color.secundario,
-                        borderRadius: 100,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                    >
-                     <Text style={{color:"white"}}>Subir imagen</Text>
-                    </TouchableOpacity>
+                    <Text style={{ color: 'white' }}>Subir imagen</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+            <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
+              <View style={styles.nombreCompletoParent}>
+                <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
+                  Nombre completo
+                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%'
+                  }}
+                >
+                  <TextInput
+                    editable={editable}
+
+                    style={[
+                      styles.brunoPham,
+                      styles.brunoPhamTypo,
+                      { width: '100%' }
+                    ]}
+                    ref={nombreInputRef}
+                    placeholder={usuario.username}
+                    onChangeText={(text) =>
+                      setDataToSend({ ...dataToSend, ['username']: text })
+                    }
+                    value={dataToSend.username}
+                  />
+                  <TouchableOpacity onPress={() => setEditable(!editable)}>
+                    <Image
+                      style={[styles.vectorIcon1, styles.vectorIconLayout]}
+                      contentFit="cover"
+                      source={require('../../../assets/vector47.png')}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+            <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
+              <View style={styles.nombreCompletoParent}>
+                <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
+                  Fecha de nacimiento
+                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%'
+                  }}
+                >
+                  <TextInput
+                    style={[
+                      styles.brunoPham,
+                      styles.brunoPhamTypo,
+                      { width: '100%' }
+                    ]}
+                    ref={nombreInputRef}
+                    editable={editable}
+                    placeholder={usuario.birthDate || 'Fecha de nacimiento'}
+                    onChangeText={(text) =>
+                      setDataToSend({ ...dataToSend, ['birthDate']: text })
+                    }
+                    value={dataToSend.birthDate}
+                  />
+                </View>
+              </View>
+            </View>
+            <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
+              <View style={styles.nombreCompletoParent}>
+                <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
+                  Ubicación
+                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%'
+                  }}
+                >
+                  <TextInput
+                    style={[
+                      styles.brunoPham,
+                      styles.brunoPhamTypo,
+                      { width: '100%' }
+                    ]}
+                    editable={editable}
+
+                    ref={nombreInputRef}
+                    placeholder={usuario.address || 'Ubicación'}
+                    onChangeText={(text) =>
+                      setDataToSend({ ...dataToSend, ['address']: text })
+                    }
+                    value={dataToSend.address}
+                  />
+                </View>
+              </View>
+            </View>
+            <Image
+              style={styles.frameChild}
+              contentFit="cover"
+              source={require('../../../assets/line-811.png')}
+            />
+            <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
+              <View style={styles.nombreCompletoParent}>
+                <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
+                  Madre
+                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%'
+                  }}
+                >
+                  <TextInput
+                    editable={editable}
+
+                    style={[styles.brunoPham, styles.brunoPhamTypo]}
+                    ref={nombreInputRef}
+                    placeholder="Agregar madre"
+                  />
+                </View>
+              </View>
+            </View>
+            <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
+              <View style={styles.nombreCompletoParent}>
+                <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
+                  Padre
+                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%'
+                  }}
+                >
+                  <TextInput
+                    editable={editable}
+
+                    style={[styles.brunoPham, styles.brunoPhamTypo]}
+                    ref={nombreInputRef}
+                    placeholder="Agregar padre"
+                  />
+                </View>
               </View>
             </View>
 
-          </View>
-          <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
-            <View style={styles.nombreCompletoParent}>
-              <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
-                Nombre completo
-              </Text>
-              <View style={{flexDirection:"row",alignItems:"center",justifyContent:"space-between",width:"100%"}}>
-              <TextInput
-                style={[styles.brunoPham, styles.brunoPhamTypo,{width:"100%"}]}
-                ref={nombreInputRef}
-                placeholder={usuario.username}
-                onChangeText={(text) => setDataToSend({ ...dataToSend, ["username"]: text })}
-                value={dataToSend.username}
-              />
-              <Image
-                style={[styles.vectorIcon1, styles.vectorIconLayout]}
-                contentFit="cover"
-                source={require('../../../assets/vector47.png')}
-              />
-              </View>
-            </View>
-          
-          </View>
-          <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
-            <View style={styles.nombreCompletoParent}>
-              <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
-                Fecha de nacimiento
-              </Text>
-              <View style={{flexDirection:"row",alignItems:"center",justifyContent:"space-between",width:"100%"}}>
+            <Image
+              style={styles.frameChild}
+              contentFit="cover"
+              source={require('../../../assets/line-811.png')}
+            />
 
-              <TextInput
-                style={[styles.brunoPham, styles.brunoPhamTypo,{width:"100%"}]}
-                ref={nombreInputRef}
-                placeholder={usuario.birthDate || "Fecha de nacimiento"}
-                onChangeText={(text) => setDataToSend({ ...dataToSend, ["birthDate"]: text })}
-                value={dataToSend.birthDate}
-              />
-         
-              </View>
-            </View>
-          
-          </View>
-          <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
-            <View style={styles.nombreCompletoParent}>
-              <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
-                Ubicación
-              </Text>
-              <View style={{flexDirection:"row",alignItems:"center",justifyContent:"space-between",width:"100%"}}>
-
-              <TextInput
-                style={[styles.brunoPham, styles.brunoPhamTypo,{width:"100%"}]}
-                ref={nombreInputRef}
-                placeholder={usuario.address || "Ubicación"}
-                onChangeText={(text) => setDataToSend({ ...dataToSend, ["address"]: text })}
-                value={dataToSend.address}
-              />
-              
-              </View>
-            </View>
-        
-          </View>
-          <Image
-            style={styles.frameChild}
-            contentFit="cover"
-            source={require('../../../assets/line-811.png')}
-          />
-          <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
-            <View style={styles.nombreCompletoParent}>
-              <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
-                Madre
-              </Text>
-              <View style={{flexDirection:"row",alignItems:"center",justifyContent:"space-between",width:"100%"}}>
-
-              <TextInput
-                style={[styles.brunoPham, styles.brunoPhamTypo]}
-                ref={nombreInputRef}
-                placeholder="Agregar madre"
-              />
-          
-              </View>
-            </View>
-           
-          </View>
-          <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
-            <View style={styles.nombreCompletoParent}>
-              <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
-                Padre
-              </Text>
-              <View style={{flexDirection:"row",alignItems:"center",justifyContent:"space-between",width:"100%"}}>
-
-              <TextInput
-                style={[styles.brunoPham, styles.brunoPhamTypo]}
-                ref={nombreInputRef}
-                placeholder="Agregar padre"
-              />
-        
-              </View>
-            </View>
-         
-          </View>
-
-          <Image
-            style={styles.frameChild}
-            contentFit="cover"
-            source={require('../../../assets/line-811.png')}
-          />
-
-          <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
-            <View style={styles.nombreCompletoParent}>
-              <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
-                Hermanos
-              </Text>
-              
-              <TextInput
-                style={[styles.brunoPham, styles.brunoPhamTypo]}
-                ref={nombreInputRef}
-                placeholder="Agregar hermano"
-              />
-            </View>
-            <View style={{ alignItems: "center", width: "20%" }}>
-              <Pressable
-                onPress={() => {
-                  setInputsBros((prev) => {
-                    return [...prev, { input: "1" }]
-                  })
-                }}
-              >
-                <Text style={{ textAlign: "center", fontSize: 22 }}>+</Text>
-              </Pressable>
-
-            </View>
-
-          </View>
-          {inputsBros.length > 0 && inputsBros.map((e, i) => {
-            return (
-              <View key={i} style={styles.nombreCompletoParent}>
+            <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
+              <View style={styles.nombreCompletoParent}>
+                <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
+                  Hermanos
+                </Text>
 
                 <TextInput
+                    editable={editable}
+
                   style={[styles.brunoPham, styles.brunoPhamTypo]}
                   ref={nombreInputRef}
                   placeholder="Agregar hermano"
                 />
               </View>
-            )
-          })}
-          <Image
-            style={styles.frameChild}
-            contentFit="cover"
-            source={require('../../../assets/line-811.png')}
-          />
-          <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
-            <View style={styles.nombreCompletoParent}>
-              <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
-                Estado Civíl
-              </Text>
-              <View style={{flexDirection:"row",alignItems:"center",justifyContent:"space-between",width:"100%"}}>
-
-              <TextInput
-                style={[styles.brunoPham, styles.brunoPhamTypo]}
-                ref={nombreInputRef}
-                placeholder="Agregar estado civíl"
-              />
-       
+              <View style={{ alignItems: 'center', width: '20%' }}>
+                <Pressable
+                  onPress={() => {
+                    setInputsBros((prev) => {
+                      return [...prev, { input: '1' }]
+                    })
+                  }}
+                >
+                  <Text style={{ textAlign: 'center', fontSize: 22 }}>+</Text>
+                </Pressable>
               </View>
             </View>
-            
-          </View>
-          <Image
-            style={styles.frameChild}
-            contentFit="cover"
-            source={require('../../../assets/line-811.png')}
-          />
-          <View style={[styles.deleteParent, styles.parentFlexBox]}>
-            <Image
-              style={styles.deleteIcon}
-              contentFit="cover"
-              source={require('../../../assets/delete2.png')}
-            />
-            <Text style={[styles.eliminarDatos, styles.brunoPhamTypo]}>
-              Eliminar datos
-            </Text>
-          </View>
-        </View>
-        <LinearGradient
-          style={styles.button}
-          locations={[0, 1]}
-          colors={['#dee274', '#7ec18c']}
-        >
-          <Pressable
-            style={[styles.pressable, styles.pressableFlexBox]}
-            onPress={() => handleSubmit()}
-          >
-            <Text style={styles.signIn}>Guardar</Text>
-          </Pressable>
-        </LinearGradient>
+            {inputsBros.length > 0 &&
+              inputsBros.map((e, i) => {
+                return (
+                  <View key={i} style={styles.nombreCompletoParent}>
+                    <TextInput
+                    editable={editable}
 
-        {modalCreate && (
-          <Modal animationType="fade" transparent={true} visible={modalCreate}>
-            <TouchableWithoutFeedback onPress={() => setModalCreate(false)}>
-              <View style={styles.modalOverlay}>
-                <View style={{ width: "100%", height: "100%" }}>
-                  <ENTRADACREADA
-                    onClose={onCloseModalCreate}
-                    message={'Guardado!'}
+                      style={[styles.brunoPham, styles.brunoPhamTypo]}
+                      ref={nombreInputRef}
+                      placeholder="Agregar hermano"
+                    />
+                  </View>
+                )
+              })}
+            <Image
+              style={styles.frameChild}
+              contentFit="cover"
+              source={require('../../../assets/line-811.png')}
+            />
+            <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
+              <View style={styles.nombreCompletoParent}>
+                <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
+                  Estado Civíl
+                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%'
+                  }}
+                >
+                  <TextInput
+                    editable={editable}
+
+                    style={[styles.brunoPham, styles.brunoPhamTypo]}
+                    ref={nombreInputRef}
+                    placeholder="Agregar estado civíl"
                   />
                 </View>
               </View>
-            </TouchableWithoutFeedback>
-          </Modal>
-        )}
-      </ScrollView>
-    </KeyboardAvoidingView>
-  )} else {
+            </View>
+            <Image
+              style={styles.frameChild}
+              contentFit="cover"
+              source={require('../../../assets/line-811.png')}
+            />
+            <View style={[styles.deleteParent, styles.parentFlexBox]}>
+              <Image
+                style={styles.deleteIcon}
+                contentFit="cover"
+                source={require('../../../assets/delete2.png')}
+              />
+              <Text style={[styles.eliminarDatos, styles.brunoPhamTypo]}>
+                Eliminar datos
+              </Text>
+            </View>
+          </View>
+          <LinearGradient
+            style={styles.button}
+            locations={[0, 1]}
+            colors={['#dee274', '#7ec18c']}
+          >
+            <Pressable
+              style={[styles.pressable, styles.pressableFlexBox]}
+              onPress={() => handleSubmit()}
+            >
+              <Text style={styles.signIn}>Guardar</Text>
+            </Pressable>
+          </LinearGradient>
+
+          {modalCreate && (
+            <Modal
+              animationType="fade"
+              transparent={true}
+              visible={modalCreate}
+            >
+              <TouchableWithoutFeedback onPress={() => setModalCreate(false)}>
+                <View style={styles.modalOverlay}>
+                  <View style={{ width: '100%', height: '100%' }}>
+                    <ENTRADACREADA
+                      onClose={onCloseModalCreate}
+                      message={'Guardado!'}
+                    />
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+            </Modal>
+          )}
+        </ScrollView>
+      </KeyboardAvoidingView>
+    )
+  } else {
     return (
       <View style={{ zIndex: 9999, height: '100%' }}>
         <CameraView
@@ -543,17 +623,15 @@ const PerfilConfiguracion = () => {
 
 const styles = StyleSheet.create({
   frameParent: {
-
     flex: 1,
     backgroundColor: Color.white,
-    paddingHorizontal: 10,
+    paddingHorizontal: 10
   },
   viewContainer: {
-    backgroundColor: Color.white
-    ,
-    flex: 1,
+    backgroundColor: Color.white,
+    flex: 1
   },
-  perfilItem:{
+  perfilItem: {
     height: 130,
     width: 130
   },
@@ -564,7 +642,7 @@ const styles = StyleSheet.create({
   brunoPhamTypo: {
     textAlign: 'left',
     fontFamily: FontFamily.lato,
-    width:"100%"
+    width: '100%'
   },
   vectorIconLayout: {
     height: 21,
@@ -595,7 +673,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base
   },
   nombreCompletoParent: {
-    width: '80%',
+    width: '80%'
   },
   vectorIcon1: {
     marginLeft: 20

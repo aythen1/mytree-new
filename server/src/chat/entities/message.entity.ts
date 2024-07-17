@@ -36,6 +36,9 @@ export class MessageEntity {
   @Column({ default: false })
   isReaded: boolean; // El contenido del mensaje
 
+  @Column({ nullable: true })
+  type: string;
+
   @Column({ default: null, nullable: true })
   senderDelete: boolean; // Estado de eliminación del mensaje para el remitente
 
