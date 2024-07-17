@@ -79,6 +79,7 @@ import OpenedChat from './screens/Mensajes/OpenedChat'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import DrawerContent from './components/DrawerContent'
 import { NavigationContainer, useRoute } from '@react-navigation/native'
+import OtherUserProfile from './screens/Perfil/OtherUserProfile'
 
 const Drawer = createDrawerNavigator()
 const Stack = createNativeStackNavigator()
@@ -239,6 +240,11 @@ const MainStackNavigator = ({ setIsFooterShow }) => {
       <Stack.Screen
         name="Chat"
         component={Chat}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="OtherUserProfile"
+        component={OtherUserProfile}
         options={{ headerShown: false }}
       />
       <Stack.Screen
