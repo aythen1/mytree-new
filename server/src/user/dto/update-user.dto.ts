@@ -34,5 +34,6 @@ export class UpdateUserDto {
     cousinsIds?: string[];
     familyIds?: string[];
     friendsIds?: string[];
+    fixedChat?: string;
   }
   

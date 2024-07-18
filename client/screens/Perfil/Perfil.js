@@ -111,7 +111,7 @@ const Perfil = () => {
     if (userData?.newUser) {
       axiosInstance.patch(`/user/${userData?.id}`, { newUser: false })
     }
-
+console.log("pasa por este ladoooooooooooooooooooooooooooooooooooooooooooooo")
     iniciar()
   }, [])
 
@@ -142,16 +142,7 @@ const Perfil = () => {
             paddingTop: 14
           }}
         >
-             {/* <Pressable
-          onPress={() => navigation.openDrawer()}
-          style={styles.menuPosition}
-        >
-          <Image
-            style={styles.ionmenuIcon}
-            contentFit="cover"
-            source={require('../../assets/ionmenu.png')}
-          />
-        </Pressable> */}
+
           <Pressable onPress={() => navigation.openDrawer()}>
             <Image
               style={[{

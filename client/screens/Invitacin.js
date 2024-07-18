@@ -7,14 +7,37 @@ import {
   Pressable,
   Modal,
   ScrollView,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  TouchableOpacity
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useNavigation } from '@react-navigation/native'
 import { FontFamily, FontSize, Color, Border, Padding } from '../GlobalStyles'
 import ENTRADACREADA from '../components/ENTRADACREADA'
+import { useDispatch, useSelector } from 'react-redux'
+import axiosInstance from '../apiBackend'
+import { getAllUserInvitations } from '../redux/actions/events'
 
-const Invitacin = () => {
+const Invitacin = ({ route }) => {
+  const { userEvents: dates, userInvitations } = useSelector(
+    (state) => state.events
+  )
+  const { userData, allUsers } = useSelector((state) => state.users)
+
+  const event = route?.params?.date
+  const event_location = route?.params?.date.location
+  const event_images = route?.params?.date.images
+  const event_wishList = route?.params?.date.wishListItems
+
+  const event_description = route?.params?.date.description
+
+  const inv = userInvitations.find((e) => e.event.id == event.id)
+
+  console.log(event, 'imnvvvvvvvvvvvvvvvvvvvvvvvvvvvv')
+
+  const event_date = route?.params?.date?.date.slice(0, 10)
+
+  const dispatch = useDispatch()
   const navigation = useNavigation()
 
   const [modalCreate, setModalCreate] = useState(false)
@@ -23,9 +46,24 @@ const Invitacin = () => {
     setModalCreate(false)
   }
 
+  const handleSubmit = async (text) => {
+    const res = await axiosInstance
+      .put(`events/invite/${inv.id}/respond`, { response: text })
+      .then(() => dispatch(getAllUserInvitations(userData.id)))
+    console.log(res, 'ressssssssssssssssssss')
+  }
+
+  const handleTake = async (id) => {
+    const res = await axiosInstance
+      .put(`events/wishlist/${id}/take`, { userId: userData.id })
+      .then(() => dispatch(getAllUserInvitations(userData.id)))
+    console.log(res, 'ressssssssssssssssssss')
+  }
+
   return (
     <ScrollView
       style={[styles.invitacin, styles.iconLayout]}
+      contentContainerStyle={{ paddingBottom: 100 }}
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.paddingBottom}>
@@ -55,7 +93,7 @@ const Invitacin = () => {
           <View style={styles.lineParent}>
             <View style={styles.frameChild} />
             <Text style={[styles.tituloDelEvento, styles.cdigoTypo]}>
-              Titulo del evento
+              {event.title}
             </Text>
             <View style={styles.calendarParent}>
               <Image
@@ -64,8 +102,8 @@ const Invitacin = () => {
                 source={require('../assets/calendar.png')}
               />
               <View style={styles.deAgostoParent}>
-                <Text style={styles.hsTypo}>24 de Agosto</Text>
-                <Text style={[styles.hs, styles.hsTypo]}>16:00 hs</Text>
+                <Text style={styles.hsTypo}>{event_date}</Text>
+                {/* <Text style={[styles.hs, styles.hsTypo]}>16:00 hs</Text> */}
               </View>
             </View>
             <View style={styles.iconlybulklocationParent}>
@@ -75,69 +113,163 @@ const Invitacin = () => {
                 source={require('../assets/iconlybulklocation2.png')}
               />
               <Text style={[styles.lugarDelEvento, styles.hsTypo]}>
-                Lugar del evento
+                {event_location}
               </Text>
             </View>
-            <Text style={[styles.cdigo, styles.cdigoTypo]}>#Código</Text>
+            <Text style={[styles.cdigo, styles.cdigoTypo]}>
+              {event_description}
+            </Text>
             <View style={styles.fieldWithTitle}>
-              <Text style={styles.hsTypo}>Observaciones</Text>
-              <View style={[styles.field, styles.parentPosition]} />
+              {event_images &&
+                event_images.map((e) => {
+                  return (
+                    <Image
+                      style={{ width: '48%', height: 100 }}
+                      source={{ uri: e }}
+                    ></Image>
+                  )
+                })}
+              {/* <Text style={styles.hsTypo}>Observaciones</Text>
+              <View style={[styles.field, styles.parentPosition]} /> */}
             </View>
           </View>
-          <View style={styles.buttonParent}>
-            <Pressable
-              style={styles.button}
-              onPress={() => setModalCreate(true)}
-            >
-              <View style={[styles.groupParent, styles.parentPosition]}>
-                <Image
-                  style={styles.frameItem}
-                  contentFit="cover"
-                  source={require('../assets/group-70351.png')}
-                />
-                <Text
-                  style={[styles.declinoAsistencia, styles.signInSpaceBlock]}
+          {inv?.status === 'pending' && (
+            <View style={styles.buttonParent}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => handleSubmit('rejected')}
+              >
+                <View style={[styles.groupParent, styles.parentPosition]}>
+                  <Image
+                    style={styles.frameItem}
+                    contentFit="cover"
+                    source={require('../assets/group-70351.png')}
+                  />
+                  <Text
+                    style={[styles.declinoAsistencia, styles.signInSpaceBlock]}
+                  >
+                    Declino asistencia
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <LinearGradient
+                style={styles.button1}
+                locations={[0, 1]}
+                colors={['#dee274', '#7ec18c']}
+              >
+                <TouchableOpacity
+                  style={[styles.pressable, styles.pressableLayout]}
+                  onPress={() => handleSubmit('accepted')}
                 >
-                  Declino asistencia
-                </Text>
-              </View>
-            </Pressable>
+                  <View style={[styles.vectorParent, styles.parentPosition]}>
+                    <Image
+                      style={styles.vectorIcon}
+                      contentFit="cover"
+                      source={require('../assets/vector33.png')}
+                    />
+                    <Text style={[styles.signIn, styles.signTypo]}>
+                      Confirmo asistencia
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </LinearGradient>
+            </View>
+          )}
+          {inv?.status == 'pending' && (
             <LinearGradient
-              style={styles.button1}
+              style={styles.button2}
               locations={[0, 1]}
               colors={['#dee274', '#7ec18c']}
             >
               <Pressable
-                style={[styles.pressable, styles.pressableLayout]}
-                onPress={() => setModalCreate(true)}
+                style={[styles.pressable1, styles.pressableLayout]}
+                onPress={() => navigation.goBack()}
               >
-                <View style={[styles.vectorParent, styles.parentPosition]}>
-                  <Image
-                    style={styles.vectorIcon}
-                    contentFit="cover"
-                    source={require('../assets/vector33.png')}
-                  />
-                  <Text style={[styles.signIn, styles.signTypo]}>
-                    Confirmo asistencia
-                  </Text>
-                </View>
+                <Text style={[styles.signIn1, styles.signTypo]}>
+                  No estoy aún seguro
+                </Text>
               </Pressable>
             </LinearGradient>
-          </View>
-          <LinearGradient
-            style={styles.button2}
-            locations={[0, 1]}
-            colors={['#dee274', '#7ec18c']}
-          >
-            <Pressable
-              style={[styles.pressable1, styles.pressableLayout]}
-              onPress={() => setModalCreate(true)}
-            >
-              <Text style={[styles.signIn1, styles.signTypo]}>
-                No estoy aún seguro
+          )}
+          {inv?.status == 'accepted' || event.creatorId === userData.id && (
+            <View style={{ marginTop: 20, gap: 5 }}>
+              <Text
+                style={{
+                  color: Color.gris,
+                  fontWeight: '500',
+                  lineHeight: 22,
+                  fontSize: FontSize.size_lg,
+                  textAlign: 'left',
+                  fontFamily: FontFamily.lato,
+                  letterSpacing: 0
+                }}
+              >
+                Lista de deseos
               </Text>
-            </Pressable>
-          </LinearGradient>
+              {inv?.status == 'accepted' || event.creatorId === userData.id &&
+                event_wishList?.map((e) => {
+                  console.log(
+                    event_wishList,"123123"
+                  )
+                  if (e.takenBy) {
+                    return (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          width: '100%',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <Text style={{ fontSize: 18 }}>{e.description}</Text>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            gap: 6
+                          }}
+                        >
+                          <Image
+                            style={{ width: 26, height: 26, borderRadius: 50 }}
+                            source={{
+                              uri: allUsers.find((u) => u.id == e.takenBy)
+                                .profilePicture
+                            }}
+                          ></Image>
+                          <Text style={{ fontSize: 14 }}>
+                            {allUsers.find((u) => u.id == e.takenBy).username}
+                          </Text>
+                        </View>
+                      </View>
+                    )
+                  } else {
+                    return (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          width: '100%',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <Text style={{ fontSize: 18 }}>{e.description}</Text>
+                        <TouchableOpacity
+                          onPress={() => handleTake(e.id)}
+                          style={{
+                            backgroundColor: Color.colorGainsboro_100,
+                            padding: 5,
+                            paddingHorizontal: 8,
+                            borderRadius: 50
+                          }}
+                        >
+                          <Text style={{ fontSize: 15, color: 'gray' }}>
+                            tomar
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    )
+                  }
+                })}
+            </View>
+          )}
         </View>
 
         <Modal animationType="slide" transparent visible={modalCreate}>
@@ -160,7 +292,6 @@ const Invitacin = () => {
 
 const styles = StyleSheet.create({
   iconLayout: {
-    overflow: 'hidden',
     width: '100%'
   },
   parentFlexBox: {
@@ -203,12 +334,9 @@ const styles = StyleSheet.create({
     width: 87,
     height: 55
   },
-  image6Wrapper: {
-    marginTop: '5%',
-    left: 20
-  },
+  image6Wrapper: {},
   frameChild: {
-    top: 44,
+    marginTop: 20,
     borderColor: Color.secundario,
     borderTopWidth: 1,
     width: 369,
@@ -217,7 +345,7 @@ const styles = StyleSheet.create({
     left: 0
   },
   tituloDelEvento: {
-    top: 64,
+    marginTop: 20,
     color: Color.gris,
     fontWeight: '500',
     lineHeight: 22,
@@ -239,7 +367,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   calendarParent: {
-    top: 106,
+    marginTop: 20,
     alignItems: 'center',
     flexDirection: 'row'
   },
@@ -251,12 +379,12 @@ const styles = StyleSheet.create({
     marginLeft: 16
   },
   iconlybulklocationParent: {
-    top: 150,
+    marginTop: 20,
     alignItems: 'center',
     flexDirection: 'row'
   },
   cdigo: {
-    top: 195,
+    marginTop: 20,
     color: Color.gris,
     fontWeight: '500',
     lineHeight: 22,
@@ -273,9 +401,10 @@ const styles = StyleSheet.create({
     width: 388
   },
   fieldWithTitle: {
-    marginTop: 237,
-    height: 131,
-    width: 388
+    flexDirection: 'row',
+    marginTop: 20,
+    gap: 5,
+    flexWrap: 'wrap'
   },
   icon: {
     height: '100%'
@@ -291,16 +420,9 @@ const styles = StyleSheet.create({
     letterSpacing: 0
   },
   backParent: {
-    top: '3%',
-    left: 0,
     flexDirection: 'row'
   },
-  lineParent: {
-    height: 368,
-    top: 0,
-    left: 0,
-    width: 388
-  },
+  lineParent: {},
   frameItem: {
     width: 12,
     height: 12
@@ -354,7 +476,7 @@ const styles = StyleSheet.create({
   },
   buttonParent: {
     flexDirection: 'row',
-    marginTop: '35%'
+    marginTop: 40
   },
   signIn1: {
     letterSpacing: 1,
@@ -374,7 +496,6 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_11xl
   },
   invitacin: {
-    flex: 1,
     backgroundColor: Color.white,
     padding: Padding.p_xl
   },

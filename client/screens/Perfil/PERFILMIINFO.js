@@ -94,7 +94,8 @@ console.log(usuario,"esto tengo")
            
                 <Image
                   style={styles.vectorIcon1}
-                  contentFit="cover"
+                  contentFit="scale-down"
+
                   source={require('../../assets/vector9.png')}
                 />
               </View>
@@ -111,7 +112,8 @@ console.log(usuario,"esto tengo")
          
                 <Image
                   style={styles.vectorIcon1}
-                  contentFit="cover"
+                  contentFit="scale-down"
+
                   source={require('../../assets/vector9.png')}
                 />
               </View>
@@ -125,7 +127,7 @@ console.log(usuario,"esto tengo")
             
                 <Image
                   style={styles.vectorIcon1}
-                  contentFit="cover"
+                  contentFit="scale-down"
                   source={require('../../assets/vector9.png')}
                 />
               </View>

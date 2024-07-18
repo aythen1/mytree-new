@@ -30,6 +30,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createEvent } from './../../redux/actions/events'
 import ImagePickerModal from '../Modals/ImagePickerModal'
+import axiosInstance from '../../apiBackend'
 
 const CrearFechaEspecial = () => {
   const [user, setUser] = useState()
@@ -124,7 +125,24 @@ const CrearFechaEspecial = () => {
 
       event.coverImage = cloudinaryUrls[0]
       console.log('creating event with values: ', event)
-      dispatch(createEvent(event))
+      dispatch(createEvent(event)).then((e) => {
+        const users = e.payload.invitedUsers
+
+        for (let index = 0; index < users.length; index++) {
+          const id = users[index]
+          axiosInstance.post(`/events/${e.payload.id}/invite`, { userId: id })
+        }
+
+        const wishList = e.payload.wishList
+
+        for (let index = 0; index < wishList.length; index++) {
+          const wish = wishList[index]
+          axiosInstance.post(`/events/${e.payload.id}/wishlist`, {
+            description: wish
+          })
+        }
+        console.log('resdel', e)
+      })
     }
   }
   return (

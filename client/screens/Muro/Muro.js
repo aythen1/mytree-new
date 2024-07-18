@@ -38,7 +38,7 @@ import Etiquetados from '../../components/Etiquetados'
 import { getAllUsers, getUserData } from '../../redux/actions/user'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getAllNotifications } from '../../redux/actions/notifications'
-import { getAllEvents } from '../../redux/actions/events'
+import { getAllEvents, getAllUserEvents, getAllUserInvitations } from '../../redux/actions/events'
 import axiosInstance from '../../apiBackend'
 import CommentsModal from '../../components/modals/CommentsModal'
 import { updateSelectedPostComments } from '../../redux/slices/comments.slices'
@@ -76,12 +76,18 @@ const Muro = () => {
     }
   }, [queryParams])
 
+  const dispatches = (id) => {
+    console.log('pasa por aca y tiene este ID', id)
+    dispatch(getAllNotifications())
+    dispatch(getUserData(id))
+    dispatch(getAllUserEvents(id))
+    dispatch(getAllEvents())
+    dispatch(getAllUserInvitations(id))
+  }
+
   useEffect(() => {
-    if (userData) {
-      dispatch(getAllNotifications())
-      dispatch(getUserData(userData.id))
-      // dispatch(getAllUsers())
-      dispatch(getAllEvents())
+    if (userData.id !== undefined) {
+      dispatches(userData.id)
     }
   }, [])
 
@@ -96,7 +102,6 @@ const Muro = () => {
       console.log(error, 'error')
     }
   }
-
 
   return (
     <LinearGradient

@@ -8,6 +8,8 @@ export class CreateEventDto {
     wishList?: any[];
     shared?: boolean;
     title?: string;
+    images?: string[];
+
 }
 // es la estructura de los usuarios invitados, la prop de arriba, con esta filtramos los que la leyeron, los que la aceptaron, los que no.
 export class InvitedUserDto {

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "MyTree",
-    "slug": "nuevappp",
+    "slug": "spotsport",
     "version": "1.0.0",
     "scheme": "mytree",
     "orientation": "portrait",
@@ -32,7 +32,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "9120196b-3c17-4afd-a7f1-26a9758f23ae"
+        "projectId": "3b77cef6-ebe6-4d36-b616-c391d890f0bb"
       }
     },
     "plugins": [
@@ -49,6 +49,6 @@
         "@react-native-google-signin/google-signin"
       ]
     ],
-    "owner": "azschiaffino"
+    "owner": "azulschiaffino"
   }
 }

@@ -7,9 +7,11 @@ import EventCard from './EventCard'
 import { useSelector } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const Eventos = ({ search , dates }) => {
+const Eventos = ({ search   }) => {
   const navigation = useNavigation()
   const { allEvents } = useSelector((state) => state.events)
+  const { userEvents:dates } = useSelector((state) => state.events)
+
   const [user, setUser] = useState()
   const [filteredEvents, setFilteredEvents] = useState(allEvents || [])
   useEffect(() => {
@@ -24,9 +26,9 @@ const Eventos = ({ search , dates }) => {
 
   useEffect(() => {
     if (search.length) {
-      const actualEvents = dates
+     
       setFilteredEvents(
-        actualEvents.filter((event) =>
+        dates.filter((event) =>
           event.title.toLowerCase().includes(search.toLowerCase())
         )
       )
@@ -34,7 +36,7 @@ const Eventos = ({ search , dates }) => {
     } else {
       setFilteredEvents(dates)
     }
-  }, [search])
+  }, [search,dates])
 
   if (user)
     return (

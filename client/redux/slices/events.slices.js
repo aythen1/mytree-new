@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getAllEvents, getAllUserEvents } from '../actions/events'
+import { getAllEvents, getAllUserEvents, getAllUserInvitations } from '../actions/events'
 
 export const eventsSlices = createSlice({
   name: 'events',
   initialState: {
     allEvents: [],
     userEvents: [],
+    userInvitations: [],
     loading: false,
     error: null
   },
@@ -48,6 +49,19 @@ export const eventsSlices = createSlice({
         state.userEvents = action.payload
       })
       .addCase(getAllUserEvents.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.error.message
+      })
+      //=====================USER INVITATIONS=======================
+      .addCase(getAllUserInvitations.pending, (state) => {
+        console.log('pending: ')
+        state.loading = true
+      })
+      .addCase(getAllUserInvitations.fulfilled, (state, action) => {
+        state.loading = false
+        state.userInvitations = action.payload
+      })
+      .addCase(getAllUserInvitations.rejected, (state, action) => {
         state.loading = false
         state.error = action.error.message
       })

@@ -32,14 +32,15 @@ const CALENDARIO = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const { setShowSelectEventTypeModal } = useContext(Context)
-
-  const { showPanel } = useSelector((state) => state.panel)
+  const { userEvents:dates ,userInvitations } = useSelector((state) => state.events)
 
   const [selectedItem, setSelectedItem] = useState('fechas')
   const [selectedDate, setSelectedDate] = useState('')
   const [user, setUser] = useState({})
-  const [dates, setDates] = useState([])
   const [search, setSearch] = useState('')
+  const [eventInvited, setEventInvited] = useState([])
+
+
 
   const handleItemPress = (item) => {
     setSelectedItem(item)
@@ -57,28 +58,14 @@ const CALENDARIO = () => {
 
     // Establecer la fecha actual como valor por defecto al montar el componente
     setSelectedDate(getCurrentDate())
+    if(userInvitations){
+     const inv = userInvitations.map((e)=> e.event )
+     setEventInvited(inv)
+    }
+    console.log(userInvitations,"userInvitations")
   }, [])
 
-  useEffect(() => {
-    const searchDate = async () => {
-      const user = await AsyncStorage.getItem('user')
-      const userpar = JSON.parse(user)
-      setUser(userpar)
-      const res = await axiosInstance.get(`/events/by-creator/${userpar.id}`)
-      console.log(res.data, 'las fechas')
-      setDates(res.data)
-    }
-    searchDate()
-  }, [selectedDate])
 
-  const getRoute = () => {
-    if (selectedItem === 'fechas') {
-      return 'CrearFechaEspecial'
-    } else if (selectedItem === 'eventos') {
-      return 'CrearEvento'
-    }
-    return null
-  }
 
   return (
     <ScrollView
@@ -162,7 +149,7 @@ const CALENDARIO = () => {
       </View>
 
       <Calendario
-        dates={dates}
+        dates={[...dates,...eventInvited]}
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
       />
@@ -207,9 +194,9 @@ const CALENDARIO = () => {
         </View>
       </View>
       {selectedItem === 'fechas' ? (
-        <Fechas user={user} dates={dates} selectedDate={selectedDate} />
+        <Fechas user={user} dates={[...dates,...eventInvited]} selectedDate={selectedDate} />
       ) : (
-        <Eventos search={search} dates={dates} selectedDate={selectedDate} />
+        <Eventos search={search} dates={dates}  selectedDate={selectedDate} />
       )}
     </ScrollView>
   )

@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { InvitationsService } from './invitations.service';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
+import { Invitations } from './entities/invitation.entity';
 
 @Controller('invitations')
 export class InvitationsController {
@@ -19,16 +20,22 @@ export class InvitationsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.invitationsService.findOne(+id);
+    return this.invitationsService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateInvitationDto: UpdateInvitationDto) {
-    return this.invitationsService.update(+id, updateInvitationDto);
+    return this.invitationsService.update(id, updateInvitationDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.invitationsService.remove(+id);
+    return this.invitationsService.remove(id);
   }
+
+  @Get('user/:userId')
+  findByUserId(@Param('userId') userId: string): Promise<Invitations[]> {
+    return this.invitationsService.findByUserId(userId);
+  }
+
 }

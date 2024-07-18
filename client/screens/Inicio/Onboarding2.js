@@ -4,14 +4,16 @@ import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { FontFamily, Border, FontSize, Color } from '../../GlobalStyles'
 import { useNavigation } from '@react-navigation/native'
 import ImageVectorSVG from '../../components/svgs/ImageVectorSVG'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux'
+import { getUserData } from '../../redux/actions/user'
 const Onboarding2 = () => {
   const navigation = useNavigation()
 
   useEffect(() => {
-    verificarUsuarioLogueado()
-  }, [])
-
+    verificarUsuarioLogueado();
+  }, []);
+  const dispatch = useDispatch()
   const verificarUsuarioLogueado = async () => {
     try {
       // Verifica si el usuario está logueado
@@ -19,15 +21,14 @@ const Onboarding2 = () => {
 
       // Navega a la pantalla adecuada
       if (usuarioLogueado) {
-        console.log(usuarioLogueado?.newUser, 'logeadoooo')
+        console.log(JSON.parse(usuarioLogueado).id,"logeadoooo")
         // Usuario logueado, navega a la pantalla de inicio
-        if (usuarioLogueado) {
-          navigation.navigate('Perfil')
+        if(usuarioLogueado?.newUser){
+        return  navigation.navigate('Perfil');
         }
-        navigation.replace('Muro')
-      } else {
-        // Usuario no logueado, navega a la pantalla de registro
-      }
+        dispatch(getUserData(JSON.parse(usuarioLogueado).id)).then((e)=> navigation.replace('Muro'))
+       
+      } 
     } catch (error) {
       console.log('Error al verificar usuario logueado: ', error)
     }

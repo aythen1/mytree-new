@@ -268,11 +268,13 @@ const ImagePickerModal = ({
             <TouchableOpacity
               key={index}
               onPress={() => {
+                console.log(imagen)
                 if (fromEvent) {
                   setPickedImages([imagen])
                   return
                 }
                 if (showSelection) {
+console.log(imagen)
                   handleSelect(
                     imagen,
                     setSelectedImage,
