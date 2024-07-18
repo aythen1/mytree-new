@@ -387,8 +387,9 @@ const BOTONInvitarAmigos1 = () => {
           </View>
         ) : (
           <ScrollView>
-            {filteredUsers.map((user) => (
+            {filteredUsers.map((user, i) => (
               <TouchableOpacity
+                key={i}
                 onPress={() => setSelectedUserToInvite(user)}
                 style={{
                   paddingHorizontal: 10,

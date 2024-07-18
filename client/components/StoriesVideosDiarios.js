@@ -8,33 +8,42 @@ import useFetchHook from '../utils/useFetchHook'
 import { useSelector } from 'react-redux'
 
 const StoriesVideosDiarios = () => {
-
   const [users, setUsers] = React.useState()
-  const { userData } = useSelector((state) => state.users)
+  const { userData, allUsers } = useSelector((state) => state.users)
 
-  const { data, loading, error } = useFetchHook({ url: `/user/${userData?.id}/friendsAndFamily` })
+  const { data, loading, error } = useFetchHook({
+    url: `/user/${userData?.id}/friendsAndFamily`
+  })
 
   const navigation = useNavigation()
 
-
   React.useEffect(() => {
     setUsers(data)
-    console.log(data, "data del hoooksss")
+    console.log(data, 'data del hoooksss')
   }, [data])
-
 
   return (
     <View style={{ marginTop: 15, width: '100%', justifyContent: 'center' }}>
-      <ScrollView style={{}} horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={{paddingRight:15}}>
-        <View style={{
-          width: '100%',
-          height: 100
-        }}>
+      <ScrollView
+        style={{}}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingRight: 15 }}
+      >
+        <View
+          style={{
+            width: '100%',
+            height: 100
+          }}
+        >
           <View style={styles.storiesLayout}>
-            <View style={{
-              height: 90,
-              width: 70, marginLeft: 15
-            }}>
+            <View
+              style={{
+                height: 90,
+                width: 70,
+                marginLeft: 15
+              }}
+            >
               <Image
                 style={[styles.aatarIcon, styles.aatarIconPosition]}
                 contentFit="cover"
@@ -44,25 +53,44 @@ const StoriesVideosDiarios = () => {
                 <Text style={[styles.you1, styles.signTypo]}>You</Text>
               </View>
             </View>
-            {data && data.map((user)=> {
-              return (
-                <Pressable
-                onPress={()=> navigation.navigate('PerfilExterno',user)}
-                style={{
-                  height: 90,
-                  width: 70, marginLeft: 15
-                }}>
-                  <Image
-                    style={[styles.aatarIcon, styles.aatarIconPosition , {borderRadius:100,borderWidth:3,borderColor: Color.primario1}]}
-                    contentFit="cover"
-                    source={{uri: user.profilePicture}}
-                  />
-                  <View style={[styles.youWrapper, styles.aatarIconPosition]}>
-                    <Text style={[styles.you1, styles.signTypo]}>{user.username}</Text>
-                  </View>
-                </Pressable>
-              )
-            }) }
+            {data &&
+              data.map((user, i) => {
+                return (
+                  <Pressable
+                    key={i}
+                    onPress={() =>
+                      navigation.navigate(
+                        'OtherUserProfile',
+                        allUsers.filter((user) => user.id === user.id)[0]
+                      )
+                    }
+                    style={{
+                      height: 90,
+                      width: 70,
+                      marginLeft: 15
+                    }}
+                  >
+                    <Image
+                      style={[
+                        styles.aatarIcon,
+                        styles.aatarIconPosition,
+                        {
+                          borderRadius: 100,
+                          borderWidth: 3,
+                          borderColor: Color.primario1
+                        }
+                      ]}
+                      contentFit="cover"
+                      source={{ uri: user.profilePicture }}
+                    />
+                    <View style={[styles.youWrapper, styles.aatarIconPosition]}>
+                      <Text style={[styles.you1, styles.signTypo]}>
+                        {user.username}
+                      </Text>
+                    </View>
+                  </Pressable>
+                )
+              })}
           </View>
         </View>
       </ScrollView>

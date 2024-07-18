@@ -73,7 +73,6 @@ export const getAllUserAlbums = createAsyncThunk(
       const { data } = await axiosInstance.post(`/albums/by-creator`, {
         creatorId: userId
       })
-      console.log('USER ALBUMS FROM ACTION', data)
       return data
     } catch (error) {
       throw new Error(error)

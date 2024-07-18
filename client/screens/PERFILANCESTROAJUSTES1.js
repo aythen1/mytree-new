@@ -103,7 +103,6 @@ const PERFILANCESTROAJUSTES1 = () => {
           >
             <View style={styles.fechaDeDefuncinParent}>
               <Text style={[styles.text, styles.textSpaceBlock]}>
-                {' '}
                 Causa natural
               </Text>
             </View>

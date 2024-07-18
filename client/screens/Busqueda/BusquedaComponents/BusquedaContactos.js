@@ -1,15 +1,54 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image } from 'expo-image'
 import { StyleSheet, View, ScrollView, Text } from 'react-native'
 import { FontFamily, FontSize, Color } from '../../../GlobalStyles'
 import { useSelector } from 'react-redux'
 
-const BusquedaContactos = () => {
+const BusquedaContactos = ({ searchOnContacts }) => {
   const { userData, allUsers } = useSelector((state) => state.users)
-  const userFamily =
-    allUsers.filter((user) => user.id === userData.id)[0]?.familyIds || []
-  const userFriends =
-    allUsers.filter((user) => user.id === userData.id)[0]?.friendsIds || []
+  const [userFamily, setUserFamily] = useState(
+    allUsers.filter((user) => user.id === userData.id)[0]?.familyIds
+  )
+  const [userFriends, setUserFriends] = useState(
+    allUsers.filter((user) => user.id === userData.id)[0]?.friendsIds
+  )
+
+  useEffect(() => {
+    console.log('searchOnContacts changed', searchOnContacts)
+
+    if (searchOnContacts?.length > 0) {
+      const searchLower = searchOnContacts.toLowerCase()
+
+      const filterUsers = (userIds) => {
+        console.log('userIds', userIds)
+        return userIds.filter((userId) => {
+          const user = allUsers.find((user) => user.id === userId)
+          if (user) {
+            const username = user.username?.toLowerCase() || ''
+            const fullname =
+              `${user.firstName || ''} ${user.lastName || ''}`.toLowerCase()
+            return (
+              username.includes(searchLower) || fullname.includes(searchLower)
+            )
+          }
+          return false
+        })
+      }
+
+      setUserFamily(
+        filterUsers(allUsers.find((user) => user.id === userData.id).familyIds)
+      )
+      setUserFriends(
+        filterUsers(allUsers.find((user) => user.id === userData.id).friendsIds)
+      )
+    } else {
+      const user = allUsers.find((user) => user.id === userData.id)
+      if (user) {
+        setUserFamily(user.familyIds || [])
+        setUserFriends(user.friendsIds || [])
+      }
+    }
+  }, [searchOnContacts])
 
   return (
     <ScrollView
@@ -64,12 +103,14 @@ const BusquedaContactos = () => {
                 style={{
                   color: '#000',
                   marginTop: 40,
-                  fontSize: 16,
+                  fontSize: 15,
                   alignSelf: 'center',
                   fontWeight: 400
                 }}
               >
-                Aun no tienes ningun contacto agregado a familiares.
+                {searchOnContacts === ''
+                  ? 'Aún no tienes ningun contacto agregado a familiares.'
+                  : 'No encontramos resultados para tu búsqueda.'}
               </Text>
             )}
           </View>
@@ -122,12 +163,14 @@ const BusquedaContactos = () => {
                     color: '#000',
                     paddingHorizontal: 15,
                     marginTop: 40,
-                    fontSize: 16,
+                    fontSize: 15,
                     alignSelf: 'center',
                     fontWeight: 400
                   }}
                 >
-                  Aun no tienes ningun contacto agregado a amigos.
+                  {searchOnContacts === ''
+                    ? 'Aún no tienes ningun contacto agregado a familiares.'
+                    : 'No encontramos resultados para tu búsqueda.'}
                 </Text>
               )}
             </View>
