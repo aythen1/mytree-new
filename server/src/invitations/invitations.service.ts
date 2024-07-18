@@ -35,6 +35,6 @@ export class InvitationsService {
   }
 
   async findByUserId(userId: string): Promise<Invitations[]> {
-    return await this.invitationsRepository.find({ where: { userId },relations:['event'] });
+    return await this.invitationsRepository.find({ where: { userId },relations:['event','event.wishListItems'] });
   }
 }

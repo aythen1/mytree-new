@@ -7,34 +7,37 @@ import {
   Pressable,
   Modal,
   ScrollView,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  TouchableOpacity
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useNavigation } from '@react-navigation/native'
 import { FontFamily, FontSize, Color, Border, Padding } from '../GlobalStyles'
 import ENTRADACREADA from '../components/ENTRADACREADA'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import axiosInstance from '../apiBackend'
+import { getAllUserInvitations } from '../redux/actions/events'
 
-const Invitacin = ({route}) => {
-
-  
-
-  const { userEvents:dates ,userInvitations } = useSelector((state) => state.events)
+const Invitacin = ({ route }) => {
+  const { userEvents: dates, userInvitations } = useSelector(
+    (state) => state.events
+  )
+  const { userData, allUsers } = useSelector((state) => state.users)
 
   const event = route?.params?.date
   const event_location = route?.params?.date.location
   const event_images = route?.params?.date.images
+  const event_wishList = route?.params?.date.wishListItems
+
   const event_description = route?.params?.date.description
 
-  const inv = userInvitations.find((e)=> e.event.id == event.id )
+  const inv = userInvitations.find((e) => e.event.id == event.id)
 
-  console.log(inv,"imnvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
+  console.log(event, 'imnvvvvvvvvvvvvvvvvvvvvvvvvvvvv')
 
+  const event_date = route?.params?.date?.date.slice(0, 10)
 
-
-  const event_date = route?.params?.date?.date.slice(0,10)
-
-
+  const dispatch = useDispatch()
   const navigation = useNavigation()
 
   const [modalCreate, setModalCreate] = useState(false)
@@ -43,10 +46,24 @@ const Invitacin = ({route}) => {
     setModalCreate(false)
   }
 
+  const handleSubmit = async (text) => {
+    const res = await axiosInstance
+      .put(`events/invite/${inv.id}/respond`, { response: text })
+      .then(() => dispatch(getAllUserInvitations(userData.id)))
+    console.log(res, 'ressssssssssssssssssss')
+  }
+
+  const handleTake = async (id) => {
+    const res = await axiosInstance
+      .put(`events/wishlist/${id}/take`, { userId: userData.id })
+      .then(() => dispatch(getAllUserInvitations(userData.id)))
+    console.log(res, 'ressssssssssssssssssss')
+  }
+
   return (
     <ScrollView
       style={[styles.invitacin, styles.iconLayout]}
-      contentContainerStyle={{paddingBottom:100}}
+      contentContainerStyle={{ paddingBottom: 100 }}
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.paddingBottom}>
@@ -99,75 +116,162 @@ const Invitacin = ({route}) => {
                 {event_location}
               </Text>
             </View>
-            <Text style={[styles.cdigo, styles.cdigoTypo]}>{event_description}</Text>
+            <Text style={[styles.cdigo, styles.cdigoTypo]}>
+              {event_description}
+            </Text>
             <View style={styles.fieldWithTitle}>
-              {event_images && event_images.map((e)=>{
-                return (
-                  <Image style={{width:"48%",height:100}} source={{uri:e}}></Image>
-                )
-              } )}
+              {event_images &&
+                event_images.map((e) => {
+                  return (
+                    <Image
+                      style={{ width: '48%', height: 100 }}
+                      source={{ uri: e }}
+                    ></Image>
+                  )
+                })}
               {/* <Text style={styles.hsTypo}>Observaciones</Text>
               <View style={[styles.field, styles.parentPosition]} /> */}
             </View>
           </View>
-         {inv.status === 'pending' && (
-           <View style={styles.buttonParent}>
-           <Pressable
-             style={styles.button}
-             onPress={() => setModalCreate(true)}
-           >
-             <View style={[styles.groupParent, styles.parentPosition]}>
-               <Image
-                 style={styles.frameItem}
-                 contentFit="cover"
-                 source={require('../assets/group-70351.png')}
-               />
-               <Text
-                 style={[styles.declinoAsistencia, styles.signInSpaceBlock]}
-               >
-                 Declino asistencia
-               </Text>
-             </View>
-           </Pressable>
-           <LinearGradient
-             style={styles.button1}
-             locations={[0, 1]}
-             colors={['#dee274', '#7ec18c']}
-           >
-             <Pressable
-               style={[styles.pressable, styles.pressableLayout]}
-               onPress={() => setModalCreate(true)}
-             >
-               <View style={[styles.vectorParent, styles.parentPosition]}>
-                 <Image
-                   style={styles.vectorIcon}
-                   contentFit="cover"
-                   source={require('../assets/vector33.png')}
-                 />
-                 <Text style={[styles.signIn, styles.signTypo]}>
-                   Confirmo asistencia
-                 </Text>
-               </View>
-             </Pressable>
-           </LinearGradient>
-         </View>
-         )}
-       {inv.status == 'pending' && (
-           <LinearGradient
-           style={styles.button2}
-           locations={[0, 1]}
-           colors={['#dee274', '#7ec18c']}
-         >
-           <Pressable
-             style={[styles.pressable1, styles.pressableLayout]}
-             onPress={() => setModalCreate(true)}
-           >
-             <Text style={[styles.signIn1, styles.signTypo]}>
-               No estoy aún seguro
-             </Text>
-           </Pressable>
-         </LinearGradient>
-       )}
+          {inv.status === 'pending' && (
+            <View style={styles.buttonParent}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => handleSubmit('rejected')}
+              >
+                <View style={[styles.groupParent, styles.parentPosition]}>
+                  <Image
+                    style={styles.frameItem}
+                    contentFit="cover"
+                    source={require('../assets/group-70351.png')}
+                  />
+                  <Text
+                    style={[styles.declinoAsistencia, styles.signInSpaceBlock]}
+                  >
+                    Declino asistencia
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <LinearGradient
+                style={styles.button1}
+                locations={[0, 1]}
+                colors={['#dee274', '#7ec18c']}
+              >
+                <TouchableOpacity
+                  style={[styles.pressable, styles.pressableLayout]}
+                  onPress={() => handleSubmit('accepted')}
+                >
+                  <View style={[styles.vectorParent, styles.parentPosition]}>
+                    <Image
+                      style={styles.vectorIcon}
+                      contentFit="cover"
+                      source={require('../assets/vector33.png')}
+                    />
+                    <Text style={[styles.signIn, styles.signTypo]}>
+                      Confirmo asistencia
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </LinearGradient>
+            </View>
+          )}
+          {inv.status == 'pending' && (
+            <LinearGradient
+              style={styles.button2}
+              locations={[0, 1]}
+              colors={['#dee274', '#7ec18c']}
+            >
+              <Pressable
+                style={[styles.pressable1, styles.pressableLayout]}
+                onPress={() => navigation.goBack()}
+              >
+                <Text style={[styles.signIn1, styles.signTypo]}>
+                  No estoy aún seguro
+                </Text>
+              </Pressable>
+            </LinearGradient>
+          )}
+          {inv.status == 'accepted' && (
+            <View style={{ marginTop: 20, gap: 5 }}>
+              <Text
+                style={{
+                  color: Color.gris,
+                  fontWeight: '500',
+                  lineHeight: 22,
+                  fontSize: FontSize.size_lg,
+                  textAlign: 'left',
+                  fontFamily: FontFamily.lato,
+                  letterSpacing: 0
+                }}
+              >
+                Lista de deseos
+              </Text>
+              {inv.status == 'accepted' &&
+                event_wishList.map((e) => {
+                  console.log(
+                    e.takenBy,
+                    'asdasfasasfas',
+                    allUsers.find((e) => e.id == e.takenBy)
+                  )
+                  if (e.takenBy) {
+                    return (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          width: '100%',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <Text style={{ fontSize: 18 }}>{e.description}</Text>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            gap: 6
+                          }}
+                        >
+                          <Image
+                            style={{ width: 26, height: 26, borderRadius: 50 }}
+                            source={{
+                              uri: allUsers.find((u) => u.id == e.takenBy)
+                                .profilePicture
+                            }}
+                          ></Image>
+                          <Text style={{ fontSize: 14 }}>
+                            {allUsers.find((u) => u.id == e.takenBy).username}
+                          </Text>
+                        </View>
+                      </View>
+                    )
+                  } else {
+                    return (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          width: '100%',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <Text style={{ fontSize: 18 }}>{e.description}</Text>
+                        <TouchableOpacity
+                          onPress={() => handleTake(e.id)}
+                          style={{
+                            backgroundColor: Color.colorGainsboro_100,
+                            padding: 5,
+                            paddingHorizontal: 8,
+                            borderRadius: 50
+                          }}
+                        >
+                          <Text style={{ fontSize: 15, color: 'gray' }}>
+                            tomar
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    )
+                  }
+                })}
+            </View>
+          )}
         </View>
 
         <Modal animationType="slide" transparent visible={modalCreate}>
@@ -232,10 +336,9 @@ const styles = StyleSheet.create({
     width: 87,
     height: 55
   },
-  image6Wrapper: {
-  },
+  image6Wrapper: {},
   frameChild: {
-    marginTop:20,
+    marginTop: 20,
     borderColor: Color.secundario,
     borderTopWidth: 1,
     width: 369,
@@ -244,7 +347,7 @@ const styles = StyleSheet.create({
     left: 0
   },
   tituloDelEvento: {
-    marginTop:20,
+    marginTop: 20,
     color: Color.gris,
     fontWeight: '500',
     lineHeight: 22,
@@ -266,7 +369,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   calendarParent: {
-    marginTop:20,
+    marginTop: 20,
     alignItems: 'center',
     flexDirection: 'row'
   },
@@ -278,12 +381,12 @@ const styles = StyleSheet.create({
     marginLeft: 16
   },
   iconlybulklocationParent: {
-    marginTop:20,
+    marginTop: 20,
     alignItems: 'center',
     flexDirection: 'row'
   },
   cdigo: {
-    marginTop:20,
+    marginTop: 20,
     color: Color.gris,
     fontWeight: '500',
     lineHeight: 22,
@@ -300,10 +403,10 @@ const styles = StyleSheet.create({
     width: 388
   },
   fieldWithTitle: {
-  flexDirection:"row",
-  marginTop:20,
-  gap:5,
-  flexWrap:"wrap"
+    flexDirection: 'row',
+    marginTop: 20,
+    gap: 5,
+    flexWrap: 'wrap'
   },
   icon: {
     height: '100%'
@@ -321,9 +424,7 @@ const styles = StyleSheet.create({
   backParent: {
     flexDirection: 'row'
   },
-  lineParent: {
- 
-  },
+  lineParent: {},
   frameItem: {
     width: 12,
     height: 12
@@ -377,7 +478,7 @@ const styles = StyleSheet.create({
   },
   buttonParent: {
     flexDirection: 'row',
-    marginTop:40
+    marginTop: 40
   },
   signIn1: {
     letterSpacing: 1,
