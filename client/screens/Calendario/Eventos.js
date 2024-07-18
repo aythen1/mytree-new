@@ -24,21 +24,25 @@ import BarraBusqueda from '../../components/BarraBusqueda'
 import CalendarCheckSVG from '../../components/svgs/CalendarCheckSVG'
 import RegaloSVG from '../../components/svgs/RegaloSVG'
 import AñadirUsuarioSVG from '../../components/svgs/AñadirUsuarioSVG'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Context } from '../../context/Context'
 import { Camera, CameraView, useCameraPermissions } from 'expo-camera'
 import ImagePickerModal from '../Modals/ImagePickerModal'
 import imageMultiPickerModal from '../Modals/imageMultiPickerModal'
 import ImageMultiPickerModal from '../Modals/imageMultiPickerModal'
+import { getAllUserEvents, updateEvent } from '../../redux/actions/events'
+import axiosInstance from '../../apiBackend'
 
 const Eventos = ({ route }) => {
   const event_name = route?.params?.title
   const event_desc = route?.params?.description
   const event_invites = route?.params?.invites
   const event_wishList = route?.params?.wishListItems
+  const event_id = route?.params?.id
+  const event_images = route?.params?.images
 
   const navigation = useNavigation()
-  const { allUsers } = useSelector((state) => state.users)
+  const { allUsers, userData } = useSelector((state) => state.users)
 
   console.log(route?.params, 'asdasfasfasfas')
   const [selected, setSelected] = useState(null)
@@ -104,18 +108,22 @@ const Eventos = ({ route }) => {
       profileImageForm.append('upload_preset', 'cfbb_profile_pictures')
       profileImageForm.append('cloud_name', 'dnewfuuv0')
 
-      await fetch('https://api.cloudinary.com/v1_1/dnewfuuv0/image/upload', {
-        method: 'post',
-        body: profileImageForm
-      })
+      const res = await fetch(
+        'https://api.cloudinary.com/v1_1/dnewfuuv0/image/upload',
+        {
+          method: 'post',
+          body: profileImageForm
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
-          //  console.log('dataUrl from uriImg:', data.url)
-
-          return transformHttpToHttps(data.url)
+          return data.url
         })
+      console.log(res, 'fuynca')
+      return transformHttpToHttps(res)
     }
   }
+  const dispatch = useDispatch()
 
   useEffect(() => {
     console.log(pickedImage, 'pickeddd')
@@ -124,13 +132,31 @@ const Eventos = ({ route }) => {
   const submit = async () => {
     const images = []
 
-    if (pickedImage.length > 0) {
-      for (let index = 0; index < pickedImage.length; index++) {
-        const url = pickedImage[index].uri
-        pickImagen(url).then((r) => images.push(r))
+    for (let index = 0; index < pickedImage.length; index++) {
+      const url = pickedImage[index].uri
+      const uploadedUrl = await pickImagen(url)
+      if (uploadedUrl) {
+        images.push(uploadedUrl)
       }
     }
-    console.log(images, 'imagessss')
+
+    console.log(images, 'uploaded images')
+
+    let data
+    if (description) {
+      data = { description }
+    }
+    if (images.length > 0) {
+      data = { images }
+    }
+    if (description && images.length > 0) {
+      data = { images, description }
+    }
+    console.log(data, 'dataaa')
+    axiosInstance
+      .patch(`/events/${event_id}`, data)
+      .then(() => dispatch(getAllUserEvents(userData.id)))
+    navigation.goBack()
   }
 
   return (
@@ -246,22 +272,39 @@ const Eventos = ({ route }) => {
           )}
           {selected && (
             <View style={{ flexDirection: 'row', paddingBottom: 100, gap: 2 }}>
-              {/* <Image
-                source={require('../../assets/coverpicture.png')}
-                style={{ width: '25%', height: 90 }}
-              ></Image>
-              <Image
-                source={require('../../assets/coverpicture.png')}
-                style={{ width: '25%', height: 90 }}
-              ></Image>
-              <Image
-                source={require('../../assets/coverpicture.png')}
-                style={{ width: '25%', height: 90 }}
-              ></Image>
-              <Image
-                source={require('../../assets/coverpicture.png')}
-                style={{ width: '25%', height: 90 }}
-              ></Image> */}
+              {event_images.length < 1 && pickedImage.length < 1 && (
+                <View style={{width:"100%",height:90,flexDirection:"row",gap:2}}>
+                  <Image
+                    source={require('../../assets/coverpicture.png')}
+                    style={{ width: '25%', height: 90 }}
+                  ></Image>
+                  <Image
+                    source={require('../../assets/coverpicture.png')}
+                    style={{ width: '25%', height: 90 }}
+                  ></Image>
+                  <Image
+                    source={require('../../assets/coverpicture.png')}
+                    style={{ width: '25%', height: 90 }}
+                  ></Image>
+                  <Image
+                    source={require('../../assets/coverpicture.png')}
+                    style={{ width: '25%', height: 90 }}
+                  ></Image>
+                </View>
+              )}
+              {event_images &&
+                event_images.map((e) => {
+                  return (
+                    <Image
+                      source={
+                        e
+                          ? { uri: e }
+                          : require('../../assets/coverpicture.png')
+                      }
+                      style={{ width: '25%', height: 90 }}
+                    ></Image>
+                  )
+                })}
               {pickedImage &&
                 pickedImage.map((e) => {
                   return (

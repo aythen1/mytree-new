@@ -28,6 +28,18 @@ export const getAllUserEvents = createAsyncThunk(
   }
 )
 
+export const getAllUserInvitations = createAsyncThunk(
+  'getAllUserInvitations/events',
+  async (userId) => {
+    try {
+      const { data } = await axiosInstance.get(`/invitations/user/${userId}`)
+      return data
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+)
+
 // Post an event
 export const createEvent = createAsyncThunk(
   'createEvent/events',
@@ -45,9 +57,9 @@ export const createEvent = createAsyncThunk(
 // Update event by id
 export const updateEvent = createAsyncThunk(
   'updateEvent/events',
-  async (body) => {
+  async (eventId,body) => {
     try {
-      const { data } = await axiosInstance.patch('/events', body)
+      const { data } = await axiosInstance.patch(`/events/${eventId}`, body)
       return data
     } catch (error) {
       throw new Error(error)

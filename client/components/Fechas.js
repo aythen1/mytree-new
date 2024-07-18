@@ -5,9 +5,12 @@ import { Color, FontFamily, FontSize } from '../GlobalStyles'
 import { useNavigation } from '@react-navigation/native'
 import axiosInstance from '../apiBackend'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useSelector } from 'react-redux'
 
 const Fechas = ({ selectedDate, dates, user }) => {
   const [datesFechas, setDatesFechas] = useState([])
+  const { userData ,allUsers } = useSelector((state) => state.users)
+
 
   useEffect(() => {
     const searchDate = async () => {
@@ -26,24 +29,20 @@ const Fechas = ({ selectedDate, dates, user }) => {
   const renderItem = ({ item }) => (
     <Pressable
       style={styles.frameContainer}
-      onPress={() => navigation.navigate('Invitacin')}
+      onPress={() => navigation.navigate('Invitacin',{date:item})}
     >
       <View style={styles.unsplashilip77sbmoeParent}>
         <Image
           style={styles.unsplashilip77sbmoeIcon}
           contentFit="cover"
-          source={require('../assets/unsplashilip77sbmoe.png')}
+          source={item.coverImage ? item.coverImage :   require('../assets/unsplashilip77sbmoe.png')}
         />
-        <Image
-          style={styles.vectorIcon}
-          contentFit="cover"
-          source={require('../assets/vector15.png')}
-        />
+      
       </View>
       <View style={styles.TextWrapper}>
         <Text style={styles.marieContainerTypo}>
           <Text style={styles.textTypo}>
-            {item.creatorId == user.id ? 'Yo' : item.creatorId}{' '}
+            {item.creatorId == userData?.id ? 'Yo' : allUsers.find((e)=> e.id === item.creatorId).username}{' '}
           </Text>
           <Text style={styles.cumple28Aos}>{item.title}</Text>
         </Text>
@@ -177,11 +176,13 @@ const styles = StyleSheet.create({
     marginTop: '5%'
   },
   unsplashilip77sbmoeParent: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginRight:8
   },
   unsplashilip77sbmoeIcon: {
     width: 44,
-    height: 44
+    height: 44,
+    borderRadius:100
   },
   vectorIcon: {
     top: '50%',

@@ -1,26 +1,40 @@
 import { Injectable } from '@nestjs/common';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
+import { Invitations } from './entities/invitation.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class InvitationsService {
-  create(createInvitationDto: CreateInvitationDto) {
-    return 'This action adds a new invitation';
+  constructor(
+    @InjectRepository(Invitations)
+    private invitationsRepository: Repository<Invitations>,
+  ) {}
+
+  async create(createInvitationDto: CreateInvitationDto): Promise<Invitations> {
+    const invitation = this.invitationsRepository.create(createInvitationDto);
+    return await this.invitationsRepository.save(invitation);
   }
 
-  findAll() {
-    return `This action returns all invitations`;
+  async findAll(): Promise<Invitations[]> {
+    return await this.invitationsRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} invitation`;
+  async findOne(id: string): Promise<Invitations> {
+    return await this.invitationsRepository.findOne({ where: { id } });
   }
 
-  update(id: number, updateInvitationDto: UpdateInvitationDto) {
-    return `This action updates a #${id} invitation`;
+  async update(id: string, updateInvitationDto: UpdateInvitationDto): Promise<Invitations> {
+    await this.invitationsRepository.update(id, updateInvitationDto);
+    return await this.findOne(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} invitation`;
+  async remove(id: string): Promise<void> {
+    await this.invitationsRepository.delete(id);
+  }
+
+  async findByUserId(userId: string): Promise<Invitations[]> {
+    return await this.invitationsRepository.find({ where: { userId },relations:['event'] });
   }
 }

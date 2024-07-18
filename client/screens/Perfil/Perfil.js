@@ -111,7 +111,7 @@ const Perfil = () => {
     if (userData?.newUser) {
       axiosInstance.patch(`/user/${userData?.id}`, { newUser: false })
     }
-
+console.log("pasa por este ladoooooooooooooooooooooooooooooooooooooooooooooo")
     iniciar()
   }, [])
 
