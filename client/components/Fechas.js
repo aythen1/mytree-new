@@ -43,7 +43,7 @@ const Fechas = ({ selectedDate, dates, user }) => {
       <View style={styles.TextWrapper}>
         <Text style={styles.marieContainerTypo}>
           <Text style={styles.textTypo}>
-            {item.creatorId == user.id ? 'Yo' : item.creatorId}{' '}
+            {item.creatorId == user.id ? 'Yo' : item.creatorId}
           </Text>
           <Text style={styles.cumple28Aos}>{item.title}</Text>
         </Text>

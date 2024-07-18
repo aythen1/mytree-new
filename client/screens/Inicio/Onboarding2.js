@@ -1,38 +1,37 @@
-import React,{useEffect} from 'react'
+import React, { useEffect } from 'react'
 import { Image } from 'expo-image'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { FontFamily, Border, FontSize, Color } from '../../GlobalStyles'
 import { useNavigation } from '@react-navigation/native'
 import ImageVectorSVG from '../../components/svgs/ImageVectorSVG'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 const Onboarding2 = () => {
   const navigation = useNavigation()
 
-
   useEffect(() => {
-    verificarUsuarioLogueado();
-  }, []);
-  
+    verificarUsuarioLogueado()
+  }, [])
+
   const verificarUsuarioLogueado = async () => {
     try {
       // Verifica si el usuario está logueado
-      const usuarioLogueado = await AsyncStorage.getItem('user');
+      const usuarioLogueado = await AsyncStorage.getItem('user')
 
       // Navega a la pantalla adecuada
       if (usuarioLogueado) {
-        console.log(usuarioLogueado?.newUser,"logeadoooo")
+        console.log(usuarioLogueado?.newUser, 'logeadoooo')
         // Usuario logueado, navega a la pantalla de inicio
-        if(usuarioLogueado){
-          navigation.navigate('Perfil');
+        if (usuarioLogueado) {
+          navigation.navigate('Perfil')
         }
-        navigation.replace('Muro');
+        navigation.replace('Muro')
       } else {
         // Usuario no logueado, navega a la pantalla de registro
       }
     } catch (error) {
-      console.error('Error al verificar usuario logueado: ', error);
+      console.log('Error al verificar usuario logueado: ', error)
     }
-  };
+  }
 
   return (
     <View style={styles.onboarding3}>

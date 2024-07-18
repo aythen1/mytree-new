@@ -47,7 +47,6 @@ const MiLegado = ({ fromOther, otherId }) => {
               source={require('../../assets/vector53.png')}
             />
           </Pressable>
-          )}
         </View>
         <Image
           style={styles.frameChild}
@@ -166,6 +165,7 @@ const MiLegado = ({ fromOther, otherId }) => {
           })}
         </ScrollView>
       </View>
+
       <View style={styles.frameContainer}>
         <View
           style={[

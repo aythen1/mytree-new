@@ -2,12 +2,14 @@ import { View, Text, Image, Pressable } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { Color, FontFamily, FontSize } from '../../GlobalStyles'
 import { useNavigation } from '@react-navigation/native'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import axiosInstance from '../../apiBackend'
 import { Context } from '../../context/Context'
+import { getUserData, updateUser } from '../../redux/actions/user'
 
 const ChatCard = ({ name, selectedUserId, value }) => {
   const navigation = useNavigation()
+  const dispatch = useDispatch()
   const { getTimeFromDate, notReadedMessages, usersWithMessages } =
     useContext(Context)
   const [convMessages, setConvMessages] = useState([])
@@ -75,6 +77,34 @@ const ChatCard = ({ name, selectedUserId, value }) => {
         })
       }}
     >
+      <Pressable
+        onPress={(e) => {
+          e.stopPropagation()
+          if (userData.fixedChat === selectedUserId) {
+            dispatch(
+              updateUser({ userId: userData.id, userData: { fixedChat: '' } })
+            ).then((res) => dispatch(getUserData(userData.id)))
+          } else {
+            dispatch(
+              updateUser({
+                userId: userData.id,
+                userData: { fixedChat: selectedUserId }
+              })
+            ).then((res) => dispatch(getUserData(userData.id)))
+          }
+        }}
+        style={{ position: 'absolute', top: 30, right: 15 }}
+      >
+        <Image
+          style={{ width: 23, height: 23, zIndex: 0 }}
+          contentFit="cover"
+          source={
+            userData.fixedChat === selectedUserId
+              ? require('../../assets/greenPin.png')
+              : require('../../assets/greyPin.png')
+          }
+        />
+      </Pressable>
       <View style={{ marginLeft: 16, width: '50%' }}>
         <Text
           style={{

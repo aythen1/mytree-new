@@ -12,7 +12,8 @@ import {
   Pressable,
   TouchableOpacity,
   ImageBackground,
-  Animated
+  Animated,
+  Share
 } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -52,6 +53,37 @@ const Posteo = ({ data, padding }) => {
       })
     ]).start()
   }, [expanded])
+
+  const onShare = async (message) => {
+    try {
+      const result = await Share.share(
+        {
+          message,
+          title: 'Echa un vistazo!'
+        },
+        {
+          // Android only:
+          dialogTitle: 'Compartir esta publicación con',
+          // iOS only:
+          excludedActivityTypes: ['com.apple.UIKit.activity.PostToTwitter']
+        }
+      )
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // compartido con el tipo de actividad de result.activityType
+          // console.log('evento conmpartido con ', result.activityType)
+        } else {
+          // compartido
+          // console.log('evento conmpartido')
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // descartado
+      }
+    } catch (error) {
+      alert(error.message)
+    }
+  }
 
   const [expanded, setExpanded] = useState(false)
   if (expanded) {
@@ -223,7 +255,15 @@ const Posteo = ({ data, padding }) => {
               >
                 <EnviarMensajeSVG />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setShowShareModal(true)}>
+              <TouchableOpacity
+                style={{ zIndex: 999999999999999 }}
+                onPress={() => {
+                  console.log('SHARING...')
+                  onShare(
+                    `¡Da un vistazo al diario de ${data?.user?.username} ${data?.user?.apellido}!. Si aún no te bajaste la app descargala en Google Play https://play.google.com/store/apps/details?id=com.aythenapps.mytree`
+                  )
+                }}
+              >
                 <CompartirSVG />
               </TouchableOpacity>
             </View>
@@ -359,7 +399,15 @@ const Posteo = ({ data, padding }) => {
             >
               <EnviarMensajeSVG />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setShowShareModal(true)}>
+            <TouchableOpacity
+              style={{ zIndex: 999999999999999 }}
+              onPress={() => {
+                console.log('SHARING...')
+                onShare(
+                  `¡Da un vistazo al diario de ${data?.user?.username} ${data?.user?.apellido}!. Si aún no te bajaste la app descargala en Google Play https://play.google.com/store/apps/details?id=com.aythenapps.mytree`
+                )
+              }}
+            >
               <CompartirSVG />
             </TouchableOpacity>
           </View>
