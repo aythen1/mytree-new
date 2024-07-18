@@ -30,7 +30,7 @@ const Album = ({ albums, setAlbums, onClose }) => {
 
   return (
     <View style={styles.album}>
-      {userAlbums.map((album) => (
+      {userAlbums.map((album, i) => (
         <Pressable
           style={{
             width: '100%',

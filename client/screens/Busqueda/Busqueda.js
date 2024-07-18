@@ -119,7 +119,7 @@ const Busqueda = () => {
   const renderSelectedComponent = () => {
     switch (selectedComponent) {
       case 'BusquedaContactos':
-        return <BusquedaContactos />
+        return <BusquedaContactos searchOnContacts={search} />
       case 'BusquedaPublicaciones':
         return <Post posts={filteredPosts} padding={true} />
       case 'BusquedaDiarios':
@@ -168,12 +168,14 @@ const Busqueda = () => {
             shadowColor: 'black'
           }}
         >
-              <Pressable onPress={() => navigation.openDrawer()}>
+          <Pressable onPress={() => navigation.openDrawer()}>
             <Image
-              style={[{
-                width: 87,
-                height: 55
-              }]}
+              style={[
+                {
+                  width: 87,
+                  height: 55
+                }
+              ]}
               contentFit="cover"
               source={require('../../assets/image-6.png')}
             />

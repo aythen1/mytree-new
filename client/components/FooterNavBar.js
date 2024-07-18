@@ -26,8 +26,9 @@ import FooterBarSVG from './svgs/FooterBarSVG'
 import { Image } from 'expo-image'
 import { getAllPosts } from '../redux/actions/posts'
 import { getAllUsers } from '../redux/actions/user'
-import { getAllUserAlbums } from '../redux/actions/albums'
-import { getAllUserDiaries } from '../redux/actions/diaries'
+import { getAllAlbums, getAllUserAlbums } from '../redux/actions/albums'
+import { getAllDiaries, getAllUserDiaries } from '../redux/actions/diaries'
+import { getAllEvents } from '../redux/actions/events'
 
 const FooterNavBar = () => {
   const {
@@ -48,6 +49,9 @@ const FooterNavBar = () => {
     getUsersMessages()
     dispatch(getAllUsers())
     dispatch(getAllPosts())
+    dispatch(getAllEvents())
+    dispatch(getAllAlbums())
+    dispatch(getAllDiaries())
     dispatch(getAllUserAlbums(userData?.id))
   }, [userData])
 

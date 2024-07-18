@@ -305,7 +305,16 @@ const OpenedChat = () => {
             />
           </Pressable>
 
-          <Pressable onPress={() => navigation.navigate('Perfil')}>
+          <Pressable
+            onPress={() =>
+              navigation.navigate(
+                'OtherUserProfile',
+                allUsers.filter(
+                  (user) => user.id.toString() === route?.params?.receiverId
+                )[0]
+              )
+            }
+          >
             <Image
               style={{
                 width: 25,

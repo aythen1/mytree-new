@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React, { useEffect } from 'react'
 import { Image } from 'expo-image'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { FontFamily, Border, FontSize, Color } from '../../GlobalStyles'
@@ -10,7 +10,6 @@ import { getUserData } from '../../redux/actions/user'
 const Onboarding2 = () => {
   const navigation = useNavigation()
 
-
   useEffect(() => {
     verificarUsuarioLogueado();
   }, []);
@@ -18,7 +17,7 @@ const Onboarding2 = () => {
   const verificarUsuarioLogueado = async () => {
     try {
       // Verifica si el usuario está logueado
-      const usuarioLogueado = await AsyncStorage.getItem('user');
+      const usuarioLogueado = await AsyncStorage.getItem('user')
 
       // Navega a la pantalla adecuada
       if (usuarioLogueado) {
@@ -31,9 +30,9 @@ const Onboarding2 = () => {
        
       } 
     } catch (error) {
-      console.error('Error al verificar usuario logueado: ', error);
+      console.log('Error al verificar usuario logueado: ', error)
     }
-  };
+  }
 
   return (
     <View style={styles.onboarding3}>

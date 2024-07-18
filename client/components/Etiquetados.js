@@ -8,33 +8,65 @@ import { Context } from '../context/Context'
 import { useSelector } from 'react-redux'
 
 const Etiquetados = () => {
-  const {selectedPostTags} = useContext(Context)
-  const {allUsers} = useSelector(state=>state.users)
-  const {setShowTaggedsModal,taggedsData}= useContext(Context)
+  const { selectedPostTags } = useContext(Context)
+  const { allUsers, userData } = useSelector((state) => state.users)
+  const { setShowTaggedsModal, taggedsData } = useContext(Context)
   const navigation = useNavigation()
-console.log('selectedPostTags: ',selectedPostTags)
+  console.log('selectedPostTags: ', selectedPostTags)
   return (
-    <View style={{    backgroundColor: Color.white,
-      width: '80%',
-      borderRadius: Border.br_5xl,
-      padding: Padding.p_base,
-      justifyContent: 'center'}}>
+    <View
+      style={{
+        backgroundColor: Color.white,
+        width: '80%',
+        borderRadius: Border.br_5xl,
+        padding: Padding.p_base,
+        justifyContent: 'center'
+      }}
+    >
       <Image
         style={styles.image}
         contentFit="cover"
         source={require('../assets/line-94.png')}
       />
-     
-     {selectedPostTags.length > 0 ?selectedPostTags.map((tag,index)=> <View style={[styles.frameGroup, styles.frameGroupFlexBox]}>
-        <View key={index + 999999} style={styles.frameContainer}>
-          <Image
-            style={styles.frameItem}
-            contentFit="cover"
-            source={require('../assets/frame-15477548751.png')}
-          />
-          <Text style={styles.brunoPham}>{allUsers.filter(user=>user.id.toString()===tag)[0].username + ' ' +allUsers.filter(user=>user.id.toString()===tag)[0].apellido }</Text>
-        </View>
-      </View>):<Text style={{color:'#404040',fontSize:15,marginTop:16}}>La publicación no tiene etiquetados.</Text>}
+
+      {selectedPostTags.length > 0 ? (
+        selectedPostTags.map((tag, index) => (
+          <Pressable
+            onPress={() => {
+              setShowTaggedsModal(false)
+              if (tag === userData.id) {
+                navigation.navigate('Perfil')
+                return
+              }
+              navigation.navigate(
+                'OtherUserProfile',
+                allUsers.filter((user) => user.id.toString() === tag)[0]
+              )
+            }}
+            key={index}
+            style={[styles.frameGroup, styles.frameGroupFlexBox]}
+          >
+            <View key={index + 999999} style={styles.frameContainer}>
+              <Image
+                style={styles.frameItem}
+                contentFit="cover"
+                source={require('../assets/frame-15477548751.png')}
+              />
+              <Text style={styles.brunoPham}>
+                {allUsers.filter((user) => user.id.toString() === tag)[0]
+                  .username +
+                  ' ' +
+                  allUsers.filter((user) => user.id.toString() === tag)[0]
+                    .apellido}
+              </Text>
+            </View>
+          </Pressable>
+        ))
+      ) : (
+        <Text style={{ color: '#404040', fontSize: 15, marginTop: 16 }}>
+          La publicación no tiene etiquetados.
+        </Text>
+      )}
       <Image
         style={styles.image}
         contentFit="cover"
@@ -42,14 +74,14 @@ console.log('selectedPostTags: ',selectedPostTags)
       />
       <Pressable
         style={[styles.frameGroup, styles.frameGroupFlexBox]}
-        onPress={()=>setShowTaggedsModal(false)}
+        onPress={() => setShowTaggedsModal(false)}
       >
         <LinearGradient
           style={styles.button}
           locations={[0, 1]}
           colors={['#dee274', '#7ec18c']}
         >
-          <Text style={{color:"#fff"}}>Aceptar</Text>
+          <Text style={{ color: '#fff' }}>Aceptar</Text>
         </LinearGradient>
       </Pressable>
     </View>
@@ -61,9 +93,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     width: '100%'
   },
-  frameParentPosition: {
-
-  },
+  frameParentPosition: {},
   frameGroupFlexBox: {
     alignSelf: 'stretch',
     marginTop: '6%'

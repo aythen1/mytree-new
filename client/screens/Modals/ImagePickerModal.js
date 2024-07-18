@@ -25,7 +25,7 @@ import PagerView from 'react-native-pager-view'
 import { handleSelect } from '../Memories/utils/utils'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Picker } from '@react-native-picker/picker'
-import {Feather} from 'react-native-vector-icons'
+import { Feather } from 'react-native-vector-icons'
 
 const ImagePickerModal = ({
   onClose,
@@ -33,8 +33,7 @@ const ImagePickerModal = ({
   pickedImages,
   fromEvent
 }) => {
-  const { pickImage, libraryImage } =
-    useContext(Context)
+  const { pickImage, libraryImage } = useContext(Context)
   const navigation = useNavigation()
   const [images, setImages] = useState([])
   const [selectedImage, setSelectedImage] = useState(null)
@@ -109,8 +108,8 @@ const ImagePickerModal = ({
     if (cameraReff?.current) {
       const photo = await cameraReff.current.takePictureAsync()
       // pickImage('a', photo.uri)
-      console.log('PHOTO',photo)
-      setPickedImages([...pickedImages,photo])
+      console.log('PHOTO', photo)
+      setPickedImages([...pickedImages, photo])
       // setSelectedImage(photo)
       setShowCamera(false)
     }
@@ -121,7 +120,7 @@ const ImagePickerModal = ({
       <CameraView
         ref={cameraReff}
         facing={facing}
-        style={{ height:'100%', position: 'absolute', top: 0, left: 0 }}
+        style={{ height: '100%', position: 'absolute', top: 0, left: 0 }}
         mode="picture"
         FocusMode="on"
         onCameraReady={(e) => console.log(e, 'esto es e')}
@@ -184,7 +183,7 @@ const ImagePickerModal = ({
                   width: 70,
                   height: 70,
                   borderRadius: 100,
-                  backgroundColor: '#7EC18C',
+                  backgroundColor: '#7EC18C'
                 }}
               ></View>
             </TouchableOpacity>
@@ -216,10 +215,20 @@ const ImagePickerModal = ({
         }}
       >
         <TouchableOpacity
-          style={{ gap: 5, alignItems: 'center', flexDirection: 'row' }}
+          style={{
+            gap: 5,
+            alignItems: 'center',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            width: '100%'
+          }}
         >
           <Picker
-            style={{ width: '100%', height: 40, justifyContent: 'flex-start' }}
+            style={{
+              width: 140,
+              height: 40,
+              justifyContent: 'flex-start'
+            }}
             selectedValue={selectedAlbum}
             onValueChange={(itemValue, itemIndex) => {
               console.log(itemValue, 'value')
@@ -231,6 +240,9 @@ const ImagePickerModal = ({
                 return <Picker.Item key={i} label={e.title} value={e} />
               })}
           </Picker>
+          <Pressable onPress={() => setShowCamera(true)}>
+            <Feather size={20} name="camera" color={'#787878'} />
+          </Pressable>
         </TouchableOpacity>
         <View
           style={{ gap: 10, alignItems: 'center', flexDirection: 'row' }}
