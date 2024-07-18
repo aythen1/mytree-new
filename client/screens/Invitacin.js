@@ -133,7 +133,7 @@ const Invitacin = ({ route }) => {
               <View style={[styles.field, styles.parentPosition]} /> */}
             </View>
           </View>
-          {inv.status === 'pending' && (
+          {inv?.status === 'pending' && (
             <View style={styles.buttonParent}>
               <TouchableOpacity
                 style={styles.button}
@@ -175,7 +175,7 @@ const Invitacin = ({ route }) => {
               </LinearGradient>
             </View>
           )}
-          {inv.status == 'pending' && (
+          {inv?.status == 'pending' && (
             <LinearGradient
               style={styles.button2}
               locations={[0, 1]}
@@ -191,7 +191,7 @@ const Invitacin = ({ route }) => {
               </Pressable>
             </LinearGradient>
           )}
-          {inv.status == 'accepted' && (
+          {inv?.status == 'accepted' || event.creatorId === userData.id && (
             <View style={{ marginTop: 20, gap: 5 }}>
               <Text
                 style={{
@@ -206,12 +206,10 @@ const Invitacin = ({ route }) => {
               >
                 Lista de deseos
               </Text>
-              {inv.status == 'accepted' &&
-                event_wishList.map((e) => {
+              {inv?.status == 'accepted' || event.creatorId === userData.id &&
+                event_wishList?.map((e) => {
                   console.log(
-                    e.takenBy,
-                    'asdasfasasfas',
-                    allUsers.find((e) => e.id == e.takenBy)
+                    event_wishList,"123123"
                   )
                   if (e.takenBy) {
                     return (

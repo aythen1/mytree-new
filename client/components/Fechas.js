@@ -11,7 +11,7 @@ const Fechas = ({ selectedDate, dates, user }) => {
   const [datesFechas, setDatesFechas] = useState([])
   const { userData ,allUsers } = useSelector((state) => state.users)
 
-
+console.log(dates,"dates")
   useEffect(() => {
     const searchDate = async () => {
       const nuevasDates = dates.filter((e) => {
@@ -59,102 +59,7 @@ const Fechas = ({ selectedDate, dates, user }) => {
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
       />
-      {/* <Pressable
-        style={styles.frameContainer}
-        onPress={() => navigation.navigate('Invitacin')}
-      >
-        <View style={styles.unsplashilip77sbmoeParent}>
-          <Image
-            style={styles.unsplashilip77sbmoeIcon}
-            contentFit="cover"
-            source={require('../assets/unsplashilip77sbmoe.png')}
-          />
-          <Image
-            style={styles.vectorIcon}
-            contentFit="cover"
-            source={require('../assets/vector15.png')}
-          />
-        </View>
-        <View style={styles.TextWrapper}>
-          <Text style={[styles.marieContainerTypo]}>
-            <Text style={styles.textTypo}>{`Bruno `}</Text>
-            <Text style={styles.cumple28Aos}>cumple 28 años</Text>
-          </Text>
-        </View>
-      </Pressable>
-      <Pressable
-        style={styles.frameFlexBox}
-        onPress={() => navigation.navigate('Invitacin')}
-      >
-        <View style={styles.unsplashilip77sbmoeParent}>
-          <Image
-            style={styles.unsplashilip77sbmoeIcon}
-            contentFit="cover"
-            source={require('../assets/unsplashilip77sbmoe.png')}
-          />
-          <Image
-            style={styles.vectorIcon}
-            contentFit="cover"
-            source={require('../assets/vector15.png')}
-          />
-        </View>
-        <View style={styles.TextWrapper}>
-          <Text style={[styles.marieContainerTypo]}>
-            <Text style={styles.textTypo}>{`Bruno `}</Text>
-            <Text style={styles.cumple28Aos}>
-              ha organizado un evento familiar
-            </Text>
-          </Text>
-        </View>
-      </Pressable>
-      <Pressable
-        style={[styles.frameWrapper, styles.frameFlexBox]}
-        onPress={() => navigation.navigate('Invitacin')}
-      >
-        <View style={styles.unsplashilip77sbmoeParent}>
-          <Image
-            style={styles.unsplashilip77sbmoeIcon}
-            contentFit="cover"
-            source={require('../assets/unsplashilip77sbmoe.png')}
-          />
-          <Image
-            style={styles.vectorIcon}
-            contentFit="cover"
-            source={require('../assets/vector15.png')}
-          />
-        </View>
-        <View style={styles.TextWrapper}>
-          <Text style={[styles.marieContainerTypo]}>
-            <Text style={styles.textTypo}>{`Marie `}</Text>
-            <Text style={styles.cumple28Aos}>cumple 28 años</Text>
-          </Text>
-        </View>
-      </Pressable>
-      <Pressable
-        style={styles.frameFlexBox}
-        onPress={() => navigation.navigate('Invitacin')}
-      >
-        <View style={styles.unsplashilip77sbmoeParent}>
-          <Image
-            style={styles.unsplashilip77sbmoeIcon}
-            contentFit="cover"
-            source={require('../assets/unsplashilip77sbmoe.png')}
-          />
-          <Image
-            style={styles.vectorIcon}
-            contentFit="cover"
-            source={require('../assets/vector15.png')}
-          />
-        </View>
-        <View style={styles.TextWrapper}>
-          <Text style={styles.marieContainerTypo}>
-            <Text style={styles.textTypo}>{`Marie `}</Text>
-            <Text style={styles.cumple28Aos}>
-              ha organizado un evento familiar
-            </Text>
-          </Text>
-        </View>
-      </Pressable> */}
+    
     </View>
   )
 }
