@@ -37,33 +37,87 @@ const StoriesVideosDiarios = () => {
           }}
         >
           <View style={styles.storiesLayout}>
-            <View
-              style={{
-                height: 90,
-                width: 70,
-                marginLeft: 15
-              }}
-            >
-              <Image
-                style={[styles.aatarIcon, styles.aatarIconPosition]}
-                contentFit="cover"
-                source={require('../assets/aatar3.png')}
-              />
-              <View style={[styles.youWrapper, styles.aatarIconPosition]}>
-                <Text style={[styles.you1, styles.signTypo]}>You</Text>
-              </View>
-            </View>
+            {userData.profilePicture && userData.profilePicture !== '' ? (
+              <Pressable
+                onPress={() => {
+                  console.log('navigating to')
+                  navigation.navigate('Perfil')
+                }}
+                style={{
+                  height: 90,
+                  width: 70,
+                  marginLeft: 15,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <Image
+                  style={[
+                    {
+                      height: 70,
+                      width: 70,
+                      marginTop: 3,
+                      borderRadius: 100,
+                      borderWidth: 3,
+                      borderColor: Color.primario1
+                    }
+                  ]}
+                  contentFit="cover"
+                  source={{ uri: userData.profilePicture }}
+                />
+                <View>
+                  <Text
+                    style={{
+                      fontWeight: '600',
+                      lineHeight: 22,
+                      fontSize: FontSize.footnote_size,
+                      textAlign: 'center',
+                      color: Color.negro,
+                      textAlign: 'center',
+                      fontFamily: FontFamily.lato,
+                      letterSpacing: 0
+                    }}
+                  >
+                    {userData.username}
+                  </Text>
+                </View>
+              </Pressable>
+            ) : (
+              <Pressable
+                onPress={() => {
+                  console.log('navigating to')
+                  navigation.navigate('Perfil')
+                }}
+                style={{
+                  height: 90,
+                  width: 70,
+                  marginLeft: 15
+                }}
+              >
+                <Image
+                  style={[styles.aatarIcon, styles.aatarIconPosition]}
+                  contentFit="cover"
+                  source={require('../assets/aatar3.png')}
+                />
+                <View style={[styles.youWrapper, styles.aatarIconPosition]}>
+                  <Text style={[styles.you1, styles.signTypo]}>You</Text>
+                </View>
+              </Pressable>
+            )}
             {data &&
               data.map((user, i) => {
                 return (
                   <Pressable
                     key={i}
-                    onPress={() =>
+                    onPress={() => {
+                      console.log('navigating to')
                       navigation.navigate(
                         'OtherUserProfile',
-                        allUsers.filter((user) => user.id === user.id)[0]
+                        allUsers.filter(
+                          (singleUser) => singleUser.id === user.id
+                        )[0]
                       )
-                    }
+                    }}
                     style={{
                       height: 90,
                       width: 70,
