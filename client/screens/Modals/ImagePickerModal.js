@@ -109,7 +109,12 @@ const ImagePickerModal = ({
       const photo = await cameraReff.current.takePictureAsync()
       // pickImage('a', photo.uri)
       console.log('PHOTO', photo)
-      setPickedImages([...pickedImages, photo])
+      if (fromEvent) {
+        setPickedImages([photo])
+      } else {
+        setPickedImages([...pickedImages, photo])
+      }
+
       // setSelectedImage(photo)
       setShowCamera(false)
     }
@@ -274,7 +279,7 @@ const ImagePickerModal = ({
                   return
                 }
                 if (showSelection) {
-console.log(imagen)
+                  console.log(imagen)
                   handleSelect(
                     imagen,
                     setSelectedImage,

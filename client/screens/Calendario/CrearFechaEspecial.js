@@ -73,6 +73,13 @@ const CrearFechaEspecial = () => {
     setCalendario(false)
   }
   const dispatch = useDispatch()
+
+  const getFileName = (filePath) => {
+    const parts = filePath.split('/')
+    const fileName = parts[parts.length - 1]
+    return fileName
+  }
+
   const handleCreateEvent = async () => {
     if (
       description.length > 0 &&
@@ -101,7 +108,7 @@ const CrearFechaEspecial = () => {
         formData.append('file', {
           uri: image.uri,
           type: 'image/jpeg',
-          name: image.filename
+          name: image.filename ? image.filename : getFileName(image.uri)
         })
         formData.append('upload_preset', 'cfbb_profile_pictures')
         formData.append('cloud_name', 'dnewfuuv0')
@@ -257,13 +264,28 @@ const CrearFechaEspecial = () => {
               <Text
                 style={{ color: invitedUsers.length > 0 ? '#000' : '#606060' }}
               >
-                {pickedImage ? 'Cambiar foto' : 'Seleccionar foto'}
+                {pickedImage && pickedImage.length > 0
+                  ? 'Cambiar foto'
+                  : 'Seleccionar foto'}
               </Text>
-              <Image
-                style={{ width: 23, height: 24, marginRight: 13 }}
-                contentFit="cover"
-                source={require('../../assets/image3.png')}
-              />
+              {pickedImage.length > 0 ? (
+                <Image
+                  style={{
+                    width: 23,
+                    height: 24,
+                    marginRight: 13,
+                    borderRadius: 5
+                  }}
+                  contentFit="cover"
+                  source={{ uri: pickedImage[0]?.uri }}
+                />
+              ) : (
+                <Image
+                  style={{ width: 23, height: 24, marginRight: 13 }}
+                  contentFit="cover"
+                  source={require('../../assets/image3.png')}
+                />
+              )}
             </Pressable>
           </View>
 

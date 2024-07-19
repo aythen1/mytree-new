@@ -152,6 +152,12 @@ const CrearAlbum = () => {
     setFrameContainer2Visible(false)
   }, [])
 
+  const getFileName = (filePath) => {
+    const parts = filePath.split('/')
+    const fileName = parts[parts.length - 1]
+    return fileName
+  }
+
   const [keyboardVisible, setKeyboardVisible] = useState(false)
 
   useEffect(() => {
@@ -197,7 +203,7 @@ const CrearAlbum = () => {
         formData.append('file', {
           uri: image.uri,
           type: 'image/jpeg',
-          name: image.filename
+          name: image.filename ? image.filename : getFileName(image.uri)
         })
         formData.append('upload_preset', 'cfbb_profile_pictures')
         formData.append('cloud_name', 'dnewfuuv0')
@@ -258,23 +264,25 @@ const CrearAlbum = () => {
           padding: Padding.p_xl
         }}
       >
-             <Pressable onPress={() => navigation.openDrawer()}>
-            <Image
-              style={[{
+        <Pressable onPress={() => navigation.openDrawer()}>
+          <Image
+            style={[
+              {
                 width: 87,
                 height: 55
-              }]}
-              contentFit="cover"
-              source={require('../assets/image-6.png')}
-            />
-          </Pressable>
+              }
+            ]}
+            contentFit="cover"
+            source={require('../assets/image-6.png')}
+          />
+        </Pressable>
         <View style={{ width: '100%' }}>
           <View
             style={{
               height: 29,
               flexDirection: 'row',
               justifyContent: 'center',
-              alignItems:"flex-end",
+              alignItems: 'flex-end',
               width: '100%'
             }}
           >
