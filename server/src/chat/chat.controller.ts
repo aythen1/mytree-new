@@ -112,7 +112,7 @@ export class ChatController {
   //  }
    //----------------
 
- 
+ // crear grupo
    @Post('group')
    async createGroupMessage(@Body() body: any): Promise<MessageEntity[]> {
      const { senderId, room, message, receiverIds } = body;
@@ -124,12 +124,13 @@ export class ChatController {
      return await this.messageService.saveGroupMessage(senderId, room, message, receiverIds);
    }
    
-
+   // marcar como leido los mensajes de un grupo
   @Patch('group/:room/:userId')
   async markGroupMessagesAsRead(@Param('room') room: string, @Param('userId') userId: string): Promise<void> {
     return await this.messageService.markGroupMessagesAsRead(room, userId);
   }
 
+  //Ruta pára eliminar grupo
   @Delete('group/:room/:userId')
   async deleteGroupChat(@Param('room') room: string, @Param('userId') userId: string): Promise<void> {
     return await this.messageService.deleteGroupChat(room, userId);
