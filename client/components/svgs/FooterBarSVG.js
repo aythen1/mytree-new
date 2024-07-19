@@ -11,11 +11,11 @@ const FooterBarSVG = (props) => {
         backgroundColor: 'transparent',
         position: 'absolute',
         bottom: -3,
-        zIndex: 99999999
+        width:"100%"
       }}
-      width={screenWidth}
+      width={"100%"}
       height={75}
-      viewBox="0 0 428 75"
+      viewBox="0 0 428 65"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >

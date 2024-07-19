@@ -6,6 +6,7 @@ export const eventsSlices = createSlice({
   initialState: {
     allEvents: [],
     userEvents: [],
+    eventSelected:{},
     userInvitations: [],
     loading: false,
     error: null
@@ -65,6 +66,7 @@ export const eventsSlices = createSlice({
         state.loading = false
         state.error = action.error.message
       })
+      
   }
 })
 

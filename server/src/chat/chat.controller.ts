@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Req,
+  Patch,
 } from '@nestjs/common';
 import { ChatService } from './service/chat.service';
 import { MessageService } from './service/message.service';
@@ -93,4 +94,63 @@ export class ChatController {
   //     throw new Error('Failed to delete messages.');
   //   }
   // }
+
+   //----------------
+  //  @Get('/group/:room')
+  //  public async getGroupChat(@Param('room') room: string) {
+  //    return await this.messageService.getMessagesForGroupRoom(room);
+  //  }
+
+  //  @Put('/group/:room')
+  //  public async getGroupChatPut(@Param('room') room: string) {
+  //    return await this.messageService.getMessagesForGroupRoom(room);
+  //  }
+
+  //  @Delete('/group/:room')
+  //  public async getGroupChatDelete(@Param('room') room: string) {
+  //    return await this.messageService.getMessagesForGroupRoom(room);
+  //  }
+   //----------------
+
+ // crear grupo
+   @Post('group')
+   async createGroupMessage(@Body() body: any): Promise<MessageEntity[]> {
+     const { senderId, room, message, receiverIds } = body;
+   
+     if (!senderId || !room || !message || !receiverIds || !Array.isArray(receiverIds) || receiverIds.length === 0 || receiverIds.some(id => typeof id !== 'string')) {
+       throw new Error('Sender ID, room, message, and a non-empty array of receiver IDs are required.');
+     }
+   
+     return await this.messageService.saveGroupMessage(senderId, room, message, receiverIds);
+   }
+   
+   // marcar como leido los mensajes de un grupo
+  @Patch('group/:room/:userId')
+  async markGroupMessagesAsRead(@Param('room') room: string, @Param('userId') userId: string): Promise<void> {
+    return await this.messageService.markGroupMessagesAsRead(room, userId);
+  }
+
+  //Ruta pára eliminar grupo
+  @Delete('group/:room/:userId')
+  async deleteGroupChat(@Param('room') room: string, @Param('userId') userId: string): Promise<void> {
+    return await this.messageService.deleteGroupChat(room, userId);
+  }
+
+    // Ruta para agregar usuarios a un grupo
+  @Patch('group/:room/add-users')
+  async addUsersToGroup(
+    @Param('room') room: string,
+    @Body('userIds') userIds: string[]
+  ): Promise<void> {
+    await this.messageService.addUsersToGroup(room, userIds);
+  }
+
+  // Ruta para eliminar usuarios de un grupo
+  @Patch('group/:room/remove-users')
+  async removeUsersFromGroup(
+    @Param('room') room: string,
+    @Body('userIds') userIds: string[]
+  ): Promise<void> {
+    await this.messageService.removeUsersFromGroup(room, userIds);
+  }
 }

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   StyleSheet,
@@ -10,7 +10,7 @@ import {
   Dimensions
 } from 'react-native'
 import { Image } from 'expo-image'
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import {
   Border,
   Color,
@@ -18,21 +18,25 @@ import {
   FontSize,
   Padding
 } from '../../GlobalStyles'
-import { setPanel } from '../../redux/slices/panel.slices'
 import Calendario from '../../components/Calendario'
-import BarraBusqueda from '../../components/BarraBusqueda'
 import Fechas from '../../components/Fechas'
 import Eventos from '../../components/Eventos'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import axiosInstance from '../../apiBackend'
+
 import MasBusquedaSVG from '../../components/svgs/MasBusquedaSVG'
 import { Context } from '../../context/Context'
+import {
+  getAllUserEvents,
+  getAllUserInvitations
+} from '../../redux/actions/events'
 
 const CALENDARIO = () => {
   const navigation = useNavigation()
-  const dispatch = useDispatch()
   const { setShowSelectEventTypeModal } = useContext(Context)
-  const { userEvents:dates ,userInvitations } = useSelector((state) => state.events)
+  const { userEvents: dates, userInvitations } = useSelector(
+    (state) => state.events
+  )
+  const dispatch = useDispatch()
+  const { userData } = useSelector((state) => state.users)
 
   const [selectedItem, setSelectedItem] = useState('fechas')
   const [selectedDate, setSelectedDate] = useState('')
@@ -40,32 +44,34 @@ const CALENDARIO = () => {
   const [search, setSearch] = useState('')
   const [eventInvited, setEventInvited] = useState([])
 
-
-
   const handleItemPress = (item) => {
     setSelectedItem(item)
   }
 
-  useEffect(() => {
-    // Función para obtener la fecha actual en formato YYYY-MM-DD
-    function getCurrentDate() {
-      const currentDate = new Date()
-      const year = currentDate.getFullYear()
-      const month = String(currentDate.getMonth() + 1).padStart(2, '0') // El mes es base 0, por eso se suma 1
-      const day = String(currentDate.getDate()).padStart(2, '0')
-      return `${year}-${month}-${day}`
-    }
+  const getCurrentDate = () => {
+    const currentDate = new Date()
+    const year = currentDate.getFullYear()
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0') // El mes es base 0, por eso se suma 1
+    const day = String(currentDate.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
 
-    // Establecer la fecha actual como valor por defecto al montar el componente
-    setSelectedDate(getCurrentDate())
-    if(userInvitations){
-     const inv = userInvitations.map((e)=> e.event )
-     setEventInvited(inv)
-    }
-    console.log(userInvitations,"userInvitations")
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      // Despachar acción para obtener los eventos del usuario
+      dispatch(getAllUserEvents(userData?.id))
+      dispatch(getAllUserInvitations(userData?.id)).then(() => {
+        if (userInvitations) {
+          const inv = userInvitations.map((e) => e.event)
+          setEventInvited(inv)
+        }
+      })
+      // Establecer la fecha actual como valor por defecto al enfocar el componente
+      setSelectedDate(getCurrentDate())
 
-
+      console.log(userInvitations, 'userInvitations')
+    }, [dispatch])
+  )
 
   return (
     <ScrollView
@@ -79,17 +85,18 @@ const CALENDARIO = () => {
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.topContainer}>
-      <Pressable onPress={() => navigation.openDrawer()}>
-            <Image
-              style={[{
+        <Pressable onPress={() => navigation.openDrawer()}>
+          <Image
+            style={[
+              {
                 width: 87,
                 height: 55
-              }]}
-              contentFit="cover"
-              source={require('../../assets/image-6.png')}
-            />
-          </Pressable>
-      
+              }
+            ]}
+            contentFit="cover"
+            source={require('../../assets/image-6.png')}
+          />
+        </Pressable>
       </View>
 
       <View
@@ -149,7 +156,7 @@ const CALENDARIO = () => {
       </View>
 
       <Calendario
-        dates={[...dates,...eventInvited]}
+        dates={[...dates, ...eventInvited]}
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
       />
@@ -194,9 +201,13 @@ const CALENDARIO = () => {
         </View>
       </View>
       {selectedItem === 'fechas' ? (
-        <Fechas user={user} dates={[...dates,...eventInvited]} selectedDate={selectedDate} />
+        <Fechas
+          user={user}
+          dates={[...dates, ...eventInvited]}
+          selectedDate={selectedDate}
+        />
       ) : (
-        <Eventos search={search} dates={dates}  selectedDate={selectedDate} />
+        <Eventos search={search} dates={dates} selectedDate={selectedDate} />
       )}
     </ScrollView>
   )

@@ -23,9 +23,10 @@ const DrawerContent = (props) => {
   const heightWithoutStatusBar = fullHeight - statusBarHeight
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'transparent' }}>
+    <View style={{ flex: 1, backgroundColor: 'transparent', zIndex: 9999999999999 }}>
       <LinearGradient
         style={{
+        
           borderTopRightRadius: Border.br_3xs,
           borderBottomRightRadius: Border.br_3xs,
           backgroundColor: Color.linearBoton,
@@ -35,7 +36,7 @@ const DrawerContent = (props) => {
         end={{ x: 0, y: 0.6 }}
         colors={['#e2e57a', '#7fc08b']}
       >
-        <View style={{ zIndex: 999999, padding: 20 , height:"100%" }}>
+        <View style={{ zIndex: 99999999999999, padding: 20 , height:"100%" }}>
           <View>
             <View style={styles.parentFlexBox}>
               <Image

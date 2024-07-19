@@ -77,4 +77,46 @@ export class ChatGateway
     client.emit('leaveRoom', room);
     console.log('leaveRoom', room);
   }
+
+
+  @SubscribeMessage('groupMessage')
+  async handleGroupMessage(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { sender: string; room: string; message: string }
+  ): Promise<any> {
+    const { sender, room, message } = data;
+    const receiverIds = await this.chatService.getUsersInGroup(room); // Implementa este método en ChatService
+
+    // Guarda el mensaje para cada receptor en la sala
+    const savedMessages = await this.messageService.saveGroupMessage(sender, room, message, receiverIds);
+
+    // Emite el mensaje a todos los usuarios en la sala
+    this.server.to(room).emit('groupMessage-server', savedMessages);
+    console.log('Group message sent to room:', room);
+    return savedMessages;
+  }
+
+  @SubscribeMessage('joinGroup')
+  async handleGroupJoin(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { room: string }
+  ) {
+    const { room } = data;
+    client.join(room);
+    client.emit('joinedGroup', room);
+    console.log('Client joined group:', room);
+  }
+
+  @SubscribeMessage('leaveGroup')
+  handleGroupLeave(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { room: string }
+  ) {
+    const { room } = data;
+    client.leave(room);
+    client.emit('leftGroup', room);
+    console.log('Client left group:', room);
+  }
+  //----------------
+
 }
