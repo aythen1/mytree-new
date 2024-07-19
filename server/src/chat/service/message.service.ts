@@ -157,38 +157,121 @@ export class MessageService {
 
   
   //----------------
-  async saveGroupMessage(
-    senderId: string,
-    room: string,
-    message: string
-  ): Promise<MessageEntity> {
-    const newMessage = this.messageRepository.create({
-      senderId,
-      receiverId: null,
-      room,
-      message,
-      isReaded: false
-    });
-    return await this.messageRepository.save(newMessage);
-  }
+  // async saveGroupMessages(
+  //   senderId: string,
+  //   room: string,
+  //   message: string
+  // ): Promise<MessageEntity> {
+  //   const newMessage = this.messageRepository.create({
+  //     senderId,
+  //     receiverId: null,
+  //     room,
+  //     message,
+  //     isReaded: false
+  //   });
+  //   return await this.messageRepository.save(newMessage);
+  // }
 
 
 
-  async getMessagesForGroupRoom(
-    room: string
-  ): Promise<MessageEntity[]> {
-    try {
-      const messageList = await this.messageRepository.find({
-        where: [
-          { room },
-          { room }
-        ]
+  // async getMessagesForGroupRoom(
+  //   room: string
+  // ): Promise<MessageEntity[]> {
+  //   try {
+  //     const messageList = await this.messageRepository.find({
+  //       where: [
+  //         { room },
+  //         { room }
+  //       ]
+  //     });
+
+  //     return messageList;
+  //   } catch (error) {
+  //     throw ErrorManager.createSignatureError(error.message);
+  //   }
+  // }
+  //----------------
+  async saveGroupMessage(senderId: string, room: string, message: string, receiverIds: string[]): Promise<MessageEntity[]> {
+    const savedMessages: MessageEntity[] = [];
+  
+    for (const receiverId of receiverIds) {
+      const newMessage = this.messageRepository.create({
+        senderId,
+        receiverId,
+        room,
+        message,
+        isReaded: false
       });
+  
+      const savedMessage = await this.messageRepository.save(newMessage);
+      savedMessages.push(savedMessage);
+    }
+  
+    return savedMessages;
+  }
+  
 
-      return messageList;
+  async markGroupMessagesAsRead(room: string, userId: string): Promise<void> {
+    try {
+      const messagesToUpdate = await this.messageRepository
+        .createQueryBuilder('message')
+        .update(MessageEntity)
+        .set({ isReaded: true })
+        .where('message.room = :room AND message.receiverId LIKE :userId', { room, userId })
+        .execute();
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
   }
-  //----------------
+
+  async deleteGroupChat(room: string, userId: string): Promise<void> {
+    try {
+      const messagesToDelete = await this.messageRepository.find({
+        where: [
+          { room, senderId: userId },
+          { room, receiverId: userId }
+        ]
+      });
+
+      messagesToDelete.forEach((message) => {
+        if (message.senderId === userId) {
+          message.senderDelete = true;
+        } else {
+          message.receiverDelete = true;
+        }
+      });
+
+      await this.messageRepository.save(messagesToDelete);
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  async addUsersToGroup(room: string, userIds: string[]): Promise<void> {
+    try {
+      const messagesToUpdate = await this.messageRepository
+        .createQueryBuilder('message')
+        .update(MessageEntity)
+        .set({ receiverId: () => `array_append(receiverId, '${userIds.join("','")}')` })
+        .where('message.room = :room')
+        .setParameter('room', room)
+        .execute();
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  async removeUsersFromGroup(room: string, userIds: string[]): Promise<void> {
+    try {
+      const messagesToUpdate = await this.messageRepository
+        .createQueryBuilder('message')
+        .update(MessageEntity)
+        .set({ receiverId: () => `array_remove(receiverId, '${userIds.join("','")}')` })
+        .where('message.room = :room')
+        .setParameter('room', room)
+        .execute();
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
 }

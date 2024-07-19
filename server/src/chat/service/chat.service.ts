@@ -85,5 +85,24 @@ export class ChatService {
     return sortedIds.join('_'); // Concatena los IDs con un guion bajo
   }
 
+
+  async getUsersInGroup(room: string): Promise<string[]> {
+    try {
+      const messages = await this.messageRepository.find({
+        select: ['receiverId'],
+        where: { room },
+      });
+
+      // Utilizamos Set para mantener los receiverId únicos
+      const uniqueReceiverIds = new Set<string>();
+      messages.forEach(message => uniqueReceiverIds.add(message.receiverId));
+
+      // Convertimos el Set a un arreglo de strings y lo devolvemos
+      return Array.from(uniqueReceiverIds);
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
   
 }

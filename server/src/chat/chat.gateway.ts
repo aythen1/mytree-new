@@ -79,34 +79,44 @@ export class ChatGateway
   }
 
 
-   //----------------
-   @SubscribeMessage('groupMessage')
-   async handleGroupMessage(
-     @ConnectedSocket() client: Socket,
-     @MessageBody() data: { sender: string; room: string; message: string }
-   ): Promise<any> {
-     const newMessage = await this.messageService.saveGroupMessage(
-       data.sender,
-       data.room,
-       data.message
-     );
-     this.server.to(data.room).emit('groupMessage-server', newMessage);
-     console.log('groupMessage', data.room);
-     return newMessage;
-   }
- 
-   @SubscribeMessage('joinGroup')
-   handleGroupJoin(client: Socket, data: { room: string }) {
-     client.join(data.room);
-     client.emit('joinedGroup', data.room);
-     console.log('joinedGroup', data.room);
-   }
- 
-   @SubscribeMessage('leaveGroup')
-   handleGroupLeave(client: Socket, data: { room: string }) {
-     client.leave(data.room);
-     client.emit('leaveGroup', data.room);
-     console.log('leaveGroup', data.room);
-   }
-   //----------------
+  @SubscribeMessage('groupMessage')
+  async handleGroupMessage(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { sender: string; room: string; message: string }
+  ): Promise<any> {
+    const { sender, room, message } = data;
+    const receiverIds = await this.chatService.getUsersInGroup(room); // Implementa este método en ChatService
+
+    // Guarda el mensaje para cada receptor en la sala
+    const savedMessages = await this.messageService.saveGroupMessage(sender, room, message, receiverIds);
+
+    // Emite el mensaje a todos los usuarios en la sala
+    this.server.to(room).emit('groupMessage-server', savedMessages);
+    console.log('Group message sent to room:', room);
+    return savedMessages;
+  }
+
+  @SubscribeMessage('joinGroup')
+  async handleGroupJoin(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { room: string }
+  ) {
+    const { room } = data;
+    client.join(room);
+    client.emit('joinedGroup', room);
+    console.log('Client joined group:', room);
+  }
+
+  @SubscribeMessage('leaveGroup')
+  handleGroupLeave(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { room: string }
+  ) {
+    const { room } = data;
+    client.leave(room);
+    client.emit('leftGroup', room);
+    console.log('Client left group:', room);
+  }
+  //----------------
+
 }
