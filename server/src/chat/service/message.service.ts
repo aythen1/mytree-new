@@ -154,4 +154,41 @@ export class MessageService {
     // Guarda los cambios en la base de datos
     await this.messageRepository.save(mensajes);
   }
+
+  
+  //----------------
+  async saveGroupMessage(
+    senderId: string,
+    room: string,
+    message: string
+  ): Promise<MessageEntity> {
+    const newMessage = this.messageRepository.create({
+      senderId,
+      receiverId: null,
+      room,
+      message,
+      isReaded: false
+    });
+    return await this.messageRepository.save(newMessage);
+  }
+
+
+
+  async getMessagesForGroupRoom(
+    room: string
+  ): Promise<MessageEntity[]> {
+    try {
+      const messageList = await this.messageRepository.find({
+        where: [
+          { room },
+          { room }
+        ]
+      });
+
+      return messageList;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+  //----------------
 }

@@ -77,4 +77,36 @@ export class ChatGateway
     client.emit('leaveRoom', room);
     console.log('leaveRoom', room);
   }
+
+
+   //----------------
+   @SubscribeMessage('groupMessage')
+   async handleGroupMessage(
+     @ConnectedSocket() client: Socket,
+     @MessageBody() data: { sender: string; room: string; message: string }
+   ): Promise<any> {
+     const newMessage = await this.messageService.saveGroupMessage(
+       data.sender,
+       data.room,
+       data.message
+     );
+     this.server.to(data.room).emit('groupMessage-server', newMessage);
+     console.log('groupMessage', data.room);
+     return newMessage;
+   }
+ 
+   @SubscribeMessage('joinGroup')
+   handleGroupJoin(client: Socket, data: { room: string }) {
+     client.join(data.room);
+     client.emit('joinedGroup', data.room);
+     console.log('joinedGroup', data.room);
+   }
+ 
+   @SubscribeMessage('leaveGroup')
+   handleGroupLeave(client: Socket, data: { room: string }) {
+     client.leave(data.room);
+     client.emit('leaveGroup', data.room);
+     console.log('leaveGroup', data.room);
+   }
+   //----------------
 }

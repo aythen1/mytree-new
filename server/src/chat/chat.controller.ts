@@ -93,4 +93,11 @@ export class ChatController {
   //     throw new Error('Failed to delete messages.');
   //   }
   // }
+
+   //----------------
+   @Get('/group/:room')
+   public async getGroupChat(@Param('room') room: string) {
+     return await this.messageService.getMessagesForGroupRoom(room);
+   }
+   //----------------
 }

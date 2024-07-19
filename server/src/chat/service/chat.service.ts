@@ -84,4 +84,6 @@ export class ChatService {
     const sortedIds = [senderId, receiverId].sort();
     return sortedIds.join('_'); // Concatena los IDs con un guion bajo
   }
+
+  
 }
