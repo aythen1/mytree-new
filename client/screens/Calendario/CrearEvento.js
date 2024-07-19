@@ -28,7 +28,7 @@ import Etiquetar from '../../components/Etiquetar'
 import CreateWishListModal from '../../components/CreateWishListModal'
 import { useDispatch, useSelector } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { createEvent } from './../../redux/actions/events'
+import { createEvent, getAllUserEvents } from './../../redux/actions/events'
 import ImagePickerModal from '../Modals/ImagePickerModal'
 import axiosInstance from '../../apiBackend'
 
@@ -141,7 +141,7 @@ const CrearFechaEspecial = () => {
             description: wish
           })
         }
-        console.log('resdel', e)
+        dispatch(getAllUserEvents(user.id))
       })
     }
   }

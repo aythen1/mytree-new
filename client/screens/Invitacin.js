@@ -16,7 +16,10 @@ import { FontFamily, FontSize, Color, Border, Padding } from '../GlobalStyles'
 import ENTRADACREADA from '../components/ENTRADACREADA'
 import { useDispatch, useSelector } from 'react-redux'
 import axiosInstance from '../apiBackend'
-import { getAllUserInvitations } from '../redux/actions/events'
+import {
+  getAllUserEvents,
+  getAllUserInvitations
+} from '../redux/actions/events'
 
 const Invitacin = ({ route }) => {
   const { userEvents: dates, userInvitations } = useSelector(
@@ -24,18 +27,18 @@ const Invitacin = ({ route }) => {
   )
   const { userData, allUsers } = useSelector((state) => state.users)
 
+  // const [event , setEvent] = useState({})
+
   const event = route?.params?.date
   const event_location = route?.params?.date.location
   const event_images = route?.params?.date.images
   const event_wishList = route?.params?.date.wishListItems
-
   const event_description = route?.params?.date.description
+  const event_date = route?.params?.date?.date.slice(0, 10)
 
   const inv = userInvitations.find((e) => e.event.id == event.id)
 
   console.log(event, 'imnvvvvvvvvvvvvvvvvvvvvvvvvvvvv')
-
-  const event_date = route?.params?.date?.date.slice(0, 10)
 
   const dispatch = useDispatch()
   const navigation = useNavigation()
@@ -92,9 +95,22 @@ const Invitacin = ({ route }) => {
           </View>
           <View style={styles.lineParent}>
             <View style={styles.frameChild} />
-            <Text style={[styles.tituloDelEvento, styles.cdigoTypo]}>
-              {event.title}
-            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 20,
+                gap: 5
+              }}
+            >
+              <Image
+                style={{ width: 60, height: 60, borderRadius: 50 }}
+                source={{ uri: event.coverImage }}
+              ></Image>
+              <Text style={[styles.tituloDelEvento, styles.cdigoTypo]}>
+                {event.title}
+              </Text>
+            </View>
             <View style={styles.calendarParent}>
               <Image
                 style={styles.calendarIcon}
@@ -191,7 +207,7 @@ const Invitacin = ({ route }) => {
               </Pressable>
             </LinearGradient>
           )}
-          {inv?.status == 'accepted' || event.creatorId === userData.id && (
+          {(event.creatorId === userData.id || inv?.status == 'accepted') && (
             <View style={{ marginTop: 20, gap: 5 }}>
               <Text
                 style={{
@@ -206,11 +222,9 @@ const Invitacin = ({ route }) => {
               >
                 Lista de deseos
               </Text>
-              {inv?.status == 'accepted' || event.creatorId === userData.id &&
+              {(event.creatorId === userData.id || inv?.status == 'accepted') &&
                 event_wishList?.map((e) => {
-                  console.log(
-                    event_wishList,"123123"
-                  )
+                  console.log(event_wishList, '123123')
                   if (e.takenBy) {
                     return (
                       <View
@@ -251,19 +265,21 @@ const Invitacin = ({ route }) => {
                         }}
                       >
                         <Text style={{ fontSize: 18 }}>{e.description}</Text>
-                        <TouchableOpacity
-                          onPress={() => handleTake(e.id)}
-                          style={{
-                            backgroundColor: Color.colorGainsboro_100,
-                            padding: 5,
-                            paddingHorizontal: 8,
-                            borderRadius: 50
-                          }}
-                        >
-                          <Text style={{ fontSize: 15, color: 'gray' }}>
-                            tomar
-                          </Text>
-                        </TouchableOpacity>
+                        {event.creatorId !== userData.id && (
+                          <TouchableOpacity
+                            onPress={() => handleTake(e.id)}
+                            style={{
+                              backgroundColor: Color.colorGainsboro_100,
+                              padding: 5,
+                              paddingHorizontal: 8,
+                              borderRadius: 50
+                            }}
+                          >
+                            <Text style={{ fontSize: 15, color: 'gray' }}>
+                              tomar
+                            </Text>
+                          </TouchableOpacity>
+                        )}
                       </View>
                     )
                   }
@@ -345,10 +361,8 @@ const styles = StyleSheet.create({
     left: 0
   },
   tituloDelEvento: {
-    marginTop: 20,
     color: Color.gris,
     fontWeight: '500',
-    lineHeight: 22,
     fontSize: FontSize.size_lg,
     textAlign: 'left',
     fontFamily: FontFamily.lato,

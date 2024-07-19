@@ -3,15 +3,14 @@ import { StyleSheet, Text, View, Pressable, FlatList } from 'react-native'
 import { Image } from 'expo-image'
 import { Color, FontFamily, FontSize } from '../GlobalStyles'
 import { useNavigation } from '@react-navigation/native'
-import axiosInstance from '../apiBackend'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useSelector } from 'react-redux'
 
 const Fechas = ({ selectedDate, dates, user }) => {
   const [datesFechas, setDatesFechas] = useState([])
   const { userData ,allUsers } = useSelector((state) => state.users)
+  const { userEvents ,userInvitations } = useSelector((state) => state.events)
 
-console.log(dates,"dates")
+
   useEffect(() => {
     const searchDate = async () => {
       const nuevasDates = dates.filter((e) => {
@@ -19,10 +18,12 @@ console.log(dates,"dates")
         const date = e.date.slice(0, 10)
         if (date === selectedDate) return e
       })
+
       setDatesFechas(nuevasDates)
     }
     searchDate()
-  }, [selectedDate, dates])
+    console.log("cambiaron las cosassss")
+  }, [selectedDate ])
 
   const navigation = useNavigation()
 
@@ -57,6 +58,7 @@ console.log(dates,"dates")
         style={{ paddingBottom: 70 }}
         data={datesFechas}
         renderItem={renderItem}
+        extraData={userEvents}
         keyExtractor={(item) => item.id.toString()}
       />
     

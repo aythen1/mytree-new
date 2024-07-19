@@ -109,6 +109,8 @@ const App = () => {
     loadApp()
   }, [])
 
+
+  
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
       <StatusBar
@@ -118,14 +120,21 @@ const App = () => {
       />
       <Provider store={store}>
         <ContextProvider>
-          <NavigationContainer ref={navigationRef} linking={linking}>
-            <Drawer.Navigator
+          <NavigationContainer  ref={navigationRef} linking={linking}>
+            <Drawer.Navigator            
               screenOptions={{
+                drawerContentContainerStyle:{
+                  backgroundColor: 'transparent',
+                  zIndex:999999999,
+                  flex:1
+                },
                 drawerStyle: {
-                  backgroundColor: 'transparent'
+                  backgroundColor: 'transparent',
+                  zIndex:999999999,
+                  flex:1
                 }
-              }}
-              drawerContent={(props) => <DrawerContent {...props} />}
+              }}              
+              drawerContent={(props) => <DrawerContent  {...props} />}
             >
               <Drawer.Screen options={{ headerShown: false }} name="Main">
                 {(props) => (
@@ -149,6 +158,7 @@ const MainStackNavigator = ({ setIsFooterShow }) => {
   return (
     <Stack.Navigator
       initialRouteName="Onboarding2"
+
       screenOptions={({ route }) => ({
         headerShown: false,
         footerShown: setIsFooterShow(

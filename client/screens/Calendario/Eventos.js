@@ -150,7 +150,7 @@ const Eventos = ({ route }) => {
       data = { images }
     }
     if (description && images.length > 0) {
-      data = { images, description }
+      data = { images:[...event_images,...images], description }
     }
     console.log(data, 'dataaa')
     axiosInstance
@@ -271,7 +271,7 @@ const Eventos = ({ route }) => {
             </View>
           )}
           {selected && (
-            <View style={{ flexDirection: 'row', paddingBottom: 100, gap: 2 }}>
+            <View style={{ flexDirection: 'row', paddingBottom: 100, justifyContent:"flex-start",gap:3,flexWrap:"wrap" }}>
               {event_images.length < 1 && pickedImage.length < 1 && (
                 <View style={{width:"100%",height:90,flexDirection:"row",gap:2}}>
                   <Image
@@ -290,6 +290,7 @@ const Eventos = ({ route }) => {
                     source={require('../../assets/coverpicture.png')}
                     style={{ width: '25%', height: 90 }}
                   ></Image>
+
                 </View>
               )}
               {event_images &&
@@ -301,7 +302,7 @@ const Eventos = ({ route }) => {
                           ? { uri: e }
                           : require('../../assets/coverpicture.png')
                       }
-                      style={{ width: '25%', height: 90 }}
+                      style={{ width: '24%', height: 90 , marginBottom:1 }}
                     ></Image>
                   )
                 })}
@@ -314,7 +315,7 @@ const Eventos = ({ route }) => {
                           ? { uri: e?.uri }
                           : require('../../assets/coverpicture.png')
                       }
-                      style={{ width: '25%', height: 90 }}
+                      style={{ width: '24%', height: 90 , marginBottom:1}}
                     ></Image>
                   )
                 })}
@@ -324,7 +325,7 @@ const Eventos = ({ route }) => {
                   width: '100%',
                   justifyContent: 'center',
                   position: 'absolute',
-                  bottom: 10
+                  bottom: 20
                 }}
               >
                 <LinearGradient

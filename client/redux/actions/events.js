@@ -21,6 +21,7 @@ export const getAllUserEvents = createAsyncThunk(
   async (userId) => {
     try {
       const { data } = await axiosInstance.get(`/events/by-creator/${userId}`)
+      console.log(data,"data")
       return data
     } catch (error) {
       throw new Error(error)
