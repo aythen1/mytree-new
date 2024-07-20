@@ -27,43 +27,15 @@ const Fechas = ({ selectedDate, dates, user }) => {
 
   const navigation = useNavigation()
 
-  const renderItem = ({ item }) => (
-    <Pressable
-      style={styles.frameContainer}
-      onPress={() => navigation.navigate('Invitacin',{date:item})}
-    >
-      <View style={styles.unsplashilip77sbmoeParent}>
-        <Image
-          style={styles.unsplashilip77sbmoeIcon}
-          contentFit="cover"
-          source={item.coverImage ? item.coverImage :   require('../assets/unsplashilip77sbmoe.png')}
-        />
-      
-      </View>
-      <View style={styles.TextWrapper}>
-        <Text style={styles.marieContainerTypo}>
-          <Text style={styles.textTypo}>
-            {item.creatorId == userData?.id ? 'Yo' : allUsers.find((e)=> e.id === item.creatorId).username}{' '}
-          </Text>
-          <Text style={styles.cumple28Aos}>{item.title}</Text>
-        </Text>
-      </View>
-    </Pressable>
-  )
 
   return (
     <View style={styles.frameGroup}>
       <Text style={styles.title}>Actividad Familiar</Text>
-      {/* <FlatList
-        style={{ paddingBottom: 70 }}
-        data={datesFechas}
-        renderItem={renderItem}
-        extraData={userEvents}
-        keyExtractor={(item) => item.id.toString()}
-      /> */}
-    {datesFechas && datesFechas.map((item)=> {
+
+    {datesFechas && datesFechas.map((item,i)=> {
       return (
         <Pressable
+        key={i}
         style={styles.frameContainer}
         onPress={() => navigation.navigate('Invitacin',{date:item})}
       >

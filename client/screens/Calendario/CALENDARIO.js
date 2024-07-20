@@ -67,11 +67,14 @@ const CALENDARIO = () => {
         }
       })
       // Establecer la fecha actual como valor por defecto al enfocar el componente
-      setSelectedDate(getCurrentDate())
 
       console.log(userInvitations, 'userInvitations')
     }, [dispatch])
   )
+
+  useEffect(()=>{
+    setSelectedDate(getCurrentDate())
+  },[])
 
   return (
     <ScrollView
