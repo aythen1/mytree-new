@@ -202,8 +202,12 @@ export class MessageService {
 
 //crea el grupo
   async createGroupInfo(groupInfoData: Partial<GroupInfo>): Promise<GroupInfo> {
+    console.log('entro')
     const newGroup = this.groupInfoRepository.create(groupInfoData);
   newGroup.members = groupInfoData.members; 
+  console.log('newGroup', newGroup)
+  console.log('newGroup.members', newGroup.members)
+
   return await this.groupInfoRepository.save(newGroup);
   }
 
@@ -229,22 +233,41 @@ export class MessageService {
   }
 
  
-//trae todos los grupos de un usuario 
-async getGroupsForUser(userId: string): Promise<GroupInfo[]> {
+ // Traer todos los grupos de un usuario
+ async getUserGroups(userId: string): Promise<GroupInfo[]> {
   try {
-    const user = await this.userRepository.findOne(userId, {
-      relations: ['groups'],
-    });
+    const user = await this.userRepository.createQueryBuilder('user')
+      .leftJoinAndSelect('user.groups', 'groups')
+      .where('user.id = :userId', { userId })
+      .getOne();
 
+      console.log('user', user)
     if (!user) {
       throw new Error('User not found');
     }
 
-    return user.groups || []; // Devuelve los grupos del usuario o un array vacío si no hay grupos
+    return user.groups;  // Retorna los grupos del usuario
   } catch (error) {
-    throw ErrorManager.createSignatureError(error.message);
+    throw new Error(`Error fetching user groups: ${error.message}`);
   }
 }
+
+//trae todos los grupos de un usuario 
+// async getGroupsForUser(userId: string): Promise<GroupInfo[]> {
+//   try {
+//     const user = await this.userRepository.findOne(userId, {
+//       relations: ['groups'],
+//     });
+
+//     if (!user) {
+//       throw new Error('User not found');
+//     }
+
+//     return user.groups || []; // Devuelve los grupos del usuario o un array vacío si no hay grupos
+//   } catch (error) {
+//     throw ErrorManager.createSignatureError(error.message);
+//   }
+// }
 
   // async saveGroupMessage(senderId: string, room: string, message: string, receiverIds: string[]): Promise<MessageEntity[]> {
   //   try {

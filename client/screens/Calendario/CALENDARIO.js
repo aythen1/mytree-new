@@ -161,7 +161,9 @@ const CALENDARIO = () => {
       <Calendario
         dates={[...dates, ...eventInvited]}
         selectedDate={selectedDate}
-        setSelectedDate={setSelectedDate}
+        setSelectedDate={(e)=> {
+          handleItemPress('fechas')
+          setSelectedDate(e)}}
       />
       <View style={styles.frameParent}>
         <View style={styles.upcomingParent}>

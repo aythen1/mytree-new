@@ -148,21 +148,22 @@ async getGroupMembers(@Param('userId') userId: string) {
 
 
 
-  // // traer todos los grupos de un usuario
-  // @Get('/grupsUser/:userId')
-  // async getUserGroups(@Param('userId') grupId: string) {
+  // traer todos los grupos de un usuario
+  @Get('/grupsUser/:userId')
+  async getUserGroups(@Param('userId') userId: string) {
 
-  //   try {
-  //     const groups = await this.userService.getUserGroups(userId);
-  //     return groups;
-  //   } catch (error) {
-  //     console.error('Error al obtener los miembros del grupo:', error);
-  //     throw new InternalServerErrorException({
-  //       statusCode: 404,
-  //       message: 'Error al traer los grupos de un usuario.',
-  //     });
-  //   }
-  // }
+    try {
+      console.log('entra')
+      const groups = await this.messageService.getUserGroups(userId);
+      return groups;
+    } catch (error) {
+      console.error('Error al obtener los miembros del grupo:', error);
+      throw new InternalServerErrorException({
+        statusCode: 404,
+        message: 'Error al traer los grupos de un usuario.',
+      });
+    }
+  }
 
 
 

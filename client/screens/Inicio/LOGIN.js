@@ -6,7 +6,8 @@ import {
   Pressable,
   Text,
   TextInput,
-  ScrollView
+  ScrollView,
+  TouchableOpacity
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useNavigation } from '@react-navigation/native'
@@ -188,15 +189,15 @@ const LOGIN = () => {
           </Text>
         </View>
         {error && <Text>{error}</Text>}
-        <LinearGradient
+       <TouchableOpacity onPress={handleSubmit}>
+       <LinearGradient
           style={[styles.button, styles.buttonFlexBox]}
           locations={[0, 1]}
           colors={['#dee274', '#7ec18c']}
         >
-          <Pressable onPress={handleSubmit}>
             <Text style={[styles.signIn, styles.signInLayout]}>Ingresar</Text>
-          </Pressable>
         </LinearGradient>
+       </TouchableOpacity>
       </View>
     </ScrollView>
   )
