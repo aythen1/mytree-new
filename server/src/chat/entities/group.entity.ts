@@ -13,7 +13,7 @@ export class GroupInfo {
   photo: string; 
 
     
-  @Column()
+  @Column('simple-array')
   photos: string[]; 
 
 

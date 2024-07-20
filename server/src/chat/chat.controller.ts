@@ -159,27 +159,27 @@ export class ChatController {
     return await this.messageService.markGroupMessagesAsRead(room, userId);
   }
 
-  //Ruta pára eliminar grupo
-  @Delete('group/:room/:userId')
-  async deleteGroupChat(@Param('room') room: string, @Param('userId') userId: string): Promise<void> {
-    return await this.messageService.deleteGroupChat(room, userId);
-  }
+  // //Ruta pára eliminar grupo
+  // @Delete('group/:room/:userId')
+  // async deleteGroupChat(@Param('room') room: string, @Param('userId') userId: string): Promise<void> {
+  //   return await this.messageService.deleteGroupChat(room, userId);
+  // }
 
-    // Ruta para agregar usuarios a un grupo
-  @Patch('group/:room/add-users')
-  async addUsersToGroup(
-    @Param('room') room: string,
-    @Body('userIds') userIds: string[]
-  ): Promise<void> {
-    await this.messageService.addUsersToGroup(room, userIds);
-  }
+  //   // Ruta para agregar usuarios a un grupo
+  // @Patch('group/:room/add-users')
+  // async addUsersToGroup(
+  //   @Param('room') room: string,
+  //   @Body('userIds') userIds: string[]
+  // ): Promise<void> {
+  //   await this.messageService.addUsersToGroup(room, userIds);
+  // }
 
-  // Ruta para eliminar usuarios de un grupo
-  @Patch('group/:room/remove-users')
-  async removeUsersFromGroup(
-    @Param('room') room: string,
-    @Body('userIds') userIds: string[]
-  ): Promise<void> {
-    await this.messageService.removeUsersFromGroup(room, userIds);
-  }
+  // // Ruta para eliminar usuarios de un grupo
+  // @Patch('group/:room/remove-users')
+  // async removeUsersFromGroup(
+  //   @Param('room') room: string,
+  //   @Body('userIds') userIds: string[]
+  // ): Promise<void> {
+  //   await this.messageService.removeUsersFromGroup(room, userIds);
+  // }
 }
