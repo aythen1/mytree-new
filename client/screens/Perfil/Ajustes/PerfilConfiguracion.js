@@ -34,25 +34,47 @@ import { Context } from '../../../context/Context'
 import { CameraView } from 'expo-camera'
 import SimboloSVG from '../SimboloSVG'
 import { Entypo } from '@expo/vector-icons'
+import PopUpCalendario from '../../../components/PopUpCalendario'
+import Maps from '../../../components/Maps'
+import EtiquetarUno from '../../../components/EtiquetarUno'
+import useFetchHook from '../../../utils/useFetchHook'
 
 const PerfilConfiguracion = () => {
-  const { userData: usuario } = useSelector((state) => state.users)
+  const { userData: usuario, allUsers } = useSelector((state) => state.users)
   const [showImageOptions, setShowImageOptions] = useState(false)
   const [facing, setFacing] = useState('back')
   const { pickImage, provisoryProfileImage, profileImage } = useContext(Context)
   const dispatch = useDispatch()
   const [showCamera, setShowCamera] = useState(false)
-
+  const [selectedDate, setSelectedDate] = useState('')
+  const [calendario, setCalendario] = useState(false)
+  const [showLocation, setShowLocation] = useState(false)
   const navigation = useNavigation()
   const nombreInputRef = useRef(null)
   const [modalCreate, setModalCreate] = useState(false)
-  const [inputsBros, setInputsBros] = useState([])
+  const [inputsBros, setInputsBros] = useState([{ input: '' }])
   const [editable, setEditable] = useState(false)
+  const [location, setLocation] = useState('')
+  const [showTagUsers, setShowTagUsers] = useState(false)
+  const [showTagUsersPadre, setShowTagUsersPadre] = useState(false)
+  const [showTagBrother, setShowTagBrother] = useState(false)
+  const [inputSelected ,setInputSelected] = useState()
+
+  const { data, loading, error } = useFetchHook({
+    url: `/user/${usuario?.id}/friendsAndFamily`
+  })
+
+
+  const [invitedUsers, setInvitedUsers] = useState([])
 
   const [dataToSend, setDataToSend] = useState({
-    username: '',
-    birthDate: '',
-    address: ''
+    username: usuario.username,
+    birthDate: usuario.birthDate,
+    address: usuario.address,
+    momId: usuario.momId,
+    dadId: usuario.dadId,
+    brotherIds: usuario.brotherIds,
+    maritalStatus: usuario.maritalStatus
   })
 
   const cameraReff = useRef(null)
@@ -60,7 +82,7 @@ const PerfilConfiguracion = () => {
   const takePicture = async () => {
     if (cameraReff) {
       const photo = await cameraReff.current.takePictureAsync()
-      setSelectedImage(photo)
+      // setSelectedImage(photo)
       pickImage('profile', photo.uri)
       setShowCamera(false)
     }
@@ -75,12 +97,36 @@ const PerfilConfiguracion = () => {
     dispatch(getUserData(usuario?.id))
   }, [profileImage])
 
+  const handleBrotherInputChange = (index, text) => {
+    setInputsBros((prev) => {
+      const newInputs = [...prev]
+      console.log(newInputs[index], 'esrto daaa')
+      newInputs[index].input = text
+      return newInputs
+    })
+  }
+
+  const handleAddBrotherInput = () => {
+    setInputsBros((prev) => [...prev, { input: '' }])
+  }
+
+  useEffect(() => {
+    const brothersArray = inputsBros
+      .map((input) => input.input)
+      .filter((input) => input?.trim() !== '')
+    setDataToSend((prevData) => ({
+      ...prevData,
+      brotherIds:  [...usuario.brotherIds, ...brothersArray]
+    }))
+  }, [inputsBros])
+
   const changePictureMode = async () => {
     setFacing((prev) => (prev == 'back' ? 'front' : 'back'))
   }
 
   const onCloseModalCreate = () => {
     setModalCreate(false)
+    navigation.goBack()
   }
 
   const handleSubmit = async () => {
@@ -95,10 +141,15 @@ const PerfilConfiguracion = () => {
     }
   }
 
+  const closeCalendario = () => {
+    setCalendario(false)
+  }
+
   if (!showCamera) {
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.viewContainer}>
         <ScrollView
+          keyboardShouldPersistTaps="handled"
           contentContainerStyle={{ paddingBottom: 130 }}
           style={styles.frameParent}
           showsVerticalScrollIndicator={false}
@@ -285,7 +336,6 @@ const PerfilConfiguracion = () => {
                 >
                   <TextInput
                     editable={editable}
-
                     style={[
                       styles.brunoPham,
                       styles.brunoPhamTypo,
@@ -308,6 +358,29 @@ const PerfilConfiguracion = () => {
                 </View>
               </View>
             </View>
+            <Modal animationType="slide" transparent visible={calendario}>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'rgba(113, 113, 113, 0.3)'
+                }}
+              >
+                <Pressable
+                  style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+                  onPress={closeCalendario}
+                />
+                <PopUpCalendario
+                  selectedDate={dataToSend.birthDate}
+                  setSelectedDate={(v) =>
+                    setDataToSend({ ...dataToSend, ['birthDate']: v })
+                  }
+                  setButtonContainer2Visible={() => {}}
+                  setCalendario={setCalendario}
+                />
+              </View>
+            </Modal>
             <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
               <View style={styles.nombreCompletoParent}>
                 <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
@@ -321,23 +394,45 @@ const PerfilConfiguracion = () => {
                     width: '100%'
                   }}
                 >
-                  <TextInput
+                  {/* <TextInput
+                    onFocus={() => setCalendario(true)}
                     style={[
                       styles.brunoPham,
                       styles.brunoPhamTypo,
                       { width: '100%' }
                     ]}
-                    ref={nombreInputRef}
+                    // ref={nombreInputRef}
                     editable={editable}
-                    placeholder={usuario.birthDate || 'Fecha de nacimiento'}
-                    onChangeText={(text) =>
-                      setDataToSend({ ...dataToSend, ['birthDate']: text })
+                    placeholder={
+                      usuario.birthDate || selectedDate || 'Fecha de nacimiento'
                     }
+                    // onChangeText={(text) =>
+                    //   setDataToSend({ ...dataToSend, ['birthDate']: text })
+                    // }
                     value={dataToSend.birthDate}
-                  />
+                  /> */}
+                  <Pressable
+                    onPress={() => (editable ? setCalendario(true) : null)}
+                    style={[
+                      styles.brunoPham,
+                      styles.brunoPhamTypo,
+                      { width: '100%' }
+                    ]}
+                  >
+                    <Text
+                      style={{
+                        color: 'gray'
+                      }}
+                    >
+                      {usuario.birthDate ||
+                        dataToSend.birthDate ||
+                        'Fecha de nacimiento'}
+                    </Text>
+                  </Pressable>
                 </View>
               </View>
             </View>
+
             <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
               <View style={styles.nombreCompletoParent}>
                 <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
@@ -351,24 +446,139 @@ const PerfilConfiguracion = () => {
                     width: '100%'
                   }}
                 >
-                  <TextInput
+                  {/* <TextInput
                     style={[
                       styles.brunoPham,
                       styles.brunoPhamTypo,
                       { width: '100%' }
                     ]}
                     editable={editable}
-
-                    ref={nombreInputRef}
-                    placeholder={usuario.address || 'Ubicación'}
-                    onChangeText={(text) =>
-                      setDataToSend({ ...dataToSend, ['address']: text })
-                    }
+                    onFocus={() => setShowLocation(true)}
+                    placeholder={usuario.address || location || 'Ubicación'}
                     value={dataToSend.address}
-                  />
+                  /> */}
+
+                  <Pressable
+                    onPress={() => (editable ? setShowLocation(true) : null)}
+                    style={[
+                      styles.brunoPham,
+                      styles.brunoPhamTypo,
+                      { width: '100%' }
+                    ]}
+                  >
+                    <Text
+                      style={{
+                        color: 'gray'
+                      }}
+                    >
+                      {usuario.address || dataToSend.address || 'Ubicación'}
+                    </Text>
+                  </Pressable>
                 </View>
               </View>
             </View>
+            <Modal animationType="fade" transparent visible={showLocation}>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'rgba(113, 113, 113, 0.3)'
+                }}
+              >
+                <Pressable
+                  style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    left: 0,
+                    top: 0
+                  }}
+                  onPress={() => {
+                    setShowLocation(false)
+                  }}
+                />
+                <Maps
+                  onClose={() => setShowLocation(false)}
+                  setLocation={(e) =>
+                    setDataToSend({ ...dataToSend, ['address']: e })
+                  }
+                />
+              </View>
+            </Modal>
+            <Modal animationType="slide" transparent visible={showTagUsers}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'rgba(113, 113, 113, 0.3)',
+                  height: '100%'
+                }}
+              >
+                <Pressable
+                  style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+                  onPress={() => setShowTagUsers(false)}
+                />
+                <EtiquetarUno
+                data={data}
+                  taggedUsers={invitedUsers}
+                  setTaggedUsers={(e) =>
+                    setDataToSend({ ...dataToSend, ['momId']: e })
+                  }
+                  onClose={() => setShowTagUsers(false)}
+                />
+              </View>
+            </Modal>
+            <Modal
+              animationType="slide"
+              transparent
+              visible={showTagUsersPadre}
+            >
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'rgba(113, 113, 113, 0.3)',
+                  height: '100%'
+                }}
+              >
+                <Pressable
+                  style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+                  onPress={() => setShowTagUsersPadre(false)}
+                />
+                <EtiquetarUno
+                data={data}
+                  taggedUsers={dataToSend}
+                  setTaggedUsers={(e) =>
+                    setDataToSend({ ...dataToSend, ['dadId']: e })
+                  }
+                  onClose={() => setShowTagUsersPadre(false)}
+                />
+              </View>
+            </Modal>
+            <Modal animationType="slide" transparent visible={showTagBrother}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'rgba(113, 113, 113, 0.3)',
+                  height: '100%'
+                }}
+              >
+                <Pressable
+                  style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+                  onPress={() => setShowTagBrother(false)}
+                />
+                <EtiquetarUno
+                data={data}
+                  taggedUsers={dataToSend}
+                  setTaggedUsers={ (text)=>  handleBrotherInputChange(inputSelected + 1 , text)
+                  
+                  }
+                  onClose={() => setShowTagBrother(false)}
+                />
+              </View>
+            </Modal>
             <Image
               style={styles.frameChild}
               contentFit="cover"
@@ -387,13 +597,36 @@ const PerfilConfiguracion = () => {
                     width: '100%'
                   }}
                 >
-                  <TextInput
+                  {/* <TextInput
                     editable={editable}
-
                     style={[styles.brunoPham, styles.brunoPhamTypo]}
                     ref={nombreInputRef}
                     placeholder="Agregar madre"
-                  />
+                  /> */}
+                  <Pressable
+                    onPress={() => (editable ? setShowTagUsers(true) : null)}
+                    style={[
+                      styles.brunoPham,
+                      styles.brunoPhamTypo,
+                      { width: '100%' }
+                    ]}
+                  >
+                    <Text
+                      style={{
+                        color: 'gray'
+                      }}
+                    >
+                      {usuario.momId || dataToSend.momId
+                        ? allUsers.filter(
+                            (user) => user.id.toString() === dataToSend.momId
+                          )[0]?.username +
+                          ' ' +
+                          allUsers.filter(
+                            (user) => user.id.toString() === dataToSend.momId
+                          )[0]?.apellido
+                        : 'Agregar madre'}
+                    </Text>
+                  </Pressable>
                 </View>
               </View>
             </View>
@@ -410,13 +643,32 @@ const PerfilConfiguracion = () => {
                     width: '100%'
                   }}
                 >
-                  <TextInput
-                    editable={editable}
-
-                    style={[styles.brunoPham, styles.brunoPhamTypo]}
-                    ref={nombreInputRef}
-                    placeholder="Agregar padre"
-                  />
+                  <Pressable
+                    onPress={() =>
+                      editable ? setShowTagUsersPadre(true) : null
+                    }
+                    style={[
+                      styles.brunoPham,
+                      styles.brunoPhamTypo,
+                      { width: '100%' }
+                    ]}
+                  >
+                    <Text
+                      style={{
+                        color: 'gray'
+                      }}
+                    >
+                      {usuario.dadId || dataToSend.dadId
+                        ? allUsers.filter(
+                            (user) => user.id.toString() === dataToSend.dadId
+                          )[0]?.username +
+                          ' ' +
+                          allUsers.filter(
+                            (user) => user.id.toString() === dataToSend.dadId
+                          )[0]?.apellido
+                        : 'Agregar padre'}
+                    </Text>
+                  </Pressable>
                 </View>
               </View>
             </View>
@@ -429,44 +681,55 @@ const PerfilConfiguracion = () => {
 
             <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
               <View style={styles.nombreCompletoParent}>
-                <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
+                <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo,{marginBottom:6}]}>
                   Hermanos
                 </Text>
-
+                {/* 
                 <TextInput
-                    editable={editable}
-
+                  editable={editable}
                   style={[styles.brunoPham, styles.brunoPhamTypo]}
                   ref={nombreInputRef}
                   placeholder="Agregar hermano"
-                />
+                  onChangeText={(text) => handleBrotherInputChange(0, text)}
+                  value={inputsBros[0]?.input || ''}
+                /> */}
+
+                {usuario.brotherIds &&
+                  usuario.brotherIds.map((e) => {
+                    console.log(e, 'eeeeeeeeeeeee')
+                    return (
+                        <Text style={{ color: 'gray',marginBottom:6 }}>
+                          {`${allUsers.find((us) => us.id == e)?.username} ${allUsers.find((us) => us.id == e)?.apellido}`}
+                        </Text>
+                    )
+                  })}
               </View>
               <View style={{ alignItems: 'center', width: '20%' }}>
-                <Pressable
-                  onPress={() => {
-                    setInputsBros((prev) => {
-                      return [...prev, { input: '1' }]
-                    })
-                  }}
-                >
+                <Pressable onPress={handleAddBrotherInput}>
                   <Text style={{ textAlign: 'center', fontSize: 22 }}>+</Text>
                 </Pressable>
               </View>
             </View>
-            {inputsBros.length > 0 &&
-              inputsBros.map((e, i) => {
-                return (
-                  <View key={i} style={styles.nombreCompletoParent}>
-                    <TextInput
+            {inputsBros &&
+              inputsBros.slice(1).map((e, i) => (
+                <View key={i} style={styles.nombreCompletoParent}>
+                  {/* <TextInput
                     editable={editable}
-
-                      style={[styles.brunoPham, styles.brunoPhamTypo]}
-                      ref={nombreInputRef}
-                      placeholder="Agregar hermano"
-                    />
-                  </View>
-                )
-              })}
+                    style={[styles.brunoPham, styles.brunoPhamTypo]}
+                    ref={nombreInputRef}
+                    placeholder="Agregar hermano"
+                    onChangeText={(text) =>
+                      handleBrotherInputChange(i + 1, text)
+                    }
+                    value={e.input || ''}
+                  /> */}
+                  <TouchableOpacity style={{marginBottom:6}} onPress={()=> {setInputSelected(i);setShowTagBrother(true)}}>
+                    <Text style={{color:"gray"}}>
+                      {e.input &&    `${allUsers.find((us) => us.id == e?.input)?.username} ${allUsers.find((us) => us.id == e?.input)?.apellido}` || "Agregar hermano"}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
             <Image
               style={styles.frameChild}
               contentFit="cover"
@@ -487,10 +750,13 @@ const PerfilConfiguracion = () => {
                 >
                   <TextInput
                     editable={editable}
-
+                    onChangeText={(text) =>
+                      setDataToSend({ ...dataToSend, ['maritalStatus']: text })
+                    }
                     style={[styles.brunoPham, styles.brunoPhamTypo]}
                     ref={nombreInputRef}
-                    placeholder="Agregar estado civíl"
+                    value={dataToSend.maritalStatus}
+                    placeholder={dataToSend.maritalStatus || 'Estado Civíl'}
                   />
                 </View>
               </View>
@@ -500,7 +766,10 @@ const PerfilConfiguracion = () => {
               contentFit="cover"
               source={require('../../../assets/line-811.png')}
             />
-            <View style={[styles.deleteParent, styles.parentFlexBox]}>
+            <TouchableOpacity
+       
+              style={[styles.deleteParent, styles.parentFlexBox]}
+            >
               <Image
                 style={styles.deleteIcon}
                 contentFit="cover"
@@ -509,19 +778,19 @@ const PerfilConfiguracion = () => {
               <Text style={[styles.eliminarDatos, styles.brunoPhamTypo]}>
                 Eliminar datos
               </Text>
-            </View>
+            </TouchableOpacity>
           </View>
           <LinearGradient
             style={styles.button}
             locations={[0, 1]}
             colors={['#dee274', '#7ec18c']}
           >
-            <Pressable
+            <TouchableOpacity
               style={[styles.pressable, styles.pressableFlexBox]}
               onPress={() => handleSubmit()}
             >
               <Text style={styles.signIn}>Guardar</Text>
-            </Pressable>
+            </TouchableOpacity>
           </LinearGradient>
 
           {modalCreate && (

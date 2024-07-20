@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback ,useEffect} from 'react'
 import { Image } from 'expo-image'
 import {
   StyleSheet,
@@ -27,18 +27,32 @@ const Invitacin = ({ route }) => {
   )
   const { userData, allUsers } = useSelector((state) => state.users)
 
-  // const [event , setEvent] = useState({})
+  const [event , setEvent] = useState({})
 
-  const event = route?.params?.date
-  const event_location = route?.params?.date.location
-  const event_images = route?.params?.date.images
-  const event_wishList = route?.params?.date.wishListItems
-  const event_description = route?.params?.date.description
-  const event_date = route?.params?.date?.date.slice(0, 10)
+  // const event = route?.params?.date
+  // const event_location = route?.params?.date.location
+  // const event_images = route?.params?.date.images
+  // const event_wishList = route?.params?.date.wishListItems
+  // const event_description = route?.params?.date.description
+  // const event_date = route?.params?.date?.date.slice(0, 10)
 
   const inv = userInvitations.find((e) => e.event.id == event.id)
 
   console.log(event, 'imnvvvvvvvvvvvvvvvvvvvvvvvvvvvv')
+
+const handleGetEvent = async ()=> {
+  const res = await axiosInstance.get(`/events/${route?.params?.date?.id}`)
+  console.log(res.data)
+  setEvent(res.data)
+
+}
+
+
+  useEffect(() => {
+    
+    handleGetEvent()
+  }, [route?.params?.date])
+  
 
   const dispatch = useDispatch()
   const navigation = useNavigation()
@@ -59,7 +73,7 @@ const Invitacin = ({ route }) => {
   const handleTake = async (id) => {
     const res = await axiosInstance
       .put(`events/wishlist/${id}/take`, { userId: userData.id })
-      .then(() => dispatch(getAllUserInvitations(userData.id)))
+      .then(() => handleGetEvent())
     console.log(res, 'ressssssssssssssssssss')
   }
 
@@ -118,7 +132,7 @@ const Invitacin = ({ route }) => {
                 source={require('../assets/calendar.png')}
               />
               <View style={styles.deAgostoParent}>
-                <Text style={styles.hsTypo}>{event_date}</Text>
+                <Text style={styles.hsTypo}>{event?.date?.slice(0, 10)}</Text>
                 {/* <Text style={[styles.hs, styles.hsTypo]}>16:00 hs</Text> */}
               </View>
             </View>
@@ -129,15 +143,15 @@ const Invitacin = ({ route }) => {
                 source={require('../assets/iconlybulklocation2.png')}
               />
               <Text style={[styles.lugarDelEvento, styles.hsTypo]}>
-                {event_location}
+                {event?.location}
               </Text>
             </View>
             <Text style={[styles.cdigo, styles.cdigoTypo]}>
-              {event_description}
+              {event?.description}
             </Text>
             <View style={styles.fieldWithTitle}>
-              {event_images &&
-                event_images.map((e) => {
+              {event?.images &&
+                event?.images.map((e) => {
                   return (
                     <Image
                       style={{ width: '48%', height: 100 }}
@@ -223,8 +237,7 @@ const Invitacin = ({ route }) => {
                 Lista de deseos
               </Text>
               {(event.creatorId === userData.id || inv?.status == 'accepted') &&
-                event_wishList?.map((e) => {
-                  console.log(event_wishList, '123123')
+                event?.wishListItems?.map((e) => {
                   if (e.takenBy) {
                     return (
                       <View

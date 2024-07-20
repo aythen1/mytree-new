@@ -13,12 +13,17 @@ import { ChatService } from './service/chat.service';
 import { MessageService } from './service/message.service';
 import { Get, Query } from '@nestjs/common';
 import { MessageEntity } from './entities/message.entity';
+import { GroupInfo } from './entities/group.entity';
+import { UserService } from 'src/user/user.service';
+
 
 @Controller('chat')
 export class ChatController {
   constructor(
     private readonly chatService: ChatService,
     private readonly messageService: MessageService,
+    private readonly userService: UserService
+
   ) {}
 
   @Post('/deleteAllMessageChat')
@@ -112,45 +117,111 @@ export class ChatController {
   //  }
    //----------------
 
- // crear grupo
-   @Post('group')
-   async createGroupMessage(@Body() body: any): Promise<MessageEntity[]> {
-     const { senderId, room, message, receiverIds } = body;
-   
-     if (!senderId || !room || !message || !receiverIds || !Array.isArray(receiverIds) || receiverIds.length === 0 || receiverIds.some(id => typeof id !== 'string')) {
-       throw new Error('Sender ID, room, message, and a non-empty array of receiver IDs are required.');
+
+
+//crear grupo --
+   @Post('/createGroup')
+   async createGroupInfo(@Body() groupInfoData: Partial<GroupInfo>): Promise<GroupInfo> {
+     try {
+       const createdGroupInfo = await this.messageService.createGroupInfo(groupInfoData);
+       return createdGroupInfo;
+     } catch (error) {
+       console.error('Error creating GroupInfo:', error);
+       throw new InternalServerErrorException('Internal server error while creating GroupInfo.');
      }
-   
-     return await this.messageService.saveGroupMessage(senderId, room, message, receiverIds);
    }
+
+// traer todos los usuarios de un grupo
+@Get('/usersGrup/:userId')
+async getGroupMembers(@Param('userId') userId: string) {
+  try {
+    const members = await this.messageService.getGroupMembers(userId);
+    return members;
+  } catch (error) {
+    console.error('Error al obtener los miembros del grupo:', error);
+    throw new InternalServerErrorException({
+      statusCode: 404,
+      message: 'Error al traer los miembros de un grupo.',
+    });
+  }
+}
+
+
+
+  // traer todos los grupos de un usuario
+  @Get('/grupsUser/:userId')
+  async getUserGroups(@Param('userId') userId: string) {
+
+    try {
+      console.log('entra')
+      const groups = await this.messageService.getUserGroups(userId);
+      return groups;
+    } catch (error) {
+      console.error('Error al obtener los miembros del grupo:', error);
+      throw new InternalServerErrorException({
+        statusCode: 404,
+        message: 'Error al traer los grupos de un usuario.',
+      });
+    }
+  }
+
+
+
+
+
+// // traer todos los grupos de un usuario
+//    @Get(':userId')
+//    async findAllGroupsOfUser(@Param('userId') userId: number): Promise<GroupInfo[]> {
+//      return this.groupService.findAllGroupsOfUser(userId);
+//    }
+ 
+
+//    //traer todos los usuarios de un grupo
+//    @Get('members/:groupId')
+//    async findAllMembersOfGroup(@Param('groupId') groupId: number): Promise<User[]> {
+//      return this.groupService.findAllMembersOfGroup(groupId);
+//    }
+
+
+ // crear mensaje para grupo
+  //  @Post('group')
+  //  async createGroupMessage(@Body() body: any): Promise<MessageEntity[]> {
+  //    const { senderId, room, message, receiverIds } = body;
    
-   // marcar como leido los mensajes de un grupo
-  @Patch('group/:room/:userId')
-  async markGroupMessagesAsRead(@Param('room') room: string, @Param('userId') userId: string): Promise<void> {
-    return await this.messageService.markGroupMessagesAsRead(room, userId);
-  }
+  //    if (!senderId || !room || !message || !receiverIds || !Array.isArray(receiverIds) || receiverIds.length === 0 || receiverIds.some(id => typeof id !== 'string')) {
+  //      throw new Error('Sender ID, room, message, and a non-empty array of receiver IDs are required.');
+  //    }
+   
+  //    return await this.messageService.saveGroupMessage(senderId, room, message, receiverIds);
+  //  }
+   
+  //  // marcar como leido los mensajes de un grupo
+  // @Patch('group/:room/:userId')
+  // async markGroupMessagesAsRead(@Param('room') room: string, @Param('userId') userId: string): Promise<void> {
+  //   return await this.messageService.markGroupMessagesAsRead(room, userId);
+  // }
 
-  //Ruta pára eliminar grupo
-  @Delete('group/:room/:userId')
-  async deleteGroupChat(@Param('room') room: string, @Param('userId') userId: string): Promise<void> {
-    return await this.messageService.deleteGroupChat(room, userId);
-  }
+  // //Ruta pára eliminar grupo
+  // @Delete('group/:room/:userId')
+  // async deleteGroupChat(@Param('room') room: string, @Param('userId') userId: string): Promise<void> {
+  //   return await this.messageService.deleteGroupChat(room, userId);
+  // }
 
-    // Ruta para agregar usuarios a un grupo
-  @Patch('group/:room/add-users')
-  async addUsersToGroup(
-    @Param('room') room: string,
-    @Body('userIds') userIds: string[]
-  ): Promise<void> {
-    await this.messageService.addUsersToGroup(room, userIds);
-  }
+  //   // Ruta para agregar usuarios a un grupo
+  // @Patch('group/:room/add-users')
+  // async addUsersToGroup(
+  //   @Param('room') room: string,
+  //   @Body('userIds') userIds: string[]
+  // ): Promise<void> {
+  //   await this.messageService.addUsersToGroup(room, userIds);
+  // }
 
-  // Ruta para eliminar usuarios de un grupo
-  @Patch('group/:room/remove-users')
-  async removeUsersFromGroup(
-    @Param('room') room: string,
-    @Body('userIds') userIds: string[]
-  ): Promise<void> {
-    await this.messageService.removeUsersFromGroup(room, userIds);
-  }
+  // // Ruta para eliminar usuarios de un grupo
+  // @Patch('group/:room/remove-users')
+  // async removeUsersFromGroup(
+  //   @Param('room') room: string,
+  //   @Body('userIds') userIds: string[]
+  // ): Promise<void> {
+  //   await this.messageService.removeUsersFromGroup(room, userIds);
+  // }
 }

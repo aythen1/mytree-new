@@ -141,7 +141,7 @@ const OtherUserProfile = () => {
         />
       </View>
 
-      <Pressable
+      {/* <Pressable
         onPress={() => navigation.openDrawer()}
         style={styles.menuPosition}
       >
@@ -150,7 +150,7 @@ const OtherUserProfile = () => {
           contentFit="cover"
           source={require('../../assets/ionmenu.png')}
         />
-      </Pressable>
+      </Pressable> */}
 
       {search && <BarraBusqueda />}
 

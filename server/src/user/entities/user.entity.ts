@@ -11,6 +11,7 @@ import { Post } from '../../posts/entities/post.entity';
 import { Notification } from '../../notification/entities/notification.entity';
 import { History } from 'src/histories/entities/history.entity';
 import { Comment } from 'src/comments/entities/comment.entity';
+import { GroupInfo } from 'src/chat/entities/group.entity';
 
 @Entity()
 export class User {
@@ -42,8 +43,8 @@ export class User {
   @Column({ nullable: true })
   birthDate: string;
 
-  @Column({ nullable: true ,default:true })
-  newUser: boolean ;
+  @Column({ nullable: true, default: true })
+  newUser: boolean;
 
   @Column({ nullable: true })
   oldPassword: string; // Para cambio de contraseña, almacenar la clave vieja
@@ -72,6 +73,9 @@ export class User {
 
   @Column('simple-array', { nullable: true })
   redes: string[];
+
+  @Column({ nullable: true })
+  maritalStatus: string;
 
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
@@ -123,4 +127,8 @@ export class User {
 
   @Column({ nullable: true })
   facebookId: string; // Para manejo de cuentas por terceros de Facebook Firebase
+
+  @ManyToMany(() => GroupInfo, (group) => group.members)
+  @JoinTable()
+  groups: GroupInfo[];
 }

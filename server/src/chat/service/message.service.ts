@@ -1,18 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InjectRepository, } from '@nestjs/typeorm';
+import { getRepository, Repository } from 'typeorm';
 import { MessageEntity } from '../entities/message.entity';
 import { GroupInfo } from '../entities/group.entity';
 
 import { ErrorManager } from 'src/utils/error.manager';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class MessageService {
   constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     @InjectRepository(MessageEntity)
     private messageRepository: Repository<MessageEntity>,
     @InjectRepository(GroupInfo)
-    private groupInfo: Repository<GroupInfo>
+    private groupInfoRepository: Repository<GroupInfo>
   ) {}
 
   async saveMessage(
@@ -195,91 +198,162 @@ export class MessageService {
   //   }
   // }
   //----------------
-  async saveGroupMessage(senderId: string, room: string, message: string, receiverIds: string[]): Promise<MessageEntity[]> {
+
+
+//crea el grupo
+  async createGroupInfo(groupInfoData: Partial<GroupInfo>): Promise<GroupInfo> {
+    console.log('entro')
+    const newGroup = this.groupInfoRepository.create(groupInfoData);
+  newGroup.members = groupInfoData.members; 
+  console.log('newGroup', newGroup)
+  console.log('newGroup.members', newGroup.members)
+
+  return await this.groupInfoRepository.save(newGroup);
+  }
+
+
+  //traer todos los usuarios de un grupo
+
+  
+  async getGroupMembers(groupId: string): Promise<string[]> {
     try {
-      const messages: MessageEntity[] = [];
-      for (const receiverId of receiverIds) {
-        const newMessage = this.messageRepository.create({
-          senderId,
-          receiverId,
-          room,
-          message,
-          isReaded: false, // Por defecto no leído
-          senderDelete: null,
-          receiverDelete: null,
-          prop1: null, 
-          prop2: null, 
-          prop3: null, 
-          prop4: null, 
-        });
-        messages.push(await this.messageRepository.save(newMessage));
+      const group = await this.groupInfoRepository.createQueryBuilder('group')
+        .leftJoinAndSelect('group.members', 'members')
+        .where('group.id = :groupId', { groupId })
+        .getOne();
+
+      if (!group) {
+        throw new Error('Group not found');
       }
-      return messages;
+
+      return group.membersIds;
     } catch (error) {
-      throw new Error(`Failed to save group message: ${error.message}`);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
+
+ 
+ // Traer todos los grupos de un usuario
+ async getUserGroups(userId: string): Promise<GroupInfo[]> {
+  try {
+    const user = await this.userRepository.createQueryBuilder('user')
+      .leftJoinAndSelect('user.groups', 'groups')
+      .where('user.id = :userId', { userId })
+      .getOne();
+
+      console.log('user', user)
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return user.groups;  // Retorna los grupos del usuario
+  } catch (error) {
+    throw new Error(`Error fetching user groups: ${error.message}`);
+  }
+}
+
+//trae todos los grupos de un usuario 
+// async getGroupsForUser(userId: string): Promise<GroupInfo[]> {
+//   try {
+//     const user = await this.userRepository.findOne(userId, {
+//       relations: ['groups'],
+//     });
+
+//     if (!user) {
+//       throw new Error('User not found');
+//     }
+
+//     return user.groups || []; // Devuelve los grupos del usuario o un array vacío si no hay grupos
+//   } catch (error) {
+//     throw ErrorManager.createSignatureError(error.message);
+//   }
+// }
+
+  // async saveGroupMessage(senderId: string, room: string, message: string, receiverIds: string[]): Promise<MessageEntity[]> {
+  //   try {
+  //     const messages: MessageEntity[] = [];
+  //     for (const receiverId of receiverIds) {
+  //       const newMessage = this.messageRepository.create({
+  //         senderId,
+  //         receiverId,
+  //         room,
+  //         message,
+  //         isReaded: false, // Por defecto no leído
+  //         senderDelete: null,
+  //         receiverDelete: null,
+  //         prop1: null, 
+  //         prop2: null, 
+  //         prop3: null, 
+  //         prop4: null, 
+  //       });
+  //       messages.push(await this.messageRepository.save(newMessage));
+  //     }
+  //     return messages;
+  //   } catch (error) {
+  //     throw new Error(`Failed to save group message: ${error.message}`);
+  //   }
+  // }
   
 
-  async markGroupMessagesAsRead(room: string, userId: string): Promise<void> {
-    try {
-      await this.messageRepository.update(
-        { room, receiverId: userId },
-        { isReaded: true }
-      );
-    } catch (error) {
-      throw new Error(`Failed to mark group messages as read: ${error.message}`);
-    }
-  }
+  // async markGroupMessagesAsRead(room: string, userId: string): Promise<void> {
+  //   try {
+  //     await this.messageRepository.update(
+  //       { room, receiverId: userId },
+  //       { isReaded: true }
+  //     );
+  //   } catch (error) {
+  //     throw new Error(`Failed to mark group messages as read: ${error.message}`);
+  //   }
+  // }
   
 
-  async deleteGroupChat(room: string, userId: string): Promise<void> {
-    try {
-      // Marcar mensajes como eliminados para el usuario
-      await this.messageRepository.update(
-        { room, receiverId: userId },
-        { receiverDelete: true }
-      );
-      // Puedes hacer lo mismo para senderDelete si es necesario
+  // // async deleteGroupChat(room: string, userId: string): Promise<void> {
+  // //   try {
+  // //     // Marcar mensajes como eliminados para el usuario
+  // //     await this.messageRepository.update(
+  // //       { room, receiverId: userId },
+  // //       { receiverDelete: true }
+  // //     );
+  // //     // Puedes hacer lo mismo para senderDelete si es necesario
   
-      // Eliminar mensajes para los usuarios marcados como eliminados
-      await this.messageRepository.delete({ room, receiverDelete: true });
+  // //     // Eliminar mensajes para los usuarios marcados como eliminados
+  // //     await this.messageRepository.delete({ room, receiverDelete: true });
   
-      // Actualizar información del grupo, como miembros
-      const groupInfo = await this.groupInfo.findOne({ where: {room: room} });
-      if (groupInfo) {
-        groupInfo.members = groupInfo.members.filter(memberId => memberId !== userId);
-        await this.groupInfo.save(groupInfo);
-      }
-    } catch (error) {
-      throw new Error(`Failed to delete group chat: ${error.message}`);
-    }
-  }
-  
-
-  async addUsersToGroup(room: string, userIds: string[]): Promise<void> {
-    try {
-      const groupInfo = await this.groupInfo.findOne({ where: {room: room} });
-      if (groupInfo) {
-        groupInfo.members = [...new Set([...groupInfo.members, ...userIds])]; // Añadir usuarios únicos al grupo
-        await this.groupInfo.save(groupInfo);
-      }
-    } catch (error) {
-      throw new Error(`Failed to add users to group: ${error.message}`);
-    }
-  }
+  // //     // Actualizar información del grupo, como miembros
+  // //     const groupInfo = await this.groupInfoRepository.findOne({ where: {room: room} });
+  // //     if (groupInfo) {
+  // //       groupInfo.membersIds = groupInfoRepository.members.filter(memberId => memberId !== userId);
+  // //       await this.groupInfoRepository.save(groupInfo);
+  // //     }
+  // //   } catch (error) {
+  // //     throw new Error(`Failed to delete group chat: ${error.message}`);
+  // //   }
+  // // }
   
 
-  async removeUsersFromGroup(room: string, userIds: string[]): Promise<void> {
-    try {
-      const groupInfo = await this.groupInfo.findOne({ where: {room: room} });
-      if (groupInfo) {
-        groupInfo.members = groupInfo.members.filter(memberId => !userIds.includes(memberId));
-        await this.groupInfo.save(groupInfo);
-      }
-    } catch (error) {
-      throw new Error(`Failed to remove users from group: ${error.message}`);
-    }
-  }
+  // // async addUsersToGroup(room: string, userIds: string[]): Promise<void> {
+  // //   try {
+  // //     const groupInfo = await this.groupInfoRepository.findOne({ where: {room: room} });
+  // //     if (groupInfo) {
+  // //       groupInfo.members = [...new Set([...groupInfo.members, ...userIds])]; // Añadir usuarios únicos al grupo
+  // //       await this.groupInfoRepository.save(groupInfo);
+  // //     }
+  // //   } catch (error) {
+  // //     throw new Error(`Failed to add users to group: ${error.message}`);
+  // //   }
+  // // }
+  
+
+  // // async removeUsersFromGroup(room: string, userIds: string[]): Promise<void> {
+  // //   try {
+  // //     const groupInfo = await this.groupInfoRepository.findOne({ where: {room: room} });
+  // //     if (groupInfo) {
+  // //       groupInfo.members = groupInfo.members.filter(memberId => !userIds.includes(memberId));
+  // //       await this.groupInfoRepository.save(groupInfo);
+  // //     }
+  // //   } catch (error) {
+  // //     throw new Error(`Failed to remove users from group: ${error.message}`);
+  // //   }
+  // // }
   
 }
