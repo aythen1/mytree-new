@@ -195,6 +195,17 @@ export class MessageService {
   //   }
   // }
   //----------------
+
+
+//crea el grupo
+  async createGroupInfo(groupInfoData: Partial<GroupInfo>): Promise<GroupInfo> {
+    const newGroup = this.groupInfo.create(groupInfoData);
+  newGroup.members = groupInfoData.members; 
+  return await this.groupInfo.save(newGroup);
+  }
+
+
+
   async saveGroupMessage(senderId: string, room: string, message: string, receiverIds: string[]): Promise<MessageEntity[]> {
     try {
       const messages: MessageEntity[] = [];
@@ -248,7 +259,7 @@ export class MessageService {
       // Actualizar información del grupo, como miembros
       const groupInfo = await this.groupInfo.findOne({ where: {room: room} });
       if (groupInfo) {
-        groupInfo.members = groupInfo.members.filter(memberId => memberId !== userId);
+        groupInfo.membersIds = groupInfo.members.filter(memberId => memberId !== userId);
         await this.groupInfo.save(groupInfo);
       }
     } catch (error) {

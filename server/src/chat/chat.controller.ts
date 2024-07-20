@@ -13,6 +13,8 @@ import { ChatService } from './service/chat.service';
 import { MessageService } from './service/message.service';
 import { Get, Query } from '@nestjs/common';
 import { MessageEntity } from './entities/message.entity';
+import { GroupInfo } from './entities/group.entity';
+
 
 @Controller('chat')
 export class ChatController {
@@ -112,7 +114,34 @@ export class ChatController {
   //  }
    //----------------
 
- // crear grupo
+
+
+//crear grupo --
+   @Post('/createGroup')
+   async createGroupInfo(@Body() groupInfoData: Partial<GroupInfo>): Promise<GroupInfo> {
+     try {
+       const createdGroupInfo = await this.messageService.createGroupInfo(groupInfoData);
+       return createdGroupInfo;
+     } catch (error) {
+       console.error('Error creating GroupInfo:', error);
+       throw new InternalServerErrorException('Internal server error while creating GroupInfo.');
+     }
+   }
+// traer todos los grupos de un usuario
+   @Get(':userId')
+   async findAllGroupsOfUser(@Param('userId') userId: number): Promise<GroupInfo[]> {
+     return this.groupService.findAllGroupsOfUser(userId);
+   }
+ 
+
+   //traer todos los usuarios de un grupo
+   @Get('members/:groupId')
+   async findAllMembersOfGroup(@Param('groupId') groupId: number): Promise<User[]> {
+     return this.groupService.findAllMembersOfGroup(groupId);
+   }
+
+
+ // crear mensaje para grupo
    @Post('group')
    async createGroupMessage(@Body() body: any): Promise<MessageEntity[]> {
      const { senderId, room, message, receiverIds } = body;

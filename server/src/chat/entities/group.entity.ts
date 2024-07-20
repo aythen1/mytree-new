@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
 
 @Entity()
 export class GroupInfo {
@@ -9,12 +10,20 @@ export class GroupInfo {
   room: string;
   
   @Column()
-  photos: string; 
+  photo: string; 
+
+    
+  @Column()
+  photos: string[]; 
 
 
   @Column()
   groupName: string;
   
   @Column('simple-array')
-  members: string[];
+  membersIds: string[];
+
+  @ManyToMany(() => User, user => user.groups)
+  @JoinTable()
+  members: User[];
 }
