@@ -200,11 +200,31 @@ export class MessageService {
   //----------------
 
 
-//crea el grupo
+  // Crear grupo
   async createGroupInfo(groupInfoData: Partial<GroupInfo>): Promise<GroupInfo> {
-    const newGroup = this.groupInfoRepository.create(groupInfoData);
-  newGroup.members = groupInfoData.members; 
-  return await this.groupInfoRepository.save(newGroup);
+    try {
+      // Crear el grupo con los datos proporcionados
+      const newGroup = this.groupInfoRepository.create(groupInfoData);
+
+      // Guardar el grupo en la base de datos
+      const savedGroup = await this.groupInfoRepository.save(newGroup);
+
+      // Si hay miembros, actualiza la relación en cada usuario
+      if (groupInfoData.members && groupInfoData.members.length > 0) {
+        const memberIds = groupInfoData.members.map(member => member.id);
+        const users = await this.userRepository.findByIds(memberIds);
+
+        // Actualizar la relación de grupo en cada usuario
+        await Promise.all(users.map(async (user) => {
+          user.groups.push(savedGroup);
+          await this.userRepository.save(user);
+        }));
+      }
+
+      return savedGroup;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
   }
 
 
@@ -213,11 +233,12 @@ export class MessageService {
   
   async getGroupMembers(groupId: string): Promise<string[]> {
     try {
+      console.log("entra")
       const group = await this.groupInfoRepository.createQueryBuilder('group')
         .leftJoinAndSelect('group.members', 'members')
         .where('group.id = :groupId', { groupId })
         .getOne();
-
+        console.log("group!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", group)
       if (!group) {
         throw new Error('Group not found');
       }
@@ -229,22 +250,27 @@ export class MessageService {
   }
 
  
-//trae todos los grupos de un usuario 
-async getGroupsForUser(userId: string): Promise<GroupInfo[]> {
-  try {
-    const user = await this.userRepository.findOne(userId, {
-      relations: ['groups'],
-    });
+  // Obtener todos los grupos de un usuario
+  async getUserGroups(userId: string): Promise<GroupInfo[]> {
+    try {
+      console.log("entra al servicio")
 
-    if (!user) {
-      throw new Error('User not found');
+      const userWithGroups = await this.userRepository.createQueryBuilder('user')
+        .leftJoinAndSelect('user.groups', 'group')
+        .where('user.id = :userId', { userId })
+        .getOne();
+
+        console.log("usuario con los grupos", userWithGroups)
+
+      if (!userWithGroups) {
+        throw new Error('User not found');
+      }
+
+      return userWithGroups.groups; 
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
     }
-
-    return user.groups || []; // Devuelve los grupos del usuario o un array vacío si no hay grupos
-  } catch (error) {
-    throw ErrorManager.createSignatureError(error.message);
   }
-}
 
   // async saveGroupMessage(senderId: string, room: string, message: string, receiverIds: string[]): Promise<MessageEntity[]> {
   //   try {

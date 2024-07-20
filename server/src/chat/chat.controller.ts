@@ -120,22 +120,34 @@ export class ChatController {
 
 
 //crear grupo --
-   @Post('/createGroup')
-   async createGroupInfo(@Body() groupInfoData: Partial<GroupInfo>): Promise<GroupInfo> {
-     try {
-       const createdGroupInfo = await this.messageService.createGroupInfo(groupInfoData);
-       return createdGroupInfo;
-     } catch (error) {
-       console.error('Error creating GroupInfo:', error);
-       throw new InternalServerErrorException('Internal server error while creating GroupInfo.');
-     }
-   }
+
+@Post('/createGroup')
+async createGroup(@Body() groupInfoData: Partial<GroupInfo>) {
+  try {
+    const newGroup = await this.messageService.createGroupInfo(groupInfoData);
+    return {
+      statusCode: 201,
+      message: 'Grupo creado exitosamente',
+      data: newGroup,
+    };
+  } catch (error) {
+    console.error('Error al crear el grupo:', error);
+    throw new InternalServerErrorException({
+      statusCode: 500,
+      message: 'Error al crear el grupo.',
+    });
+  }
+}
+
+
+
 
 // traer todos los usuarios de un grupo
-@Get('/usersGrup/:userId')
-async getGroupMembers(@Param('userId') userId: string) {
+@Get('/usersGrup/:groupId')
+
+async getGroupMembers(@Param('groupId') groupId: string) {
   try {
-    const members = await this.messageService.getGroupMembers(userId);
+    const members = await this.messageService.getGroupMembers(groupId);
     return members;
   } catch (error) {
     console.error('Error al obtener los miembros del grupo:', error);
@@ -148,21 +160,22 @@ async getGroupMembers(@Param('userId') userId: string) {
 
 
 
-  // // traer todos los grupos de un usuario
-  // @Get('/grupsUser/:userId')
-  // async getUserGroups(@Param('userId') grupId: string) {
+  // traer todos los grupos de un usuario
+  @Get('/grupsUser/:userId')
+  async getUserGroups(@Param('userId') userId: string) {
 
-  //   try {
-  //     const groups = await this.userService.getUserGroups(userId);
-  //     return groups;
-  //   } catch (error) {
-  //     console.error('Error al obtener los miembros del grupo:', error);
-  //     throw new InternalServerErrorException({
-  //       statusCode: 404,
-  //       message: 'Error al traer los grupos de un usuario.',
-  //     });
-  //   }
-  // }
+    try {
+      console.log("entra")
+      const groups = await this.messageService.getUserGroups(userId);
+      return groups;
+    } catch (error) {
+      console.error('Error al obtener los miembros del grupo:', error);
+      throw new InternalServerErrorException({
+        statusCode: 404,
+        message: 'Error al traer los grupos de un usuario.',
+      });
+    }
+  }
 
 
 
