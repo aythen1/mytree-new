@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback ,useEffect} from 'react'
 import { Image } from 'expo-image'
 import {
   StyleSheet,
@@ -39,6 +39,19 @@ const Invitacin = ({ route }) => {
   const inv = userInvitations.find((e) => e.event.id == event.id)
 
   console.log(event, 'imnvvvvvvvvvvvvvvvvvvvvvvvvvvvv')
+
+const handleGetEvent = async ()=> {
+  const res = await axiosInstance.get(`/events/${event.id}`)
+  console.log(res)
+}
+
+
+  useEffect(() => {
+    
+  
+    handleGetEvent()
+  }, [event])
+  
 
   const dispatch = useDispatch()
   const navigation = useNavigation()

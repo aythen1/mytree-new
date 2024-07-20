@@ -244,53 +244,53 @@ export class MessageService {
   }
   
 
-  async deleteGroupChat(room: string, userId: string): Promise<void> {
-    try {
-      // Marcar mensajes como eliminados para el usuario
-      await this.messageRepository.update(
-        { room, receiverId: userId },
-        { receiverDelete: true }
-      );
-      // Puedes hacer lo mismo para senderDelete si es necesario
+  // async deleteGroupChat(room: string, userId: string): Promise<void> {
+  //   try {
+  //     // Marcar mensajes como eliminados para el usuario
+  //     await this.messageRepository.update(
+  //       { room, receiverId: userId },
+  //       { receiverDelete: true }
+  //     );
+  //     // Puedes hacer lo mismo para senderDelete si es necesario
   
-      // Eliminar mensajes para los usuarios marcados como eliminados
-      await this.messageRepository.delete({ room, receiverDelete: true });
+  //     // Eliminar mensajes para los usuarios marcados como eliminados
+  //     await this.messageRepository.delete({ room, receiverDelete: true });
   
-      // Actualizar información del grupo, como miembros
-      const groupInfo = await this.groupInfo.findOne({ where: {room: room} });
-      if (groupInfo) {
-        groupInfo.membersIds = groupInfo.members.filter(memberId => memberId !== userId);
-        await this.groupInfo.save(groupInfo);
-      }
-    } catch (error) {
-      throw new Error(`Failed to delete group chat: ${error.message}`);
-    }
-  }
-  
-
-  async addUsersToGroup(room: string, userIds: string[]): Promise<void> {
-    try {
-      const groupInfo = await this.groupInfo.findOne({ where: {room: room} });
-      if (groupInfo) {
-        groupInfo.members = [...new Set([...groupInfo.members, ...userIds])]; // Añadir usuarios únicos al grupo
-        await this.groupInfo.save(groupInfo);
-      }
-    } catch (error) {
-      throw new Error(`Failed to add users to group: ${error.message}`);
-    }
-  }
+  //     // Actualizar información del grupo, como miembros
+  //     const groupInfo = await this.groupInfo.findOne({ where: {room: room} });
+  //     if (groupInfo) {
+  //       groupInfo.membersIds = groupInfo.members.filter(memberId => memberId !== userId);
+  //       await this.groupInfo.save(groupInfo);
+  //     }
+  //   } catch (error) {
+  //     throw new Error(`Failed to delete group chat: ${error.message}`);
+  //   }
+  // }
   
 
-  async removeUsersFromGroup(room: string, userIds: string[]): Promise<void> {
-    try {
-      const groupInfo = await this.groupInfo.findOne({ where: {room: room} });
-      if (groupInfo) {
-        groupInfo.members = groupInfo.members.filter(memberId => !userIds.includes(memberId));
-        await this.groupInfo.save(groupInfo);
-      }
-    } catch (error) {
-      throw new Error(`Failed to remove users from group: ${error.message}`);
-    }
-  }
+  // async addUsersToGroup(room: string, userIds: string[]): Promise<void> {
+  //   try {
+  //     const groupInfo = await this.groupInfo.findOne({ where: {room: room} });
+  //     if (groupInfo) {
+  //       groupInfo.members = [...new Set([...groupInfo.members, ...userIds])]; // Añadir usuarios únicos al grupo
+  //       await this.groupInfo.save(groupInfo);
+  //     }
+  //   } catch (error) {
+  //     throw new Error(`Failed to add users to group: ${error.message}`);
+  //   }
+  // }
+  
+
+  // async removeUsersFromGroup(room: string, userIds: string[]): Promise<void> {
+  //   try {
+  //     const groupInfo = await this.groupInfo.findOne({ where: {room: room} });
+  //     if (groupInfo) {
+  //       groupInfo.members = groupInfo.members.filter(memberId => !userIds.includes(memberId));
+  //       await this.groupInfo.save(groupInfo);
+  //     }
+  //   } catch (error) {
+  //     throw new Error(`Failed to remove users from group: ${error.message}`);
+  //   }
+  // }
   
 }

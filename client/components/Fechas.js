@@ -54,14 +54,38 @@ const Fechas = ({ selectedDate, dates, user }) => {
   return (
     <View style={styles.frameGroup}>
       <Text style={styles.title}>Actividad Familiar</Text>
-      <FlatList
+      {/* <FlatList
         style={{ paddingBottom: 70 }}
         data={datesFechas}
         renderItem={renderItem}
         extraData={userEvents}
         keyExtractor={(item) => item.id.toString()}
-      />
-    
+      /> */}
+    {datesFechas && datesFechas.map((item)=> {
+      return (
+        <Pressable
+        style={styles.frameContainer}
+        onPress={() => navigation.navigate('Invitacin',{date:item})}
+      >
+        <View style={styles.unsplashilip77sbmoeParent}>
+          <Image
+            style={styles.unsplashilip77sbmoeIcon}
+            contentFit="cover"
+            source={item.coverImage ? item.coverImage :   require('../assets/unsplashilip77sbmoe.png')}
+          />
+        
+        </View>
+        <View style={styles.TextWrapper}>
+          <Text style={styles.marieContainerTypo}>
+            <Text style={styles.textTypo}>
+              {item.creatorId == userData?.id ? 'Yo' : allUsers.find((e)=> e.id === item.creatorId).username}{' '}
+            </Text>
+            <Text style={styles.cumple28Aos}>{item.title}</Text>
+          </Text>
+        </View>
+      </Pressable>
+      )
+    })}
     </View>
   )
 }

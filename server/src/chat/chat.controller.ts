@@ -127,18 +127,18 @@ export class ChatController {
        throw new InternalServerErrorException('Internal server error while creating GroupInfo.');
      }
    }
-// traer todos los grupos de un usuario
-   @Get(':userId')
-   async findAllGroupsOfUser(@Param('userId') userId: number): Promise<GroupInfo[]> {
-     return this.groupService.findAllGroupsOfUser(userId);
-   }
+// // traer todos los grupos de un usuario
+//    @Get(':userId')
+//    async findAllGroupsOfUser(@Param('userId') userId: number): Promise<GroupInfo[]> {
+//      return this.groupService.findAllGroupsOfUser(userId);
+//    }
  
 
-   //traer todos los usuarios de un grupo
-   @Get('members/:groupId')
-   async findAllMembersOfGroup(@Param('groupId') groupId: number): Promise<User[]> {
-     return this.groupService.findAllMembersOfGroup(groupId);
-   }
+//    //traer todos los usuarios de un grupo
+//    @Get('members/:groupId')
+//    async findAllMembersOfGroup(@Param('groupId') groupId: number): Promise<User[]> {
+//      return this.groupService.findAllMembersOfGroup(groupId);
+//    }
 
 
  // crear mensaje para grupo
