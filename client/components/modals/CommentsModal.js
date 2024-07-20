@@ -222,7 +222,9 @@ const CommentsModal = ({ onClose }) => {
                   key={index}
                   commentId={comment?.id}
                   image={
-                    'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716389822/idv5sw3zoyvual6moptl.jpg'
+                    allUsers.filter(
+                      (user) => user?.id.toString() === comment.creatorId
+                    )[0]?.profilePicture
                   }
                   createdAt={comment.createdAt || new Date()}
                   creatorId={comment.creatorId}

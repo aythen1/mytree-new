@@ -26,7 +26,7 @@ import Etiquetar from '../../components/Etiquetar'
 import OpcionesCaategora from '../../components/OpcionesCaategora'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useDispatch } from 'react-redux'
-import { createEvent } from '../../redux/actions/events'
+import { createEvent, getAllUserEvents } from '../../redux/actions/events'
 import Privacidad from '../Privacidad'
 import ImagePickerModal from '../Modals/ImagePickerModal'
 import Maps from '../../components/Maps'
@@ -131,7 +131,7 @@ const CrearFechaEspecial = () => {
 
       event.coverImage = cloudinaryUrls[0]
       console.log('creating special date with values: ', event)
-      dispatch(createEvent(event))
+      dispatch(createEvent(event)).then(()=> dispatch(getAllUserEvents(user.id)))
     }
   }
 

@@ -18,10 +18,14 @@ const StoriesVideosDiarios = () => {
   const navigation = useNavigation()
 
   React.useEffect(() => {
-    setUsers(data)
-    console.log(data, 'data del hoooksss')
-  }, [data])
-
+    if (data) {
+      const uniqueData = data.filter((item, index, self) => 
+        index === self.findIndex((t) => t.id === item.id)
+      );
+      setUsers(uniqueData);
+      console.log(uniqueData, 'data del hoooksss');
+    }
+  }, [data]);
   return (
     <View style={{ marginTop: 15, width: '100%', justifyContent: 'center' }}>
       <ScrollView
@@ -104,8 +108,8 @@ const StoriesVideosDiarios = () => {
                 </View>
               </Pressable>
             )}
-            {data &&
-              data.map((user, i) => {
+            {users &&
+              users.map((user, i) => {
                 return (
                   <Pressable
                     key={i}

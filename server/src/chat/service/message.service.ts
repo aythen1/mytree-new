@@ -272,6 +272,23 @@ export class MessageService {
     }
   }
 
+//trae todos los grupos de un usuario 
+// async getGroupsForUser(userId: string): Promise<GroupInfo[]> {
+//   try {
+//     const user = await this.userRepository.findOne(userId, {
+//       relations: ['groups'],
+//     });
+
+//     if (!user) {
+//       throw new Error('User not found');
+//     }
+
+//     return user.groups || []; // Devuelve los grupos del usuario o un array vacío si no hay grupos
+//   } catch (error) {
+//     throw ErrorManager.createSignatureError(error.message);
+//   }
+// }
+
   // async saveGroupMessage(senderId: string, room: string, message: string, receiverIds: string[]): Promise<MessageEntity[]> {
   //   try {
   //     const messages: MessageEntity[] = [];

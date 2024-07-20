@@ -12,6 +12,7 @@ import { GroupInfo } from './entities/group.entity';
 import { Post } from 'src/posts/entities/post.entity';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
+import { Post } from 'src/posts/entities/post.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([MessageEntity,GroupInfo, User, Post])],

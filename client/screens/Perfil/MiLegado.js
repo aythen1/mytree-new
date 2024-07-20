@@ -25,7 +25,7 @@ const MiLegado = ({ fromOther, otherId }) => {
   )
   const otherUserPosts = allPosts.filter((post) => post.user.id === otherId)
 
-  console.log('ALBUMS', otherUserPosts[0])
+  console.log('ALBUMS', otherId)
 
   const { setShowSelectEventTypeModal } = useContext(Context)
 
@@ -39,14 +39,16 @@ const MiLegado = ({ fromOther, otherId }) => {
             { justifyContent: 'space-between', alignItems: 'center' }
           ]}
         >
-          <Text style={styles.miBiografaActual}>Mis álbumes</Text>
-          <Pressable onPress={() => navigation.navigate('CrearAlbum')}>
-            <Image
-              style={styles.vectorIcon1}
-              contentFit="cover"
-              source={require('../../assets/vector53.png')}
-            />
-          </Pressable>
+          <Text style={styles.miBiografaActual}>{otherId ? "Álbumes" : "Mis álbumes"}</Text>
+       {!otherId ? (
+           <Pressable onPress={() => navigation.navigate('CrearAlbum')}>
+           <Image
+             style={styles.vectorIcon1}
+             contentFit="cover"
+             source={require('../../assets/vector53.png')}
+           />
+         </Pressable>
+       ) : null}
         </View>
         <Image
           style={styles.frameChild}
@@ -89,14 +91,16 @@ const MiLegado = ({ fromOther, otherId }) => {
             { justifyContent: 'space-between', alignItems: 'center' }
           ]}
         >
-          <Text style={styles.miBiografaActual}>Mis publicaciones</Text>
-          <Pressable onPress={() => navigation.navigate('UploadMemory')}>
+          <Text style={styles.miBiografaActual}>{otherId ? "Publicaciones" :"Mis publicaciones"}</Text>
+      {!otherId ? (
+            <Pressable onPress={() => navigation.navigate('UploadMemory')}>
             <Image
               style={styles.vectorIcon1}
               contentFit="cover"
               source={require('../../assets/vector53.png')}
             />
           </Pressable>
+      ): null}
         </View>
         <Image
           style={styles.frameChild}
@@ -128,14 +132,16 @@ const MiLegado = ({ fromOther, otherId }) => {
             { justifyContent: 'space-between', alignItems: 'center' }
           ]}
         >
-          <Text style={styles.miBiografaActual}>Mis eventos</Text>
-          <Pressable onPress={() => setShowSelectEventTypeModal(true)}>
+          <Text style={styles.miBiografaActual}>{otherId ? "Eventos" : "Mis eventos"}</Text>
+        {!otherId ? (
+            <Pressable onPress={() => setShowSelectEventTypeModal(true)}>
             <Image
               style={styles.vectorIcon1}
               contentFit="cover"
               source={require('../../assets/vector53.png')}
             />
           </Pressable>
+        ):null}
         </View>
         <Image
           style={styles.frameChild}
@@ -174,16 +180,18 @@ const MiLegado = ({ fromOther, otherId }) => {
             { justifyContent: 'space-between', alignItems: 'center' }
           ]}
         >
-          <Text style={styles.miBiografaActual}>Mis diarios</Text>
-          <Pressable
-            onPress={() => navigation.navigate('MIDIARIOPANTALLAPERSONAL')}
-          >
-            <Image
-              style={styles.vectorIcon1}
-              contentFit="cover"
-              source={require('../../assets/vector53.png')}
-            />
-          </Pressable>
+          <Text style={styles.miBiografaActual}>{otherId ? "Diarios" :"Mis diarios"}</Text>
+         {!otherId ? (
+           <Pressable
+           onPress={() => navigation.navigate('MIDIARIOPANTALLAPERSONAL')}
+         >
+           <Image
+             style={styles.vectorIcon1}
+             contentFit="cover"
+             source={require('../../assets/vector53.png')}
+           />
+         </Pressable>
+         ): null}
         </View>
         <Image
           style={styles.frameChild}
