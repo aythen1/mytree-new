@@ -30,7 +30,7 @@ export class EventService {
   }
 
   async findOne(id: string): Promise<Event> {
-    return await this.eventRepository.findOne({where: {id:id}});
+    return await this.eventRepository.findOne({where: {id:id} ,relations:['invites','wishListItems']});
   }
 
   async findByCreator(creatorId: string): Promise<Event[]> {
