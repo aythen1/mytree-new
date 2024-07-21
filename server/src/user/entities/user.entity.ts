@@ -128,7 +128,9 @@ export class User {
   @Column({ nullable: true })
   facebookId: string; // Para manejo de cuentas por terceros de Facebook Firebase
 
-  @ManyToMany(() => GroupInfo, (group) => group.members)
-  @JoinTable()
+  // @ManyToMany(() => GroupInfo, (group) => group.members)
+  // @JoinTable()
+  // groups: GroupInfo[];
+  @ManyToMany(() => GroupInfo, group => group.members)
   groups: GroupInfo[];
 }
