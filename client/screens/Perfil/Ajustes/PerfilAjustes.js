@@ -77,7 +77,7 @@ const PerfilAjustes = () => {
       locations={[0.1, 1]}
       colors={['#fff', '#7ec18c']}
     >
-      <View style={styles.frameParent}>
+      <ScrollView contentContainerStyle={{paddingBottom:130}} style={styles.frameParent}>
         <View style={styles.frameGroup}>
           <View>
             <View style={styles.parentIcons}>
@@ -229,7 +229,7 @@ const PerfilAjustes = () => {
             </Text>
           </View>
         </Pressable>
-      </View>
+      </ScrollView>
     </LinearGradient>
   )
 }

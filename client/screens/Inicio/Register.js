@@ -202,7 +202,7 @@ const Register = () => {
           ></View>
         </View>
 
-        <View>
+        <View style={{flex:1}}>
           {nextField === 1 && (
             <NameRegister
               name={name}
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
   },
   frameChild: {
     width: '100%',
-    height: '30%',
+    height: 270,
     zIndex: 0
   },
   rectangleGroup: {
