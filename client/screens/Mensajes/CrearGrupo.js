@@ -23,12 +23,13 @@ import OpcionesModal from '../../components/OpcionesModal'
 import ENTRADACREADA from '../../components/ENTRADACREADA'
 import { useNavigation } from '@react-navigation/native'
 import AddGroupMembersModal from '../../components/AddGroupMembersModal'
+import axiosInstance from '../../apiBackend'
 
 const CrearGrupo = () => {
   const dispatch = useDispatch()
 
   const { showPanel } = useSelector((state) => state.panel)
-  const { allUsers } = useSelector((state) => state.users)
+  const { allUsers , userData } = useSelector((state) => state.users)
 
   const [taggedUsers, setTaggedUsers] = useState([])
   const [modalCreate, setModalCreate] = useState(false)
@@ -50,6 +51,18 @@ const CrearGrupo = () => {
   }
 
   const navigation = useNavigation()
+
+  const submit =async ()=> {
+const res = axiosInstance.post(`/chat/createGroup`,{
+  room:"",
+  photo:"exampple.com",
+  photos:[],
+  groupName:name,
+  membersIds:[...taggedUsers,userData.id],
+  members:[...taggedUsers,{id:userData.id}]
+})
+console.log(res.data)
+  }
 
   return (
     <ScrollView
@@ -136,7 +149,7 @@ const CrearGrupo = () => {
           </Pressable>
         </View>
 
-        <Pressable style={styles.button} onPress={() => setModalCreate(true)}>
+        <Pressable style={styles.button} onPress={() => {submit();setModalCreate(true)}}>
           <Text style={[styles.signIn, styles.signTypo]}>
             Enviar invitación
           </Text>

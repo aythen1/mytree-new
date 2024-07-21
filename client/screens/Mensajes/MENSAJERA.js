@@ -18,18 +18,20 @@ import { Context } from '../../context/Context'
 import ChatCard from './ChatCard'
 import { useSelector } from 'react-redux'
 import { isLoading } from 'expo-font'
+import axiosInstance from '../../apiBackend'
 
 const MENSAJERA = () => {
   const navigation = useNavigation()
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(true)
   const { allMessages } = useSelector((state) => state.chats)
-  const { allUsers } = useSelector((state) => state.users)
+  const { allUsers , userData:usuario } = useSelector((state) => state.users)
   const { usersWithMessages, userData, getUsersMessages } = useContext(Context)
   const [selectedFilter, setSelectedFilter] = useState('All')
   const [filteredUsersWithMessages, setFilteredUsersWithMessages] = useState(
     usersWithMessages || []
   )
+  const [userGoups ,setUserGroups]=useState([])
 
   const sortUsers = (userA, userB) => {
     const isInMessagesA = filteredUsersWithMessages?.some(
@@ -47,6 +49,15 @@ const MENSAJERA = () => {
       return 0
     }
   }
+
+  useEffect(()=>{
+    const obtenerGrupos =async ()=> {
+      const res = await axiosInstance.get(`/chat/grupsUser/${usuario?.id}`)
+      console.log(res.data,"dataaaaaaaaaaaaaa")
+      setUserGroups(res.data)
+    }
+    obtenerGrupos()
+  },[selectedFilter])
 
   const filteredUsers = allUsers
     ?.filter(
@@ -70,6 +81,7 @@ const MENSAJERA = () => {
         allUsers.filter((user) => user.id === userData.id)[0]?.familyIds || []
       const userFriends =
         allUsers.filter((user) => user.id === userData.id)[0]?.friendsIds || []
+
       if (selectedFilter === 'All') {
         setFilteredUsersWithMessages([...usersWithMessages])
       } else if (selectedFilter === 'Friends') {
@@ -81,7 +93,7 @@ const MENSAJERA = () => {
           [...usersWithMessages].filter((user) => userFamily.includes(user.id))
         )
       } else if (selectedFilter === 'Groups') {
-        setFilteredUsersWithMessages([])
+        setFilteredUsersWithMessages(userGoups)
       }
     }
   }, [selectedFilter])
@@ -219,7 +231,7 @@ const MENSAJERA = () => {
                 <ChatCard
                   value={search}
                   key={user.id}
-                  name={user.username + ' ' + user.apellido}
+                  name={selectedFilter !== 'Groups'? `${user.username} ${user.apellido}`: user.groupName}
                   selectedUserId={user.id}
                 />
               ))
