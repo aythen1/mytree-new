@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository, } from '@nestjs/typeorm';
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, In, Repository } from 'typeorm';
 import { MessageEntity } from '../entities/message.entity';
 import { GroupInfo } from '../entities/group.entity';
 
@@ -204,90 +204,101 @@ export class MessageService {
   async createGroupInfo(groupInfoData: Partial<GroupInfo>): Promise<GroupInfo> {
     try {
       // Crear el grupo con los datos proporcionados
-      const newGroup = this.groupInfoRepository.create(groupInfoData);
-
+      const newGroup = this.groupInfoRepository.create({
+        room: groupInfoData.room,
+        photo: groupInfoData.photo,
+        photos: groupInfoData.photos,
+        groupName: groupInfoData.groupName,
+        membersIds: groupInfoData.membersIds,
+      });
+  
       // Guardar el grupo en la base de datos
       const savedGroup = await this.groupInfoRepository.save(newGroup);
-
+  
       // Si hay miembros, actualiza la relación en cada usuario
-      if (groupInfoData.members && groupInfoData.members.length > 0) {
-        const memberIds = groupInfoData.members.map(member => member.id);
-        const users = await this.userRepository.findByIds(memberIds);
-
-        // Actualizar la relación de grupo en cada usuario
-        await Promise.all(users.map(async (user) => {
-          user.groups.push(savedGroup);
-          await this.userRepository.save(user);
-        }));
+      if (groupInfoData.membersIds && groupInfoData.membersIds.length > 0) {
+        const memberIds = groupInfoData.membersIds;
+        
+     
+  
+        // // Actualizar la relación de grupo en cada usuario
+        // await Promise.all(users.map(async (user) => {
+        //   user.groups = user.groups || []
+        //   // Inicializar groups como un array vacío si es undefined
+        //   user.groups = [...user.groups,savedGroup];
+  
+        //   // Agregar el nuevo grupo solo si no está ya en la lista
+         
+          
+        //     await this.userRepository.save(user);
+          
+        // }));
+  
+        // Actualizar la relación de miembros en el grupo
+        savedGroup.members = await this.userRepository.find({
+          where: { id: In(memberIds) }
+        });
+        console.log(savedGroup)
+        await this.groupInfoRepository.save(savedGroup);
       }
-
-      return savedGroup;
+  
+      // Devolver el grupo con la relación de miembros
+      return savedGroup
     } catch (error) {
-      throw ErrorManager.createSignatureError(error.message);
+      console.error('Error al crear el grupo:', error);
+      throw new Error('Error al crear el grupo.');
     }
   }
-
+  
 
   //traer todos los usuarios de un grupo
 
   
-  async getGroupMembers(groupId: string): Promise<string[]> {
+  async getGroupMembers(groupId: string): Promise<GroupInfo[]> {
     try {
-      console.log("entra")
-      const group = await this.groupInfoRepository.createQueryBuilder('group')
-        .leftJoinAndSelect('group.members', 'members')
-        .where('group.id = :groupId', { groupId })
-        .getOne();
-        console.log("group!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", group)
+      console.log("entra");
+      const group = await this.groupInfoRepository.find({
+        where: { id: groupId },
+        relations: ['members'],
+      });
+      console.log("group!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", group);
+  
       if (!group) {
         throw new Error('Group not found');
       }
-
-      return group.membersIds;
+  
+      // Devolver los miembros del grupo (como objetos de usuario)
+      return group;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
-  }
+     }
 
- 
-  // Obtener todos los grupos de un usuario
-  async getUserGroups(userId: string): Promise<GroupInfo[]> {
-    try {
-      console.log("entra al servicio")
 
-      const userWithGroups = await this.userRepository.createQueryBuilder('user')
-        .leftJoinAndSelect('user.groups', 'group')
-        .where('user.id = :userId', { userId })
-        .getOne();
+//trae todos los grupos de un usuario
+async getUserGroups(userId: string): Promise<GroupInfo[]> {
+  try {
+    console.log("entra al servicio");
 
-        console.log("usuario con los grupos", userWithGroups)
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['groups'] // Incluye la relación con los grupos
+    });
 
-      if (!userWithGroups) {
-        throw new Error('User not found');
-      }
+    console.log("usuario con los grupos", user);
 
-      return userWithGroups.groups; 
-    } catch (error) {
-      throw ErrorManager.createSignatureError(error.message);
+    if (!user) {
+      throw new Error('User not found');
     }
+
+    return user.groups; 
+  } catch (error) {
+    console.error('Error al obtener los grupos del usuario:', error);
+    throw ErrorManager.createSignatureError(error.message);
   }
+}
 
-//trae todos los grupos de un usuario 
-// async getGroupsForUser(userId: string): Promise<GroupInfo[]> {
-//   try {
-//     const user = await this.userRepository.findOne(userId, {
-//       relations: ['groups'],
-//     });
-
-//     if (!user) {
-//       throw new Error('User not found');
-//     }
-
-//     return user.groups || []; // Devuelve los grupos del usuario o un array vacío si no hay grupos
-//   } catch (error) {
-//     throw ErrorManager.createSignatureError(error.message);
-//   }
-// }
+    
 
   // async saveGroupMessage(senderId: string, room: string, message: string, receiverIds: string[]): Promise<MessageEntity[]> {
   //   try {

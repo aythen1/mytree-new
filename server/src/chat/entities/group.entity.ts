@@ -3,10 +3,10 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 't
 
 @Entity()
 export class GroupInfo {
-  @PrimaryGeneratedColumn()
-  id: number;
-  
-  @Column()
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ nullable: true }) 
   room: string;
   
   @Column()
@@ -26,4 +26,5 @@ export class GroupInfo {
   @ManyToMany(() => User, user => user.groups)
   @JoinTable()
   members: User[];
+  
 }

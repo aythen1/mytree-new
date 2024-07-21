@@ -8,6 +8,7 @@ import {
   Put,
   Req,
   Patch,
+  BadRequestException,
 } from '@nestjs/common';
 import { ChatService } from './service/chat.service';
 import { MessageService } from './service/message.service';
@@ -120,11 +121,30 @@ export class ChatController {
 
 
 //crear grupo --
-
 @Post('/createGroup')
 async createGroup(@Body() groupInfoData: Partial<GroupInfo>) {
   try {
+    console.log('Datos recibidos:', groupInfoData);
+
+    // Verifica si membersIds está definido y tiene al menos dos elementos
+    if (!groupInfoData.membersIds || groupInfoData.membersIds.length < 2) {
+      throw new BadRequestException('Se requieren al menos dos IDs de miembros para generar la sala.');
+    }
+
+    // Generar el ID de la sala usando los primeros dos IDs de miembros
+    const roomId = this.chatService.roomIdGenerator(
+      groupInfoData.membersIds[0], // Asegúrate de que estos IDs están disponibles
+      groupInfoData.membersIds[1]  // Ajusta según sea necesario
+    );
+
+    console.log('roomId generado:', roomId);
+
+    // Agregar el ID de la sala al grupo
+    groupInfoData.room = roomId;
+
+    // Crear el grupo usando el servicio
     const newGroup = await this.messageService.createGroupInfo(groupInfoData);
+
     return {
       statusCode: 201,
       message: 'Grupo creado exitosamente',
@@ -144,15 +164,18 @@ async createGroup(@Body() groupInfoData: Partial<GroupInfo>) {
 
 // traer todos los usuarios de un grupo
 @Get('/usersGrup/:groupId')
-
 async getGroupMembers(@Param('groupId') groupId: string) {
   try {
     const members = await this.messageService.getGroupMembers(groupId);
-    return members;
+    return {
+      statusCode: 200,
+      message: 'Miembros del grupo obtenidos exitosamente',
+      data: members,
+    };
   } catch (error) {
     console.error('Error al obtener los miembros del grupo:', error);
     throw new InternalServerErrorException({
-      statusCode: 404,
+      statusCode: 500,
       message: 'Error al traer los miembros de un grupo.',
     });
   }
