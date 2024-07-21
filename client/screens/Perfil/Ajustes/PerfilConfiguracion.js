@@ -73,7 +73,7 @@ const PerfilConfiguracion = () => {
     address: usuario.address,
     momId: usuario.momId,
     dadId: usuario.dadId,
-    brotherIds: usuario.brotherIds,
+    brotherIds: usuario.brotherIds || [],
     maritalStatus: usuario.maritalStatus
   })
 
@@ -111,13 +111,15 @@ const PerfilConfiguracion = () => {
   }
 
   useEffect(() => {
-    const brothersArray = inputsBros
-      .map((input) => input.input)
-      .filter((input) => input?.trim() !== '')
+    const brothersArray = inputsBros?.map((input) => input?.input)
+      ?.filter((input) => input?.trim() !== '')
+      
+   if(inputsBros[0].input !== ''){
     setDataToSend((prevData) => ({
       ...prevData,
-      brotherIds:  [...usuario.brotherIds, ...brothersArray]
+      brotherIds:  [...usuario.brotherIds, ...brothersArray] 
     }))
+   }
   }, [inputsBros])
 
   const changePictureMode = async () => {
@@ -723,7 +725,9 @@ const PerfilConfiguracion = () => {
                     }
                     value={e.input || ''}
                   /> */}
-                  <TouchableOpacity style={{marginBottom:6}} onPress={()=> {setInputSelected(i);setShowTagBrother(true)}}>
+                  <TouchableOpacity style={{marginBottom:6}} onPress={()=> {if(editable){
+                    setInputSelected(i);setShowTagBrother(true)
+                  }}}>
                     <Text style={{color:"gray"}}>
                       {e.input &&    `${allUsers.find((us) => us.id == e?.input)?.username} ${allUsers.find((us) => us.id == e?.input)?.apellido}` || "Agregar hermano"}
                     </Text>

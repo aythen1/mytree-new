@@ -133,4 +133,8 @@ export class User {
   // groups: GroupInfo[];
   @ManyToMany(() => GroupInfo, group => group.members)
   groups: GroupInfo[];
+
+
+  @Column({ nullable: true, default: null })
+  badge: string; 
 }

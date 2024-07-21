@@ -65,7 +65,8 @@ const Fechas = ({ selectedDate, dates, user }) => {
 const styles = StyleSheet.create({
   frameGroup: {
     marginTop: 19,
-    alignSelf: 'stretch'
+    alignSelf: 'stretch',
+    paddingBottom:80
   },
   title: {
     fontSize: 25,
