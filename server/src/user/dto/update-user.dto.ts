@@ -36,5 +36,6 @@ export class UpdateUserDto {
     friendsIds?: string[];
     fixedChat?: string;
     maritalStatus?:string;
+    badge?: string; 
   }
   
