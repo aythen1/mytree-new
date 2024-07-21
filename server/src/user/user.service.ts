@@ -44,10 +44,7 @@ export class UserService {
     if (existingUser) {
       throw new ConflictException('Email already exists');
     }
-    const existingUserPhone = await this.userRepository.findOne({ where: { phone: phone } });
-    if (existingUserPhone) {
-      throw new ConflictException('Phone already exists');
-    }
+
     const user = this.userRepository.create(createUserDto);
     return await this.userRepository.save(user);
   }

@@ -725,7 +725,9 @@ const PerfilConfiguracion = () => {
                     }
                     value={e.input || ''}
                   /> */}
-                  <TouchableOpacity style={{marginBottom:6}} onPress={()=> {setInputSelected(i);setShowTagBrother(true)}}>
+                  <TouchableOpacity style={{marginBottom:6}} onPress={()=> {if(editable){
+                    setInputSelected(i);setShowTagBrother(true)
+                  }}}>
                     <Text style={{color:"gray"}}>
                       {e.input &&    `${allUsers.find((us) => us.id == e?.input)?.username} ${allUsers.find((us) => us.id == e?.input)?.apellido}` || "Agregar hermano"}
                     </Text>
