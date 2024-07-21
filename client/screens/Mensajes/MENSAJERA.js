@@ -85,17 +85,60 @@ const MENSAJERA = () => {
         allUsers.filter((user) => user.id === userData.id)[0]?.friendsIds || []
 
       if (selectedFilter === 'All') {
-        setFilteredUsersWithMessages([...usersWithMessages])
+        const da = usersWithMessages.filter((e) => e.username && e); // Primer filtrado para asegurarte de que `username` exista
+
+        const uniqueUsers = [];
+        const seenUsernames = new Set();
+        
+        for (const user of da) {
+          if (!seenUsernames.has(user.id)) {
+            seenUsernames.add(user.id);
+            uniqueUsers.push(user);
+          }
+        }
+        console.log(uniqueUsers,"mennnnnnnnnn")
+        setFilteredUsersWithMessages(uniqueUsers)
       } else if (selectedFilter === 'Friends') {
+        const da =   [...usersWithMessages].filter((user) => userFriends.includes(user.id))
+        const uniqueUsers = [];
+        const seenUsernames = new Set();
+        
+        for (const user of da) {
+          if (!seenUsernames.has(user.id)) {
+            seenUsernames.add(user.id);
+            uniqueUsers.push(user);
+          }
+        }
         setFilteredUsersWithMessages(
-          [...usersWithMessages].filter((user) => userFriends.includes(user.id))
+          uniqueUsers
         )
       } else if (selectedFilter === 'Family') {
-        setFilteredUsersWithMessages(
-          [...usersWithMessages].filter((user) => userFamily.includes(user.id))
+       const da = [...usersWithMessages].filter((user) => userFamily.includes(user.id))
+       const uniqueUsers = [];
+       const seenUsernames = new Set();
+       
+       for (const user of da) {
+         if (!seenUsernames.has(user.id)) {
+           seenUsernames.add(user.id);
+           uniqueUsers.push(user);
+         }
+       }
+       setFilteredUsersWithMessages(
+        uniqueUsers
         )
       } else if (selectedFilter === 'Groups') {
-        setFilteredUsersWithMessages(userGoups)
+        const da = userGoups
+        console.log(userGoups,"men2")
+        const uniqueUsers = [];
+        const seenUsernames = new Set();
+        
+        for (const user of da) {
+          if (!seenUsernames.has(user.room)) {
+            seenUsernames.add(user.room);
+            uniqueUsers.push(user);
+          }
+        }
+        setFilteredUsersWithMessages(uniqueUsers)
       }
     }
   }, [selectedFilter])
@@ -229,11 +272,11 @@ const MENSAJERA = () => {
                 </View>
               )}
           {search === '' && filteredUsersWithMessages.length > 0
-            ? filteredUsersWithMessages?.map((user) => (
+            ? filteredUsersWithMessages?.map((user,i) => (
                 <ChatCard
                   value={search}
-                  key={user.id}
-                  name={selectedFilter !== 'Groups'? `${user.username} ${user.apellido}`: user.groupName}
+                  key={i}
+                  name={selectedFilter !== 'Groups'? `${user?.username} ${user?.apellido}`: user?.groupName}
                   selectedUserId={user.id}
                   isGroup={selectedFilter !== 'Groups' ? false : true }
                   userInfo={user}
