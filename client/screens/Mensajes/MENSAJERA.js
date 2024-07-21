@@ -56,7 +56,9 @@ const MENSAJERA = () => {
       console.log(res.data,"dataaaaaaaaaaaaaa")
       setUserGroups(res.data)
     }
+   if(selectedFilter == 'Groups'){
     obtenerGrupos()
+   }
   },[selectedFilter])
 
   const filteredUsers = allUsers
@@ -233,6 +235,8 @@ const MENSAJERA = () => {
                   key={user.id}
                   name={selectedFilter !== 'Groups'? `${user.username} ${user.apellido}`: user.groupName}
                   selectedUserId={user.id}
+                  isGroup={selectedFilter !== 'Groups' ? false : true }
+                  userInfo={user}
                 />
               ))
             : search === '' && (

@@ -7,7 +7,7 @@ import axiosInstance from '../../apiBackend'
 import { Context } from '../../context/Context'
 import { getUserData, updateUser } from '../../redux/actions/user'
 
-const ChatCard = ({ name, selectedUserId, value }) => {
+const ChatCard = ({ name, selectedUserId, value , userInfo ,isGroup }) => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const { getTimeFromDate, notReadedMessages, usersWithMessages } =
@@ -19,15 +19,24 @@ const ChatCard = ({ name, selectedUserId, value }) => {
 
   const getChatMessages = async () => {
     if (userData.id && selectedUserId) {
-      // console.log('getting messages from', user.user.id, 'and', selectedUserId)
+    if(!isGroup){
+        // console.log('getting messages from', user.user.id, 'and', selectedUserId)
+        const { data } = await axiosInstance.get(
+          `chat/room?senderId=${userData.id}&receiverId=${selectedUserId}`
+        )
+        console.log(  `chat/room?senderId=${userData.id}&receiverId=${selectedUserId}`)
+        setConvMessages(data)
+    } else {
       const { data } = await axiosInstance.get(
-        `chat/room?senderId=${userData.id}&receiverId=${selectedUserId}`
+        `chat/receiver?receiverId=${selectedUserId}`
       )
-      // console.log('====SETTING CONV MESSAGES TO', data)
+      console.log(  data ,"datitaa")
       setConvMessages(data)
+    }
     }
   }
 
+  console.log(userInfo,"userrrrrrrrrrrrrrrrrr")
   useEffect(() => {
     getChatMessages()
   }, [usersWithMessages, value])
@@ -73,7 +82,8 @@ const ChatCard = ({ name, selectedUserId, value }) => {
       onPress={() => {
         navigation.navigate('OpenedChat', {
           receiverId: selectedUserId,
-          receiverName: name
+          receiverName: name,
+          isGroup
         })
       }}
     >

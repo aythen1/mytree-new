@@ -76,6 +76,33 @@ export class MessageService {
     }
   }
 
+  async getMessagesForReceiver(receiverId: string, createdAt?: Date): Promise<MessageEntity[]> {
+    try {
+      console.log('receiverId:', receiverId);
+      console.log('data from backend:', createdAt);
+
+      let query = this.messageRepository
+        .createQueryBuilder('message')
+        .where('message.receiverId = :receiverId', { receiverId })
+        .orderBy('message.createdAt', 'DESC');
+
+      if (createdAt) {
+        const date = new Date(createdAt);
+        query = query.andWhere('message.createdAt < :createdAt', { createdAt: date });
+        query = query.orderBy('message.createdAt', 'DESC');
+      }
+
+      console.log('2');
+      const receiverMessages = await query.getMany();
+      console.log('receiverMessages', receiverMessages);
+
+      return receiverMessages;
+    } catch (error) {
+      console.log('entra al catch');
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
   async getMessagesBetweenUsers(
     senderId: string,
     receiverId: string,

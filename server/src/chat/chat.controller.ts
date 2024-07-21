@@ -56,6 +56,12 @@ export class ChatController {
     );
   }
 
+  @Get('/receiver')
+  public async getMessagesForReceiver(@Req() req: any) {
+    const { receiverId, createdAt } = req.query;
+    return await this.messageService.getMessagesForReceiver(receiverId, createdAt);
+  }
+
   @Put('readed/:id')
   async markAsRead(@Param('id') id: string): Promise<MessageEntity> {
     return this.messageService.markAsRead(id);

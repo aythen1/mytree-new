@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getChatHistory, updateMessages } from '../actions/chat'
+import { getChatHistory, getChatHistoryGroup, updateMessages } from '../actions/chat'
 
 const clubSlices = createSlice({
   name: 'chats',
@@ -54,7 +54,32 @@ const clubSlices = createSlice({
         state.loading = false
         state.error = true
       })
-      // Update allMessages
+      // Update allMessages-----------------
+      .addCase(getChatHistoryGroup.pending, (state) => {
+        state.loading = true
+        state.error = false
+      })
+      .addCase(getChatHistoryGroup.fulfilled, (state, action) => {
+        console.log(
+          '========SETTING ALLMESSAGES TO PAYLOAD',
+          action.payload.map((message) => {
+            return {
+              message: message.message,
+              receiverId: message.receiverId,
+              senderId: message.senderId,
+              roomId: message.room
+            }
+          })
+        )
+        state.loading = false
+        state.allMessages = action.payload
+        state.error = false
+      })
+      .addCase(getChatHistoryGroup.rejected, (state) => {
+        state.loading = false
+        state.error = true
+      })
+      // U
       .addCase(updateMessages.pending, (state) => {
         state.loading = true
         state.error = false
