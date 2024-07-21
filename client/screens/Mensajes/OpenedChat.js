@@ -17,7 +17,7 @@ import { Color, FontFamily } from '../../GlobalStyles'
 import { LinearGradient } from 'expo-linear-gradient'
 import SingleMessage from './SingleMessage'
 import { useDispatch, useSelector } from 'react-redux'
-import { emptyAllMessages, getChatHistory } from '../../redux/actions/chat'
+import { emptyAllMessages, getChatHistory, getChatHistoryGroup } from '../../redux/actions/chat'
 import { setAllConversationMessagesToRead } from '../../redux/slices/chats.slices'
 import axiosInstance from '../../apiBackend'
 
@@ -55,13 +55,22 @@ const OpenedChat = () => {
     console.log(userrr, 'Dettt')
   }, [])
   useEffect(() => {
+    const isGroup = route?.params?.isGroup
     joinRoom(userData?.id, route?.params?.receiverId)
+   if(!isGroup){
     dispatch(
       getChatHistory({
         sender: userData?.id,
         receiver: route?.params?.receiverId
       })
     )
+   } else {
+    dispatch(
+      getChatHistoryGroup({
+        receiver: route?.params?.receiverId
+      })
+    )
+   }
     return () => {
       dispatch(emptyAllMessages())
       leaveRoom(userData?.id, route.params.receiverId)
