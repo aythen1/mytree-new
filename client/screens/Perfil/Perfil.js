@@ -7,7 +7,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Modal,
-  Share
+  Share,
+  ActivityIndicator
 } from 'react-native'
 import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
@@ -41,13 +42,23 @@ import { emojis } from 'rn-emoji-picker/dist/data'
 import { getAllUserEvents } from '../../redux/actions/events'
 import { getAllUserDiaries } from '../../redux/actions/diaries'
 import { getUserFriendsAndFamilyLength } from '../../redux/actions/user'
+import Badge1 from '../../assets/Badge_01.svg'
+import Badge2 from '../../assets/Badge_02.svg'
+import Badge3 from '../../assets/Badge_03.svg'
+import Badge4 from '../../assets/Badge_04.svg'
+import Badge5 from '../../assets/Badge_05.svg'
+import Badge6 from '../../assets/Badge_06.svg'
+import Badge7 from '../../assets/Badge_07.svg'
+import Badge8 from '../../assets/Badge_08.svg'
+import Badge9 from '../../assets/Badge_09.svg'
+import BadgesModal from '../../components/modals/BadgesModal'
 
 const Perfil = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const [facing, setFacing] = useState('back')
   const { pickImage, provisoryProfileImage, profileImage } = useContext(Context)
-  const { userData } = useSelector((state) => state.users)
+  const { userData, loading } = useSelector((state) => state.users)
   const [hasPermission, setHasPermission] = useState(null)
   const [selectedImage, setSelectedImage] = useState(null)
   const [showCamera, setShowCamera] = useState(false)
@@ -56,7 +67,10 @@ const Perfil = () => {
   const [showImageOptions, setShowImageOptions] = useState(false)
   const [selectedComponent, setSelectedComponent] = useState('MiLegado')
   const [search, setSearch] = useState(false)
+  const [showBadgesModal, setShowBadgesModal] = useState(false)
   const cameraReff = useRef(null)
+
+  console.log('userData.badge=====================', userData.badge)
 
   useEffect(() => {
     ;(async () => {
@@ -111,7 +125,9 @@ const Perfil = () => {
     if (userData?.newUser) {
       axiosInstance.patch(`/user/${userData?.id}`, { newUser: false })
     }
-console.log("pasa por este ladoooooooooooooooooooooooooooooooooooooooooooooo")
+    console.log(
+      'pasa por este ladoooooooooooooooooooooooooooooooooooooooooooooo'
+    )
     iniciar()
   }, [])
 
@@ -142,13 +158,14 @@ console.log("pasa por este ladoooooooooooooooooooooooooooooooooooooooooooooo")
             paddingTop: 14
           }}
         >
-
           <Pressable onPress={() => navigation.openDrawer()}>
             <Image
-              style={[{
-                width: 87,
-                height: 55
-              }]}
+              style={[
+                {
+                  width: 87,
+                  height: 55
+                }
+              ]}
               contentFit="cover"
               source={require('../../assets/image-6.png')}
             />
@@ -175,8 +192,6 @@ console.log("pasa por este ladoooooooooooooooooooooooooooooooooooooooooooooo")
           />
         </View>
 
-     
-
         {search && <BarraBusqueda />}
 
         <View
@@ -196,6 +211,61 @@ console.log("pasa por este ladoooooooooooooooooooooooooooooooooooooooooooooo")
               position: 'relative'
             }}
           >
+            {loading === true ? (
+              <View
+                style={{
+                  width: 30,
+                  height: 30,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  position: 'absolute',
+                  top: 50,
+                  right: -45,
+                  zIndex: 999
+                }}
+              >
+                <ActivityIndicator size="small" color={'#7ec18c'} />
+              </View>
+            ) : (
+              <TouchableOpacity
+                onPress={() => setShowBadgesModal(true)}
+                style={{
+                  width: 30,
+                  height: 30,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  position: 'absolute',
+                  top: 50,
+                  right: -45,
+                  zIndex: 999
+                }}
+              >
+                {!userData?.badge && loading === true && (
+                  <Badge1 width={30} height={30} />
+                )}
+                {userData.badge === 'badge1' ? (
+                  <Badge1 width={30} height={30} />
+                ) : userData.badge === 'badge2' ? (
+                  <Badge2 width={30} height={30} />
+                ) : userData.badge === 'badge3' ? (
+                  <Badge3 width={30} height={30} />
+                ) : userData.badge === 'badge4' ? (
+                  <Badge4 width={30} height={30} />
+                ) : userData.badge === 'badge5' ? (
+                  <Badge5 width={30} height={30} />
+                ) : userData.badge === 'badge6' ? (
+                  <Badge6 width={30} height={30} />
+                ) : userData.badge === 'badge7' ? (
+                  <Badge7 width={30} height={30} />
+                ) : userData.badge === 'badge8' ? (
+                  <Badge8 width={30} height={30} />
+                ) : (
+                  userData.badge === 'badge9' && (
+                    <Badge9 width={30} height={30} />
+                  )
+                )}
+              </TouchableOpacity>
+            )}
             <Pressable
               onPress={() => setShowCamera(true)}
               style={{
@@ -348,6 +418,22 @@ console.log("pasa por este ladoooooooooooooooooooooooooooooooooooooooooooooo")
                 setShowEmojis(false)
               }} // callback when user selects emoji - returns emoji obj
             />
+          </View>
+        </Modal>
+        <Modal animationType="slide" transparent visible={showBadgesModal}>
+          <View
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(113, 113, 113, 0.3)'
+            }}
+          >
+            <Pressable
+              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              onPress={() => setShowBadgesModal(false)}
+            />
+            <BadgesModal onClose={() => setShowBadgesModal(false)} />
           </View>
         </Modal>
       </ScrollView>
