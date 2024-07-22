@@ -18,6 +18,15 @@ import {
   Border,
   FontSize
 } from '../../GlobalStyles'
+import Badge1 from '../../assets/Badge_01.svg'
+import Badge2 from '../../assets/Badge_02.svg'
+import Badge3 from '../../assets/Badge_03.svg'
+import Badge4 from '../../assets/Badge_04.svg'
+import Badge5 from '../../assets/Badge_05.svg'
+import Badge6 from '../../assets/Badge_06.svg'
+import Badge7 from '../../assets/Badge_07.svg'
+import Badge8 from '../../assets/Badge_08.svg'
+import Badge9 from '../../assets/Badge_09.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import MiLegado from './MiLegado'
 import MisAlbumes from './MisAlbumes'
@@ -77,6 +86,8 @@ const OtherUserProfile = () => {
         return null
     }
   }
+
+  // console.log('userData.badge', userData.badge)
 
   //   useEffect(() => {
   //     if (userData?.newUser) {
@@ -157,22 +168,102 @@ const OtherUserProfile = () => {
       <View style={{ width: 'auto', justifyContent: 'center' }}>
         <Pressable
           //   onPress={() => setShowImageOptions(!showImageOptions)}
-          style={{ ...styles.imageContainer }}
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            flex: 1,
+            flexDirection: 'row',
+            position: 'relative'
+          }}
         >
           {!userData?.profilePicture ? (
-            <Image
-              style={{ ...styles.perfilItem, borderRadius: 100 }}
-              contentFit="cover"
-              source={require('../../assets/group-1171276683.png')}
-            />
+            <View>
+              <View
+                style={{
+                  width: 30,
+                  height: 30,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  position: 'absolute',
+                  top: 50,
+                  right: -45,
+                  zIndex: 999999999999,
+                  borderRadius: 2,
+                  borderColor: 'red'
+                }}
+              >
+                {!userData?.badge && <Badge1 width={30} height={30} />}
+                {userData.badge === 'badge1' ? (
+                  <Badge1 width={30} height={30} />
+                ) : userData.badge === 'badge2' ? (
+                  <Badge2 width={30} height={30} />
+                ) : userData.badge === 'badge3' ? (
+                  <Badge3 width={30} height={30} />
+                ) : userData.badge === 'badge4' ? (
+                  <Badge4 width={30} height={30} />
+                ) : userData.badge === 'badge5' ? (
+                  <Badge5 width={30} height={30} />
+                ) : userData.badge === 'badge6' ? (
+                  <Badge6 width={30} height={30} />
+                ) : userData.badge === 'badge7' ? (
+                  <Badge7 width={30} height={30} />
+                ) : userData.badge === 'badge8' ? (
+                  <Badge8 width={30} height={30} />
+                ) : (
+                  <Badge9 width={30} height={30} />
+                )}
+              </View>
+              <Image
+                style={{ ...styles.perfilItem, borderRadius: 100 }}
+                contentFit="cover"
+                source={require('../../assets/group-1171276683.png')}
+              />
+            </View>
           ) : (
-            <Image
-              style={{ ...styles.perfilItem, borderRadius: 100 }}
-              contentFit="cover"
-              source={{
-                uri: userData.profilePicture
-              }}
-            />
+            <View>
+              <View
+                style={{
+                  width: 30,
+                  height: 30,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  position: 'absolute',
+                  top: 50,
+                  right: -45,
+                  zIndex: 999999999999
+                }}
+              >
+                {!userData?.badge && <Badge1 width={30} height={30} />}
+                {userData.badge === 'badge1' ? (
+                  <Badge1 width={30} height={30} />
+                ) : userData.badge === 'badge2' ? (
+                  <Badge2 width={30} height={30} />
+                ) : userData.badge === 'badge3' ? (
+                  <Badge3 width={30} height={30} />
+                ) : userData.badge === 'badge4' ? (
+                  <Badge4 width={30} height={30} />
+                ) : userData.badge === 'badge5' ? (
+                  <Badge5 width={30} height={30} />
+                ) : userData.badge === 'badge6' ? (
+                  <Badge6 width={30} height={30} />
+                ) : userData.badge === 'badge7' ? (
+                  <Badge7 width={30} height={30} />
+                ) : userData.badge === 'badge8' ? (
+                  <Badge8 width={30} height={30} />
+                ) : (
+                  userData.badge === 'badge9' && (
+                    <Badge9 width={30} height={30} />
+                  )
+                )}
+              </View>
+              <Image
+                style={{ ...styles.perfilItem, borderRadius: 100 }}
+                contentFit="cover"
+                source={{
+                  uri: userData.profilePicture
+                }}
+              />
+            </View>
           )}
         </Pressable>
       </View>
