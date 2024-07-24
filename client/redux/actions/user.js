@@ -218,7 +218,9 @@ export const getUserFriendsAndFamilyLength = createAsyncThunk(
   'user/getUserFriendsAndFamilyLength',
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/user/${userId}/friendsAndFamilyLength`)
+      const response = await axiosInstance.get(
+        `/user/${userId}/friendsAndFamilyLength`
+      )
       return response.data
     } catch (error) {
       return rejectWithValue(error.response.data)
@@ -284,6 +286,7 @@ export const updateUser = createAsyncThunk(
     console.log('userId, userData from updateUser', userId, userData)
     try {
       const response = await axiosInstance.patch(`/user/${userId}`, userData)
+      console.log('RESPONSE FROM UPDATEUSER', response.data)
       return response.data
     } catch (error) {
       return rejectWithValue(error.response.data)
