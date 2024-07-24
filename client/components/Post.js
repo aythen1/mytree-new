@@ -129,7 +129,7 @@ const Posteo = ({ data, padding }) => {
                   color: Color.white,
                   fontWeight: '700'
                 }}
-              >{`${data.user.username} ${data.user.apellido}`}</Text>
+              >{`${data?.user?.username} ${data?.user?.apellido}`}</Text>
               <Text
                 style={{
                   marginTop: 10,
@@ -225,7 +225,7 @@ const Posteo = ({ data, padding }) => {
                       }}
                       source={{
                         uri:
-                          data.user.profilePicture ||
+                          data?.user?.profilePicture ||
                           'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716419224/bciupv6y3hwccgmtpwoe.png'
                       }}
                     />
@@ -374,7 +374,7 @@ const Posteo = ({ data, padding }) => {
                     }}
                     source={{
                       uri:
-                        data.user.profilePicture ||
+                        data?.user?.profilePicture ||
                         'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716419224/bciupv6y3hwccgmtpwoe.png'
                     }}
                   />
@@ -428,7 +428,7 @@ const Posteo = ({ data, padding }) => {
           >
             <Text
               style={styles.camila}
-            >{`${data.user.username} ${data.user.apellido}`}</Text>
+            >{`${data?.user?.username} ${data?.user?.apellido}`}</Text>
             <Text
               numberOfLines={1}
               ellipsizeMode="tail"
