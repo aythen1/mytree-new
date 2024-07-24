@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   View,
@@ -7,7 +7,8 @@ import {
   Modal,
   ScrollView,
   TouchableWithoutFeedback,
-  Button
+  Button,
+  RefreshControl
 } from 'react-native'
 import { Image } from 'expo-image'
 import {
@@ -110,6 +111,27 @@ const Muro = () => {
     }
   }
 
+  const [refreshing, setRefreshing] = useState(false);
+  const scrollViewRef = useRef(null);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    if (userData.id !== undefined) {
+      dispatches(userData.id)
+    }
+    // Aquí puedes agregar la lógica para actualizar la pantalla
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000); // Simulación de una actualización de datos
+  };
+
+  const handleScroll = (event) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+    if (offsetY === 0) {
+      onRefresh();
+    }
+  };
+
   return (
     <LinearGradient
       colors={['#fff', '#f1f1f1']}
@@ -120,6 +142,15 @@ const Muro = () => {
       <ScrollView
         contentContainerStyle={{ paddingBottom: 85 }}
         showsVerticalScrollIndicator={false}
+        ref={scrollViewRef}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
       >
         {/* <View
           style={{
