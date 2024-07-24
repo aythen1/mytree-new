@@ -13,7 +13,8 @@ import {
   TouchableOpacity,
   ImageBackground,
   Animated,
-  Share
+  Share,
+  Dimensions
 } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -94,7 +95,7 @@ const Posteo = ({ data, padding }) => {
             backgroundColor: Color.mytreeClarito,
             left: 0,
             top: padding && padding !== false ? 15 : 5,
-            height: 500,
+            height: Dimensions.get('screen').height / 1.8,
             marginBottom: 30,
             borderRadius: 20,
             transition: 'all 1s ease',
@@ -106,7 +107,7 @@ const Posteo = ({ data, padding }) => {
         >
           <ImageBackground
             style={{
-              height: 500,
+              height: Dimensions.get('screen').height / 1.8,
               zIndex: -1000,
               justifyContent: 'flex-end',
               resizeMode: 'cover',
@@ -115,69 +116,7 @@ const Posteo = ({ data, padding }) => {
             }}
             source={{ uri: data.photos[0] }}
           >
-            <TouchableOpacity
-              onPress={() => {
-                console.log('settings post tags to: ', data.tags || [])
-                setSelectedPostTags(data.tags || [])
-                setShowTaggedsModal(true)
-              }}
-              style={{
-                position: 'absolute',
-                zIndex: 99999999999,
-                right: 15,
-                top: 15
-              }}
-            >
-              <LinearGradient
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 64,
-                  height: 64,
-                  borderRadius: 25,
-                  zIndex: 0
-                }}
-                locations={[0, 1]}
-                colors={['#7ec18c', '#dee274']}
-              >
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: 59,
-                    borderRadius: 23,
-                    backgroundColor: '#c5eacd',
-                    height: 59
-                  }}
-                >
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: 53,
-                      borderRadius: 23,
-                      backgroundColor: '#b7e4c0',
-                      height: 53
-                    }}
-                  >
-                    <Image
-                      contentFit="cover"
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        borderRadius: 20,
-                        zIndex: 999999999999
-                      }}
-                      source={{
-                        uri:
-                          data.user.profilePicture ||
-                          'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716419224/bciupv6y3hwccgmtpwoe.png'
-                      }}
-                    />
-                  </View>
-                </View>
-              </LinearGradient>
-            </TouchableOpacity>
+           
             <LinearGradient
               style={{ height: 300, justifyContent: 'flex-start', padding: 15 }}
               end={{ x: 0.5, y: 1 }}
@@ -231,8 +170,69 @@ const Posteo = ({ data, padding }) => {
               )}
             </LinearGradient>
             <View
-              style={{ gap: 50, position: 'absolute', right: 24, bottom: 100 }}
+              style={{  position: 'absolute', right: 14,height:"100%",alignItems:"center",paddingVertical:10,paddingBottom:10 ,gap:40}}
             >
+               <TouchableOpacity
+              onPress={() => {
+                console.log('settings post tags to: ', data.tags || [])
+                setSelectedPostTags(data.tags || [])
+                setShowTaggedsModal(true)
+              }}
+              style={{
+                zIndex: 99999999999,
+              
+              }}
+            >
+              <LinearGradient
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 64,
+                  height: 64,
+                  borderRadius: 25,
+                  zIndex: 0
+                }}
+                locations={[0, 1]}
+                colors={['#7ec18c', '#dee274']}
+              >
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: 59,
+                    borderRadius: 23,
+                    backgroundColor: '#c5eacd',
+                    height: 59
+                  }}
+                >
+                  <View
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: 53,
+                      borderRadius: 23,
+                      backgroundColor: '#b7e4c0',
+                      height: 53
+                    }}
+                  >
+                    <Image
+                      contentFit="cover"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: 20,
+                        zIndex: 999999999999
+                      }}
+                      source={{
+                        uri:
+                          data.user.profilePicture ||
+                          'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716419224/bciupv6y3hwccgmtpwoe.png'
+                      }}
+                    />
+                  </View>
+                </View>
+              </LinearGradient>
+            </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
                   setSelectedPost(data.id)
@@ -266,6 +266,28 @@ const Posteo = ({ data, padding }) => {
               >
                 <CompartirSVG />
               </TouchableOpacity>
+              <TouchableOpacity   style={{
+                    zIndex:99999999999,
+                    position:"absolute",
+                    bottom:12,right:-6,
+                    fontSize: FontSize.size_base,
+                    fontFamily: FontFamily.lato,
+                    color: Color.white,
+                  }} onPress={() => setExpanded(false)}>
+                <Text
+                style={{
+              
+                  fontSize: FontSize.size_base,
+                  textAlign: 'right',
+                  fontFamily: FontFamily.lato,
+                  color: Color.white,
+                  width:100
+                }}
+                
+                >
+                  Ver menos...
+                </Text>
+              </TouchableOpacity>
             </View>
             <LinearGradient
               style={{ height: 130, justifyContent: 'flex-end', padding: 15 }}
@@ -273,19 +295,6 @@ const Posteo = ({ data, padding }) => {
               start={{ x: 0.5, y: 1 }}
               colors={['rgba(0,0,0,0.9)', 'transparent']}
             >
-              <Pressable onPress={() => setExpanded(false)}>
-                <Text
-                  style={{
-                    marginTop: 5,
-                    fontSize: FontSize.size_base,
-                    textAlign: 'right',
-                    fontFamily: FontFamily.lato,
-                    color: Color.white
-                  }}
-                >
-                  Ver menos...
-                </Text>
-              </Pressable>
             </LinearGradient>
           </ImageBackground>
         </View>
@@ -298,7 +307,7 @@ const Posteo = ({ data, padding }) => {
           backgroundColor: Color.mytreeClarito,
           left: 0,
           top: padding && padding !== false ? 15 : 5,
-          height: 500,
+          height: Dimensions.get('screen').height / 1.8,
           marginBottom: 30,
           borderRadius: 20,
           marginHorizontal: padding && padding !== false && 15,
@@ -307,7 +316,7 @@ const Posteo = ({ data, padding }) => {
       >
         <ImageBackground
           style={{
-            height: 500,
+            height: Dimensions.get('screen').height / 1.8,
             zIndex: -1000,
             justifyContent: 'flex-end',
             resizeMode: 'cover',
@@ -375,7 +384,7 @@ const Posteo = ({ data, padding }) => {
           </TouchableOpacity>
 
           <View
-            style={{ gap: 50, position: 'absolute', right: 24, bottom: 100 }}
+            style={{ gap: 40, position: 'absolute', right: 24,height:"100%",justifyContent:"center" }}
           >
             <TouchableOpacity
               onPress={() => {

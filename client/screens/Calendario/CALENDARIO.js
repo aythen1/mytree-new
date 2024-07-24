@@ -28,6 +28,7 @@ import {
   getAllUserEvents,
   getAllUserInvitations
 } from '../../redux/actions/events'
+import TopBar from '../../components/TopBar'
 
 const CALENDARIO = () => {
   const navigation = useNavigation()
@@ -82,45 +83,33 @@ const CALENDARIO = () => {
         width: '100%',
         flex: 1,
         backgroundColor: Color.white,
-        padding: Padding.p_xl
       }}
       contentContainerStyle={styles.scrollViewContent}
       showsVerticalScrollIndicator={false}
     >
-      <View style={styles.topContainer}>
-        <Pressable onPress={() => navigation.openDrawer()}>
-          <Image
-            style={[
-              {
-                width: 87,
-                height: 55
-              }
-            ]}
-            contentFit="cover"
-            source={require('../../assets/image-6.png')}
-          />
-        </Pressable>
-      </View>
+      <TopBar screen={"calendario"}></TopBar>
 
       <View
         style={{
           alignItems: 'center',
           flexDirection: 'row',
-          width: Dimensions.get('screen').width * 0.9,
+          width: "100%",
+          justifyContent:"space-between",
+          paddingHorizontal:10,
           backgroundColor: Color.white,
-          marginTop: 20,
-          justifyContent: 'space-between'
+          marginTop: 5,
         }}
       >
         <View
           style={{
             backgroundColor: Color.fAFAFA,
             paddingHorizontal: Padding.p_sm,
-            paddingVertical: 3.5,
+            paddingVertical: 6,
             borderRadius: Border.br_3xs,
-            width: '85%',
+            width: '87%',
             flexDirection: 'row',
-            alignItems: 'center'
+            alignItems: 'center',
+            justifyContent:"space-between"
           }}
         >
           <Image
@@ -132,19 +121,21 @@ const CALENDARIO = () => {
             style={{
               marginLeft: 6,
               flexDirection: 'row',
-              flex: 1
+              flex: 1,
+              width:"100%"
             }}
           >
             <TextInput
               style={{
                 fontSize: FontSize.size_sm,
-                lineHeight: 21,
+                lineHeight: 25,
                 fontStyle: 'italic',
                 fontWeight: '200',
                 fontFamily: FontFamily.nunito,
                 color: Color.textPlaceholder,
                 letterSpacing: 0,
-                textAlign: 'left'
+                textAlign: 'left',
+                width:"100%"
               }}
               value={search}
               onChangeText={(text) => setSearch(text)}
@@ -157,14 +148,16 @@ const CALENDARIO = () => {
           <MasBusquedaSVG />
         </Pressable>
       </View>
-
-      <Calendario
+<View style={{paddingHorizontal:5}}>
+  
+<Calendario
         dates={[...dates, ...eventInvited]}
         selectedDate={selectedDate}
         setSelectedDate={(e)=> {
           handleItemPress('fechas')
           setSelectedDate(e)}}
       />
+</View>
       <View style={styles.frameParent}>
         <View style={styles.upcomingParent}>
           <Pressable
@@ -241,7 +234,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'stretch',
     flexDirection: 'row',
-    marginTop: '2%',
     height: 50
   },
   TextWrapper: {
@@ -251,7 +243,8 @@ const styles = StyleSheet.create({
     width: 388
   },
   frameParent: {
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
+    paddingHorizontal:10
   },
   background: {
     zIndex: 0

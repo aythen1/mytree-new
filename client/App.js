@@ -101,7 +101,7 @@ const App = () => {
   useEffect(() => {
     Linking.addEventListener('url', async (e) => {
       const { hostname, path, queryParams } = Linking.parse(e.url)
-      // console.log(queryParams,"parms")
+      console.log(queryParams,"parms")
       // const re =await Linking.openURL("http://mytreeappoficial.com")
       // console.log(re,"navsss")
       navigationRef.current?.navigate('Muro', queryParams) // Usar
@@ -125,13 +125,9 @@ const App = () => {
               screenOptions={{
                 drawerContentContainerStyle:{
                   backgroundColor: 'transparent',
-                  zIndex:999999999,
-                  flex:1
                 },
                 drawerStyle: {
                   backgroundColor: 'transparent',
-                  zIndex:999999999,
-                  flex:1
                 }
               }}              
               drawerContent={(props) => <DrawerContent  {...props} />}

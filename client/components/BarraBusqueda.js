@@ -19,8 +19,9 @@ const BarraBusqueda = ({ navigate, route, fromSearch, search, setSearch }) => {
         width: fromSearch ? '100%' : Dimensions.get('screen').width * 0.9,
         marginLeft: !fromSearch && Dimensions.get('screen').width * 0.05,
         backgroundColor: Color.white,
-        marginTop: fromSearch ? 30 : 20,
-        justifyContent: 'space-between'
+        marginTop: fromSearch ? 10 : 20,
+        justifyContent: 'space-between',
+        paddingHorizontal:10
       }}
     >
       <View

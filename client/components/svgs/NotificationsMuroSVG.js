@@ -45,7 +45,7 @@ const NotificationsMuroSVG = ({ isNavigation }) => {
       )}
       <Svg
         style={{ marginRight: 10 }}
-        width={19 * 1.1}
+        width={16 * 1.1}
         height={22 * 1.1}
         viewBox="0 0 19 22"
         fill="none"

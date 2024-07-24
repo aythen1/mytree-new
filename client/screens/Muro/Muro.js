@@ -38,10 +38,15 @@ import Etiquetados from '../../components/Etiquetados'
 import { getAllUsers, getUserData } from '../../redux/actions/user'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getAllNotifications } from '../../redux/actions/notifications'
-import { getAllEvents, getAllUserEvents, getAllUserInvitations } from '../../redux/actions/events'
+import {
+  getAllEvents,
+  getAllUserEvents,
+  getAllUserInvitations
+} from '../../redux/actions/events'
 import axiosInstance from '../../apiBackend'
 import CommentsModal from '../../components/modals/CommentsModal'
 import { updateSelectedPostComments } from '../../redux/slices/comments.slices'
+import TopBar from '../../components/TopBar'
 
 const Muro = () => {
   const {
@@ -71,7 +76,6 @@ const Muro = () => {
 
   useEffect(() => {
     if (queryParams?.invite && queryParams?.memberId) {
-      console.log(user, 'user')
       setShowInviteModal(true)
     }
   }, [queryParams])
@@ -93,10 +97,13 @@ const Muro = () => {
 
   const handleAceptInvitation = async () => {
     try {
-      const res = await axiosInstance.patch(`/user/${user.id}`, {
+      const res = await axiosInstance.patch(`/user/${userData.id}`, {
         [queryParams.property]: queryParams.memberId
       })
       console.log(res.data, 'datasss')
+      if (res) {
+        dispatch(getAllUsers())
+      }
       setShowInviteModal(false)
     } catch (error) {
       console.log(error, 'error')
@@ -114,7 +121,7 @@ const Muro = () => {
         contentContainerStyle={{ paddingBottom: 85 }}
         showsVerticalScrollIndicator={false}
       >
-        <View
+        {/* <View
           style={{
             width: '100%',
             paddingTop: 5,
@@ -163,12 +170,11 @@ const Muro = () => {
               }
             />
           </View>
-        </View>
-
+        </View> */}
+        <TopBar screen={'muro'}></TopBar>
         <View>
           <View
             style={{
-              marginTop: 10,
               flexDirection: 'row',
               width: '95%',
               alignSelf: 'center',
@@ -256,13 +262,14 @@ const Muro = () => {
                     color: Color.white,
                     fontWeight: '300',
                     fontSize: FontSize.size_3xs,
-                    width: 30,
+                    width: 'auto',
+                    textAlignVertical: 'center',
+                    paddingHorizontal: 3,
                     height: 20,
-                    lineHeight: 18,
                     textAlign: 'center'
                   }}
                 >
-                  Soon
+                  Pronto
                 </Text>
               </Pressable>
             </View>
@@ -358,8 +365,7 @@ const Muro = () => {
               style={{
                 flex: 1,
                 justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'rgba(0,0,0,0.3)'
+                alignItems: 'center'
               }}
             >
               <Etiquetados onClose={() => setShowTaggedsModal(false)} />
@@ -372,7 +378,6 @@ const Muro = () => {
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >

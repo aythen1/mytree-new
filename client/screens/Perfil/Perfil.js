@@ -41,6 +41,7 @@ import { emojis } from 'rn-emoji-picker/dist/data'
 import { getAllUserEvents } from '../../redux/actions/events'
 import { getAllUserDiaries } from '../../redux/actions/diaries'
 import { getUserFriendsAndFamilyLength } from '../../redux/actions/user'
+import TopBar from '../../components/TopBar'
 
 const Perfil = () => {
   const navigation = useNavigation()
@@ -134,50 +135,7 @@ console.log("pasa por este ladoooooooooooooooooooooooooooooooooooooooooooooo")
         }}
         showsVerticalScrollIndicator={false}
       >
-        <View
-          style={{
-            justifyContent: 'space-between',
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingTop: 14
-          }}
-        >
-
-          <Pressable onPress={() => navigation.openDrawer()}>
-            <Image
-              style={[{
-                width: 87,
-                height: 55
-              }]}
-              contentFit="cover"
-              source={require('../../assets/image-6.png')}
-            />
-          </Pressable>
-
-          <HeaderIcons
-            icons={
-              selectedComponent !== 'PERFILMIINFO'
-                ? [
-                    <Pressable onPress={() => setSearch(!search)}>
-                      <LupaSVG />
-                    </Pressable>,
-                    <PlusSVG isNavigation={'CrearAlbum'} />,
-                    <SettingMuroSVG isNavigation={'PerfilAjustes'} />
-                  ]
-                : [
-                    <TreeSVG />,
-                    <NotificationsMuroSVG
-                      isNavigation={'PERFILNOTIFICACIONES'}
-                    />,
-                    <SettingMuroSVG isNavigation={'PerfilAjustes'} />
-                  ]
-            }
-          />
-        </View>
-
-     
-
-        {search && <BarraBusqueda />}
+     <TopBar screen={"perfil"}></TopBar>
 
         <View
           style={{
@@ -499,7 +457,8 @@ const styles = StyleSheet.create({
     width: 130
   },
   nameContainer: {
-    paddingVertical: 20
+    paddingVertical: 20,
+    paddingHorizontal:20
   },
   brunoPham: {
     textAlign: 'center',

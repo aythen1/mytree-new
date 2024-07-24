@@ -110,13 +110,7 @@ const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
           todayTextColor: 'black'
         }}
       />
-      <View
-        style={{
-          paddingHorizontal: 15,
-          backgroundColor: Color.white,
-          paddingVertical: 15
-        }}
-      ></View>
+    
     </View>
   )
 }
@@ -124,8 +118,7 @@ const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: 360,
-    marginTop: 10
+    paddingVertical:15
   }
 })
 

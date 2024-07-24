@@ -197,11 +197,10 @@ const OpenedChat = () => {
       style={{
         flex: 1,
         overflow: 'hidden',
-        paddingTop: 10,
         width: '100%',
         paddingBottom: 15
       }}
-      colors={['#fff', '#f1f1f1']}
+      colors={['#41bf63', '#f1f1f1']}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
     >
@@ -217,11 +216,13 @@ const OpenedChat = () => {
           alignItems: 'center',
           justifyContent: 'space-between',
           paddingHorizontal: 25,
-          paddingBottom: 25,
+          paddingBottom: 10,
+          paddingTop:10,
           borderColor: 'green',
           borderBottomColor: Color.primario1,
           borderBottomWidth: 0.5,
-          marginBottom: 2
+          marginBottom: 2,
+          backgroundColor:"white"
         }}
       >
         <View
@@ -257,9 +258,14 @@ const OpenedChat = () => {
                 fontWeight: 'bold',
                 textAlign: 'left',
                 fontFamily: FontFamily.lato,
-                fontSize: 15,
-                color: Color.primario1
+                fontSize: 20,
+                color: Color.primario1,
+                width:Dimensions.get("screen").width / 3
+                
+                
               }}
+              numberOfLines={1}
+              
             >
               {route.params.receiverName}
             </Text>
@@ -291,13 +297,13 @@ const OpenedChat = () => {
                   color: Color.fAFAFA
                 }}
               >
-                Soon
+                Pronto
               </Text>
             </View>
             <Image
               style={{
-                width: 25,
-                height: 25
+                width: 20,
+                height: 20
               }}
               contentFit="cover"
               source={require('../../assets/graySword.png')}
@@ -306,8 +312,8 @@ const OpenedChat = () => {
           <Pressable onPress={() => navigation.navigate('CrearEvento')}>
             <Image
               style={{
-                width: 25,
-                height: 25
+                width: 20,
+                height: 20
               }}
               contentFit="cover"
               source={require('../../assets/greenCalendar.png')}
@@ -326,8 +332,8 @@ const OpenedChat = () => {
           >
             <Image
               style={{
-                width: 25,
-                height: 25
+                width: 20,
+                height: 20
               }}
               contentFit="cover"
               source={require('../../assets/greenPerson.png')}
@@ -419,9 +425,9 @@ const OpenedChat = () => {
             colors={['#7ec18c', '#dee274']}
           >
             <Image
-              style={{ width: 20, height: 20, borderWidth: 2 }}
+              style={{ width: 26, height: 26, borderWidth: 2 }}
               contentFit="cover"
-              source={require('../../assets/whiteSend.png')}
+              source={require('../../assets/paperplanee.png')}
             />
           </LinearGradient>
         </Pressable>

@@ -4,6 +4,7 @@ import {
   Keyboard,
   Modal,
   Pressable,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
@@ -86,7 +87,7 @@ const FooterNavBar = () => {
       <View style={{ backgroundColor: '#f1f1f1' }}>
         <View
           style={{
-            height: 75,
+            height: 65,
             flexDirection: 'row',
             width: '100%',
             justifyContent: 'space-between',
@@ -102,7 +103,7 @@ const FooterNavBar = () => {
             style={{
               flexDirection: 'row',
               gap: Dimensions.get('window').width / 10,
-              marginLeft: '12%',
+              marginLeft: '10%',
               zIndex: 9999999
             }}
           >
@@ -129,7 +130,7 @@ const FooterNavBar = () => {
             style={{
               flexDirection: 'row',
               gap: Dimensions.get('window').width / 10,
-              marginRight: '12%'
+              marginRight: '10%'
             }}
           >
             <Pressable
@@ -152,7 +153,7 @@ const FooterNavBar = () => {
             </Pressable>
           </View>
 
-          <Pressable
+          <TouchableOpacity
             style={{
               width: 60,
               height: 60,
@@ -190,21 +191,22 @@ const FooterNavBar = () => {
               <Image
                 style={{ width: 25, height: 25 }}
                 contentFit="cover"
-                source={require('../assets/PlusPng.png')}
+                source={require('../assets/Plus.png')}
               />
             </LinearGradient>
-          </Pressable>
+          </TouchableOpacity>
         </View>
-        <FooterBarSVG />
+        {/* <FooterBarSVG /> */}
         <Image
           style={{
             width: screenWidth,
             height: 80,
             position: 'absolute',
-            bottom: 0
+            bottom: 0,
+            opacity:1
           }}
-          contentFit="fill"
-          source={require('../assets/bottomBarPng.png')}
+          contentFit="cover"
+          source={require('../assets/nav.png')}
         />
         <Modal
           animationType="slide"

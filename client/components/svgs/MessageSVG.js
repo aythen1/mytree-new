@@ -36,7 +36,7 @@ const MessageSVG = ({ color }) => {
       )}
       <Svg
         style={{ marginRight: 10 }}
-        width="25"
+        width="20"
         height="24"
         viewBox="0 0 25 24"
         fill="none"

@@ -20,6 +20,7 @@ import {
   getAllUserEvents,
   getAllUserInvitations
 } from '../redux/actions/events'
+import TopBar from '../components/TopBar'
 
 const Invitacin = ({ route }) => {
   const { userEvents: dates, userInvitations } = useSelector(
@@ -83,15 +84,9 @@ const handleGetEvent = async ()=> {
       contentContainerStyle={{ paddingBottom: 100 }}
       showsVerticalScrollIndicator={false}
     >
+        <TopBar screen={"invitacion"}></TopBar>
       <View style={styles.paddingBottom}>
-        <View style={[styles.image6Wrapper, styles.parentFlexBox]}>
-          <Image
-            style={styles.image6Icon}
-            contentFit="cover"
-            source={require('../assets/image-6.png')}
-          />
-        </View>
-        <View>
+        <View style={{paddingHorizontal:10}}>
           <View style={styles.backParent}>
             <Pressable
               style={styles.calendarIcon}
@@ -524,7 +519,6 @@ const styles = StyleSheet.create({
   },
   invitacin: {
     backgroundColor: Color.white,
-    padding: Padding.p_xl
   },
   paddingBottom: {
     paddingBottom: 90

@@ -14,6 +14,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import MasBusquedaSVG from '../../components/svgs/MasBusquedaSVG'
 import { Context } from '../../context/Context'
 import { getAllDiaries, getAllUserDiaries } from '../../redux/actions/diaries'
+import TopBar from '../../components/TopBar'
 
 const MIDIARIOPANTALLAPERSONAL = () => {
   const navigation = useNavigation()
@@ -53,57 +54,7 @@ const MIDIARIOPANTALLAPERSONAL = () => {
           shadowColor: 'black'
         }}
       >
-        <View
-          style={{
-            marginTop: 10,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingHorizontal: 15
-          }}
-        >
-          <Pressable onPress={() => navigation.navigate('Muro')}>
-          <Pressable onPress={() => navigation.openDrawer()}>
-            <Image
-              style={[{
-                width: 87,
-                height: 55
-              }]}
-              contentFit="cover"
-              source={require('../../assets/image-6.png')}
-            />
-          </Pressable>
-          </Pressable>
-          <View style={styles.iconlylightOutlinesearchParent}>
-            <HeaderIcons
-              icons={[
-                <Pressable
-                  key={1}
-                  onPress={() => navigation.navigate('Busqueda')}
-                >
-                  <LupaSVG />
-                </Pressable>,
-                <Pressable
-                  key={2}
-                  onPress={() => navigation.navigate('MIDIARIOENTRADATEXTOPL7')}
-                >
-                  <Image
-                    style={{
-                      width: 25,
-                      height: 25,
-                      marginRight: 12,
-                      marginLeft: 4
-                    }}
-                    resizeMode="contain"
-                    source={require('../../assets/document12.png')}
-                  />
-                </Pressable>,
-                <SettingMuroSVG key={3} isNavigation={'PerfilAjustes'} />
-
-                // <MasBusquedaSVG diary={true} />
-              ]}
-            />
-          </View>
-        </View>
+     <TopBar screen={"diarios"}></TopBar>
         <View style={styles.frameParent12}>
          
           <Text style={[styles.miDiario, styles.textTypo]}>
@@ -160,7 +111,7 @@ const MIDIARIOPANTALLAPERSONAL = () => {
           </View> */}
 
           <View
-            style={{ paddingHorizontal: 10, backgroundColor: 'transparent' }}
+            style={{ paddingHorizontal: 0, backgroundColor: 'transparent' }}
           >
             <Pressable
               style={styles.rectangleGroup}

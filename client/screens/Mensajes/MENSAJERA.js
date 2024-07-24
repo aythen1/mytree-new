@@ -19,6 +19,7 @@ import ChatCard from './ChatCard'
 import { useSelector } from 'react-redux'
 import { isLoading } from 'expo-font'
 import axiosInstance from '../../apiBackend'
+import TopBar from '../../components/TopBar'
 
 const MENSAJERA = () => {
   const navigation = useNavigation()
@@ -174,7 +175,7 @@ const MENSAJERA = () => {
           shadowColor: 'black'
         }}
       >
-        <View style={{ width: '100%' }}>
+        {/* <View style={{ width: '100%' }}>
           <Pressable onPress={() => navigation.openDrawer()}>
             <Image
               style={[
@@ -187,7 +188,8 @@ const MENSAJERA = () => {
               source={require('../../assets/image-6.png')}
             />
           </Pressable>
-        </View>
+        </View> */}
+        <TopBar screen={"mensajes"}></TopBar>
         <View
           style={{
             flexDirection: 'row',
