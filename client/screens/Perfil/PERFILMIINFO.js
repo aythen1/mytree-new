@@ -141,16 +141,7 @@ console.log(usuario,"esto tengo")
           <Text style={[styles.miInformacinPersonal, styles.miInfoTypo]}>
             Mi información personal
           </Text>
-          <Pressable
-            style={styles.lock}
-            onPress={() => setSelectedComponent('SOLOYO')}
-          >
-            <Image
-              style={styles.icon}
-              contentFit="cover"
-              source={require('../../assets/lock1.png')}
-            />
-          </Pressable>
+        
         </View>
 
         <View style={styles.frameParent}>

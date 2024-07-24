@@ -53,7 +53,8 @@ const Eventos = ({ search   }) => {
 
 const styles = StyleSheet.create({
   frameGroup: {
-    marginTop: 19,
+    marginTop: 10,
+    paddingHorizontal:10,
     alignSelf: 'stretch',
     paddingBottom: 80
   },

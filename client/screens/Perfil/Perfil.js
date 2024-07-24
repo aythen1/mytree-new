@@ -42,6 +42,7 @@ import { emojis } from 'rn-emoji-picker/dist/data'
 import { getAllUserEvents } from '../../redux/actions/events'
 import { getAllUserDiaries } from '../../redux/actions/diaries'
 import { getUserFriendsAndFamilyLength } from '../../redux/actions/user'
+import TopBar from '../../components/TopBar'
 import Badge1 from '../../assets/Badge_01.svg'
 import Badge2 from '../../assets/Badge_02.svg'
 import Badge3 from '../../assets/Badge_03.svg'
@@ -150,47 +151,8 @@ const Perfil = () => {
         }}
         showsVerticalScrollIndicator={false}
       >
-        <View
-          style={{
-            justifyContent: 'space-between',
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingTop: 14
-          }}
-        >
-          <Pressable onPress={() => navigation.openDrawer()}>
-            <Image
-              style={[
-                {
-                  width: 87,
-                  height: 55
-                }
-              ]}
-              contentFit="cover"
-              source={require('../../assets/image-6.png')}
-            />
-          </Pressable>
-
-          <HeaderIcons
-            icons={
-              selectedComponent !== 'PERFILMIINFO'
-                ? [
-                    <Pressable onPress={() => setSearch(!search)}>
-                      <LupaSVG />
-                    </Pressable>,
-                    <PlusSVG isNavigation={'CrearAlbum'} />,
-                    <SettingMuroSVG isNavigation={'PerfilAjustes'} />
-                  ]
-                : [
-                    <TreeSVG />,
-                    <NotificationsMuroSVG
-                      isNavigation={'PERFILNOTIFICACIONES'}
-                    />,
-                    <SettingMuroSVG isNavigation={'PerfilAjustes'} />
-                  ]
-            }
-          />
-        </View>
+     <TopBar screen={"perfil"}></TopBar>
+       
 
         {search && <BarraBusqueda />}
 
@@ -585,7 +547,8 @@ const styles = StyleSheet.create({
     width: 130
   },
   nameContainer: {
-    paddingVertical: 20
+    paddingVertical: 20,
+    paddingHorizontal:20
   },
   brunoPham: {
     textAlign: 'center',

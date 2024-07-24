@@ -48,12 +48,12 @@ const Fechas = ({ selectedDate, dates, user }) => {
         
         </View>
         <View style={styles.TextWrapper}>
-          <Text style={styles.marieContainerTypo}>
-            <Text style={styles.textTypo}>
+          <Text numberOfLines={1} style={{...styles.marieContainerTypo}}>
+            <Text numberOfLines={1} style={styles.textTypo}>
               {item.creatorId == userData?.id ? 'Yo' : allUsers.find((e)=> e.id === item.creatorId).username}{' '}
             </Text>
-            <Text style={styles.cumple28Aos}>{item.title}</Text>
           </Text>
+            <Text style={styles.cumple28Aos}>{item.title}</Text>
         </View>
       </Pressable>
       )
@@ -64,9 +64,10 @@ const Fechas = ({ selectedDate, dates, user }) => {
 
 const styles = StyleSheet.create({
   frameGroup: {
-    marginTop: 19,
+    marginTop: 10,
     alignSelf: 'stretch',
-    paddingBottom:80
+    paddingBottom:80,
+    paddingHorizontal:10
   },
   title: {
     fontSize: 25,
@@ -94,17 +95,18 @@ const styles = StyleSheet.create({
     width: 20
   },
   TextWrapper: {
-    width: '80%'
+    width: '80%',
+    
   },
   marieContainerTypo: {
     textAlign: 'justify',
     lineHeight: 22,
-    fontSize: FontSize.size_lg
+    fontSize: FontSize.size_lg,
   },
   textTypo: {
     color: Color.primario1,
     fontFamily: FontFamily.lato,
-    fontWeight: '700'
+    fontWeight: '700',
   },
   cumple28Aos: {
     color: Color.negro,

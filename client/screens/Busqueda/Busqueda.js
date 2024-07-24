@@ -27,6 +27,7 @@ import Post from '../../components/Post'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllPosts } from '../../redux/actions/posts'
+import TopBar from '../../components/TopBar'
 
 const Busqueda = () => {
   const navigation = useNavigation()
@@ -157,7 +158,6 @@ const Busqueda = () => {
           style={{
             paddingBottom: 10,
             backgroundColor: '#fff',
-            paddingHorizontal: 20,
             shadowOpacity: 1,
             elevation: 5,
             shadowRadius: 15,
@@ -168,7 +168,7 @@ const Busqueda = () => {
             shadowColor: 'black'
           }}
         >
-          <Pressable onPress={() => navigation.openDrawer()}>
+          {/* <Pressable onPress={() => navigation.openDrawer()}>
             <Image
               style={[
                 {
@@ -179,7 +179,8 @@ const Busqueda = () => {
               contentFit="cover"
               source={require('../../assets/image-6.png')}
             />
-          </Pressable>
+          </Pressable> */}
+          <TopBar screen={"busqueda"}></TopBar>
           <View style={styles.backParent}>
             <Pressable
               style={styles.back}
@@ -377,7 +378,7 @@ const styles = StyleSheet.create({
   backParent: {
     alignItems: 'center',
     flexDirection: 'row',
-    top: '1%'
+    paddingHorizontal:10
   },
   iconlylightsendCopyWrapper: {
     borderRadius: Border.br_xl,
@@ -404,7 +405,8 @@ const styles = StyleSheet.create({
   },
   tabsParent: {
     marginTop: 15,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    paddingHorizontal:10
   },
   bsqueda: {
     width: '100%',

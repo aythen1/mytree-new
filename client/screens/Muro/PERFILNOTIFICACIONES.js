@@ -28,6 +28,7 @@ import {
 } from '../../redux/actions/notifications'
 import { Context } from '../../context/Context'
 import { getAllUsers, updateUser } from '../../redux/actions/user'
+import TopBar from '../../components/TopBar'
 
 const PERFILNOTIFICACIONES = () => {
   const { formatDate } = useContext(Context)
@@ -137,41 +138,7 @@ const PERFILNOTIFICACIONES = () => {
       <View style={styles.perfilNotificaciones}>
         <View>
           <View style={styles.frameViewFlexBox}>
-            <View
-              style={{
-                width: '100%',
-                marginTop: 15,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              {/* <Image
-                style={styles.image6Icon}
-                contentFit="cover"
-                source={require('../../assets/image-6.png')}
-              /> */}
-              <Pressable onPress={() => navigation.openDrawer()}>
-                <Image
-                  style={[
-                    {
-                      width: 87,
-                      height: 55
-                    }
-                  ]}
-                  contentFit="cover"
-                  source={require('../../assets/image-6.png')}
-                />
-              </Pressable>
-
-              <HeaderIcons
-                icons={[
-                  <CalendarMuroSVG />,
-                  <BookSVG />,
-                  <SettingMuroSVG isNavigation={'PerfilAjustes'} />
-                ]}
-              />
-            </View>
+          <TopBar screen={"notificaciones"}></TopBar>
           </View>
           <View style={[styles.notificacionesWrapper, styles.frameViewFlexBox]}>
             <Text style={styles.notificaciones}>Notificaciones</Text>

@@ -34,7 +34,7 @@ import { useNavigation } from '@react-navigation/native'
 import { getAllPosts } from '../redux/actions/posts'
 import { getUserPosts } from '../redux/slices/user.slices'
 import Maps from '../components/Maps'
-
+import TopBar from "../components/TopBar"
 const Organizador = () => {
   const dispatch = useDispatch()
   const [taggedUsers, setTaggedUsers] = useState([])
@@ -225,18 +225,10 @@ const Organizador = () => {
         contentContainerStyle={{
           width: '100%',
           flex: 1,
-          padding: Padding.p_xl
         }}
       >
-        <Image
-          style={{
-            width: 87,
-            height: 55
-          }}
-          contentFit="cover"
-          source={require('../assets/image-6.png')}
-        />
-        <View style={{ width: '100%' }}>
+        <TopBar></TopBar>
+        <View style={{ width: '100%' ,paddingHorizontal:10}}>
           <View
             style={{
               height: 29,
@@ -250,7 +242,7 @@ const Organizador = () => {
                 style={{
                   top: 5,
                   width: 26,
-                  height: 20,
+                  opacity:0,
                   overflow: 'hidden'
                 }}
                 contentFit="cover"
@@ -264,7 +256,6 @@ const Organizador = () => {
                 textAlign: 'left',
                 fontFamily: FontFamily.lato,
                 color: Color.negro,
-                top: 0
               }}
             >
               Subir recuerdo

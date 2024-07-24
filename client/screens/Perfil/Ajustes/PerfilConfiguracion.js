@@ -38,6 +38,7 @@ import PopUpCalendario from '../../../components/PopUpCalendario'
 import Maps from '../../../components/Maps'
 import EtiquetarUno from '../../../components/EtiquetarUno'
 import useFetchHook from '../../../utils/useFetchHook'
+import TopBar from '../../../components/TopBar'
 
 const PerfilConfiguracion = () => {
   const { userData: usuario, allUsers } = useSelector((state) => state.users)
@@ -156,37 +157,9 @@ const PerfilConfiguracion = () => {
           style={styles.frameParent}
           showsVerticalScrollIndicator={false}
         >
+          <TopBar screen={'perfil'}></TopBar>
           <View>
-            <View style={styles.parentIcons}>
-              <Pressable onPress={() => navigation.openDrawer()}>
-                <Image
-                  style={[
-                    {
-                      width: 87,
-                      height: 55
-                    }
-                  ]}
-                  contentFit="cover"
-                  source={require('../../../assets/image-6.png')}
-                />
-              </Pressable>
-              {/* <Pressable onPress={() => navigation.navigate('Muro')}>
-              <Image
-                style={styles.image6Icon}
-                contentFit="cover"
-                source={require('../../../assets/image-6.png')}
-              />
-            </Pressable> */}
-              <View style={styles.iconlylightOutlinecalendarParent}>
-                <HeaderIcons
-                  icons={[
-                    <CalendarMuroSVG />,
-                    <BookSVG />,
-                    <NotificationsMuroSVG />
-                  ]}
-                />
-              </View>
-            </View>
+           
             <View style={[styles.backParent, styles.parentFlexBox]}>
               <Pressable
                 style={styles.iconlylightOutlinecalendar}
@@ -266,47 +239,7 @@ const PerfilConfiguracion = () => {
                       />
                     )}
                   </Pressable>
-                  {showImageOptions && (
-                    <View
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        right: '25%',
-                        gap: 10
-                      }}
-                    >
-                      <Pressable
-                        onPress={() => pickImage('profile')}
-                        style={{
-                          width: 30,
-                          height: 30,
-                          backgroundColor: Color.secundario,
-                          borderRadius: 100,
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                        }}
-                      >
-                        <SimboloSVG color={'#fff'} />
-                      </Pressable>
-                      <Pressable
-                        onPress={() => setShowCamera(true)}
-                        style={{
-                          width: 30,
-                          height: 30,
-                          backgroundColor: Color.secundario,
-                          borderRadius: 100,
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                        }}
-                      >
-                        <Image
-                          style={{ width: 16, height: 16 }}
-                          contentFit="cover"
-                          source={require('../../../assets/cameraIcon.png')}
-                        />
-                      </Pressable>
-                    </View>
-                  )}
+                 
                   <TouchableOpacity
                     onPress={() => pickImage('profile')}
                     style={{
@@ -343,6 +276,7 @@ const PerfilConfiguracion = () => {
                       styles.brunoPhamTypo,
                       { width: '100%' }
                     ]}
+                    maxLength={38}
                     ref={nombreInputRef}
                     placeholder={usuario.username}
                     onChangeText={(text) =>
@@ -1030,7 +964,6 @@ const styles = StyleSheet.create({
     width: 24
   },
   backParent: {
-    marginTop: 30
   },
   icon: {
     height: '100%',

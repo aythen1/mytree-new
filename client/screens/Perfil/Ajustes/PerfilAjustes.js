@@ -33,6 +33,7 @@ import { clearStories } from '../../../redux/slices/stories.slices'
 import { clearUser } from '../../../redux/slices/user.slices'
 import { clearEvents } from '../../../redux/slices/events.slices'
 import { useDispatch, useSelector } from 'react-redux'
+import TopBar from '../../../components/TopBar'
 
 
 
@@ -78,20 +79,9 @@ const PerfilAjustes = () => {
       colors={['#fff', '#7ec18c']}
     >
       <ScrollView contentContainerStyle={{paddingBottom:130}} style={styles.frameParent}>
+           <TopBar></TopBar>
         <View style={styles.frameGroup}>
-          <View>
-            <View style={styles.parentIcons}>
-            <Pressable onPress={() => navigation.openDrawer()}>
-            <Image
-              style={[{
-                width: 87,
-                height: 55
-              }]}
-              contentFit="cover"
-              source={require('../../../assets/image-6.png')}
-            />
-          </Pressable>
-            </View>
+          <View style={{width:"100%"}}>
             <View style={[styles.backParent, styles.parentFlexBox]}>
               <Pressable
                 style={styles.iconlylightOutlinecalendar}
@@ -277,6 +267,7 @@ const styles = StyleSheet.create({
   },
   parentLayout: {
     padding: Padding.p_xl,
+    marginHorizontal:10,
     borderRadius: Border.br_3xs,
     backgroundColor: 'rgba(255, 255, 255, 0.7)'
   },
@@ -306,7 +297,6 @@ const styles = StyleSheet.create({
     fontWeight: '700'
   },
   backParent: {
-    marginTop: 30
   },
   frameChild: {
     width: 50,
@@ -374,7 +364,8 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   frameGroup: {
-    justifyContent: 'center'
+    justifyContent: 'center',
+    paddingHorizontal:10
   },
   polticaDePrivacidad: {
     marginLeft: 13
@@ -398,7 +389,6 @@ const styles = StyleSheet.create({
     marginTop: 19
   },
   frameParent: {
-    paddingHorizontal: Padding.p_xl,
     paddingVertical: 0
   },
   perfilAjustes: {

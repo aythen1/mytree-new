@@ -69,7 +69,7 @@ const StoriesVideosDiarios = () => {
                   contentFit="cover"
                   source={{ uri: userData.profilePicture }}
                 />
-                <View>
+                <View style={{width:70}}>
                   <Text
                     style={{
                       fontWeight: '600',
@@ -79,8 +79,11 @@ const StoriesVideosDiarios = () => {
                       color: Color.negro,
                       textAlign: 'center',
                       fontFamily: FontFamily.lato,
-                      letterSpacing: 0
+                      letterSpacing: 0,
+                      width:"100%",
+
                     }}
+                    numberOfLines={1}
                   >
                     {userData.username}
                   </Text>
@@ -142,7 +145,7 @@ const StoriesVideosDiarios = () => {
                       source={{ uri: user.profilePicture }}
                     />
                     <View style={[styles.youWrapper, styles.aatarIconPosition]}>
-                      <Text style={[styles.you1, styles.signTypo]}>
+                      <Text numberOfLines={1} style={[styles.you1, styles.signTypo]}>
                         {user.username}
                       </Text>
                     </View>
@@ -417,14 +420,11 @@ const styles = StyleSheet.create({
     top: 0
   },
   you1: {
-    left: 25,
     fontWeight: '600',
     lineHeight: 22,
     fontSize: FontSize.footnote_size,
-    top: -1,
     textAlign: 'center',
     color: Color.negro,
-    position: 'absolute'
   },
   youWrapper: {
     top: 70,

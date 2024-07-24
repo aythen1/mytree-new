@@ -9,13 +9,13 @@ const SettingMuroSVG = ({ isNavigation }) => {
   return (
     <Pressable
       onPress={() => {
-        isNavigation && navigation.navigate(isNavigation)
+         navigation.navigate("PerfilAjustes")
       }}
     >
       <Svg
         style={{ marginRight: 10 }}
         width="24"
-        height="24"
+        height="21"
         viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

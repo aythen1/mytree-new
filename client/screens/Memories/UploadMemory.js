@@ -182,11 +182,11 @@ const UploadMemory = () => {
             <TouchableOpacity onPress={() => navigation.navigate('Muro')}>
               <Image
                 contentFit="cover"
-                style={{ width: 19, height: 19 }}
+                style={{ width: 14, height: 14 }}
                 source={require('../../assets/group-6846.png')}
               />
             </TouchableOpacity>
-            <Text style={{ fontSize: 24, fontWeight: 700, color: '#292A2B' }}>
+            <Text style={{ fontSize: 20, fontWeight: 700, color: '#292A2B' }}>
               Subir recuerdo
             </Text>
             <TouchableOpacity
@@ -209,7 +209,7 @@ const UploadMemory = () => {
               contentFit="cover"
               style={{
                 width: Dimensions.get('window').width - 30,
-                height: Dimensions.get('window').width,
+                height: Dimensions.get('window').height / 2.3,
                 borderRadius: 8
               }}
               source={
@@ -221,10 +221,10 @@ const UploadMemory = () => {
           </View>
           ) : (
             <View
-            style={{ justifyContent: 'center', alignItems: 'center',height: "53%" }}
+            style={{ justifyContent: 'center', alignItems: 'center',height:Dimensions.get('window').height / 2.3 }}
           >
               <PagerView
-                  style={{  height:"100%",width:"100%" }}
+                  style={{  height:Dimensions.get('window').height / 2.3,width:"100%" }}
                   initialPage={0}
                 >
                   {multiSelect.map((e, i) => (
@@ -232,7 +232,7 @@ const UploadMemory = () => {
                       <Image
                        style={{
                         width: Dimensions.get('window').width - 30,
-                        height: Dimensions.get('window').width,
+                        height:Dimensions.get('window').height / 2.3 ,
                         borderRadius: 8
                       }}
                         contentFit="cover"
@@ -276,7 +276,7 @@ const UploadMemory = () => {
                 setShowSelection(!showSelection)}}
                 style={{
                   gap: 5,
-                  backgroundColor: '#D9D9D9',
+                  backgroundColor: showSelection ? "#03fcad" : '#D9D9D9',
                   alignItems: 'center',
                   flexDirection: 'row',
                   borderRadius: 5,
@@ -320,11 +320,9 @@ const UploadMemory = () => {
           </View>
           <ScrollView
             showsVerticalScrollIndicator={false}
+            contentContainerStyle={{paddingBottom:70}}
             style={{
-              height:
-                Dimensions.get('window').height -
-                (Dimensions.get('window').width + 30) -
-                190
+              height:Dimensions.get('window').height / 2.8
             }}
           >
             <View

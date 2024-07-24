@@ -89,7 +89,7 @@ const PopUpCalendario = ({
                   backgroundColor: '#DFE271',
                   width: 32,
                   height: 32,
-                  borderRadius: 0
+                  borderRadius: 9
                 },
                 text: {
                   color: 'white'
