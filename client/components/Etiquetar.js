@@ -93,7 +93,7 @@ const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers }) => {
                 fontWeight: 400
               }}
             >
-              Aun no tienes ningun contacto agregado a amigos.
+              ¡Aún no tienes ningún contacto agregado a amigos!
             </Text>
           )}
           {userFriends.length > 0 &&
@@ -197,7 +197,7 @@ const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers }) => {
                 fontWeight: 400
               }}
             >
-              Aun no tienes ningun contacto agregado a familiares.
+              ¡Aún no tienes ningún contacto agregado a familiares!
             </Text>
           )}
           {userFamily.length > 0 &&

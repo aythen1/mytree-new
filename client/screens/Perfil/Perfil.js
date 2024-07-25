@@ -205,24 +205,24 @@ const Perfil = () => {
                 {!userData?.badge && loading === true && (
                   <Badge1 width={30} height={30} />
                 )}
-                {userData.badge === 'badge1' ? (
+                {userData?.badge === 'badge1' ? (
                   <Badge1 width={30} height={30} />
-                ) : userData.badge === 'badge2' ? (
+                ) : userData?.badge === 'badge2' ? (
                   <Badge2 width={30} height={30} />
-                ) : userData.badge === 'badge3' ? (
+                ) : userData?.badge === 'badge3' ? (
                   <Badge3 width={30} height={30} />
-                ) : userData.badge === 'badge4' ? (
+                ) : userData?.badge === 'badge4' ? (
                   <Badge4 width={30} height={30} />
-                ) : userData.badge === 'badge5' ? (
+                ) : userData?.badge === 'badge5' ? (
                   <Badge5 width={30} height={30} />
-                ) : userData.badge === 'badge6' ? (
+                ) : userData?.badge === 'badge6' ? (
                   <Badge6 width={30} height={30} />
-                ) : userData.badge === 'badge7' ? (
+                ) : userData?.badge === 'badge7' ? (
                   <Badge7 width={30} height={30} />
-                ) : userData.badge === 'badge8' ? (
+                ) : userData?.badge === 'badge8' ? (
                   <Badge8 width={30} height={30} />
                 ) : (
-                  userData.badge === 'badge9' && (
+                  userData?.badge === 'badge9' && (
                     <Badge9 width={30} height={30} />
                   )
                 )}
@@ -253,7 +253,7 @@ const Perfil = () => {
               <Image
                 style={{ ...styles.perfilItem, borderRadius: 100 }}
                 contentFit="cover"
-                source={require('../../assets/group-1171276683.png')}
+                source={require('../../assets/logoo.png')}
               />
             ) : (
               <Image

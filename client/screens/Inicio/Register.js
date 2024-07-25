@@ -27,6 +27,8 @@ const Register = () => {
   const [mail, setMail] = useState('')
   const [birthDate, setBIrthDate] = useState('')
 
+  const [openCalendar,setOpenCalendar] = useState(false)
+
   const [data, setData] = useState(null)
 
   const [dataToSend, setDataToSend] = useState({
@@ -104,6 +106,7 @@ const Register = () => {
       style={styles.registroNombre}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.scrollViewContent}
+      keyboardShouldPersistTaps={true}
     >
       <LinearGradient
         style={styles.frameChild}
@@ -325,7 +328,7 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     flexGrow: 1,
-    paddingBottom: 220
+    paddingBottom: 80
   },
   back: {
     height: 50,

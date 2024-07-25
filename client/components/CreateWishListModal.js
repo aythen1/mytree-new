@@ -134,7 +134,7 @@ const CreateWishListModal = ({ onClose, wishList, setWishList }) => {
                 width: '100%'
               }}
             >
-              Aun no has agregado ningun deseo a tu lista!
+              ¡Aún no has agregado ningún deseo a tu lista!
             </Text>
           </View>
         )}

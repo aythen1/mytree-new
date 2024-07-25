@@ -109,7 +109,7 @@ const BusquedaContactos = ({ searchOnContacts }) => {
                 }}
               >
                 {searchOnContacts === ''
-                  ? 'Aún no tienes ningun contacto agregado a familiares.'
+                  ? 'Aún no tienes ningún contacto agregado a familiares.'
                   : 'No encontramos resultados para tu búsqueda.'}
               </Text>
             )}
@@ -169,7 +169,7 @@ const BusquedaContactos = ({ searchOnContacts }) => {
                   }}
                 >
                   {searchOnContacts === ''
-                    ? 'Aún no tienes ningun contacto agregado a familiares.'
+                    ? 'Aún no tienes ningún contacto agregado a familiares.'
                     : 'No encontramos resultados para tu búsqueda.'}
                 </Text>
               )}

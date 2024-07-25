@@ -66,21 +66,175 @@ const SingleDiary = ({
     >
       {!notEditable && editingDiary === diary.id && (
         <View style={{ width: '100%', marginTop: -15 }}>
+          <View style={{}}>
+            <TextInput
+              style={{
+                fontSize: FontSize.size_lg,
+                lineHeight: 27,
+                width: Dimensions.get('screen').width * 0.8,
+                textAlign: 'left',
+                color: Color.negro,
+                fontFamily: FontFamily.lato,
+                letterSpacing: 0,
+                marginBottom: 8
+              }}
+              multiline
+              value={text}
+              onChangeText={(text) => setText(text)}
+            />
+            <View
+              style={{
+                width: '100%',
+                flexWrap: 'wrap',
+                flexDirection: 'row',
+                gap: 5
+              }}
+            >
+              {diaryImages.length > 0 &&
+                diaryImages.map((image, i) => (
+                  <View>
+                    <Image
+                      key={i}
+                      source={{ uri: image }}
+                      contentFit={'contain'}
+                      style={{ width: 50, height: 50, borderRadius: 3 }}
+                    />
+                    <Pressable
+                      onPress={() =>
+                        setDiaryImages(
+                          [...diaryImages].filter((img) => img !== image)
+                        )
+                      }
+                      style={{
+                        position: 'absolute',
+                        top: 3,
+                        right: 3,
+                        borderRadius: 3,
+                        backgroundColor: '#fff',
+                        padding: 3.5
+                      }}
+                    >
+                      <Image
+                        contentFit="cover"
+                        style={{ width: 7, height: 7 }}
+                        source={require('../assets/group-68463.png')}
+                      />
+                    </Pressable>
+                  </View>
+                ))}
+              {pickedImages.length > 0 &&
+                pickedImages.map((image, i) => (
+                  <View>
+                    <Image
+                      key={i + 500}
+                      source={{ uri: image.uri }}
+                      contentFit={'contain'}
+                      style={{ width: 50, height: 50, borderRadius: 3 }}
+                    />
+                    <Pressable
+                      onPress={() => {
+                        setPickedImages(
+                          pickedImages.filter((img) => img.uri !== image.uri)
+                        )
+                      }}
+                      style={{
+                        position: 'absolute',
+                        top: 3,
+                        right: 3,
+                        borderRadius: 3,
+                        backgroundColor: '#fff',
+                        padding: 3.5
+                      }}
+                    >
+                      <Image
+                        contentFit="cover"
+                        style={{ width: 7, height: 7 }}
+                        source={require('../assets/group-68463.png')}
+                      />
+                    </Pressable>
+                  </View>
+                ))}
+            </View>
+          </View>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'flex-end',
               paddingHorizontal: 5,
-              alignItems: 'center'
+              alignItems: 'center',
             }}
           >
             <View
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                flexDirection: 'row'
+                flexDirection: 'row',
+                height:"100%",
               }}
             >
+              {!notEditable && editingDiary === diary.id ? (
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+            gap: 15,
+            paddingRight: 5
+          }}
+        >
+          <Pressable
+            style={{ height: 13, width: 13, marginTop: 8 }}
+            onPress={() => {
+              if (diary.id === 'preDiary') {
+                dispatch(removeUserDiary('preDiary'))
+              }
+              setEditingDiary()
+              setPickedImages([])
+            }}
+          >
+            <Image
+              style={{ height: '100%', width: '100%' }}
+              contentFit="cover"
+              source={require('../assets/group-68463.png')}
+            />
+          </Pressable>
+          
+        </View>
+      ) : (
+        <View>
+          <Text
+            style={{
+              fontSize: FontSize.size_lg,
+              lineHeight: 27,
+              textAlign: 'left',
+              color: Color.negro,
+              marginTop: !notEditable && 20,
+              fontFamily: FontFamily.lato,
+              letterSpacing: 0,
+              marginBottom: 8
+            }}
+          >
+            {text}
+          </Text>
+          <View
+            style={{
+              width: '100%',
+              flexWrap: 'wrap',
+              flexDirection: 'row',
+              gap: 5
+            }}
+          >
+            {diaryImages.length > 0 &&
+              diaryImages.map((image, i) => (
+                <Image
+                  key={i}
+                  source={{ uri: image }}
+                  contentFit={'contain'}
+                  style={{ width: 50, height: 50, borderRadius: 3 }}
+                />
+              ))}
+          </View>
+        </View>
+      )}
               <Pressable
                 style={{ height: 24, width: 24 }}
                 onPress={() => setShowEmojisModal(true)}
@@ -202,7 +356,7 @@ const SingleDiary = ({
         <View
           style={{
             position: 'absolute',
-            top: 5,
+            top: 50,
             left: 0,
             zIndex: 99999999999999,
             width: '100%',
@@ -228,158 +382,7 @@ const SingleDiary = ({
           )}
         </View>
       )}
-      {!notEditable && editingDiary === diary.id ? (
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'flex-start',
-            gap: 15,
-            paddingRight: 5
-          }}
-        >
-          <Pressable
-            style={{ height: 13, width: 13, marginTop: 8 }}
-            onPress={() => {
-              if (diary.id === 'preDiary') {
-                dispatch(removeUserDiary('preDiary'))
-              }
-              setEditingDiary()
-              setPickedImages([])
-            }}
-          >
-            <Image
-              style={{ height: '100%', width: '100%' }}
-              contentFit="cover"
-              source={require('../assets/group-68463.png')}
-            />
-          </Pressable>
-          <View style={{}}>
-            <TextInput
-              style={{
-                fontSize: FontSize.size_lg,
-                lineHeight: 27,
-                width: Dimensions.get('screen').width * 0.8,
-                textAlign: 'left',
-                color: Color.negro,
-                fontFamily: FontFamily.lato,
-                letterSpacing: 0,
-                marginBottom: 8
-              }}
-              multiline
-              value={text}
-              onChangeText={(text) => setText(text)}
-            />
-            <View
-              style={{
-                width: '100%',
-                flexWrap: 'wrap',
-                flexDirection: 'row',
-                gap: 5
-              }}
-            >
-              {diaryImages.length > 0 &&
-                diaryImages.map((image, i) => (
-                  <View>
-                    <Image
-                      key={i}
-                      source={{ uri: image }}
-                      contentFit={'contain'}
-                      style={{ width: 50, height: 50, borderRadius: 3 }}
-                    />
-                    <Pressable
-                      onPress={() =>
-                        setDiaryImages(
-                          [...diaryImages].filter((img) => img !== image)
-                        )
-                      }
-                      style={{
-                        position: 'absolute',
-                        top: 3,
-                        right: 3,
-                        borderRadius: 3,
-                        backgroundColor: '#fff',
-                        padding: 3.5
-                      }}
-                    >
-                      <Image
-                        contentFit="cover"
-                        style={{ width: 7, height: 7 }}
-                        source={require('../assets/group-68463.png')}
-                      />
-                    </Pressable>
-                  </View>
-                ))}
-              {pickedImages.length > 0 &&
-                pickedImages.map((image, i) => (
-                  <View>
-                    <Image
-                      key={i + 500}
-                      source={{ uri: image.uri }}
-                      contentFit={'contain'}
-                      style={{ width: 50, height: 50, borderRadius: 3 }}
-                    />
-                    <Pressable
-                      onPress={() => {
-                        setPickedImages(
-                          pickedImages.filter((img) => img.uri !== image.uri)
-                        )
-                      }}
-                      style={{
-                        position: 'absolute',
-                        top: 3,
-                        right: 3,
-                        borderRadius: 3,
-                        backgroundColor: '#fff',
-                        padding: 3.5
-                      }}
-                    >
-                      <Image
-                        contentFit="cover"
-                        style={{ width: 7, height: 7 }}
-                        source={require('../assets/group-68463.png')}
-                      />
-                    </Pressable>
-                  </View>
-                ))}
-            </View>
-          </View>
-        </View>
-      ) : (
-        <View>
-          <Text
-            style={{
-              fontSize: FontSize.size_lg,
-              lineHeight: 27,
-              textAlign: 'left',
-              color: Color.negro,
-              marginTop: !notEditable && 20,
-              fontFamily: FontFamily.lato,
-              letterSpacing: 0,
-              marginBottom: 8
-            }}
-          >
-            {text}
-          </Text>
-          <View
-            style={{
-              width: '100%',
-              flexWrap: 'wrap',
-              flexDirection: 'row',
-              gap: 5
-            }}
-          >
-            {diaryImages.length > 0 &&
-              diaryImages.map((image, i) => (
-                <Image
-                  key={i}
-                  source={{ uri: image }}
-                  contentFit={'contain'}
-                  style={{ width: 50, height: 50, borderRadius: 3 }}
-                />
-              ))}
-          </View>
-        </View>
-      )}
+      
       {!notEditable && (
         <Modal animationType="slide" transparent visible={modalCreate}>
           <View

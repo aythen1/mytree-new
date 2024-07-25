@@ -14,7 +14,8 @@ import {
   ImageBackground,
   Animated,
   Share,
-  Dimensions
+  Dimensions,
+  ScrollView
 } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -89,7 +90,9 @@ const Posteo = ({ data, padding }) => {
   const [expanded, setExpanded] = useState(false)
   if (expanded) {
     return (
-      <View>
+      <Pressable
+      onPress={() => setExpanded(false)}
+      >
         <View
           style={{
             backgroundColor: Color.mytreeClarito,
@@ -100,7 +103,7 @@ const Posteo = ({ data, padding }) => {
             borderRadius: 20,
             transition: 'all 1s ease',
             marginHorizontal: padding && padding !== false && 15,
-            overflow: 'hidden'
+            overflow: 'hidden',
             // opacity,
             // transform: [{translateY}]
           }}
@@ -118,7 +121,7 @@ const Posteo = ({ data, padding }) => {
           >
            
             <LinearGradient
-              style={{ height: 300, justifyContent: 'flex-start', padding: 15 }}
+              style={{ height: "100%", justifyContent: 'flex-start', padding: 15 }}
               end={{ x: 0.5, y: 1 }}
               start={{ x: 0.5, y: 0 }}
               colors={['rgba(0,0,0,0.7)', 'transparent']}
@@ -127,20 +130,28 @@ const Posteo = ({ data, padding }) => {
                 style={{
                   fontSize: FontSize.size_5xl,
                   color: Color.white,
-                  fontWeight: '700'
+                  fontWeight: '700',
+                  width:"80%"
                 }}
-              >{`${data.user.username} ${data.user.apellido}`}</Text>
+              >{`${data?.user?.username} ${data?.user?.apellido}`}</Text>
+              <ScrollView contentContainerStyle={{zIndex:999999999999}} style={{
+                  height:Dimensions.get("window").height / 4,
+                  zIndex:999
+
+              }}>
               <Text
                 style={{
                   marginTop: 10,
                   fontSize: FontSize.size_base,
                   textAlign: 'left',
                   fontFamily: FontFamily.lato,
-                  color: Color.white
+                  color: Color.white,
+                  width:"70%",
                 }}
               >
                 {data.description}
               </Text>
+              </ScrollView>
 
               {data.hashtags.length > 0 && (
                 <View
@@ -149,7 +160,7 @@ const Posteo = ({ data, padding }) => {
                     flexDirection: 'row',
                     flexWrap: 'wrap',
                     gap: 5,
-                    marginTop: 20
+                    marginTop: 10,
                   }}
                 >
                   {data.hashtags.map((hashtag) => (
@@ -225,7 +236,7 @@ const Posteo = ({ data, padding }) => {
                       }}
                       source={{
                         uri:
-                          data.user.profilePicture ||
+                          data?.user?.profilePicture ||
                           'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716419224/bciupv6y3hwccgmtpwoe.png'
                       }}
                     />
@@ -298,11 +309,12 @@ const Posteo = ({ data, padding }) => {
             </LinearGradient>
           </ImageBackground>
         </View>
-      </View>
+      </Pressable>
     )
   } else {
     return (
-      <View
+      <Pressable
+      onPress={() => setExpanded(true)}
         style={{
           backgroundColor: Color.mytreeClarito,
           left: 0,
@@ -365,18 +377,17 @@ const Posteo = ({ data, padding }) => {
                   }}
                 >
                   <Image
-                    contentFit="cover"
+                    contentFit={data?.user?.profilePicture ? "cover" : "contain"}
                     style={{
                       width: '100%',
                       height: '100%',
                       borderRadius: 20,
                       zIndex: 999999999999
                     }}
-                    source={{
+                    source={ data?.user?.profilePicture  ?{
                       uri:
-                        data.user.profilePicture ||
-                        'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716419224/bciupv6y3hwccgmtpwoe.png'
-                    }}
+                        data?.user?.profilePicture 
+                    } : require("../assets/logoo.png")}
                   />
                 </View>
               </View>
@@ -421,14 +432,16 @@ const Posteo = ({ data, padding }) => {
             </TouchableOpacity>
           </View>
           <LinearGradient
-            style={{ padding: 15, height: 130 }}
+            style={{ paddingHorizontal: 10, height: 130 }}
             end={{ x: 0.5, y: 0 }}
             start={{ x: 0.5, y: 1 }}
             colors={['rgba(0,0,0,0.9)', 'transparent']}
           >
-            <Text
+           <View >
+           <Text
+            numberOfLines={1}
               style={styles.camila}
-            >{`${data.user.username} ${data.user.apellido}`}</Text>
+            >{`${data?.user?.username} ${data?.user?.apellido}`}</Text>
             <Text
               numberOfLines={1}
               ellipsizeMode="tail"
@@ -449,9 +462,10 @@ const Posteo = ({ data, padding }) => {
                 Ver más...
               </Text>
             </Pressable>
+           </View>
           </LinearGradient>
         </ImageBackground>
-      </View>
+      </Pressable>
     )
   }
 }
@@ -529,14 +543,16 @@ const styles = StyleSheet.create({
   camila: {
     fontSize: FontSize.size_5xl,
     color: Color.white,
-    fontWeight: '700'
+    fontWeight: '700',
+    width:"70%"
   },
   yendoALa: {
     marginTop: 20,
     fontSize: FontSize.size_base,
     textAlign: 'left',
     fontFamily: FontFamily.lato,
-    color: Color.white
+    color: Color.white,
+    width:"70%"
   },
   textContainer: {
     padding: 15,

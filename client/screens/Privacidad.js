@@ -34,9 +34,7 @@ const Privacidad = ({ onClose, setPrivacy, privacy }) => {
               ¿Quién puede ver tu publicación?
             </Text>
             <Text style={[styles.loremIpsumDolor, styles.familiaYAmigosTypo]}>
-              Lorem ipsum dolor sit amet amet consectetur. Dui dui nullam nullam
-              maecenas tempus hac. Viverra sem quis elementum id scelerisque. Ut
-              amet sed sit orci justo.
+            Aquí podrás escoger todas las posibilidades para configurar quién puede visualizar tu contenido. 
             </Text>
           </View>
           <View style={styles.elegirAudienciaParent}>
@@ -152,9 +150,6 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.lato
   },
   vectorParent: {
-    left: 0,
-    top: 0,
-    position: 'absolute'
   },
   frameChild: {
     left: 0,
@@ -182,13 +177,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontWeight: '500',
     textAlign: 'left',
-    width: 388
   },
   quinPuedeVerTuPublicacinParent: {
-    top: 20,
-    left: 0,
-    position: 'absolute',
-    width: 388
+    width: "100%"
   },
   checkChild: {
     height: '105%',
@@ -234,20 +225,14 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   elegirAudienciaParent: {
-    top: 136,
-    left: 0,
-    position: 'absolute'
   },
   vectorGroup: {
-    top: 42,
-    height: 287,
-    left: 0,
-    position: 'absolute',
-    width: 388
+    marginTop:20,
+    width: "100%"
   },
   frameParent: {
     height: 329,
-    width: 388
+    width: "100%"
   },
   signIn: {
     letterSpacing: 1,

@@ -70,8 +70,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider } from 'react-redux'
 import { store } from './redux/store'
 import { loadFonts } from './GlobalStyles'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { Platform, StatusBar } from 'react-native'
+import { Platform, SafeAreaView, StatusBar } from 'react-native'
 import UploadMemory from './screens/Memories/UploadMemory'
 import { ContextProvider } from './context/Context'
 import * as Linking from 'expo-linking'
@@ -157,6 +156,7 @@ const MainStackNavigator = ({ setIsFooterShow }) => {
 
       screenOptions={({ route }) => ({
         headerShown: false,
+        
         footerShown: setIsFooterShow(
           route.name !== 'Register' &&
             route.name !== 'Splash' &&

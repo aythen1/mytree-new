@@ -93,7 +93,7 @@ const EtiquetarUno = ({ onClose, taggedUsers, setTaggedUsers ,data}) => {
                 fontWeight: 400
               }}
             >
-              Aun no tienes ningun contacto agregado a amigos.
+              ¡Aún no tienes ningún contacto agregado a amigos!
             </Text>
           )}
           {users && users?.length > 0 &&
