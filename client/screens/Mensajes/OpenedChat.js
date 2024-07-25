@@ -425,7 +425,7 @@ const OpenedChat = () => {
             colors={['#7ec18c', '#dee274']}
           >
             <Image
-              style={{ width: 26, height: 26, borderWidth: 2 }}
+              style={{ width: 26, height: 26 }}
               contentFit="cover"
               source={require('../../assets/paperplanee.png')}
             />

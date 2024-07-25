@@ -18,7 +18,7 @@ const Album = ({ albums, setAlbums, onClose }) => {
         <Text
           style={[styles.lbumDeMi, styles.lbumTypo, { paddingVertical: 20 }]}
         >
-          Todavia no has creado ningun album!
+          ¡Todavía no has creado ningún album!
         </Text>
         <Pressable onPress={() => navigation.navigate('CrearAlbum')}>
           <Text style={[styles.aadirLbum, styles.lbumTypo]}>

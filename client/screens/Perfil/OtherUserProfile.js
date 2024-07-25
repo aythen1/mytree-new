@@ -50,6 +50,7 @@ import { emojis } from 'rn-emoji-picker/dist/data'
 import { getAllUserEvents } from '../../redux/actions/events'
 import { getAllUserDiaries } from '../../redux/actions/diaries'
 import { getUserFriendsAndFamilyLength } from '../../redux/actions/user'
+import TopBar from '../../components/TopBar'
 
 const OtherUserProfile = () => {
   const navigation = useNavigation()
@@ -115,42 +116,7 @@ const OtherUserProfile = () => {
       }}
       showsVerticalScrollIndicator={false}
     >
-      <View
-        style={{
-          justifyContent: 'space-between',
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingTop: 14
-        }}
-      >
-        <Pressable onPress={() => navigation.navigate('Muro')}>
-          <Image
-            style={[styles.image6Icon, styles.ionmenu]}
-            contentFit="cover"
-            source={require('../../assets/image-6.png')}
-          />
-        </Pressable>
-
-        <HeaderIcons
-          icons={
-            selectedComponent !== 'PERFILMIINFO'
-              ? [
-                  <Pressable onPress={() => setSearch(!search)}>
-                    <LupaSVG />
-                  </Pressable>,
-                  <PlusSVG isNavigation={'CrearAlbum'} />,
-                  <SettingMuroSVG isNavigation={'PerfilAjustes'} />
-                ]
-              : [
-                  <TreeSVG />,
-                  <NotificationsMuroSVG
-                    isNavigation={'PERFILNOTIFICACIONES'}
-                  />,
-                  <SettingMuroSVG isNavigation={'PerfilAjustes'} />
-                ]
-          }
-        />
-      </View>
+      <TopBar screen={"perfilOtro"}></TopBar>
 
       {/* <Pressable
         onPress={() => navigation.openDrawer()}
@@ -193,21 +159,21 @@ const OtherUserProfile = () => {
                 }}
               >
                 {!userData?.badge && <Badge1 width={30} height={30} />}
-                {userData.badge === 'badge1' ? (
+                {userData?.badge === 'badge1' ? (
                   <Badge1 width={30} height={30} />
-                ) : userData.badge === 'badge2' ? (
+                ) : userData?.badge === 'badge2' ? (
                   <Badge2 width={30} height={30} />
-                ) : userData.badge === 'badge3' ? (
+                ) : userData?.badge === 'badge3' ? (
                   <Badge3 width={30} height={30} />
-                ) : userData.badge === 'badge4' ? (
+                ) : userData?.badge === 'badge4' ? (
                   <Badge4 width={30} height={30} />
-                ) : userData.badge === 'badge5' ? (
+                ) : userData?.badge === 'badge5' ? (
                   <Badge5 width={30} height={30} />
-                ) : userData.badge === 'badge6' ? (
+                ) : userData?.badge === 'badge6' ? (
                   <Badge6 width={30} height={30} />
-                ) : userData.badge === 'badge7' ? (
+                ) : userData?.badge === 'badge7' ? (
                   <Badge7 width={30} height={30} />
-                ) : userData.badge === 'badge8' ? (
+                ) : userData?.badge === 'badge8' ? (
                   <Badge8 width={30} height={30} />
                 ) : (
                   <Badge9 width={30} height={30} />
@@ -234,24 +200,24 @@ const OtherUserProfile = () => {
                 }}
               >
                 {!userData?.badge && <Badge1 width={30} height={30} />}
-                {userData.badge === 'badge1' ? (
+                {userData?.badge === 'badge1' ? (
                   <Badge1 width={30} height={30} />
-                ) : userData.badge === 'badge2' ? (
+                ) : userData?.badge === 'badge2' ? (
                   <Badge2 width={30} height={30} />
-                ) : userData.badge === 'badge3' ? (
+                ) : userData?.badge === 'badge3' ? (
                   <Badge3 width={30} height={30} />
-                ) : userData.badge === 'badge4' ? (
+                ) : userData?.badge === 'badge4' ? (
                   <Badge4 width={30} height={30} />
-                ) : userData.badge === 'badge5' ? (
+                ) : userData?.badge === 'badge5' ? (
                   <Badge5 width={30} height={30} />
-                ) : userData.badge === 'badge6' ? (
+                ) : userData?.badge === 'badge6' ? (
                   <Badge6 width={30} height={30} />
-                ) : userData.badge === 'badge7' ? (
+                ) : userData?.badge === 'badge7' ? (
                   <Badge7 width={30} height={30} />
-                ) : userData.badge === 'badge8' ? (
+                ) : userData?.badge === 'badge8' ? (
                   <Badge8 width={30} height={30} />
                 ) : (
-                  userData.badge === 'badge9' && (
+                  userData?.badge === 'badge9' && (
                     <Badge9 width={30} height={30} />
                   )
                 )}
@@ -260,7 +226,7 @@ const OtherUserProfile = () => {
                 style={{ ...styles.perfilItem, borderRadius: 100 }}
                 contentFit="cover"
                 source={{
-                  uri: userData.profilePicture
+                  uri: userData?.profilePicture
                 }}
               />
             </View>
@@ -270,12 +236,12 @@ const OtherUserProfile = () => {
 
       <View style={styles.nameContainer}>
         <Text style={styles.brunoPham}>
-          {userData.username} {userData.apellido}
+          {userData?.username} {userData?.apellido}
         </Text>
         <View style={styles.placeContainer}>
           <Text style={[styles.daNangVietnam, styles.miInfoTypo]}>
-            {userData.adress && userData.adress + ','}
-            {userData.city}
+            {userData?.adress && userData?.adress + ','}
+            {userData?.city}
           </Text>
         </View>
       </View>

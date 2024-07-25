@@ -28,6 +28,7 @@ import NotificationsMuroSVG from '../../../components/svgs/NotificationsMuroSVG'
 import { useDispatch, useSelector } from 'react-redux'
 import axiosInstance from '../../../apiBackend'
 import { getUserData } from '../../../redux/actions/user'
+import TopBar from '../../../components/TopBar'
 
 const PerfilConfiguracion = () => {
 
@@ -73,32 +74,9 @@ const dispatch = useDispatch()
 
   return (
     <ScrollView style={styles.frameParent} showsVerticalScrollIndicator={false}>
+          <TopBar screen={"seguridad"}></TopBar>
       <View style={styles.viewContainer}>
         <View>
-          <View style={styles.parentIcons}>
-          <Pressable onPress={() => navigation.openDrawer()}>
-            <Image
-              style={[{
-                width: 87,
-                height: 55
-              }]}
-              contentFit="cover"
-              source={require('../../../assets/image-6.png')}
-            />
-          </Pressable>
-            {/* <Image
-              style={styles.image6Icon}
-              contentFit="cover"
-              source={require('../../../assets/image-6.png')}
-            /> */}
-            <HeaderIcons
-              icons={[
-                <CalendarMuroSVG />,
-                <BookSVG />,
-                <NotificationsMuroSVG />
-              ]}
-            />
-          </View>
           <View style={[styles.backParent, styles.parentFlexBox]}>
             <Pressable
               style={styles.iconlylightOutlinecalendar}
@@ -313,7 +291,6 @@ const styles = StyleSheet.create({
     width: 24
   },
   backParent: {
-    marginTop: 30
   },
   icon: {
     height: '100%',

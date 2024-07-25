@@ -8,7 +8,8 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Button,
-  RefreshControl
+  RefreshControl,
+  Platform
 } from 'react-native'
 import { Image } from 'expo-image'
 import {
@@ -81,7 +82,7 @@ const Muro = () => {
     }
   }, [queryParams])
 
-  const dispatches = (id) => {
+  const dispatches = async (id) => {
     console.log('pasa por aca y tiene este ID', id)
     dispatch(getAllNotifications())
     dispatch(getUserData(id))
@@ -117,18 +118,20 @@ const Muro = () => {
   const onRefresh = () => {
     setRefreshing(true);
     if (userData.id !== undefined) {
-      dispatches(userData.id)
+      dispatches(userData.id).finally(()=>{
+        setRefreshing(false);
+      })
     }
     // Aquí puedes agregar la lógica para actualizar la pantalla
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000); // Simulación de una actualización de datos
+    // Simulación de una actualización de datos
   };
 
   const handleScroll = (event) => {
-    const offsetY = event.nativeEvent.contentOffset.y;
-    if (offsetY === 0) {
-      onRefresh();
+    const { contentOffset } = event.nativeEvent;
+    const y = contentOffset.y;
+    // Check if user is at the top of the scroll view
+    if (y <= -60) {
+    return  onRefresh();
     }
   };
 
@@ -142,15 +145,15 @@ const Muro = () => {
       <ScrollView
         contentContainerStyle={{ paddingBottom: 85 }}
         showsVerticalScrollIndicator={false}
-        ref={scrollViewRef}
-        onScroll={handleScroll}
         scrollEventThrottle={16}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
+       
           />
         }
+        
       >
         {/* <View
           style={{

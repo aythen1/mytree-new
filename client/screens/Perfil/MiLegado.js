@@ -23,7 +23,7 @@ const MiLegado = ({ fromOther, otherId }) => {
   const otherUserDiaries = allDiaries.filter(
     (diary) => diary.creatorId === otherId
   )
-  const otherUserPosts = allPosts.filter((post) => post.user.id === otherId)
+  const otherUserPosts = allPosts.filter((post) => post?.user?.id === otherId)
 
   console.log('ALBUMS', otherId)
 
@@ -65,7 +65,7 @@ const MiLegado = ({ fromOther, otherId }) => {
             flexWrap: 'wrap'
           }}
         >
-          {(fromOther ? otherUserAlbums : userAlbums).map((album) => (
+          {(fromOther ? otherUserAlbums : userAlbums)?.map((album) => (
             <Pressable
               key={album.id}
               onPress={() => navigation.navigate('CrearLbum', { album })}
@@ -113,7 +113,7 @@ const MiLegado = ({ fromOther, otherId }) => {
           showsHorizontalScrollIndicator={false}
           style={[styles.maskGroupParent, styles.groupParentFlexBox]}
         >
-          {(fromOther ? otherUserPosts : userPosts).map((e, i) => (
+          {(fromOther ? otherUserPosts : userPosts)?.map((e, i) => (
             <Image
               key={i}
               style={styles.maskGroupIcon}
@@ -154,7 +154,7 @@ const MiLegado = ({ fromOther, otherId }) => {
           horizontal
           style={[styles.maskGroupParent, styles.groupParentFlexBox]}
         >
-          {(fromOther ? otherUserEvents : userEvents).map((e, i) => {
+          {(fromOther ? otherUserEvents : userEvents)?.map((e, i) => {
             return (
               <Pressable key={i}>
                 <Image
@@ -199,7 +199,7 @@ const MiLegado = ({ fromOther, otherId }) => {
           source={require('../../assets/line-78.png')}
         />
         <View style={[styles.maskGroupParent, styles.groupParentFlexBox]}>
-          {(fromOther ? otherUserDiaries : userDiaries).map((e, i) => {
+          {(fromOther ? otherUserDiaries : userDiaries)?.map((e, i) => {
             return (
               <Pressable key={i}>
                 <Image

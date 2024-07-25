@@ -42,6 +42,7 @@ import MasBusquedaSVG from '../../components/svgs/MasBusquedaSVG'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserDiariesByDateOrCategory } from '../../redux/actions/diaries'
 import ImagePickerModal from '../Modals/ImagePickerModal'
+import TopBar from '../../components/TopBar'
 
 const MIDIARIOENTRADATEXTOPL7 = () => {
   const dispatch = useDispatch()
@@ -280,25 +281,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
       ) : (
         <View>
           <View>
-            <View style={styles.topContainer}>
-              <Pressable onPress={() => navigation.navigate('Muro')}>
-                <Image
-                  style={styles.image6Icon}
-                  contentFit="cover"
-                  source={require('../../assets/image-6.png')}
-                />
-              </Pressable>
-              <HeaderIcons
-                icons={[
-                  <Pressable onPress={() => navigation.navigate('Busqueda')}>
-                    <LupaSVG />
-                  </Pressable>,
-                  <SettingMuroSVG
-                    isNavigation={() => navigation.navigate('PerfilAjustes')}
-                  />
-                ]}
-              />
-            </View>
+            <TopBar></TopBar>
 
             <NavBarDiario setIsSection={setIsSection} isSection={isSection} />
 

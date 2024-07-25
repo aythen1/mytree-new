@@ -1,5 +1,12 @@
 import * as React from 'react'
-import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  Text,
+  Pressable,
+  ScrollView,
+  TouchableOpacity
+} from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useNavigation } from '@react-navigation/native'
@@ -19,13 +26,14 @@ const StoriesVideosDiarios = () => {
 
   React.useEffect(() => {
     if (data) {
-      const uniqueData = data.filter((item, index, self) => 
-        index === self.findIndex((t) => t.id === item.id)
-      );
-      setUsers(uniqueData);
-      console.log(uniqueData, 'data del hoooksss');
+      console.log(data, 'dartaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+      const uniqueData = data.filter(
+        (item, index, self) => index === self.findIndex((t) => t.id === item.id)
+      )
+      setUsers(uniqueData)
+      console.log(uniqueData, 'data del hoooksss')
     }
-  }, [data]);
+  }, [data])
   return (
     <View style={{ marginTop: 15, width: '100%', justifyContent: 'center' }}>
       <ScrollView
@@ -69,7 +77,7 @@ const StoriesVideosDiarios = () => {
                   contentFit="cover"
                   source={{ uri: userData.profilePicture }}
                 />
-                <View style={{width:70}}>
+                <View style={{ width: 70 }}>
                   <Text
                     style={{
                       fontWeight: '600',
@@ -80,8 +88,7 @@ const StoriesVideosDiarios = () => {
                       textAlign: 'center',
                       fontFamily: FontFamily.lato,
                       letterSpacing: 0,
-                      width:"100%",
-
+                      width: '100%'
                     }}
                     numberOfLines={1}
                   >
@@ -114,7 +121,7 @@ const StoriesVideosDiarios = () => {
             {users &&
               users.map((user, i) => {
                 return (
-                  <Pressable
+                  <TouchableOpacity
                     key={i}
                     onPress={() => {
                       console.log('navigating to')
@@ -125,31 +132,42 @@ const StoriesVideosDiarios = () => {
                         )[0]
                       )
                     }}
-                    style={{
-                      height: 90,
-                      width: 70,
-                      marginLeft: 15
-                    }}
+                    style={{alignItems:"center",width:70,marginLeft:15}}
                   >
-                    <Image
+                    <View
                       style={[
                         styles.aatarIcon,
                         styles.aatarIconPosition,
                         {
                           borderRadius: 100,
                           borderWidth: 3,
-                          borderColor: Color.primario1
+                          borderColor: Color.primario1,
+                          overflow: 'hidden',
+                          alignItems: 'center',
                         }
                       ]}
-                      contentFit="cover"
-                      source={{ uri: user.profilePicture }}
-                    />
+                    >
+                      <Image
+                        style={[
+                          styles.aatarIcon,
+                          styles.aatarIconPosition,
+                          {
+                            borderRadius: 100
+                          }
+                        ]}
+                        contentFit="cover"
+                        source={{ uri: user.profilePicture }}
+                      />
+                    </View>
                     <View style={[styles.youWrapper, styles.aatarIconPosition]}>
-                      <Text numberOfLines={1} style={[styles.you1, styles.signTypo]}>
+                      <Text
+                        numberOfLines={1}
+                        style={[styles.you1, styles.signTypo]}
+                      >
                         {user.username}
                       </Text>
                     </View>
-                  </Pressable>
+                  </TouchableOpacity>
                 )
               })}
           </View>
@@ -214,8 +232,6 @@ const styles = StyleSheet.create({
   },
   aatarIconPosition: {
     width: 70,
-    left: 0,
-    position: 'absolute'
   },
   signTypo: {
     textAlign: 'center',
@@ -416,20 +432,17 @@ const styles = StyleSheet.create({
     position: 'absolute'
   },
   aatarIcon: {
-    height: 70,
-    top: 0
+    height: 70
   },
   you1: {
     fontWeight: '600',
     lineHeight: 22,
     fontSize: FontSize.footnote_size,
-    textAlign: 'center',
     color: Color.negro,
   },
   youWrapper: {
-    top: 70,
     height: 20,
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   benjamin1: {
     left: 10,

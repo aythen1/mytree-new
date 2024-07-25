@@ -107,23 +107,26 @@ const FooterNavBar = () => {
               zIndex: 9999999
             }}
           >
-            <Pressable
+            <TouchableOpacity
               onPress={() => {
                 navigation.navigate('Muro')
                 setSelected('Muro')
               }}
             >
-              <HomeSVG picked={selected === 'Muro' && true} />
-            </Pressable>
-            <Pressable
+              {/* <HomeSVG picked={selected === 'Muro' && true} /> */}
+              {selected === "Muro" ? <Image style={{width:24,height:24}} source={require("../assets/Home.png")}></Image> : <Image style={{width:24,height:24}} source={require("../assets/Home1.png")}></Image>}
+            </TouchableOpacity>
+            <TouchableOpacity
               onPress={() => {
                 navigation.navigate('CALENDARIO')
                 setSelected('Calendario')
               }}
               style={{ zIndex: 9999999 }}
             >
-              <CalendarSVG picked={selected === 'Calendario' && true} />
-            </Pressable>
+              {/* <CalendarSVG picked={selected === 'Calendario' && true} /> */}
+              {selected === "Calendario" ? <Image style={{width:24,height:24}} source={require("../assets/calendario.png")}></Image> : <Image style={{width:24,height:24}} source={require("../assets/calendario1.png")}></Image>}
+
+            </TouchableOpacity>
           </View>
 
           <View
@@ -133,7 +136,7 @@ const FooterNavBar = () => {
               marginRight: '10%'
             }}
           >
-            <Pressable
+            <TouchableOpacity
               onPress={() => {
                 navigation.navigate('MIDIARIOPANTALLAPERSONAL')
                 dispatch(getAllUserDiaries(userData.id))
@@ -141,16 +144,20 @@ const FooterNavBar = () => {
               }}
               style={{}}
             >
-              <FooterBookSVG picked={selected === 'MiDiario' && true} />
-            </Pressable>
-            <Pressable
+              {/* <FooterBookSVG picked={selected === 'MiDiario' && true} /> */}
+              {selected === "MiDiario" ? <Image style={{width:24,height:24}} source={require("../assets/diario.png")}></Image> : <Image style={{width:24,height:24}} source={require("../assets/diario1.png")}></Image>}
+
+            </TouchableOpacity>
+            <TouchableOpacity
               onPress={() => {
                 navigation.navigate('Perfil')
                 setSelected('Perfil')
               }}
             >
-              <UsuarioSVG picked={selected === 'Perfil' && true} />
-            </Pressable>
+              {/* <UsuarioSVG picked={selected === 'Perfil' && true} /> */}
+              {selected === "Perfil" ? <Image style={{width:24,height:24}} source={require("../assets/profile.png")}></Image> : <Image style={{width:24,height:24}} source={require("../assets/Profile1.png")}></Image>}
+
+            </TouchableOpacity>
           </View>
 
           <TouchableOpacity
@@ -186,6 +193,7 @@ const FooterNavBar = () => {
                 zIndex: 0
               }}
               locations={[0, 1]}
+              
               colors={['#7ec18c', '#dee274']}
             >
               <Image

@@ -57,9 +57,10 @@ const MENSAJERA = () => {
       console.log(res.data,"dataaaaaaaaaaaaaa")
       setUserGroups(res.data)
     }
-   if(selectedFilter == 'Groups'){
-    obtenerGrupos()
-   }
+   if(selectedFilter == 'All' || selectedFilter == 'Groups'){
+  obtenerGrupos()
+
+  }
   },[selectedFilter])
 
   const filteredUsers = allUsers
@@ -295,7 +296,7 @@ const MENSAJERA = () => {
                   <Text
                     style={{ fontSize: 14, fontWeight: 500, color: '#202020' }}
                   >
-                    Aun no tienes chats, inicia una conversacion!
+                    ¡Aún no tienes chats, inicia una conversación!
                   </Text>
                 </View>
               )}

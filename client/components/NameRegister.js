@@ -1,11 +1,17 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Image } from 'expo-image'
-import { StyleSheet, View, Text, TextInput } from 'react-native'
+import { StyleSheet, View, Text, TextInput, Modal, Pressable } from 'react-native'
 
 import { Color, FontFamily, FontSize, Border } from '../GlobalStyles'
+import PopUpCalendario from './PopUpCalendario'
+import Maps from './Maps'
 
 const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDate, setBIrthDate, setDataToSend ,dataToSend}) => {
 
+  const [calendario, setCalendario] = useState(false)
+  const [selectedDate, setSelectedDate] = useState()
+  const [lugar, setLugar] = useState(false)
+  const [location, setLocation] = useState()
 
   const handleChangeText = (input) => {
     const filteredInput = input.replace(/[^0-9/]/g, '')
@@ -19,7 +25,21 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
     setDataToSend({...dataToSend,["birthDate"]:formattedInput})
   }
 
+  const openCalendario = useCallback(() => {
+    setCalendario(true)
+  }, [])
 
+  const closeCalendario = useCallback(() => {
+    setCalendario(false)
+  }, [])
+
+  const openLugar = useCallback(() => {
+    setLugar(true)
+  }, [])
+
+  const closeLugar = useCallback(() => {
+    setLugar(false)
+  }, [])
   return (
     <View style={{flex:1,paddingBottom:20}}>
       <View>
@@ -31,7 +51,7 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
             <Image
               style={styles.vectorIconLayout}
               contentFit="cover"
-              source={require('../assets/vector81.png')}
+              source={require('../assets/Icard.png')}
             />
             <TextInput
               style={styles.placeholder}
@@ -52,7 +72,7 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
             <Image
               style={styles.vectorIconLayout}
               contentFit="cover"
-              source={require('../assets/vector81.png')}
+              source={require('../assets/Icard.png')}
             />
             <TextInput
               style={styles.placeholder}
@@ -69,23 +89,69 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
           Fecha de Nacimiento
         </Text>
         <View style={styles.baseBackgroundParent}>
-          <View style={styles.vectorParent}>
+          <Pressable onPress={()=> setCalendario(true)} style={styles.vectorParent}>
             <Image
               style={styles.vectorIconLayout}
               contentFit="cover"
-              source={require('../assets/vector79.png')}
+              source={require('../assets/Cake.png')}
             />
-            <TextInput
+            {/* <TextInput
               keyboardType="numeric"
               placeholder="20/12/1988"
               onChangeText={handleChangeText}
               value={dataToSend.birthDate}
               maxLength={10}
               style={styles.placeholder}
-            />
-          </View>
+            /> */}
+            <Text style={{...styles.placeholder,color:"gray"}}>{dataToSend.birthDate || "20/12/1988"}</Text>
+          </Pressable>
         </View>
       </View>
+      <Modal animationType="slide" transparent visible={calendario}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(113, 113, 113, 0.3)',
+              height: '100%'
+            }}
+          >
+            <Pressable
+              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              onPress={closeCalendario}
+            />
+            <PopUpCalendario
+              setButtonContainer2Visible={() => {}}
+              setCalendario={setCalendario}
+              selectedDate={dataToSend?.birthDate}
+              setSelectedDate={(birt)=> setDataToSend({...dataToSend,["birthDate"]:birt})}
+            />
+          </View>
+        </Modal>
+        <Modal animationType="fade" transparent visible={lugar}>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(113, 113, 113, 0.3)'
+          }}
+        >
+          <Pressable
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              left: 0,
+              top: 0
+            }}
+            onPress={() => {
+              setLugar(false)
+            }}
+          />
+          <Maps onClose={() => setLugar(false)} setLocation={(c)=> setDataToSend({...dataToSend,["address"]:c})} />
+        </View>
+      </Modal>
       {/* <View>
         <Text style={[styles.labelled, styles.labelledTypo]}>
         Direccion
@@ -112,19 +178,20 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
           Ciudad
         </Text>
         <View style={styles.baseBackgroundParent}>
-          <View style={styles.vectorParent}>
+          <Pressable onPress={()=> setLugar(true)} style={styles.vectorParent}>
             <Image
               style={styles.vectorIconLayout}
               contentFit="cover"
-              source={require('../assets/vector81.png')}
+              source={require('../assets/Buildings.png')}
             />
-            <TextInput
+            {/* <TextInput
               style={styles.placeholder}
               placeholder="Ciudad"
               onChangeText={(ciudad)=> setDataToSend({...dataToSend,["city"]:ciudad})}
               value={dataToSend.city}
-            />
-          </View>
+            /> */}
+            <Text style={{...styles.placeholder,color:"gray"}}>{dataToSend.address || "Ciudad"}</Text>
+          </Pressable>
         </View>
         
       </View>
@@ -153,8 +220,8 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
           <View style={styles.vectorParent}>
             <Image
               style={styles.vectorIcon2}
-              contentFit="cover"
-              source={require('../assets/vector83.png')}
+              contentFit="contain"
+              source={require('../assets/mailto.png')}
             />
             <TextInput
               style={styles.placeholder}
@@ -174,7 +241,7 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
             <Image
               style={styles.vectorIconLayout}
               contentFit="cover"
-              source={require('../assets/vector81.png')}
+              source={require('../assets/Key.png')}
             />
             <TextInput
               style={styles.placeholder}
@@ -197,7 +264,7 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
             <Image
               style={styles.vectorIconLayout}
               contentFit="cover"
-              source={require('../assets/vector81.png')}
+              source={require('../assets/Key.png')}
             />
             <TextInput
               style={styles.placeholder}
@@ -235,9 +302,8 @@ const styles = StyleSheet.create({
     width: 18
   },
   vectorIcon2: {
-    width: 24,
-    height: 18,
-    top: 3
+    width: 26,
+    height: 26,
   },
   placeholder: {
     fontSize: FontSize.size_base,

@@ -17,6 +17,7 @@ import {
   Padding,
   Border
 } from '../../../GlobalStyles'
+import TopBar from '../../../components/TopBar'
 
 const Suscripciones = () => {
   const navigation = useNavigation()
@@ -28,31 +29,7 @@ const Suscripciones = () => {
       showsVerticalScrollIndicator={false}
     >
       <View style={[styles.frameParent]}>
-        <View style={styles.image6Parent}>
-        <Pressable onPress={() => navigation.openDrawer()}>
-            <Image
-              style={[{
-                width: 87,
-                height: 55
-              }]}
-              contentFit="cover"
-              source={require('../../../assets/image-6.png')}
-            />
-          </Pressable>
-          <View style={[styles.backParent, styles.buttonFlexBox]}>
-            <Pressable
-              style={styles.back}
-              onPress={() => navigation.navigate('PerfilAjustes')}
-            >
-              <Image
-                style={[styles.icon, styles.iconLayout]}
-                contentFit="cover"
-                source={require('../../../assets/back.png')}
-              />
-            </Pressable>
-            <Text style={styles.suscripciones1}>Suscripciones</Text>
-          </View>
-        </View>
+       <TopBar screen={"suscripciones"}></TopBar>
         <View style={[styles.div2Cards, styles.div2ShadowBox]}>
           <View style={styles.card}>
             <View style={styles.content}>
