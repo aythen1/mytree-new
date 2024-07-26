@@ -43,7 +43,7 @@ const Fechas = ({ selectedDate, dates, user }) => {
           <Image
             style={styles.unsplashilip77sbmoeIcon}
             contentFit="cover"
-            source={item.coverImage ? item.coverImage :   require('../assets/unsplashilip77sbmoe.png')}
+            source={item.coverImage ? item.coverImage :   require('../assets/logoo.png')}
           />
         
         </View>

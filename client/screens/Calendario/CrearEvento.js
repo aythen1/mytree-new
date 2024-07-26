@@ -84,9 +84,7 @@ const CrearFechaEspecial = () => {
       description.length > 0 &&
       title.length > 0 &&
       location.length > 0 &&
-      selectedDate &&
-      invitedUsers.length > 0 &&
-      wishList.length > 0
+      selectedDate 
     ) {
       const event = {
         type: 'normal',
