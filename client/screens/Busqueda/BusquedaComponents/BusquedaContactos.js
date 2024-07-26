@@ -64,7 +64,7 @@ const BusquedaContactos = ({ searchOnContacts }) => {
             <View style={[styles.frameChild, styles.frameChildLayout]} />
           </View>
           <View style={{ marginTop: 15, maxHeight: 100 }}>
-            {userFamily.length > 0 ? (
+            {userFamily?.length > 0 ? (
               <ScrollView style={{ maxHeight: 100 }}>
                 {userFamily.map((familyMember, index) => (
                   <View key={index} style={styles.frameParent1}>
@@ -123,7 +123,7 @@ const BusquedaContactos = ({ searchOnContacts }) => {
               <View style={[styles.frameChild, styles.frameChildLayout]} />
             </View>
             <View style={{ marginTop: 15, maxHeight: 100 }}>
-              {userFriends.length > 0 ? (
+              {userFriends?.length > 0 ? (
                 <ScrollView style={{ maxHeight: 100 }}>
                   {userFriends.map((friendMember, index) => (
                     <View key={index} style={styles.frameParent1}>

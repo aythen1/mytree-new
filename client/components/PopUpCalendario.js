@@ -1,5 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, Text, Pressable } from 'react-native'
 import { Calendar, LocaleConfig } from 'react-native-calendars'
 import { Border, Color, FontFamily, FontSize } from '../GlobalStyles'
@@ -56,9 +56,25 @@ const PopUpCalendario = ({
 
   LocaleConfig.defaultLocale = 'es'
 
+  const getCurrentDate = () => {
+    const currentDate = new Date()
+    const year = currentDate.getFullYear()
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0') // El mes es base 0, por eso se suma 1
+    const day = String(currentDate.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
+
+  const dat = new Date()
+  useEffect(()=>{
+    
+
+  },[])
+
   const handleDayPress = (day) => {
     if (fromDiary) {
-      console.log('day', day)
+    
+
       setSelectedDate(new Date(day.year, day.month - 1, day.day))
       setCalendario(false)
       return

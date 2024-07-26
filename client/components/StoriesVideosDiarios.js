@@ -5,7 +5,8 @@ import {
   Text,
   Pressable,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  Share
 } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -34,6 +35,38 @@ const StoriesVideosDiarios = () => {
       console.log(uniqueData, 'data del hoooksss')
     }
   }, [data])
+
+  const onShare = async (eventLink) => {
+    try {
+      const result = await Share.share(
+        {
+          message: `Te invito a formar parte de mi familia , ingresa a este link ! http://app.mytreeoficial.com/app?invite=true&property=friendsIds&memberId=${userData?.id} `,
+          title: 'Mira éste evento increíble'
+        },
+        {
+          // Android only:
+          dialogTitle: 'Te invito a formar parte de mi familia',
+          // iOS only:
+          excludedActivityTypes: ['com.apple.UIKit.activity.PostToTwitter']
+        }
+      )
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // compartido con el tipo de actividad de result.activityType
+          console.log('evento conmpartido con ', result.activityType)
+        } else {
+          // compartido
+          console.log('evento conmpartido')
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // descartado
+      }
+    } catch (error) {
+      alert(error.message)
+    }
+  }
+
   return (
     <View style={{ marginTop: 15, width: '100%', justifyContent: 'center' }}>
       <ScrollView
@@ -170,6 +203,27 @@ const StoriesVideosDiarios = () => {
                   </TouchableOpacity>
                 )
               })}
+              <Pressable
+                onPress={() => {
+                onShare()
+                }}
+                style={{
+                  width: 70,
+                  height: 70,
+
+                  marginLeft: 15,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: 3,
+                  borderRadius: 100,
+                  borderWidth: 3,
+                  borderColor: Color.primario1
+                }}
+              >
+                <Text style={{color:Color.primario1,fontSize:20}}>+</Text>
+         
+              
+              </Pressable>
           </View>
         </View>
       </ScrollView>

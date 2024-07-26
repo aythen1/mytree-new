@@ -79,7 +79,9 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import DrawerContent from './components/DrawerContent'
 import { NavigationContainer, useRoute } from '@react-navigation/native'
 import OtherUserProfile from './screens/Perfil/OtherUserProfile'
-
+if (__DEV__) {
+  require("./ReactotronConfig");
+}
 const Drawer = createDrawerNavigator()
 const Stack = createNativeStackNavigator()
 

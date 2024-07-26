@@ -5,7 +5,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  Pressable
+  Pressable,
+  TouchableWithoutFeedback
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Padding, Color, Border, FontSize, FontFamily } from '../GlobalStyles'
@@ -198,7 +199,7 @@ const Cancion1 = ({ onClose }) => {
         locations={[0, 1]}
         colors={['#dee274', '#7ec18c']}
       >
-        <TouchableOpacity onPress={() => handleAddHashtag()}>
+        <TouchableWithoutFeedback onPress={() => handleAddHashtag()}>
           <Text
             style={{
               color: Color.white,
@@ -209,56 +210,9 @@ const Cancion1 = ({ onClose }) => {
           >
             Añadir
           </Text>
-        </TouchableOpacity>
+        </TouchableWithoutFeedback>
       </LinearGradient>
-      {/* <TouchableOpacity
-        onPress={() => handleAddHashtag('MiPrimeraBicicleta')}
-        style={[styles.button1, styles.buttonFlexBox1]}
-      >
-        <Text style={[styles.miprimerabicicleta, styles.recomendadosTypo]}>
-          #MiPrimeraBicicleta
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => handleAddHashtag('Felicidad')}
-        style={[styles.button2, styles.buttonFlexBox1]}
-      >
-        <Text style={[styles.miprimerabicicleta, styles.recomendadosTypo]}>
-          #Felicidad
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => handleAddHashtag('Happy')}
-        style={[styles.button3, styles.buttonFlexBox1]}
-      >
-        <Text style={[styles.miprimerabicicleta, styles.recomendadosTypo]}>
-          #Happy
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => handleAddHashtag('Emoción')}
-        style={[styles.button4, styles.buttonFlexBox]}
-      >
-        <Text style={[styles.miprimerabicicleta, styles.recomendadosTypo]}>
-          #Emoción
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => handleAddHashtag('NosVamosDeViaje')}
-        style={[styles.button5, styles.buttonFlexBox]}
-      >
-        <Text style={[styles.miprimerabicicleta, styles.recomendadosTypo]}>
-          #NosVamosDeViaje
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => handleAddHashtag('CumpleañosFeliz')}
-        style={[styles.button6, styles.buttonFlexBox]}
-      >
-        <Text style={[styles.miprimerabicicleta, styles.recomendadosTypo]}>
-          #CumpleañosFeliz
-        </Text>
-      </TouchableOpacity> */}
+     
       <Text
         style={{
           top: 20,
@@ -484,7 +438,7 @@ const styles = StyleSheet.create({
     color: Color.white,
     textAlign: 'center',
     fontSize: FontSize.size_base,
-    fontFamily: FontFamily.lato
+    fontFamily: FontFamily.lato,zIndex:99999999
   },
   button: {
     top: 280,

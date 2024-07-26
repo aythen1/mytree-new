@@ -77,21 +77,7 @@ const OpenedChat = () => {
     }
   }, [])
 
-  // const setAllToRead = async () => {
-  //   console.log('on setAllToRead')
-  //   const messagesToSetReaded = allMessages?.filter(
-  //     (message) =>
-  //       message.senderId !== user?.user?.id && message?.isReaded === false
-  //   )
-  //   console.log('messagesToSetReaded', messagesToSetReaded)
-  //   if (messagesToSetReaded.length > 0) {
-  //     await messagesToSetReaded.forEach((message) => {
-  //       axiosInstance.put(`chat/readed/${message?.id}`)
-  //       dispatch(setAllConversationMessagesToRead())
-  //     })
-  //     getUsersMessages()
-  //   }
-  // }
+
 
   const setAllToRead = async () => {
     console.log('on setAllToRead')
@@ -332,11 +318,12 @@ const OpenedChat = () => {
           >
             <Image
               style={{
-                width: 20,
-                height: 20
+                width: 24,
+                height: 24,
+                borderRadius:50
               }}
               contentFit="cover"
-              source={require('../../assets/greenPerson.png')}
+              source={ selectedUserDetails?.profilePicture ? {uri:selectedUserDetails?.profilePicture } : require('../../assets/greenPerson.png')}
             />
           </Pressable>
         </View>

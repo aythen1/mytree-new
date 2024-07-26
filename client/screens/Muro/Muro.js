@@ -393,7 +393,7 @@ const Muro = () => {
           </View>
         </Modal>
 
-        <Modal animationType="slide" transparent visible={showTaggedsModal}>
+        <Modal animationType="fade" transparent visible={showTaggedsModal}>
           <TouchableWithoutFeedback onPress={() => setShowTaggedsModal(false)}>
             <View
               style={{

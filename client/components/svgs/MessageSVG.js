@@ -4,7 +4,7 @@ import { Pressable, Text } from 'react-native'
 import { Path, Svg } from 'react-native-svg'
 import { Context } from '../../context/Context'
 
-const MessageSVG = ({ color }) => {
+const MessageSVG = ({ color ,isMenu}) => {
   const navigation = useNavigation()
   const { notReaded } = useContext(Context)
   return (
@@ -36,7 +36,7 @@ const MessageSVG = ({ color }) => {
       )}
       <Svg
         style={{ marginRight: 10 }}
-        width="20"
+        width={isMenu ? "25" : "20"}
         height="24"
         viewBox="0 0 25 24"
         fill="none"

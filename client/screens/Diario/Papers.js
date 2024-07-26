@@ -52,7 +52,7 @@ const Papers = () => {
             source={require('../../assets/line-71.png')}
           />
           <View style={styles.ltimasEntradasParent}>
-            <Text style={[styles.ltimosDiariosFamiliares, styles.textTypo]}>
+            <Text style={[styles.ltimosDiariosFamiliares, styles.textTypo,{color:Color.primario1}]}>
               Últimas entradas
             </Text>
             <Pressable onPress={openCalendario}>
@@ -138,7 +138,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   ltimasEntradasParent: {
-    paddingHorizontal: 15,
     flexDirection: 'row',
     paddingVertical:10,
     alignItems: 'center',

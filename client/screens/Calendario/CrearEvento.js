@@ -155,13 +155,7 @@ const CrearFechaEspecial = () => {
     <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
       <View style={[styles.crearEvento]}>
         <View>
-          <View style={styles.image6Wrapper}>
-            <Image
-              style={styles.image6Icon}
-              contentFit="cover"
-              source={require('../../assets/image-6.png')}
-            />
-          </View>
+          
           <View style={[styles.backParent, styles.buttonBarFlexBox]}>
             <Pressable
               style={styles.backLayout}

@@ -12,6 +12,9 @@ const useFetchHook = ({url}) => {
         try{
             setLoading(true);
             const response = await axiosInstance.post(url);
+            if(response.data[0].message){
+                return []
+            }
             setData(response?.data);
         } catch(err){
             setError(err.message);

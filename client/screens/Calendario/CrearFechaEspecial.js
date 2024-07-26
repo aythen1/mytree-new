@@ -140,13 +140,7 @@ const CrearFechaEspecial = () => {
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
         <View style={[styles.crearEvento]}>
           <View>
-            <View style={styles.image6Wrapper}>
-              <Image
-                style={styles.image6Icon}
-                contentFit="cover"
-                source={require('../../assets/image-6.png')}
-              />
-            </View>
+       
             <View style={[styles.backParent, styles.buttonBarFlexBox]}>
               <Pressable
                 style={styles.backLayout}
@@ -446,7 +440,7 @@ const CrearFechaEspecial = () => {
             />
           </View>
         </Modal>
-        <Modal animationType="slide" transparent visible={showCategoryModal}>
+        <Modal animationType="fade" transparent visible={showCategoryModal}>
           <View
             style={{
               alignItems: 'center',
@@ -486,7 +480,7 @@ const CrearFechaEspecial = () => {
             />
           </View>
         </Modal>
-        <Modal animationType="slide" transparent visible={showPickImage}>
+        <Modal animationType="fade" transparent visible={showPickImage}>
           <View
             style={{
               backgroundColor: 'rgba(113, 113, 113, 0.7)',
@@ -650,7 +644,8 @@ const styles = StyleSheet.create({
     backgroundColor: Color.white,
     paddingHorizontal: Padding.p_xl,
     gap: 10,
-    marginBottom: -10
+    marginBottom: -10,
+    paddingTop:15,
   },
   titleBase: {
     paddingBottom: Padding.p_7xs,

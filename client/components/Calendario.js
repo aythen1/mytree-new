@@ -94,7 +94,7 @@ const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
             selected: true,
             customStyles: {
               container: {
-                backgroundColor: '#DFE271',
+                backgroundColor:Color.primario1,
                 width: 32,
                 height: 32,
                 borderRadius: 10
