@@ -76,7 +76,9 @@ const MENSAJERA = () => {
   }, [usersWithMessages])
 
   useEffect(() => {
-    getUsersMessages()
+    getUsersMessages().then(()=> {
+      setLoading(false)
+    })
   }, [allMessages])
 
   useEffect(() => {
@@ -87,8 +89,9 @@ const MENSAJERA = () => {
         allUsers.filter((user) => user.id === userData.id)[0]?.friendsIds || []
 
       if (selectedFilter === 'All') {
-        const da = usersWithMessages.filter((e) => e.username && e); // Primer filtrado para asegurarte de que `username` exista
-
+        const da1 = usersWithMessages.filter((e) => e.username && e); 
+        // Primer filtrado para asegurarte de que `username` exista
+        const da = [...da1,...userGoups]
         const uniqueUsers = [];
         const seenUsernames = new Set();
         
@@ -128,7 +131,7 @@ const MENSAJERA = () => {
        setFilteredUsersWithMessages(
         uniqueUsers
         )
-      } else if (selectedFilter === 'Groups') {
+      } else if (selectedFilter === 'Groups' ) {
         const da = userGoups
         console.log(userGoups,"men2")
         const uniqueUsers = [];
@@ -145,11 +148,8 @@ const MENSAJERA = () => {
     }
   }, [selectedFilter])
 
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 700)
-  }, [])
+  
 
-  // console.log('allUsers: ', allUsers)
 
   useEffect(() => {
     console.log('usersWithMessages:', usersWithMessages)
@@ -176,20 +176,7 @@ const MENSAJERA = () => {
           shadowColor: 'black'
         }}
       >
-        {/* <View style={{ width: '100%' }}>
-          <Pressable onPress={() => navigation.openDrawer()}>
-            <Image
-              style={[
-                {
-                  width: 87,
-                  height: 55
-                }
-              ]}
-              contentFit="cover"
-              source={require('../../assets/image-6.png')}
-            />
-          </Pressable>
-        </View> */}
+
         <TopBar screen={"mensajes"}></TopBar>
         <View
           style={{
@@ -279,13 +266,13 @@ const MENSAJERA = () => {
                 <ChatCard
                   value={search}
                   key={i}
-                  name={selectedFilter !== 'Groups'? `${user?.username} ${user?.apellido}`: user?.groupName}
+                  name={ !user.groupName ? `${user?.username} ${user?.apellido}`: user?.groupName}
                   selectedUserId={user.id}
                   isGroup={selectedFilter !== 'Groups' ? false : true }
                   userInfo={user}
                 />
               ))
-            : search === '' && (
+            : (search === '' &&  filteredUsersWithMessages.length < 1) && (
                 <View
                   style={{
                     width: '100%',

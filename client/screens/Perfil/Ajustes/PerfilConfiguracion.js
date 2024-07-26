@@ -178,9 +178,7 @@ const PerfilConfiguracion = () => {
           <View style={styles.centralContainer}>
             <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
               <View style={{ width: '100%' }}>
-                <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
-                  Cambiar foto de perfil
-                </Text>
+      
                 <View
                   style={{
                     width: '100%',
@@ -224,7 +222,7 @@ const PerfilConfiguracion = () => {
                       <Image
                         style={{ ...styles.perfilItem, borderRadius: 100 }}
                         contentFit="cover"
-                        source={require('../../../assets/group-1171276683.png')}
+                        source={require('../../../assets/logoo.png')}
                       />
                     ) : (
                       <Image
@@ -288,7 +286,7 @@ const PerfilConfiguracion = () => {
                     <Image
                       style={[styles.vectorIcon1, styles.vectorIconLayout]}
                       contentFit="cover"
-                      source={require('../../../assets/vector47.png')}
+                      source={ editable ? require('../../../assets/vector47.png') : require('../../../assets/lapizgris.png') }
                     />
                   </TouchableOpacity>
                 </View>

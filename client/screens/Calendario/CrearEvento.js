@@ -84,9 +84,7 @@ const CrearFechaEspecial = () => {
       description.length > 0 &&
       title.length > 0 &&
       location.length > 0 &&
-      selectedDate &&
-      invitedUsers.length > 0 &&
-      wishList.length > 0
+      selectedDate 
     ) {
       const event = {
         type: 'normal',
@@ -155,13 +153,7 @@ const CrearFechaEspecial = () => {
     <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
       <View style={[styles.crearEvento]}>
         <View>
-          <View style={styles.image6Wrapper}>
-            <Image
-              style={styles.image6Icon}
-              contentFit="cover"
-              source={require('../../assets/image-6.png')}
-            />
-          </View>
+          
           <View style={[styles.backParent, styles.buttonBarFlexBox]}>
             <Pressable
               style={styles.backLayout}

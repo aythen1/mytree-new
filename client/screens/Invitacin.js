@@ -114,7 +114,7 @@ const handleGetEvent = async ()=> {
             >
               <Image
                 style={{ width: 60, height: 60, borderRadius: 50 }}
-                source={{ uri: event.coverImage }}
+                source={ event.coverImage ?{ uri: event.coverImage }: require("../assets/logoo.png") }
               ></Image>
               <Text style={[styles.tituloDelEvento, styles.cdigoTypo]}>
                 {event.title}

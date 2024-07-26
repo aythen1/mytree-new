@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, StyleSheet, Text, Pressable } from 'react-native'
+import { View, StyleSheet, Text, Pressable, TouchableOpacity } from 'react-native'
 import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
 import { FontSize, FontFamily, Color, Border, Padding } from '../GlobalStyles'
@@ -21,7 +21,7 @@ const Aadir1 = ({ setShowSelectEventTypeModal }) => {
       colors={['#dee274', '#7ec18c']}
     >
       <View style={styles.frameParent}>
-        <Pressable
+        <TouchableOpacity
           style={[styles.frameWrapper, styles.frameWrapperFlexBox]}
           onPress={() => {
             dispatch(setPanelAddFooter(false))
@@ -29,15 +29,17 @@ const Aadir1 = ({ setShowSelectEventTypeModal }) => {
           }}
         >
           <View style={[styles.groupParent, styles.groupParentFlexBox]}>
-            <Image
-              style={styles.iconLayout}
+          <View style={{width:27}}>
+        <Image
+              style={{...styles.iconLayout,marginLeft:-2}}
               contentFit="cover"
               source={require('../assets/group-11712766891.png')}
             />
+        </View>
             <Text style={styles.aadirRecuerdo}>Añadir recuerdo</Text>
           </View>
-        </Pressable>
-        <Pressable
+        </TouchableOpacity>
+        <TouchableOpacity
           style={[styles.frameContainer, styles.frameFlexBox]}
           onPress={() => {
             dispatch(setPanelAddFooter(false))
@@ -45,16 +47,18 @@ const Aadir1 = ({ setShowSelectEventTypeModal }) => {
           }}
         >
           <View style={[styles.groupParent, styles.groupParentFlexBox]}>
-            <Image
+          <View style={{width:27}}>
+          <Image
               style={styles.iconlylightOutline3User}
               contentFit="cover"
               source={require('../assets/iconlylightoutline3user2.png')}
             />
+          </View>
             <Text style={styles.aadirRecuerdo}>Añadir familiar</Text>
           </View>
-        </Pressable>
+        </TouchableOpacity>
 
-        <Pressable
+        <TouchableOpacity
           style={[styles.framePressable, styles.frameFlexBox]}
           onPress={() => {
             dispatch(setPanelAddFooter(false))
@@ -65,8 +69,8 @@ const Aadir1 = ({ setShowSelectEventTypeModal }) => {
             <DiarioSVG />
             <Text style={styles.aadirRecuerdo}>Crear entrada al Diario</Text>
           </View>
-        </Pressable>
-        <Pressable
+        </TouchableOpacity>
+        <TouchableOpacity
           style={[styles.frameWrapper1, styles.frameFlexBox]}
           onPress={() => {
             dispatch(setPanelAddFooter(false))
@@ -74,15 +78,17 @@ const Aadir1 = ({ setShowSelectEventTypeModal }) => {
           }}
         >
           <View style={styles.groupParentFlexBox}>
-            <Image
+          <View style={{width:35}}>
+           <Image
               contentFit="cover"
               style={{ width: 25, height: 25, marginRight: 11 }}
               source={require('../assets/whiteCalendar.png')}
             />
+           </View>
             <Text style={styles.aadirRecuerdo2}>Crear evento</Text>
           </View>
-        </Pressable>
-        <Pressable
+        </TouchableOpacity>
+        <TouchableOpacity
           style={[styles.frameFlexBox]}
           onPress={() => {
             dispatch(setPanelAddFooter(false))
@@ -90,10 +96,12 @@ const Aadir1 = ({ setShowSelectEventTypeModal }) => {
           }}
         >
           <View style={styles.groupParentFlexBox}>
-            <MessageSVG color={Color.white} />
-            <Text style={styles.aadirRecuerdo2}>Mensajeria</Text>
+         <View style={{width:35}}>
+         <MessageSVG isMenu={true} color={Color.white} />
+         </View>
+            <Text style={styles.aadirRecuerdo2}>Mensajería</Text>
           </View>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </LinearGradient>
   )
@@ -149,7 +157,7 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   frameWrapper: {
-    zIndex: 0
+    zIndex: 0,
   },
   iconlylightOutline3User: {
     height: 27,

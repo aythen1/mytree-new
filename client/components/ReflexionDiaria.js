@@ -70,7 +70,8 @@ const ReflexionDiaria = ({
           }}
         >
           <Text style={{ fontSize: 14, fontWeight: 500, color: '#202020' }}>
-            No hemos encontrado diarios basados en su busqueda!
+          ¡No hemos encontrado diarios basados en su búsqueda!
+
           </Text>
         </View>
       ) : (

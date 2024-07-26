@@ -102,7 +102,7 @@ const PerfilAjustes = () => {
               <Image
                 style={{...styles.frameChild,borderRadius:100}}
                 contentFit="cover"
-                source={usuario.profilePicture || require('../../../assets/frame-15477548756.png')} 
+                source={usuario.profilePicture || require('../../../assets/logoo.png')} 
               />
               <View style={styles.brunoPhamWrapper}>
                 <Text style={styles.brunoPham}>{usuario.username}</Text>

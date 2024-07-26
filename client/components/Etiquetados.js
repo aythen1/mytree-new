@@ -50,7 +50,7 @@ const Etiquetados = () => {
               <Image
                 style={styles.frameItem}
                 contentFit="cover"
-                source={require('../assets/frame-15477548751.png')}
+                source={   allUsers.filter((user) => user.id.toString() === tag)[0] ?  {uri:allUsers.filter((user) => user.id.toString() === tag)[0].profilePicture} :require('../assets/frame-15477548751.png')}
               />
               <Text style={styles.brunoPham}>
                 {allUsers.filter((user) => user.id.toString() === tag)[0]
@@ -100,7 +100,8 @@ const styles = StyleSheet.create({
   },
   frameItem: {
     width: 30,
-    height: 30
+    height: 30,
+    borderRadius:50
   },
   image: {
     height: 1.5,

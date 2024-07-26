@@ -288,109 +288,19 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
             <ScrollView
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{
-                paddingBottom: 20
+
+                height:"100%",
+                paddingBottom:100
+
               }}
               style={{
                 width: '100%',
                 paddingTop: 15,
                 paddingHorizontal: 15,
-                height: Dimensions.get('screen').height * 0.5
+                height: "100%",
               }}
             >
-              {/* {!showEdit ? (
-                <View style={styles.editContainer}>
-                  <Pressable
-                    onPress={() => setShowEdit(!showEdit)}
-                    style={{ flexDirection: 'row', alignItems: 'center' }}
-                  >
-                    <Text style={[styles.text, styles.textTypo]}>07</Text>
-                    <Text style={[styles.jul2023, styles.textTypo]}>
-                      jul. 2023
-                    </Text>
-                    <Image
-                      style={styles.iconlycurvedarrowDown2}
-                      resizeMode="contain"
-                      source={require('../../assets/iconlycurvedarrowdown2.png')}
-                    />
-                    <Editar2SVG style={{ marginLeft: '45%' }} />
-                  </Pressable>
-                </View>
-              ) : (
-                <Pressable
-                  style={styles.frameParent}
-                  onPress={() => {
-                    setShowEdit(!showEdit)
-                    // navigation.navigate('MIDIARIOENTRADATEXTOPL1')
-                  }}
-                >
-                  {showEdit && (
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        paddingHorizontal: 5,
-                        alignItems: 'center'
-                      }}
-                    >
-                      <Pressable
-                        style={styles.wrapper}
-                        onPress={() => setShowEdit(false)}
-                      >
-                        <Image
-                          style={styles.icon}
-                          contentFit="cover"
-                          source={require('../../assets/group-68463.png')}
-                        />
-                      </Pressable>
-                      <View style={styles.groupFlexBox}>
-                        <Pressable
-                          style={styles.wrapper}
-                          onPress={openGroupIcon1}
-                        >
-                          <Image
-                            style={styles.icon}
-                            contentFit="cover"
-                            source={require('../../assets/group2.png')}
-                          />
-                        </Pressable>
-                        <LinearGradient
-                          style={styles.container}
-                          locations={[0, 1]}
-                          colors={['#dee274', '#7ec18c']}
-                        >
-                          <Pressable
-                            style={[styles.pressable]}
-                            onPress={() => setModalCreate(true)}
-                          >
-                            <Text style={[styles.signIn, styles.ttTypo]}>
-                              Guardar
-                            </Text>
-                          </Pressable>
-                        </LinearGradient>
-                      </View>
-                    </View>
-                  )}
-
-                  <Modal
-                    animationType="slide"
-                    transparent
-                    visible={modalCreate}
-                  >
-                    <View style={styles.arrowDown2Icon1Overlay}>
-                      <Pressable
-                        style={styles.arrowDown2Icon1Bg}
-                        onPress={() => setModalCreate(false)}
-                      />
-                      <ENTRADACREADA
-                        onClose={() => setModalCreate(false)}
-                        message={'Entrada Creada'}
-                        isNavigate={'MIDIARIOPANTALLAPERSONAL'}
-                      />
-                    </View>
-                  </Modal>
-                </Pressable>
-              )} */}
-
+           
               <View style={styles.editContainer}>
                 <Pressable
                   onPress={() => setShowCalendar(true)}

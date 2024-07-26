@@ -41,6 +41,7 @@ const Busqueda = () => {
   useEffect(() => {
     dispatch(getAllPosts())
   }, [])
+  const { userData } = useSelector((state)=> state.users)
 
   const [selectedComponent, setSelectedComponent] =
     useState('BusquedaContactos')
@@ -52,7 +53,7 @@ const Busqueda = () => {
 
   useEffect(() => {
     console.log('search changed: ', search)
-    if (search.length > 0) {
+    if (search?.length > 0) {
       if (selectedComponent === 'BusquedaPublicaciones') {
         const postFilteredBySearch = [...allPosts].filter((post) => {
           if (
@@ -74,16 +75,16 @@ const Busqueda = () => {
         setFilteredPosts(postFilteredBySearch)
       }
       if (selectedComponent === 'BusquedaEventos') {
-        const eventsFilteredBySearch = [...allEvents].filter((evnt) =>
-          evnt.title.toLowerCase().includes(search.toLowerCase())
-        )
+        console.log('ON eeeeee')
+
+        const eventsFilteredBySearch = allEvents.filter((e)=> e.creatorId == userData.id)
         setFilteredEvents(eventsFilteredBySearch)
       }
       if (selectedComponent === 'BusquedaHashtags') {
         console.log('ON BusquedaHashtags')
 
         const postFilteredBySearch = [...allPosts].filter((post) => {
-          if (post.hashtags && post.hashtags.length > 0) {
+          if (post.hashtags && post?.hashtags?.length > 0) {
             const hashtagsLowerCase = post.hashtags.map((hashtag) =>
               hashtag.toLowerCase()
             )
@@ -103,7 +104,7 @@ const Busqueda = () => {
         setFilteredPosts(allPosts)
       }
       if (selectedComponent === 'BusquedaEventos') {
-        setFilteredEvents(allEvents)
+        setFilteredEvents()
       }
       if (selectedComponent === 'BusquedaHashtags') {
         setFilteredEvents([])

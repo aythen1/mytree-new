@@ -157,26 +157,15 @@ const UploadMemory = () => {
         </CameraView>
       ) : (
         <View style={{ gap: 15, paddingHorizontal: 15 }}>
-          <View>
-          <Pressable onPress={() => navigation.openDrawer()}>
-            <Image
-              style={[{
-                width: 87,
-                height: 55
-              }]}
-              contentFit="cover"
-              source={require('../../assets/image-6.png')}
-            />
-          </Pressable>
-          </View>
+          
 
           <View
             style={{
               justifyContent: 'space-between',
-              marginTop: -20,
               width: '100%',
               flexDirection: 'row',
-              alignItems: 'center'
+              alignItems: 'center',
+              paddingTop:15
             }}
           >
             <TouchableOpacity onPress={() => navigation.navigate('Muro')}>
@@ -195,7 +184,7 @@ const UploadMemory = () => {
             >
               <Image
                 contentFit="cover"
-                style={{ width: 27, height: 27 }}
+                style={{ width: 20, height: 20 }}
                 source={require('../../assets/back7.png')}
               />
             </TouchableOpacity>
@@ -276,7 +265,7 @@ const UploadMemory = () => {
                 setShowSelection(!showSelection)}}
                 style={{
                   gap: 5,
-                  backgroundColor: showSelection ? "#03fcad" : '#D9D9D9',
+                  backgroundColor: showSelection ? Color.primario1 : '#D9D9D9',
                   alignItems: 'center',
                   flexDirection: 'row',
                   borderRadius: 5,
@@ -351,7 +340,7 @@ const UploadMemory = () => {
                   style={{
                     width: 20,
                     height: 20,
-                    backgroundColor: Color.secundario,
+                    backgroundColor: Color.primario1,
                     borderRadius: 100,
                     position: 'absolute',
                     top: 10,

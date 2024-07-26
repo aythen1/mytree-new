@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import { FontFamily, FontSize, Color, Border, Padding } from '../GlobalStyles'
 import { LinearGradient } from 'expo-linear-gradient'
+import Checkbox from 'expo-checkbox'
 
 const OpcionesCaategora = ({
   onClose,
@@ -18,14 +19,17 @@ const OpcionesCaategora = ({
 }) => {
   const [addedCategory, setAddedCategory] = React.useState()
   const [text, setText] = React.useState('')
+
+  const [opcion,setOpcion] = React.useState(0)
+
   return (
     <View style={styles.opcionesCaategora}>
       <View style={styles.aniversarioParent}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{
-            height: 70,
-            maxHeight: 70,
+            height: 77,
+            maxHeight: 77,
             overflow: 'hidden',
             flexGrow: 1,
             marginTop: 5
@@ -41,23 +45,35 @@ const OpcionesCaategora = ({
             onPress={() => {
               setSelectedCategory('Aniversario')
               setText('')
-              onClose()
             }}
           >
-            <Text style={[styles.aniversario, styles.aadirTypo]}>
-              Aniversario
-            </Text>
+            <View style={{ flexDirection: 'row', gap: 5 }}>
+              <Checkbox color={Color.primario1} value={opcion == 1} onValueChange={()=> {
+                setOpcion(1)
+                  setSelectedCategory('Aniversario')
+                  setText('')
+              }} />
+              <Text style={[styles.aniversario, styles.aadirTypo]}>
+                Aniversario
+              </Text>
+            </View>
           </Pressable>
           <Pressable
             onPress={() => {
               setSelectedCategory('Graduación')
               setText('')
-              onClose()
             }}
           >
-            <Text style={[styles.aniversario, styles.aadirTypo]}>
-              Graduación
-            </Text>
+            <View style={{ flexDirection: 'row', gap: 5 }}>
+            <Checkbox color={Color.primario1}  value={opcion == 2} onValueChange={()=> {
+                setOpcion(2)
+                  setSelectedCategory('Graduación')
+                  setText('')
+              }} />
+              <Text style={[styles.aniversario, styles.aadirTypo]}>
+                Graduación
+              </Text>
+            </View>
           </Pressable>
 
           <Pressable
@@ -67,9 +83,17 @@ const OpcionesCaategora = ({
               onClose()
             }}
           >
-            <Text style={[styles.aniversario, styles.aadirTypo]}>
-              Compra de primer coche
-            </Text>
+            <View style={{ flexDirection: 'row', gap: 5 }}>
+            <Checkbox color={Color.primario1}  value={opcion == 3} onValueChange={()=> {
+                setOpcion(3)
+                  setSelectedCategory('Compra de primer coche')
+                  setText('')
+              }} />
+
+              <Text style={[styles.aniversario, styles.aadirTypo]}>
+                Compra de primer coche
+              </Text>
+            </View>
           </Pressable>
           {addedCategory && (
             <Pressable
@@ -112,8 +136,10 @@ const OpcionesCaategora = ({
         />
         <TouchableOpacity
           onPress={() => {
-            setAddedCategory(text)
-            setSelectedCategory(text)
+        if(text){
+          setAddedCategory(text)
+          setSelectedCategory(text)
+        }
             setText('')
             onClose()
           }}
@@ -143,7 +169,7 @@ const OpcionesCaategora = ({
                 fontSize: FontSize.size_base
               }}
             >
-              + Añadir
+              Guardar
             </Text>
           </LinearGradient>
         </TouchableOpacity>

@@ -44,6 +44,7 @@ const Privacidad = ({ onClose, setPrivacy, privacy }) => {
             <View style={[styles.checkParent, styles.parentFlexBox]}>
               <View style={styles.check}>
                 <Checkbox
+                color={Color.primario1} 
                   value={privacy === 'Todos'}
                   onValueChange={() => setPrivacy('Todos')}
                 />
@@ -64,6 +65,7 @@ const Privacidad = ({ onClose, setPrivacy, privacy }) => {
             <View style={[styles.checkParent, styles.parentFlexBox]}>
               <View style={styles.check}>
                 <Checkbox
+                color={Color.primario1} 
                   value={privacy === 'Amigos y Familiares'}
                   onValueChange={() => setPrivacy('Amigos y Familiares')}
                 />
@@ -84,6 +86,7 @@ const Privacidad = ({ onClose, setPrivacy, privacy }) => {
             <View style={[styles.checkParent, styles.parentFlexBox]}>
               <View style={styles.check}>
                 <Checkbox
+                color={Color.primario1} 
                   value={privacy === 'Yo'}
                   onValueChange={() => setPrivacy('Yo')}
                 />

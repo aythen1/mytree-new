@@ -117,6 +117,7 @@ const Posteo = ({ data, padding }) => {
               overflow: 'hidden',
               justifyContent: 'space-between'
             }}
+            resizeMethod='resize'
             source={{ uri: data.photos[0] }}
           >
            
@@ -234,11 +235,10 @@ const Posteo = ({ data, padding }) => {
                         borderRadius: 20,
                         zIndex: 999999999999
                       }}
-                      source={{
+                      source={ data?.user?.profilePicture  ? {
                         uri:
-                          data?.user?.profilePicture ||
-                          'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716419224/bciupv6y3hwccgmtpwoe.png'
-                      }}
+                          data?.user?.profilePicture 
+                      } : require("../assets/logoo.png")}
                     />
                   </View>
                 </View>
@@ -334,6 +334,7 @@ const Posteo = ({ data, padding }) => {
             resizeMode: 'cover',
             overflow: 'hidden'
           }}
+          resizeMethod='resize'
           source={{ uri: data.photos[0] }}
         >
           <TouchableOpacity
@@ -411,8 +412,9 @@ const Posteo = ({ data, padding }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
+                console.log(data,"datata")
                 navigation.navigate('OpenedChat', {
-                  receiverId: data.id,
+                  receiverId: data.user.id,
                   receiverName: data.nameUser
                 })
               }}
@@ -449,12 +451,12 @@ const Posteo = ({ data, padding }) => {
             >
               {data.description}
             </Text>
-            <Pressable onPress={() => setExpanded(true)}>
+           </View>
+            <Pressable style={{position:"absolute",bottom:10,left:10}} onPress={() => setExpanded(true)}>
               <Text
                 style={{
-                  marginTop: 5,
                   fontSize: FontSize.size_base,
-                  textAlign: 'right',
+                  textAlign: 'left',
                   fontFamily: FontFamily.lato,
                   color: Color.white
                 }}
@@ -462,7 +464,6 @@ const Posteo = ({ data, padding }) => {
                 Ver más...
               </Text>
             </Pressable>
-           </View>
           </LinearGradient>
         </ImageBackground>
       </Pressable>

@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux'
 
 function BusquedaEventos({ events }) {
   const navigation = useNavigation()
-  if (events.length === 0)
+  if (events?.length === 0)
     return (
       <View style={{ width: '100%', alignItems: 'center', paddingTop: 50 }}>
         <Text style={{ fontSize: 14, fontWeight: 500, color: '#202020' }}>

@@ -304,9 +304,9 @@ const CommentsModal = ({ onClose }) => {
           style={{ width: 30, height: 30, borderRadius: 50 }}
           contentFit="cover"
           contentPosition={'center'}
-          source={{
-            uri: 'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716389822/idv5sw3zoyvual6moptl.jpg'
-          }}
+          source={userData.profilePicture  ?{
+            uri: userData.profilePicture 
+          } : require('../../assets/logoo.png')}
         />
         <View
           style={{

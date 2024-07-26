@@ -43,6 +43,9 @@ export const ContextProvider = ({ children }) => {
   const [selectedSection, setSelectedSection] = useState('nube')
 
   const handleAddDiary = (category, date) => {
+
+    const dateEdit= new Date(date)
+    const dateString = dateEdit.toISOString().split('T')[0]; // Obtener solo el año-mes-día
     console.log(
       'Agregando nuevo diario en categoria',
       category,
@@ -54,7 +57,7 @@ export const ContextProvider = ({ children }) => {
       addUserDiary({
         images: [],
         videos: [],
-        date: new Date(date),
+        date:dateString,
         category,
         id: 'preDiary',
         title: '',
@@ -413,7 +416,7 @@ export const ContextProvider = ({ children }) => {
   )
 
   socket.on('connect', () => {
-    console.log('Connected to server')
+    // console.log('Connected to server')
   })
 
   socket.on('disconnect', () => {

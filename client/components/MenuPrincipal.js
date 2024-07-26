@@ -77,7 +77,7 @@ const MenuPrincipal = () => {
                   navigation.navigate('MENSAJERA')
                 }}
               >
-                <Text style={styles.muro1Typo}>Mensajeria</Text>
+                <Text style={styles.muro1Typo}>Mensajería</Text>
               </Pressable>
             </View>
 
