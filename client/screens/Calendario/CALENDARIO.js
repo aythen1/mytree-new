@@ -73,31 +73,31 @@ const CALENDARIO = () => {
     }, [dispatch])
   )
 
-  useEffect(()=>{
+  useEffect(() => {
     setSelectedDate(getCurrentDate())
-  },[])
+  }, [])
 
   return (
     <ScrollView
       style={{
         width: '100%',
         flex: 1,
-        backgroundColor: Color.white,
+        backgroundColor: Color.white
       }}
       contentContainerStyle={styles.scrollViewContent}
       showsVerticalScrollIndicator={false}
     >
-      <TopBar screen={"calendario"}></TopBar>
+      <TopBar screen={'calendario'}></TopBar>
 
       <View
         style={{
           alignItems: 'center',
           flexDirection: 'row',
-          width: "100%",
-          justifyContent:"space-between",
-          paddingHorizontal:10,
+          width: '100%',
+          justifyContent: 'space-between',
+          paddingHorizontal: 10,
           backgroundColor: Color.white,
-          marginTop: 5,
+          marginTop: 5
         }}
       >
         <View
@@ -109,7 +109,7 @@ const CALENDARIO = () => {
             width: '87%',
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent:"space-between"
+            justifyContent: 'space-between'
           }}
         >
           <Image
@@ -122,9 +122,12 @@ const CALENDARIO = () => {
               marginLeft: 6,
               flexDirection: 'row',
               flex: 1,
-              width:"100%"
+              width: '100%'
             }}
           >
+
+
+            
             <TextInput
               style={{
                 fontSize: FontSize.size_sm,
@@ -135,7 +138,7 @@ const CALENDARIO = () => {
                 color: Color.textPlaceholder,
                 letterSpacing: 0,
                 textAlign: 'left',
-                width:"100%"
+                width: '100%'
               }}
               value={search}
               onChangeText={(text) => setSearch(text)}
@@ -148,16 +151,16 @@ const CALENDARIO = () => {
           <MasBusquedaSVG />
         </Pressable>
       </View>
-<View style={{paddingHorizontal:5}}>
-  
-<Calendario
-        dates={[...dates, ...eventInvited]}
-        selectedDate={selectedDate}
-        setSelectedDate={(e)=> {
-          handleItemPress('fechas')
-          setSelectedDate(e)}}
-      />
-</View>
+      <View style={{ paddingHorizontal: 5 }}>
+        <Calendario
+          dates={[...dates, ...eventInvited]}
+          selectedDate={selectedDate}
+          setSelectedDate={(e) => {
+            handleItemPress('fechas')
+            setSelectedDate(e)
+          }}
+        />
+      </View>
       <View style={styles.frameParent}>
         <View style={styles.upcomingParent}>
           <Pressable
@@ -244,7 +247,7 @@ const styles = StyleSheet.create({
   },
   frameParent: {
     alignItems: 'flex-end',
-    paddingHorizontal:10
+    paddingHorizontal: 10
   },
   background: {
     zIndex: 0

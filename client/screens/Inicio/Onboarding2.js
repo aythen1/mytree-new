@@ -1,19 +1,23 @@
-import React, { useEffect } from 'react'
-import { Image } from 'expo-image'
+import React, { useEffect, useState } from 'react'
+import { Image, ImageBackground } from 'expo-image'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { FontFamily, Border, FontSize, Color } from '../../GlobalStyles'
 import { useNavigation } from '@react-navigation/native'
 import ImageVectorSVG from '../../components/svgs/ImageVectorSVG'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useDispatch } from 'react-redux'
-import { getUserData } from '../../redux/actions/user'
+import { getAllUsers, getUserData } from '../../redux/actions/user'
+
 const Onboarding2 = () => {
   const navigation = useNavigation()
+  const [step, setStep] = useState(1)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    verificarUsuarioLogueado();
-  }, []);
-  const dispatch = useDispatch()
+    dispatch(getAllUsers())
+    verificarUsuarioLogueado()
+  }, [])
+
   const verificarUsuarioLogueado = async () => {
     try {
       // Verifica si el usuario está logueado
@@ -21,48 +25,157 @@ const Onboarding2 = () => {
 
       // Navega a la pantalla adecuada
       if (usuarioLogueado) {
-        console.log(JSON.parse(usuarioLogueado).id,"logeadoooo")
+        console.log(JSON.parse(usuarioLogueado).id, 'logeadoooo')
         // Usuario logueado, navega a la pantalla de inicio
-        if(usuarioLogueado?.newUser){
-        return  navigation.navigate('Perfil');
+        if (usuarioLogueado?.newUser) {
+          return navigation.navigate('Perfil')
         }
-        dispatch(getUserData(JSON.parse(usuarioLogueado).id)).then((e)=> navigation.replace('Muro'))
-       
-      } 
+        dispatch(getUserData(JSON.parse(usuarioLogueado).id)).then((e) =>
+          navigation.replace('Muro')
+        )
+      }
     } catch (error) {
       console.log('Error al verificar usuario logueado: ', error)
     }
   }
 
+  const handleNext = ()=> {
+    if(step == 3){
+      navigation.navigate('Splash')
+    } else {
+      setStep((e)=> e + 1)
+    }
+  }
+
+  const Step1 = () => (
+    <View style={styles.secondContainer}>
+      <Text style={[styles.dejaTuHuella, styles.huellaTypo]}>
+        Junta la historia de tu familia y deja un legado para tus descendientes
+      </Text>
+      <View style={styles.frameWrapper}>
+        <View style={styles.rectangleParent}>
+          <View style={styles.frameChild} />
+          <View style={[styles.frameItem, styles.frameLayout]} />
+          <View style={[styles.frameInner, styles.frameLayout]} />
+        </View>
+      </View>
+    </View>
+  )
+
+  const Step2 = () => (
+    <View style={styles.secondContainer}>
+      <Text style={[styles.dejaTuHuella, styles.huellaTypo]}>
+        Un tesoro de recuerdos para compartir con futuras generaciones
+      </Text>
+      <View style={styles.frameWrapper}>
+        <View style={styles.rectangleParent}>
+          <View style={styles.frameItem} />
+          <View style={styles.frameChild} />
+          <View style={[styles.frameInner, styles.frameLayout]} />
+        </View>
+      </View>
+      {/* <Pressable
+        style={styles.progressButton}
+        onPress={() => navigation.navigate('Onboarding')}
+      >
+        <View style={[styles.buttonfullcircle, styles.huellaParentFlexBox]}>
+          <Image
+            style={styles.arrowRight}
+            contentFit="cover"
+            source={require('../../assets/arrow--right.png')}
+          />
+        </View>
+        <Image
+          style={[styles.progressButtonChild, styles.progressPosition]}
+          contentFit="cover"
+          source={require('../../assets/progres2.png')}
+        />
+      </Pressable> */}
+    </View>
+  )
+
+  const Step3 = () => (
+    <View style={styles.secondContainer}>
+      <Text style={[styles.dejaTuHuella, styles.huellaTypo]}>
+        Deja tu huella en el mundo mientras construyes tu legado
+      </Text>
+      <View style={styles.frameWrapper}>
+        <View style={styles.rectangleParent}>
+          <View style={[styles.frameItem, styles.frameLayout]} />
+          <View style={[styles.frameInner, styles.frameLayout]} />
+          <View style={styles.frameChild} />
+        </View>
+      </View>
+      {/* <Pressable
+        style={styles.progressButton}
+        onPress={() => navigation.navigate('Splash')}
+      >
+        <View style={[styles.buttonfullcircle, styles.huellaParentFlexBox]}>
+          <Image
+            style={styles.arrowRight}
+            contentFit="cover"
+            source={require('../../assets/arrow--right.png')}
+          />
+        </View>
+        <Image
+          style={[styles.progressButtonChild, styles.progressPosition]}
+          contentFit="cover"
+          source={require('../../assets/progres4.png')}
+        />
+      </Pressable> */}
+    </View>
+  )
+
   return (
-    <View style={styles.onboarding3}>
-      <Image
-        style={styles.onboarding1Icon}
-        contentFit="cover"
-        source={require('../../assets/onboarding-1.png')}
-      />
-      <View style={[styles.huellaParent, styles.huellaParentFlexBox]}>
-        <View style={styles.dejaTuHuellaEnElMundoMieParent}>
-          <Text style={[styles.huella, styles.huellaTypo]}>Legado</Text>
-          <View style={styles.imageVector}>
-            <ImageVectorSVG />
-          </View>
-          <View style={styles.secondContainer}>
-            <Text style={[styles.dejaTuHuella, styles.huellaTypo]}>
-              Junta la historia de tu familia y deja un legado para tus
-              descendientes
-            </Text>
-            <View style={styles.frameWrapper}>
-              <View style={styles.rectangleParent}>
-                <View style={styles.frameChild} />
-                <View style={[styles.frameItem, styles.frameLayout]} />
-                <View style={[styles.frameInner, styles.frameLayout]} />
+    <ImageBackground
+      style={styles.onboarding1Icon}
+      contentFit="fill"
+      source={require('../../assets/onbord.png')}
+    >
+      <Text style={[styles.huella, styles.huellaTypo]}>Legado</Text>
+      <View style={{ position: 'absolute', top: '40%' }}>
+        <ImageVectorSVG />
+      </View>
+
+      {/* <View style={[styles.huellaParent]}>
+        {step == 2 && <Step2></Step2>}
+        {step == 3 && <Step3></Step3>}
+      </View> */}
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 20,
+          alignItems: 'center',
+          width: '100%'
+        }}
+      >
+        {(step == 1 && <Step1></Step1>) ||
+          (step == 2 && <Step2></Step2>) ||
+          (step == 3 && <Step3></Step3>)}
+        <Pressable
+          style={styles.progressButton}
+          onPress={handleNext}
+        >
+          {step == 2 && (
+            <>
+              <View
+                style={[styles.buttonfullcircle, styles.huellaParentFlexBox]}
+              >
+                <Image
+                  style={styles.arrowRight}
+                  contentFit="cover"
+                  source={require('../../assets/arrow--right.png')}
+                />
               </View>
-            </View>
-            <Pressable
-              style={styles.progressButton}
-              onPress={() => navigation.navigate('Onboarding1')}
-            >
+              <Image
+                style={[styles.progressButtonChild, styles.progressPosition]}
+                contentFit="cover"
+                source={require('../../assets/progres2.png')}
+              />
+            </>
+          )}
+          {step == 1 && (
+            <>
               <View
                 style={[styles.buttonfullcircle, styles.huellaParentFlexBox]}
               >
@@ -82,17 +195,34 @@ const Onboarding2 = () => {
                 contentFit="cover"
                 source={require('../../assets/ellipse-192.png')}
               />
-            </Pressable>
-          </View>
-        </View>
+            </>
+          )}
+          {step == 3 && (
+            <>
+              <View
+                style={[styles.buttonfullcircle, styles.huellaParentFlexBox]}
+              >
+                <Image
+                  style={styles.arrowRight}
+                  contentFit="cover"
+                  source={require('../../assets/arrow--right.png')}
+                />
+              </View>
+              <Image
+                style={[styles.progressButtonChild, styles.progressPosition]}
+                contentFit="cover"
+                source={require('../../assets/progres4.png')}
+              />
+            </>
+          )}
+        </Pressable>
       </View>
-    </View>
+    </ImageBackground>
   )
 }
 
 const styles = StyleSheet.create({
   huellaParentFlexBox: {
-    justifyContent: 'center',
     position: 'absolute',
     alignItems: 'center'
   },
@@ -101,7 +231,7 @@ const styles = StyleSheet.create({
     lineHeight: 35
   },
   frameLayout: {
-    marginLeft: 7,
+    marginHorizontal: 3,
     height: 6
   },
   progressPosition: {
@@ -111,16 +241,17 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   onboarding1Icon: {
-    width: 428,
-    zIndex: 0,
-    overflow: 'hidden'
+    width: '100%',
+    height: '100%',
+    paddingVertical: 50,
+    alignItems: 'center'
   },
   huella: {
     fontSize: FontSize.size_13xl,
     letterSpacing: 1.3,
     fontWeight: '700',
     color: Color.white,
-    textAlign: 'left'
+    textAlign: 'center'
   },
   dejaTuHuella: {
     fontSize: FontSize.size_7xl,
@@ -133,16 +264,18 @@ const styles = StyleSheet.create({
     height: 6,
     borderRadius: Border.br_3xs,
     width: 34,
+    marginHorizontal:4,
     backgroundColor: Color.white
   },
   frameItem: {
     width: 8,
     backgroundColor: Color.colorGray_400,
-    marginLeft: 7
+    borderRadius:9
   },
   frameInner: {
     backgroundColor: Color.colorGray_400,
-    width: 8
+    width: 8,
+    borderRadius:9
   },
   rectangleParent: {
     flexDirection: 'row'
@@ -154,7 +287,9 @@ const styles = StyleSheet.create({
   arrowRight: {
     width: 24,
     height: 24,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    position: 'absolute',
+    left: '30%'
   },
   buttonfullcircle: {
     height: '65.96%',
@@ -169,7 +304,6 @@ const styles = StyleSheet.create({
   progressButtonChild: {
     bottom: '0%',
     left: '0%',
-    opacity: 0.38,
     width: '100%'
   },
   progressButtonItem: {
@@ -181,23 +315,20 @@ const styles = StyleSheet.create({
   progressButton: {
     width: 94,
     height: 94,
-    marginTop: 30
+    marginTop: 30,
+    alignSelf: 'center'
   },
   dejaTuHuellaEnElMundoMieParent: {
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-between'
+    height: '100%',
+    justifyContent: 'center'
   },
   huellaParent: {
-    marginLeft: -194,
-    paddingVertical: 50,
-    top: 20,
-    bottom: 20,
-    width: 388,
-    backgroundColor: Color.linearBoton,
-    zIndex: 1,
-    left: '50%',
-    borderRadius: Border.br_31xl
+    width: '100%',
+    height: '90%',
+    justifyContent: 'space-around',
+    flexDirection: 'column',
+    zIndex: 1
   },
   onboarding3: {
     flex: 1,
@@ -206,12 +337,9 @@ const styles = StyleSheet.create({
   },
   secondContainer: {
     justifyContent: 'center',
-    alignItems: 'center',
-    top: '10%'
+    alignItems: 'center'
   },
-  imageVector: {
-    marginTop: '10%'
-  }
+  imageVector: {}
 })
 
 export default Onboarding2

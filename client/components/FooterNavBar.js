@@ -9,27 +9,17 @@ import {
   View
 } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { LinearGradient } from 'expo-linear-gradient'
 import { useNavigation } from '@react-navigation/native'
-import CalendarSVG from './svgs/CalendarSVG'
-import FooterBookSVG from './svgs/FooterBookSVG'
-import UsuarioSVG from './svgs/UsuarioSVG'
-import HomeSVG from './svgs/HomeSVG'
+
 import Aadir1 from './Aadir1'
 import { setPanelAddFooter } from '../redux/slices/panel.slices'
-import { Color } from '../GlobalStyles'
 import { Context } from '../context/Context'
 import SelectEventTypeModal from './SelectEventTypeModal'
-import FooterIcon from './FooterIcon'
-import FooterBar from './svgs/FooterBarSVG'
-import TreeSVG from './svgs/TreeSVG'
-import FooterBarSVG from './svgs/FooterBarSVG'
+
 import { Image } from 'expo-image'
-import { getAllPosts } from '../redux/actions/posts'
-import { getAllUsers } from '../redux/actions/user'
-import { getAllAlbums, getAllUserAlbums } from '../redux/actions/albums'
-import { getAllDiaries, getAllUserDiaries } from '../redux/actions/diaries'
-import { getAllEvents } from '../redux/actions/events'
+
+import {  getAllUserDiaries } from '../redux/actions/diaries'
+
 
 const FooterNavBar = () => {
   const {
@@ -46,15 +36,15 @@ const FooterNavBar = () => {
 
   const [selected, setSelected] = useState('Muro')
 
-  useEffect(() => {
-    getUsersMessages()
-    dispatch(getAllUsers())
-    dispatch(getAllPosts())
-    dispatch(getAllEvents())
-    dispatch(getAllAlbums())
-    dispatch(getAllDiaries())
-    dispatch(getAllUserAlbums(userData?.id))
-  }, [userData])
+  // useEffect(() => {
+  //   getUsersMessages()
+  //   dispatch(getAllUsers())
+  //   dispatch(getAllPosts())
+  //   dispatch(getAllEvents())
+  //   dispatch(getAllAlbums())
+  //   dispatch(getAllDiaries())
+  //   dispatch(getAllUserAlbums(userData?.id))
+  // }, [userData])
 
   const showModalAdd = () => {
     dispatch(setPanelAddFooter(!panelAddFooter))
@@ -164,7 +154,6 @@ const FooterNavBar = () => {
             style={{
               width: 60,
               height: 60,
-              backgroundColor: Color.backgroundGreyBackground,
               position: 'absolute',
               top: -29,
               left: '50%',
@@ -183,25 +172,13 @@ const FooterNavBar = () => {
             }}
             onPress={showModalAdd}
           >
-            <LinearGradient
-              style={{
-                width: '100%',
-                height: '100%',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 60,
-                zIndex: 0
-              }}
-              locations={[0, 1]}
-              
-              colors={['#7ec18c', '#dee274']}
-            >
+         
               <Image
-                style={{ width: 25, height: 25 }}
+                style={{ width: 63, height: 63 }}
                 contentFit="cover"
-                source={require('../assets/Plus.png')}
+                source={require('../assets/btnhomee.png')}
               />
-            </LinearGradient>
+         
           </TouchableOpacity>
         </View>
         {/* <FooterBarSVG /> */}

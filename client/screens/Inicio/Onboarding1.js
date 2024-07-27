@@ -12,52 +12,11 @@ const Onboarding2 = () => {
     <View style={styles.onboarding3}>
       <Image
         style={styles.onboarding1Icon}
-        contentFit="cover"
-        source={require('../../assets/onboarding-1.png')}
+        contentFit="fill"
+        source={require('../../assets/onbord.png')}
       />
       <View style={[styles.huellaParent, styles.huellaParentFlexBox]}>
-        <View style={styles.dejaTuHuellaEnElMundoMieParent}>
-          <Text style={[styles.huella, styles.huellaTypo]}>Comparte</Text>
-          <View style={styles.imageVector}>
-            <ImageVectorSVG />
-          </View>
-          <View style={styles.secondContainer}>
-            <Text style={[styles.dejaTuHuella, styles.huellaTypo]}>
-              Un tesoro de recuerdos para compartir con futuras generaciones
-            </Text>
-            <View style={styles.frameWrapper}>
-              <View style={styles.rectangleParent}>
-                <View style={styles.frameItem} />
-                <View style={styles.frameChild} />
-                <View style={[styles.frameInner, styles.frameLayout]} />
-              </View>
-            </View>
-            <Pressable
-              style={styles.progressButton}
-              onPress={() => navigation.navigate('Onboarding')}
-            >
-              <View
-                style={[styles.buttonfullcircle, styles.huellaParentFlexBox]}
-              >
-                <Image
-                  style={styles.arrowRight}
-                  contentFit="cover"
-                  source={require('../../assets/arrow--right.png')}
-                />
-              </View>
-              <Image
-                style={[styles.progressButtonChild, styles.progressPosition]}
-                contentFit="cover"
-                source={require('../../assets/ellipse-190.png')}
-              />
-              <Image
-                style={[styles.progressButtonItem, styles.progressPosition]}
-                contentFit="cover"
-                source={require('../../assets/ellipse-192.png')}
-              />
-            </Pressable>
-          </View>
-        </View>
+     
       </View>
     </View>
   )
@@ -84,7 +43,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   onboarding1Icon: {
-    width: 428,
+    width: "100%",
     zIndex: 0,
     overflow: 'hidden'
   },
@@ -142,7 +101,6 @@ const styles = StyleSheet.create({
   progressButtonChild: {
     bottom: '0%',
     left: '0%',
-    opacity: 0.38,
     width: '100%'
   },
   progressButtonItem: {

@@ -199,7 +199,7 @@ const Cancion1 = ({ onClose }) => {
         locations={[0, 1]}
         colors={['#dee274', '#7ec18c']}
       >
-        <TouchableWithoutFeedback onPress={() => handleAddHashtag()}>
+        <TouchableOpacity onPress={() => handleAddHashtag()}>
           <Text
             style={{
               color: Color.white,
@@ -210,7 +210,7 @@ const Cancion1 = ({ onClose }) => {
           >
             Añadir
           </Text>
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
       </LinearGradient>
      
       <Text

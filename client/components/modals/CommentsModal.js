@@ -8,7 +8,7 @@ import {
   Pressable
 } from 'react-native'
 import { Image } from 'expo-image'
-import { Border } from '../../GlobalStyles'
+import { Border, FontFamily } from '../../GlobalStyles'
 import SingleComment from '../SingleComment'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -51,6 +51,7 @@ const CommentsModal = ({ onClose }) => {
     require('../../assets/emoji9.png'),
     require('../../assets/emoji10.png')
   ]
+  const emojis = ['😳', '😊', '😄', '😍', '😉', '😞', '😢', '😠', '😮', '😑']
 
   useEffect(() => {
     if (search.length) {
@@ -164,19 +165,17 @@ const CommentsModal = ({ onClose }) => {
         }}
       >
         <Pressable
-        onPress={onClose}
+          onPress={onClose}
           style={{
             width: 60,
-            height:10,
-            borderRadius:50,
+            height: 10,
+            borderRadius: 50,
             flexDirection: 'row',
             paddingHorizontal: 28,
-            backgroundColor:"white",
+            backgroundColor: 'white',
             alignItems: 'center'
           }}
-        >
-          
-        </Pressable>
+        ></Pressable>
         <View
           style={{
             borderColor: '#787878',
@@ -277,18 +276,22 @@ const CommentsModal = ({ onClose }) => {
           paddingHorizontal: 15
         }}
       >
-        {images.map((image, index) => (
-          <Image
-            key={index}
-            style={{
-              width: (Dimensions.get('screen').width - 102) / 10,
-              height: (Dimensions.get('screen').width - 102) / 10
+     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+     {emojis.map((image, index) => (
+          <Text key={index}
+            onPress={() => {
+              setComment(`${comment}😞`)
             }}
-            contentFit="cover"
-            contentPosition={'center'}
-            source={image}
-          />
+            style={{fontSize: 26,
+              fontFamily: FontFamily.lato,
+              fontWeight: '500',
+            
+              letterSpacing: 10}}
+          >
+            {image}
+          </Text>
         ))}
+     </ScrollView>
       </View>
       <View
         style={{
@@ -304,9 +307,13 @@ const CommentsModal = ({ onClose }) => {
           style={{ width: 30, height: 30, borderRadius: 50 }}
           contentFit="cover"
           contentPosition={'center'}
-          source={userData.profilePicture  ?{
-            uri: userData.profilePicture 
-          } : require('../../assets/logoo.png')}
+          source={
+            userData.profilePicture
+              ? {
+                  uri: userData.profilePicture
+                }
+              : require('../../assets/logoo.png')
+          }
         />
         <View
           style={{

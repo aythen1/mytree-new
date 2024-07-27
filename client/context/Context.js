@@ -7,6 +7,7 @@ import { updateMessages } from '../redux/actions/chat'
 import axiosInstance from '../apiBackend'
 import { addUserDiary } from '../redux/slices/diaries.slices'
 import { getUserData } from '../redux/actions/user'
+import { setAllChats } from '../redux/slices/chats.slices'
 
 export const Context = createContext()
 
@@ -43,9 +44,8 @@ export const ContextProvider = ({ children }) => {
   const [selectedSection, setSelectedSection] = useState('nube')
 
   const handleAddDiary = (category, date) => {
-
-    const dateEdit= new Date(date)
-    const dateString = dateEdit.toISOString().split('T')[0]; // Obtener solo el año-mes-día
+    const dateEdit = new Date(date)
+    const dateString = dateEdit.toISOString().split('T')[0] // Obtener solo el año-mes-día
     console.log(
       'Agregando nuevo diario en categoria',
       category,
@@ -57,7 +57,7 @@ export const ContextProvider = ({ children }) => {
       addUserDiary({
         images: [],
         videos: [],
-        date:dateString,
+        date: dateString,
         category,
         id: 'preDiary',
         title: '',
@@ -278,75 +278,14 @@ export const ContextProvider = ({ children }) => {
     }
   }
 
-  // const getUsersMessages = () => {
-  //   const getConvMessages = async (user) => {
-  //     try {
-  //       const { data } = await axiosInstance.get(
-  //         `chat/room?limit=${10}&senderId=${userData.id}&receiverId=${user.id}`
-  //       )
-  //       console.log('data from chat with ', user.id, data)
-  //       const filterByDelete = data?.filter((message) => {
-  //         const senderOrReceiver =
-  //           message.senderId.toString() === userData.id.toString()
-  //             ? 'sender'
-  //             : 'receiver'
-  //         if (senderOrReceiver === 'sender') {
-  //           if (message.senderDelete === true) {
-  //             return false
-  //           }
-  //           return true
-  //         }
-  //         if (senderOrReceiver === 'receiver') {
-  //           if (message.receiverDelete === true) {
-  //             return false
-  //           }
-  //           return true
-  //         }
-  //       })
-  //       return filterByDelete
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error)
-  //       return []
-  //     }
-  //   }
-  //   Promise.all(
-  //     allUsers
-  //       ?.filter((user) => user?.id !== userData.id)
-  //       ?.map(async (user) => ({
-  //         user,
-  //         data: await getConvMessages(user)
-  //       }))
-  //   )
-  //     .then((filteredUsers) => {
-  //       const usersWithMessages = filteredUsers?.filter(
-  //         (user) => user?.data && user?.data.length > 0
-  //       )
-
-  //       const sortedUsersWithMessages = usersWithMessages?.sort(
-  //         (a, b) =>
-  //           new Date(b.data[0].createdAt) - new Date(a.data[0].createdAt)
-  //       )
-
-  //       setUsersWithMessages(sortedUsersWithMessages?.map(({ user }) => user))
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error fetching messages for users:', error)
-  //     })
-  // }
-
   const [editingDiary, setEditingDiary] = useState()
   const [notReadedMessages, setNotReadedMessages] = useState()
 
   const getUsersMessages = async () => {
-    console.log('userData.id', userData.id)
-    // try {
-
-    // } catch (error) {
-    //   console.log('error', error)
-    // }
     const { data } = await axiosInstance.post('chat/chats', {
       userId: userData.id
     })
+
     console.log('DATA', data)
     const convs = Object.keys(data)
     console.log('convs', convs)
@@ -383,22 +322,21 @@ export const ContextProvider = ({ children }) => {
           .filter((singleId) => singleId !== userData.id)[0]
 
         console.log('other user id', otherUserId)
-        const userInfo = allUsers.filter((user) => user.id === otherUserId)[0]
-        console.log('userInfo==========', userInfo)
+        const userInfo = allUsers && allUsers.filter((user) => user.id === otherUserId)[0]
+        console.log('userInfo==========', userInfo , otherUserId)
         const lastMessage = data[key].sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         )[0]
         return { room: key, ...userInfo, lastMessage }
       })
-      // console.log('Setting users with messages to: ', finalInfo)
+      console.log('Setting users with messages to: ', finalInfo)
       //fix
-      setUsersWithMessages(
-        finalInfo.sort(
-          (a, b) =>
-            new Date(b.lastMessage.createdAt) -
-            new Date(a.lastMessage.createdAt)
-        )
+      const res = finalInfo.sort(
+        (a, b) =>
+          new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt)
       )
+      dispatch(setAllChats(res))
+      setUsersWithMessages(res)
     }
   }
 

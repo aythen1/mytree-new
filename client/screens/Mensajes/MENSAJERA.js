@@ -25,14 +25,13 @@ const MENSAJERA = () => {
   const navigation = useNavigation()
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(true)
-  const { allMessages } = useSelector((state) => state.chats)
-  const { allUsers , userData:usuario } = useSelector((state) => state.users)
+  const { allMessages , groups ,allChats} = useSelector((state) => state.chats)
+  const { allUsers, userData: usuario } = useSelector((state) => state.users)
   const { usersWithMessages, userData, getUsersMessages } = useContext(Context)
   const [selectedFilter, setSelectedFilter] = useState('All')
   const [filteredUsersWithMessages, setFilteredUsersWithMessages] = useState(
     usersWithMessages || []
   )
-  const [userGoups ,setUserGroups]=useState([])
 
   const sortUsers = (userA, userB) => {
     const isInMessagesA = filteredUsersWithMessages?.some(
@@ -51,17 +50,7 @@ const MENSAJERA = () => {
     }
   }
 
-  useEffect(()=>{
-    const obtenerGrupos =async ()=> {
-      const res = await axiosInstance.get(`/chat/grupsUser/${usuario?.id}`)
-      console.log(res.data,"dataaaaaaaaaaaaaa")
-      setUserGroups(res.data)
-    }
-   if(selectedFilter == 'All' || selectedFilter == 'Groups'){
-  obtenerGrupos()
-
-  }
-  },[selectedFilter])
+ 
 
   const filteredUsers = allUsers
     ?.filter(
@@ -71,15 +60,7 @@ const MENSAJERA = () => {
     )
     .sort(sortUsers)
 
-  useEffect(() => {
-    console.log('USERSWITHMESSAGES', usersWithMessages.length)
-  }, [usersWithMessages])
 
-  useEffect(() => {
-    getUsersMessages().then(()=> {
-      setLoading(false)
-    })
-  }, [allMessages])
 
   useEffect(() => {
     if (selectedFilter.length > 0) {
@@ -89,71 +70,72 @@ const MENSAJERA = () => {
         allUsers.filter((user) => user.id === userData.id)[0]?.friendsIds || []
 
       if (selectedFilter === 'All') {
-        const da1 = usersWithMessages.filter((e) => e.username && e); 
+        const da = usersWithMessages.filter((e) => e.username && e)
         // Primer filtrado para asegurarte de que `username` exista
-        const da = [...da1,...userGoups]
-        const uniqueUsers = [];
-        const seenUsernames = new Set();
-        
+     
+        const uniqueUsers = []
+        const seenUsernames = new Set()
+
         for (const user of da) {
           if (!seenUsernames.has(user.id)) {
-            seenUsernames.add(user.id);
-            uniqueUsers.push(user);
+            seenUsernames.add(user.id)
+            uniqueUsers.push(user)
           }
         }
-        console.log(uniqueUsers,"mennnnnnnnnn")
-        setFilteredUsersWithMessages(uniqueUsers)
+        console.log([...uniqueUsers,...groups], 'mennnnnnnnnn')
+        setFilteredUsersWithMessages([...uniqueUsers,...groups])
+        setLoading(false)
       } else if (selectedFilter === 'Friends') {
-        const da =   [...usersWithMessages].filter((user) => userFriends.includes(user.id))
-        const uniqueUsers = [];
-        const seenUsernames = new Set();
-        
+        const da = [...usersWithMessages].filter((user) =>
+          userFriends.includes(user.id)
+        )
+        const uniqueUsers = []
+        const seenUsernames = new Set()
+
         for (const user of da) {
           if (!seenUsernames.has(user.id)) {
-            seenUsernames.add(user.id);
-            uniqueUsers.push(user);
+            seenUsernames.add(user.id)
+            uniqueUsers.push(user)
           }
         }
-        setFilteredUsersWithMessages(
-          uniqueUsers
-        )
+        setFilteredUsersWithMessages(uniqueUsers)
+        setLoading(false)
+
       } else if (selectedFilter === 'Family') {
-       const da = [...usersWithMessages].filter((user) => userFamily.includes(user.id))
-       const uniqueUsers = [];
-       const seenUsernames = new Set();
-       
-       for (const user of da) {
-         if (!seenUsernames.has(user.id)) {
-           seenUsernames.add(user.id);
-           uniqueUsers.push(user);
-         }
-       }
-       setFilteredUsersWithMessages(
-        uniqueUsers
+        const da = [...usersWithMessages].filter((user) =>
+          userFamily.includes(user.id)
         )
-      } else if (selectedFilter === 'Groups' ) {
-        const da = userGoups
-        console.log(userGoups,"men2")
-        const uniqueUsers = [];
-        const seenUsernames = new Set();
-        
+        const uniqueUsers = []
+        const seenUsernames = new Set()
+
+        for (const user of da) {
+          if (!seenUsernames.has(user.id)) {
+            seenUsernames.add(user.id)
+            uniqueUsers.push(user)
+          }
+        }
+        setFilteredUsersWithMessages(uniqueUsers)
+        setLoading(false)
+
+      } else if (selectedFilter === 'Groups') {
+        const da = groups
+        const uniqueUsers = []
+        const seenUsernames = new Set()
+
         for (const user of da) {
           if (!seenUsernames.has(user.room)) {
-            seenUsernames.add(user.room);
-            uniqueUsers.push(user);
+            seenUsernames.add(user.room)
+            uniqueUsers.push(user)
           }
         }
         setFilteredUsersWithMessages(uniqueUsers)
+        setLoading(false)
+
       }
     }
   }, [selectedFilter])
 
-  
 
-
-  useEffect(() => {
-    console.log('usersWithMessages:', usersWithMessages)
-  }, [usersWithMessages])
 
   return (
     <LinearGradient
@@ -176,8 +158,7 @@ const MENSAJERA = () => {
           shadowColor: 'black'
         }}
       >
-
-        <TopBar screen={"mensajes"}></TopBar>
+        <TopBar screen={'mensajes'}></TopBar>
         <View
           style={{
             flexDirection: 'row',
@@ -262,17 +243,22 @@ const MENSAJERA = () => {
                 </View>
               )}
           {search === '' && filteredUsersWithMessages.length > 0
-            ? filteredUsersWithMessages?.map((user,i) => (
+            ? filteredUsersWithMessages?.map((user, i) => (
                 <ChatCard
                   value={search}
                   key={i}
-                  name={ !user.groupName ? `${user?.username} ${user?.apellido}`: user?.groupName}
+                  name={
+                    !user.groupName
+                      ? `${user?.username} ${user?.apellido}`
+                      : user?.groupName
+                  }
                   selectedUserId={user.id}
-                  isGroup={selectedFilter !== 'Groups' ? false : true }
+                  isGroup={selectedFilter !== 'Groups' ? false : true}
                   userInfo={user}
                 />
               ))
-            : (search === '' &&  filteredUsersWithMessages.length < 1) && (
+            : search === '' &&
+              filteredUsersWithMessages.length < 1 && (
                 <View
                   style={{
                     width: '100%',
