@@ -68,6 +68,14 @@ export const getChatHistoryGroup = createAsyncThunk(
   }
 )
 
+export const chatGroups = createAsyncThunk('chatGroups/chats', async (id) => {
+  try {
+    const data = await axiosInstance.get(`/chat/grupsUser/${id}`)
+    return data.data
+  } catch (error) {
+    throw new Error(error)
+  }
+})
 
 export const updateMessages = createAsyncThunk(
   'updateMessages/chats',

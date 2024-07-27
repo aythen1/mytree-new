@@ -1,10 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getChatHistory, getChatHistoryGroup, updateMessages } from '../actions/chat'
+import { chatGroups, getChatHistory, getChatHistoryGroup, updateMessages } from '../actions/chat'
 
 const clubSlices = createSlice({
   name: 'chats',
   initialState: {
     allMessages: [],
+    allchats:[],
+    groups: [],
     loading: false,
     error: false
   },
@@ -15,6 +17,9 @@ const clubSlices = createSlice({
     },
     setAllMessages: (state, action) => {
       state.allMessages = action.payload
+    },
+    setAllChats: (state, action) => {
+      state.allchats = action.payload
     },
     setAllConversationMessagesToRead: (state, action) => {
       const allToReaded = state.allMessages.map((message) => ({
@@ -93,6 +98,20 @@ const clubSlices = createSlice({
         state.loading = false
         state.error = true
       })
+      //------------------
+      .addCase(chatGroups.pending, (state) => {
+        state.loading = true
+        state.error = false
+      })
+      .addCase(chatGroups.fulfilled, (state, action) => {
+        state.loading = false
+        state.groups = action.payload
+        state.error = false
+      })
+      .addCase(chatGroups.rejected, (state) => {
+        state.loading = false
+        state.error = true
+      })
   }
 })
 
@@ -100,7 +119,8 @@ export const {
   setAllMessages,
   setAllConversationMessagesToRead,
   resetChatsSlices,
-  clearChats
+  clearChats,
+  setAllChats
 } = clubSlices.actions
 
 export default clubSlices.reducer

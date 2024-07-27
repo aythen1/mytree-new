@@ -65,9 +65,6 @@ const OtherUserProfile = () => {
   const route = useRoute()
   const userData = route.params
 
-  //   useEffect(() => {
-  //     console.log('======== userData from OtherUserProfile ========', userData)
-  //   }, [])
   const renderSelectedComponent = () => {
     switch (selectedComponent) {
       case 'MiLegado':

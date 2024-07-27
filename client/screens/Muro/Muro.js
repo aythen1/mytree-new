@@ -49,6 +49,9 @@ import axiosInstance from '../../apiBackend'
 import CommentsModal from '../../components/modals/CommentsModal'
 import { updateSelectedPostComments } from '../../redux/slices/comments.slices'
 import TopBar from '../../components/TopBar'
+import { chatGroups } from '../../redux/actions/chat'
+import { getAllPosts } from '../../redux/actions/posts'
+import GestureRecognizer from 'react-native-swipe-gestures'
 
 const Muro = () => {
   const {
@@ -57,7 +60,9 @@ const Muro = () => {
     showTaggedsModal,
     setShowTaggedsModal,
     showCommentsModal,
-    setShowCommentsModal
+    setShowCommentsModal,
+    usersWithMessages,
+    getUsersMessages
   } = useContext(Context)
   const dispatch = useDispatch()
   const navigation = useNavigation()
@@ -84,11 +89,16 @@ const Muro = () => {
 
   const dispatches = async (id) => {
     console.log('pasa por aca y tiene este ID', id)
-    dispatch(getAllNotifications())
-    dispatch(getUserData(id))
-    dispatch(getAllUserEvents(id))
-    dispatch(getAllEvents())
-    dispatch(getAllUserInvitations(id))
+    dispatch(getAllUsers()).finally(() => {
+      getUsersMessages()
+      dispatch(getAllNotifications())
+      dispatch(getAllPosts())
+      dispatch(chatGroups(id))
+      dispatch(getUserData(id))
+      dispatch(getAllUserEvents(id))
+      dispatch(getAllEvents())
+      dispatch(getAllUserInvitations(id))
+    })
   }
 
   useEffect(() => {
@@ -112,28 +122,28 @@ const Muro = () => {
     }
   }
 
-  const [refreshing, setRefreshing] = useState(false);
-  const scrollViewRef = useRef(null);
+  const [refreshing, setRefreshing] = useState(false)
+  const scrollViewRef = useRef(null)
 
   const onRefresh = () => {
-    setRefreshing(true);
+    setRefreshing(true)
     if (userData.id !== undefined) {
-      dispatches(userData.id).finally(()=>{
-        setRefreshing(false);
+      dispatches(userData.id).finally(() => {
+        setRefreshing(false)
       })
     }
     // Aquí puedes agregar la lógica para actualizar la pantalla
     // Simulación de una actualización de datos
-  };
+  }
 
   const handleScroll = (event) => {
-    const { contentOffset } = event.nativeEvent;
-    const y = contentOffset.y;
+    const { contentOffset } = event.nativeEvent
+    const y = contentOffset.y
     // Check if user is at the top of the scroll view
     if (y <= -60) {
-    return  onRefresh();
+      return onRefresh()
     }
-  };
+  }
 
   return (
     <LinearGradient
@@ -147,13 +157,8 @@ const Muro = () => {
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={16}
         refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-       
-          />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-        
       >
         {/* <View
           style={{
@@ -407,29 +412,42 @@ const Muro = () => {
           </TouchableWithoutFeedback>
         </Modal>
 
-        <Modal animationType="slide" transparent visible={showCommentsModal}>
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%'
-            }}
+        <GestureRecognizer
+          keyboardShouldPersistTaps="always"
+          onSwipeDown={() => {
+            setShowCommentsModal(false)
+            dispatch(updateSelectedPostComments([]))
+          }}
+        >
+          <Modal
+            animationType="slide"
+            transparent
+            visible={showCommentsModal}
+            sw
           >
-            <Pressable
-              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
-              onPress={() => {
-                setShowCommentsModal(false)
-                dispatch(updateSelectedPostComments([]))
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%'
               }}
-            />
-            <CommentsModal
-              onClose={() => {
-                setShowCommentsModal(false)
-                dispatch(updateSelectedPostComments([]))
-              }}
-            />
-          </View>
-        </Modal>
+            >
+              <Pressable
+                style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+                onPress={() => {
+                  setShowCommentsModal(false)
+                  dispatch(updateSelectedPostComments([]))
+                }}
+              />
+              <CommentsModal
+                onClose={() => {
+                  setShowCommentsModal(false)
+                  dispatch(updateSelectedPostComments([]))
+                }}
+              />
+            </View>
+          </Modal>
+        </GestureRecognizer>
       </ScrollView>
     </LinearGradient>
   )

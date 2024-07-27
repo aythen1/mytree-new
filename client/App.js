@@ -69,7 +69,7 @@ import MasDetallesEventos from './screens/Calendario/MasDetallesEventos'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider } from 'react-redux'
 import { store } from './redux/store'
-import { loadFonts } from './GlobalStyles'
+import { Color, loadFonts } from './GlobalStyles'
 import { Platform, SafeAreaView, StatusBar } from 'react-native'
 import UploadMemory from './screens/Memories/UploadMemory'
 import { ContextProvider } from './context/Context'
@@ -113,7 +113,7 @@ const App = () => {
 
   
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Color.primario1 }}>
       <StatusBar
         hidden={!isFooterShow && !onConv}
         barStyle={'dark-content'}
@@ -136,6 +136,7 @@ const App = () => {
               <Drawer.Screen options={{ headerShown: false }} name="Main">
                 {(props) => (
                   <MainStackNavigator
+
                     {...props}
                     setIsFooterShow={setIsFooterShow}
                     setOnConv={setOnConv}
@@ -155,6 +156,11 @@ const MainStackNavigator = ({ setIsFooterShow }) => {
   return (
     <Stack.Navigator
       initialRouteName="Onboarding2"
+      transitionConfig={() => ({
+        containerStyle: {
+          backgroundColor: '#f0f0f0', // Cambia el color de fondo aquí
+        },
+      })}
 
       screenOptions={({ route }) => ({
         headerShown: false,

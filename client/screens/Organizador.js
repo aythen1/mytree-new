@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect, useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Image } from 'expo-image'
 import {
-  StyleSheet,
   Text,
   View,
   Pressable,
@@ -10,16 +9,13 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
-  Dimensions,
-  Keyboard
+  Keyboard,
+  ActivityIndicator
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import Etiquetar from '../components/Etiquetar'
-import Lugar3 from '../components/Lugar3'
 import { FontSize, FontFamily, Color, Border, Padding } from '../GlobalStyles'
-import Checkbox from 'expo-checkbox'
 import ENTRADACREADA from '../components/ENTRADACREADA'
-import { setPanel } from '../redux/slices/panel.slices'
 import Album from './Album'
 import PopUpCalendario from '../components/PopUpCalendario'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -27,14 +23,11 @@ import axios from 'axios'
 import { BACKURL } from '../apiBackend'
 import Privacidad from './Privacidad'
 import { Context } from '../context/Context'
-import { StatusBar } from 'react-native'
 import Cancion1 from '../components/Cancion1'
-import MapView from 'react-native-maps'
 import { useNavigation } from '@react-navigation/native'
 import { getAllPosts } from '../redux/actions/posts'
-import { getUserPosts } from '../redux/slices/user.slices'
 import Maps from '../components/Maps'
-import TopBar from "../components/TopBar"
+import TopBar from '../components/TopBar'
 const Organizador = () => {
   const dispatch = useDispatch()
   const [taggedUsers, setTaggedUsers] = useState([])
@@ -49,17 +42,17 @@ const Organizador = () => {
     setSelectedHashtags
   } = useContext(Context)
 
-  const [legado, setLegado] = useState(false)
   const [album, setAlbum] = useState(false)
   const [selectedAlbum, setSelectedAlbum] = useState(false)
+  const [loading, setLoading] = useState(false)
+
   const [añadirAUnAlbum, setAñadirAUnAlbum] = useState(false)
   const [calendario, setCalendario] = useState(false)
   const [lugar, setLugar] = useState(false)
   const [frameContainer2Visible, setFrameContainer2Visible] = useState(false)
   const [submit, setSubmit] = useState(false)
   const [showEtapas, setShowEtapas] = useState(false)
-  const [usuario, setUsuario] = useState({})
-  const [username, setUsername] = useState('')
+
 
   useEffect(() => {}, [taggedUsers])
 
@@ -85,11 +78,6 @@ const Organizador = () => {
     getUser()
   }, [])
 
-  const [uploadRecuerdo, setUploadRecuerdo] = useState(false)
-  const [cancion, setCancion] = useState(false)
-  const [ischecked, setIschecked] = useState(false)
-  const [buttonContainer1Visible, setButtonContainer1Visible] = useState(false)
-  const [frameContainer5Visible, setFrameContainer5Visible] = useState(false)
   const [showPrivacidad, setShowPrivacidad] = useState(false)
   const [privacy, setPrivacy] = useState('Todos')
   const [albums, setAlbums] = useState([])
@@ -172,6 +160,7 @@ const Organizador = () => {
   }, [])
 
   const handleSubmit = async () => {
+    setLoading(true)
     try {
       const finalData = {}
       finalData.tags = taggedUsers
@@ -191,12 +180,14 @@ const Organizador = () => {
 
       if (res.data) {
         console.log('res.data: ', res.data)
-        setSubmit(true)
         setSelectedHashtags([])
         setTaggedUsers([])
         setAlbums([])
         setAlbum(false)
-        dispatch(getAllPosts(userData.id))
+        dispatch(getAllPosts(userData.id)).then(() => {
+          setSubmit(true)
+          setLoading(false)
+        })
       }
     } catch (error) {
       console.log(error)
@@ -204,6 +195,7 @@ const Organizador = () => {
       setTaggedUsers([])
       setAlbums([])
       setAlbum(false)
+      setLoading(false)
     }
   }
 
@@ -222,13 +214,15 @@ const Organizador = () => {
     >
       <ScrollView
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps={true}
         contentContainerStyle={{
           width: '100%',
           flex: 1,
+          paddingBottom: 20
         }}
       >
         <TopBar></TopBar>
-        <View style={{ width: '100%' ,paddingHorizontal:10}}>
+        <View style={{ width: '100%', paddingHorizontal: 10 }}>
           <View
             style={{
               height: 29,
@@ -242,7 +236,7 @@ const Organizador = () => {
                 style={{
                   top: 5,
                   width: 26,
-                  opacity:0,
+                  opacity: 0,
                   overflow: 'hidden'
                 }}
                 contentFit="cover"
@@ -255,7 +249,7 @@ const Organizador = () => {
                 fontWeight: '700',
                 textAlign: 'left',
                 fontFamily: FontFamily.lato,
-                color: Color.negro,
+                color: Color.negro
               }}
             >
               Subir recuerdo
@@ -629,55 +623,6 @@ const Organizador = () => {
                           width: '100%'
                         }}
                       >
-                        {/* <View style={{ flexDirection: 'row', gap: 10 }}>
-                          <TouchableOpacity onPress={() => setLegado(!legado)}>
-                            {legado ? (
-                              <Image
-                                contentFit="cover"
-                                style={{ width: 20, height: 20 }}
-                                source={require('../assets/checked.png')}
-                              />
-                            ) : (
-                              <Image
-                                contentFit="cover"
-                                style={{ width: 20, height: 20 }}
-                                source={require('../assets/notchecked.png')}
-                              />
-                            )}
-                          </TouchableOpacity>
-                          <Text
-                            style={{
-                              textAlign: 'left',
-                              color: Color.gris,
-                              fontFamily: FontFamily.lato,
-                              fontWeight: '500',
-                              lineHeight: 19,
-                              letterSpacing: 0,
-                              fontSize: FontSize.size_base
-                            }}
-                          >
-                            Añadir a mi legado
-                          </Text>
-                        </View> */}
-                        {/* <Pressable
-                        // onPress={openEtapas}
-                        >
-                          <Text
-                            style={{
-                              height: 30,
-                              padding: 5,
-                              backgroundColor: Color.secundario,
-                              borderRadius: Border.br_11xl,
-                              textAlign: 'center',
-                              color: Color.primario1,
-                              lineHeight: 18,
-                              fontSize: FontSize.size_xs,
-                              fontFamily: FontFamily.lato
-                            }}
-                          >
-                            Añadir etapa
-                          </Text>
-                        </Pressable> */}
                       </View>
                     </Pressable>
                     <Pressable
@@ -791,69 +736,46 @@ const Organizador = () => {
                 />
               </View>
             </View>
-            <LinearGradient
-              style={{
-                marginTop: 30,
-                paddingVertical: Padding.p_sm,
-                backgroundColor: Color.linearBoton,
-                borderRadius: Border.br_11xl,
-                justifyContent: 'center',
-                alignSelf: 'center',
-                width: '95%',
-                alignItems: 'center',
-                flexDirection: 'row'
-              }}
-              locations={[0, 1]}
-              colors={['#dee274', '#7ec18c']}
+            <TouchableOpacity
+              disabled={ loading|| submit ||!libraryImage || dataToSend.description === ''}
+              onPress={handleSubmit}
             >
-              <Text
-                disabled={!libraryImage || dataToSend.description === ''}
-                onPress={handleSubmit}
+              <LinearGradient
                 style={{
-                  letterSpacing: 1,
-                  lineHeight: 24,
-                  color: Color.white,
-                  textAlign: 'center',
-                  fontSize: FontSize.size_base,
-                  fontFamily: FontFamily.lato
+                  marginTop: 30,
+                  paddingVertical: Padding.p_sm,
+                  backgroundColor: Color.linearBoton,
+                  borderRadius: Border.br_11xl,
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                  width: '95%',
+                  alignItems: 'center',
+                  flexDirection: 'row'
                 }}
+                locations={[0, 1]}
+                colors={['#dee274', '#7ec18c']}
               >
-                Subir
-              </Text>
-            </LinearGradient>
+                <Text
+                  style={{
+                    letterSpacing: 1,
+                    lineHeight: 24,
+                    color: Color.white,
+                    textAlign: 'center',
+                    fontSize: FontSize.size_base,
+                    fontFamily: FontFamily.lato
+                  }}
+                >
+                  {!loading ? (
+                    ' Subir'
+                  ) : (
+                    <ActivityIndicator color={'white'}></ActivityIndicator>
+                  )}
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
           </ScrollView>
         </View>
-        {/* {!keyboardVisible && (
-          <LinearGradient
-            style={{
-              paddingVertical: Padding.p_sm,
-              backgroundColor: Color.linearBoton,
-              borderRadius: Border.br_11xl,
-              justifyContent: 'center',
-              alignSelf: 'center',
-              width: '95%',
-              alignItems: 'center',
-              flexDirection: 'row'
-            }}
-            locations={[0, 1]}
-            colors={['#dee274', '#7ec18c']}
-          >
-            <Text
-              disabled={!libraryImage || dataToSend.description === ''}
-              onPress={handleSubmit}
-              style={{
-                letterSpacing: 1,
-                lineHeight: 24,
-                color: Color.white,
-                textAlign: 'center',
-                fontSize: FontSize.size_base,
-                fontFamily: FontFamily.lato
-              }}
-            >
-              Subir
-            </Text>
-          </LinearGradient>
-        )} */}
+
         <Modal animationType="slide" transparent visible={showEtapas}>
           <View
             style={{
