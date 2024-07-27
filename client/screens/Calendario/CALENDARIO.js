@@ -125,6 +125,9 @@ const CALENDARIO = () => {
               width: '100%'
             }}
           >
+
+
+            
             <TextInput
               style={{
                 fontSize: FontSize.size_sm,
