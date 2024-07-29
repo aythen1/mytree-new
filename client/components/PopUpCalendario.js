@@ -61,14 +61,17 @@ const PopUpCalendario = ({
     const year = currentDate.getFullYear()
     const month = String(currentDate.getMonth() + 1).padStart(2, '0') // El mes es base 0, por eso se suma 1
     const day = String(currentDate.getDate()).padStart(2, '0')
+ 
     return `${year}-${month}-${day}`
   }
 
 
-  const dat = new Date()
   useEffect(()=>{
-    
-
+ if(!fromDiary){
+  setSelectedDate(getCurrentDate())
+ } else {
+  setSelectedDate(new Date())
+ }
   },[])
 
   const handleDayPress = (day) => {
@@ -102,7 +105,7 @@ const PopUpCalendario = ({
               selected: true,
               customStyles: {
                 container: {
-                  backgroundColor: '#DFE271',
+                  backgroundColor: Color.primario1,
                   width: 32,
                   height: 32,
                   borderRadius: 9

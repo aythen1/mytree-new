@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Image, Modal, Dimensions } from 'react-native'
+import { View, Text, Pressable, Image, Modal, Dimensions, TouchableOpacity } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { TextInput } from 'react-native-gesture-handler'
 import { Color, FontFamily, FontSize, Padding } from '../GlobalStyles'
@@ -27,7 +27,8 @@ const SingleDiary = ({
   last,
   selectedDate,
   setPickedImages,
-  notEditable
+  notEditable,
+  setSelected
 }) => {
   const { selectedSection, formatDateToNormal } = useContext(Context)
   const { userData } = useSelector((state) => state.users)
@@ -54,7 +55,8 @@ const SingleDiary = ({
   }, [])
 
   return (
-    <View
+    <TouchableOpacity
+      onPress={()=>  setSelected(diary)}
       style={{
         borderTopWidth: 1,
         borderBottomWidth: last ? 1 : 0,
@@ -380,7 +382,9 @@ const SingleDiary = ({
           )}
 
           {!notEditable && (
-            <Pressable onPress={() => setEditingDiary(diary.id)}>
+            // <Pressable onPress={() => setEditingDiary(diary.id)}>
+            <Pressable onPress={() => { setEditingDiary(diary.id);setSelected(diary)}}>
+
               <View style={{ marginBottom: -3, marginRight: 4 }}>
                 <Editar2SVG />
               </View>
@@ -445,7 +449,7 @@ const SingleDiary = ({
           </View>
         </Modal>
       )}
-    </View>
+    </TouchableOpacity>
   )
 }
 
