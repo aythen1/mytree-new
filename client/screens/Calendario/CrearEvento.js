@@ -6,7 +6,8 @@ import {
   Pressable,
   Modal,
   ScrollView,
-  TextInput
+  TextInput,
+  TouchableOpacity
 } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -83,7 +84,6 @@ const CrearFechaEspecial = () => {
     if (
       description.length > 0 &&
       title.length > 0 &&
-      location.length > 0 &&
       selectedDate 
     ) {
       const event = {
@@ -146,6 +146,8 @@ const CrearFechaEspecial = () => {
           })
         }
         dispatch(getAllUserEvents(user.id))
+        setModalCreate(true)
+
       })
     }
   }
@@ -174,7 +176,7 @@ const CrearFechaEspecial = () => {
         <View>
           <View style={styles.titleBase}>
             <Text style={[styles.title, styles.titleTypo]}>
-              Titulo del evento
+              Título del evento
             </Text>
           </View>
           <TextInput
@@ -184,13 +186,12 @@ const CrearFechaEspecial = () => {
               paddingVertical: Padding.p_smi,
               backgroundColor: Color.fAFAFA,
               borderRadius: Border.br_3xs,
-              paddingHorizontal: Padding.p_xl,
               flexDirection: 'row',
               width: '100%',
               alignItems: 'center',
               gap: 20
             }}
-            placeholder="Nombre del evento"
+            placeholder="Título del evento"
           />
         </View>
 
@@ -208,7 +209,6 @@ const CrearFechaEspecial = () => {
               paddingVertical: Padding.p_smi,
               backgroundColor: Color.fAFAFA,
               borderRadius: Border.br_3xs,
-              paddingHorizontal: Padding.p_xl,
               flexDirection: 'row',
               width: '100%'
             }}
@@ -227,7 +227,6 @@ const CrearFechaEspecial = () => {
               paddingVertical: 13,
               backgroundColor: Color.fAFAFA,
               borderRadius: Border.br_3xs,
-              paddingHorizontal: Padding.p_xl,
               flexDirection: 'row',
               width: '100%',
               justifyContent: 'space-between'
@@ -258,7 +257,6 @@ const CrearFechaEspecial = () => {
               paddingVertical: 13,
               backgroundColor: Color.fAFAFA,
               borderRadius: Border.br_3xs,
-              paddingHorizontal: Padding.p_xl,
               flexDirection: 'row',
               width: '100%',
               justifyContent: 'space-between'
@@ -321,7 +319,6 @@ const CrearFechaEspecial = () => {
               paddingVertical: 13,
               backgroundColor: Color.fAFAFA,
               borderRadius: Border.br_3xs,
-              paddingHorizontal: Padding.p_xl,
               flexDirection: 'row',
               width: '100%',
               justifyContent: 'space-between'
@@ -348,7 +345,6 @@ const CrearFechaEspecial = () => {
               paddingVertical: 13,
               backgroundColor: Color.fAFAFA,
               borderRadius: Border.br_3xs,
-              paddingHorizontal: Padding.p_xl,
               flexDirection: 'row',
               width: '100%',
               justifyContent: 'space-between'
@@ -384,15 +380,14 @@ const CrearFechaEspecial = () => {
           locations={[0, 1]}
           colors={['#dee274', '#7ec18c']}
         >
-          <Pressable
+          <TouchableOpacity
             style={[styles.pressable1, styles.pressableFlexBox]}
             onPress={() => {
               handleCreateEvent()
-              setModalCreate(true)
             }}
           >
             <Text style={[styles.signIn2, styles.signTypo]}>Enviar</Text>
-          </Pressable>
+          </TouchableOpacity>
         </LinearGradient>
 
         <View style={styles.frameChild} />
@@ -554,7 +549,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: Color.fAFAFA,
     borderRadius: Border.br_3xs,
-    paddingHorizontal: Padding.p_xl,
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-between'

@@ -16,8 +16,8 @@ const Privacidad = ({ onClose, setPrivacy, privacy }) => {
         <View style={[styles.vectorParent, styles.parentFlexBox]}>
           <Image
             style={styles.vectorIcon}
-            contentFit="cover"
-            source={require('../assets/vector1.png')}
+            contentFit="contain"
+            source={require('../assets/greenBackArrow.png')}
           />
           <Text style={styles.opcionesDePrivacidad}>
             Opciones de privacidad

@@ -172,7 +172,9 @@ const MainStackNavigator = ({ setIsFooterShow }) => {
             route.name !== 'Onboarding1' &&
             route.name !== 'Onboarding2' &&
             route.name !== 'OpenedChat' &&
-            route.name !== 'LOGIN'
+            route.name !== 'LOGIN' && 
+            route.name !== 'REGISTROTRMINOSYCONDICIO' &&
+             route.name !== 'REGISTROPOLTICASDEPRIVAC'
         )
       })}
     >

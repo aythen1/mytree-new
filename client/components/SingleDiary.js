@@ -185,7 +185,7 @@ const SingleDiary = ({
                   }}
                 >
                   <Pressable
-                    style={{ height: 13, width: 13, marginTop: 8 }}
+                    style={{ height: 18, width: 18, marginTop: 8 }}
                     onPress={() => {
                       if (diary.id === 'preDiary') {
                         dispatch(removeUserDiary('preDiary'))
@@ -338,7 +338,7 @@ const SingleDiary = ({
                       })
                     }
                     setPickedImages([])
-                    setEditingDiary()
+                    setEditingDiary(false)
                   }}
                 >
                   <Text

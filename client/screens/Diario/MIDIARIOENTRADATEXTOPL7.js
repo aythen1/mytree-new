@@ -41,7 +41,7 @@ import * as MediaLibrary from 'expo-media-library'
 import PopUpCalendario from '../../components/PopUpCalendario'
 import MasBusquedaSVG from '../../components/svgs/MasBusquedaSVG'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserDiariesByDateOrCategory } from '../../redux/actions/diaries'
+import { getUserDiariesByDateOrCategory, postDiary } from '../../redux/actions/diaries'
 import ImagePickerModal from '../Modals/ImagePickerModal'
 import TopBar from '../../components/TopBar'
 import { removeUserDiary } from '../../redux/slices/diaries.slices'
@@ -53,6 +53,8 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
   const [showEdit, setShowEdit] = useState(false)
   const [isSection, setIsSection] = useState('')
   const { userData } = useSelector((state) => state.users)
+  const { userDiaries } = useSelector((state) => state.diaries)
+
   const [modalCreate, setModalCreate] = useState(false)
   const {
     pickImage,
@@ -419,7 +421,9 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                   <View
                     style={{
                       flexDirection: 'row',
-                      alignItems: 'center'
+                      alignItems: 'center',
+                      justifyContent:"flex-end",
+                      marginTop:10
                     }}
                   >
                     <View
@@ -435,11 +439,11 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                           style={{
                             flexDirection: 'row',
                             gap: 15,
-                            paddingRight: 15
+                            paddingRight: 15,
                           }}
                         >
                           <Pressable
-                            style={{ height: 13, width: 13}}
+                            style={{ height: 18, width: 18}}
                             onPress={() => {
                               if (editingDiary === 'preDiary') {
                                 dispatch(removeUserDiary('preDiary'))
@@ -526,7 +530,8 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                           }}
                           onPress={async () => {
                             console.log('opening create modal')
-                            const preDiary = { ...diary }
+                            const ultimo = userDiaries[userDiaries.length - 1]
+                            const preDiary = { ...ultimo }
                             preDiary.description = text
                             const cloudinaryUrls = []
 

@@ -29,6 +29,7 @@ import {
   getAllNotifications,
   postNotification
 } from '../redux/actions/notifications'
+import TopBar from '../components/TopBar'
 
 const BOTONInvitarAmigos1 = () => {
   const navigation = useNavigation()
@@ -136,41 +137,32 @@ const BOTONInvitarAmigos1 = () => {
           overflow: 'hidden',
           flex: 1,
           gap: 15,
-          paddingHorizontal: 15
+          paddingHorizontal: 15,
+          paddingVertical: 20
         }}
       >
-        <Image
-          style={{
-            width: 87,
-            height: 55
-          }}
-          contentFit="cover"
-          source={require('../assets/image-6.png')}
-        />
         <View
           style={{
             width: '100%',
-            marginTop: -10,
-            justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            justifyContent:"center",
+            flexDirection:"row"
           }}
         >
-          <Pressable
-            style={{ position: 'absolute', left: 0 }}
-            onPress={openDrawer}
-          >
+          <Pressable style={{ position:"absolute",left:0}} onPress={() => navigation.goBack()}>
             <Image
-              style={{ width: 26, height: 20 }}
+              style={{ height: 20, width: 20, alignSelf:"center"}}
               contentFit="cover"
-              source={require('../assets/ionmenu.png')}
+              source={require('../assets/back.png')}
             />
           </Pressable>
+
           <Text
             style={{
               fontSize: FontSize.size_5xl,
               fontWeight: 700,
               fontFamily: FontFamily.lato,
-              color: Color.negro
+              color: Color.negro,
             }}
           >
             Añadir familia
@@ -322,7 +314,7 @@ const BOTONInvitarAmigos1 = () => {
                   fontWeight: 600
                 }}
               >
-                Parentezco
+                Parentesco
               </Text>
               <View
                 style={{
@@ -340,7 +332,7 @@ const BOTONInvitarAmigos1 = () => {
                     fontWeight: 500
                   }}
                 >
-                  {selectedRelationShip || 'Selecciona parentezco'}
+                  {selectedRelationShip || 'Selecciona parentesco'}
                 </Text>
                 <TouchableOpacity
                   onPress={() => setRelationshipModalVisible(true)}

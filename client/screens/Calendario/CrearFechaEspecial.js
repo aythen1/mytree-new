@@ -84,9 +84,8 @@ const CrearFechaEspecial = () => {
     if (
       description.length > 0 &&
       selectedCategory &&
-      location.length > 0 &&
-      selectedDate &&
-      invitedUsers.length > 0
+      selectedDate 
+
     ) {
       const event = {
         type: 'special',
@@ -131,7 +130,10 @@ const CrearFechaEspecial = () => {
 
       event.coverImage = cloudinaryUrls[0]
       console.log('creating special date with values: ', event)
-      dispatch(createEvent(event)).then(()=> dispatch(getAllUserEvents(user.id)))
+      dispatch(createEvent(event)).then(()=> {
+        
+        dispatch(getAllUserEvents(user.id))})
+        setModalCreate(true)
     }
   }
 
@@ -168,7 +170,6 @@ const CrearFechaEspecial = () => {
                 paddingVertical: 13,
                 backgroundColor: Color.fAFAFA,
                 borderRadius: Border.br_3xs,
-                paddingHorizontal: Padding.p_xl,
                 flexDirection: 'row',
                 width: '100%',
                 justifyContent: 'space-between'
@@ -200,7 +201,6 @@ const CrearFechaEspecial = () => {
                 paddingVertical: Padding.p_smi,
                 backgroundColor: Color.fAFAFA,
                 borderRadius: Border.br_3xs,
-                paddingHorizontal: Padding.p_xl,
                 flexDirection: 'row',
                 width: '100%'
               }}
@@ -219,7 +219,6 @@ const CrearFechaEspecial = () => {
                 paddingVertical: 13,
                 backgroundColor: Color.fAFAFA,
                 borderRadius: Border.br_3xs,
-                paddingHorizontal: Padding.p_xl,
                 flexDirection: 'row',
                 width: '100%',
                 justifyContent: 'space-between'
@@ -249,7 +248,6 @@ const CrearFechaEspecial = () => {
                 paddingVertical: 13,
                 backgroundColor: Color.fAFAFA,
                 borderRadius: Border.br_3xs,
-                paddingHorizontal: Padding.p_xl,
                 flexDirection: 'row',
                 width: '100%',
                 justifyContent: 'space-between'
@@ -314,7 +312,6 @@ const CrearFechaEspecial = () => {
                 paddingVertical: 13,
                 backgroundColor: Color.fAFAFA,
                 borderRadius: Border.br_3xs,
-                paddingHorizontal: Padding.p_xl,
                 flexDirection: 'row',
                 width: '100%',
                 justifyContent: 'space-between'
@@ -337,7 +334,8 @@ const CrearFechaEspecial = () => {
               width: '100%',
               justifyContent: 'space-between',
               flexDirection: 'row',
-              alignItems: 'center'
+              alignItems: 'center',
+              paddingRight:4
             }}
           >
             <View style={styles.titleBase}>
@@ -346,9 +344,9 @@ const CrearFechaEspecial = () => {
               </Text>
             </View>
             <Image
-              contentFit="cover"
-              style={{ width: 20, height: 20, marginRight: 10 }}
-              source={require('../../assets/grayRightArrow.png')}
+              contentFit="contain"
+              style={{ width: 18, height: 18, marginRight: 10 }}
+              source={require('../../assets/lock3.png')}
             />
           </Pressable>
 
@@ -369,7 +367,6 @@ const CrearFechaEspecial = () => {
               style={[styles.pressable1, styles.pressableFlexBox]}
               onPress={() => {
                 handleCreateEvent()
-                setModalCreate(true)
               }}
             >
               <Text style={[styles.signIn2, styles.signTypo]}>Enviar</Text>
@@ -575,7 +572,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: Color.fAFAFA,
     borderRadius: Border.br_3xs,
-    paddingHorizontal: Padding.p_xl,
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-between'

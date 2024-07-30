@@ -52,6 +52,7 @@ import TopBar from '../../components/TopBar'
 import { chatGroups } from '../../redux/actions/chat'
 import { getAllPosts } from '../../redux/actions/posts'
 import GestureRecognizer from 'react-native-swipe-gestures'
+import { getAllUserDiaries } from '../../redux/actions/diaries'
 
 const Muro = () => {
   const {
@@ -94,6 +95,10 @@ const Muro = () => {
       dispatch(getAllNotifications())
       dispatch(getAllPosts())
       dispatch(chatGroups(id))
+      // dispatch(getAllUserDiaries(id))
+      // dispatch(getAllUserEvents(id))
+
+
       dispatch(getUserData(id))
       dispatch(getAllUserEvents(id))
       dispatch(getAllEvents())
