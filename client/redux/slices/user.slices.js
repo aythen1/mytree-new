@@ -314,12 +314,16 @@ export const userSlice = createSlice({
     familyLength:0,
     friendLength:0,
     loading: false,
-    error: null
+    error: null,
+    screen:"Muro"
   },
   reducers: {
     // Limpia el error en el estado del usuario
     clearError: (state) => {
       state.error = null
+    },
+    setScreen:(state,action)=> {
+      state.screen = action.payload
     },
     clearUser: (state) => {
       ;(state.userData = {}),
@@ -408,6 +412,6 @@ export const userSlice = createSlice({
   }
 })
 
-export const { clearUser } = userSlice.actions
+export const { clearUser , setScreen } = userSlice.actions
 
 export default userSlice.reducer

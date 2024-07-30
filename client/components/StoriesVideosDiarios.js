@@ -214,16 +214,17 @@ const StoriesVideosDiarios = () => {
                   marginLeft: 15,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginTop: 3,
                   borderRadius: 100,
                   borderWidth: 3,
                   borderColor: Color.primario1
                 }}
               >
-                <Text style={{color:Color.primario1,fontSize:20}}>+</Text>
+                <Text style={{color:Color.primario1,height:80,fontSize:50,fontWeight:300,textAlignVertical:"center",paddingBottom:5}}>+</Text>
+
          
               
               </Pressable>
+                <Text style={{color:Color.primario1,fontSize:20}}></Text>
           </View>
         </View>
       </ScrollView>

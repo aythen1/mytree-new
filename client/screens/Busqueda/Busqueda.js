@@ -205,6 +205,7 @@ const Busqueda = () => {
           <ScrollView
             style={styles.tabsParent}
             horizontal={true}
+            contentContainerStyle={{paddingRight:20}}
             showsHorizontalScrollIndicator={false}
           >
             <Pressable

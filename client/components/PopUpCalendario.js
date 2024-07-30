@@ -1,8 +1,9 @@
 import { LinearGradient } from 'expo-linear-gradient'
 import React, { useEffect, useState } from 'react'
-import { View, StyleSheet, Text, Pressable } from 'react-native'
+import { View, StyleSheet, Text, Pressable, TouchableOpacity, ScrollView } from 'react-native'
 import { Calendar, LocaleConfig } from 'react-native-calendars'
 import { Border, Color, FontFamily, FontSize } from '../GlobalStyles'
+import { dataYears } from '../utils/dataLocal'
 
 const PopUpCalendario = ({
   setButtonContainer2Visible,
@@ -12,6 +13,10 @@ const PopUpCalendario = ({
   setSelectedDate,
   fromDiary
 }) => {
+  const [showYearList, setShowYearList] = useState(false)
+  const [yearSelect, setYearSelect] = useState(selectedDate?.slice(0,4) || new Date().getFullYear())
+
+
   LocaleConfig.locales['es'] = {
     monthNames: [
       'Enero',
@@ -61,14 +66,30 @@ const PopUpCalendario = ({
     const year = currentDate.getFullYear()
     const month = String(currentDate.getMonth() + 1).padStart(2, '0') // El mes es base 0, por eso se suma 1
     const day = String(currentDate.getDate()).padStart(2, '0')
+ 
     return `${year}-${month}-${day}`
   }
+  const mm = [
+    'Enero',
+    'Febrero',
+    'Marzo',
+    'Abril',
+    'Mayo',
+    'Junio',
+    'Julio',
+    'Agosto',
+    'Septiembre',
+    'Octubre',
+    'Noviembre',
+    'Diciembre'
+  ]
 
-
-  const dat = new Date()
   useEffect(()=>{
-    
-
+ if(!fromDiary){
+  setSelectedDate(getCurrentDate())
+ } else {
+  setSelectedDate(new Date())
+ }
   },[])
 
   const handleDayPress = (day) => {
@@ -82,27 +103,43 @@ const PopUpCalendario = ({
     if (selectedDate === day.dateString) {
       setSelectedDate(null)
     } else {
-      setSelectedDate(day.dateString)
+      console.log("dayyyy",`${yearSelect}${day.dateString.slice(4)}`)
+      setSelectedDate(`${yearSelect}${day.dateString.slice(4)}`)
+      setCalendario(false)
     }
+  }
+
+  const renderHeader = (date) => {
+    console.log(date,"dateeeeeeeee")
+    return (
+      <TouchableOpacity onPress={() => setShowYearList(!showYearList)}>
+        <Text>{`${mm[`${date.getMonth()}`]} ${yearSelect}`}</Text>
+      </TouchableOpacity>
+    )
   }
 
   return (
     <View style={styles.container}>
-      <View
+    {!showYearList ? (
+      <>
+        <View
         style={{
           width: '90%',
           alignSelf: 'center'
         }}
       >
         <Calendar
+         key={selectedDate + ""} 
           onDayPress={handleDayPress}
+          renderHeader={(date) => renderHeader(date)}
           markingType="custom"
+          
           markedDates={{
             [selectedDate]: {
               selected: true,
               customStyles: {
                 container: {
-                  backgroundColor: '#DFE271',
+                  backgroundColor: Color.primario1,
                   width: 32,
                   height: 32,
                   borderRadius: 9
@@ -126,22 +163,34 @@ const PopUpCalendario = ({
           paddingVertical: 15
         }}
       >
-        <Pressable
-          style={{ borderStartColor: 'red' }}
+       
+      </View>
+      </>
+    ) : (
+      <ScrollView
+      style={{
+        width: '100%',
+        backgroundColor: 'white',
+        maxHeight: 260,
+        borderTopEndRadius: 30
+      }}
+      contentContainerStyle={{ alignItems: 'center', gap: 15, paddingVertical: 15 }}
+      showsVerticalScrollIndicator={false}
+    >
+      {dataYears.map((year) => (
+        <TouchableOpacity
+          style={{ paddingHorizontal: 40, borderRadius: 50, backgroundColor: Color.primario1 }}
+          key={year}
           onPress={() => {
-            !not && setButtonContainer2Visible(true)
-            !not && setCalendario(false)
+            setYearSelect(year)
+            setShowYearList(false)
           }}
         >
-          <LinearGradient
-            style={styles.button}
-            locations={[0, 1]}
-            colors={['#dee274', '#7ec18c']}
-          >
-            <Text style={styles.save}>Guardar</Text>
-          </LinearGradient>
-        </Pressable>
-      </View>
+          <Text style={{ fontWeight: 600, color: 'white' }}>{year}</Text>
+        </TouchableOpacity>
+      ))}
+    </ScrollView>
+    )}
     </View>
   )
 }

@@ -106,7 +106,7 @@ const Register = () => {
       style={styles.registroNombre}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.scrollViewContent}
-      keyboardShouldPersistTaps={true}
+      keyboardShouldPersistTaps={"always"}
     >
       <LinearGradient
         style={styles.frameChild}
@@ -126,8 +126,8 @@ const Register = () => {
             ¡REGISTRATE!
           </Text>
           <Text style={[styles.laFamiliaEs, styles.registrateTypo]}>
-            La familia es el cimiento de la sociedad, donde el amor y el apoyo
-            mutuo crean un hogar lleno de calor y seguridad.
+            La família es el cimiento de la sociedad, donde el amor y el apoyo
+            mútuo crean un hogar lleno de calor y seguridad.
           </Text>
         </View>
       </LinearGradient>

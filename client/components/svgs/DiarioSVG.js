@@ -4,7 +4,7 @@ import { Svg, Path, G } from 'react-native-svg'
 const DiarioSVG = () => {
   return (
     <Svg
-      width="29"
+      width="26"
       height="31"
       viewBox="0 0 30 31"
       fill="none"

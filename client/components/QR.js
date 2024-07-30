@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Padding.p_sm,
     paddingVertical: Padding.p_5xs,
     marginTop: 20,
-    width: '90%',
+    width: '80%',
     alignItems: "center",
     flexDirection: "row",
   },

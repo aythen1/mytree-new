@@ -11,7 +11,7 @@ import {
   ActivityIndicator
 } from 'react-native'
 import { Image } from 'expo-image'
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import {
   Color,
   FontFamily,
@@ -53,6 +53,7 @@ import Badge7 from '../../assets/Badge_07.svg'
 import Badge8 from '../../assets/Badge_08.svg'
 import Badge9 from '../../assets/Badge_09.svg'
 import BadgesModal from '../../components/modals/BadgesModal'
+import { setScreen } from '../../redux/slices/user.slices'
 
 const Perfil = () => {
   const navigation = useNavigation()
@@ -79,6 +80,10 @@ const Perfil = () => {
       setHasPermission(status === 'granted')
     })()
   }, [])
+
+  useFocusEffect(()=> {
+    dispatch(setScreen("Perfil"))
+  })
 
   const takePicture = async () => {
     if (cameraReff) {

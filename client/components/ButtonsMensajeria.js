@@ -19,7 +19,7 @@ const ButtonsMensajeria = ({ selectedFilter, setSelectedFilter }) => {
   }
 
   return (
-    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={{paddingRight:15}}>
       <View
         style={{
           width: '100%',

@@ -23,14 +23,15 @@ const REGISTROPOLTICASDEPRIVAC = () => {
               locations={[0, 1]}
               colors={['#7ec18c', '#dee274']}
             />
-            <View style={styles.rectangleGroup}>
+           
+             <View style={styles.rectangleGroup}>
               <Pressable
                 style={styles.frameItem}
                 onPress={() => navigation.goBack()}
               />
               <Image
                 style={styles.backButtonIcon}
-                contentFit="cover"
+                contentFit="contain"
                 source={require('../../assets/back-button1.png')}
               />
             </View>
@@ -118,19 +119,7 @@ Para cumplir con la ley o responder a solicitudes legales, como una orden judici
 `}</Text>
               </Text>
             </View>
-            <View style={styles.labelledParent}>
-              <Pressable onPress={() => navigation.goBack()}>
-                <Text style={[styles.volver, styles.volverTypo]}>
-                  {'< Volver '}
-                </Text>
-              </Pressable>
-              <Pressable
-                style={styles.labelled1}
-                onPress={() => navigation.navigate('Register')}
-              >
-                <Text style={styles.volverTypo}>{'Continuar >'}</Text>
-              </Pressable>
-            </View>
+           
           </View>
         </View>
       </View>
@@ -177,17 +166,19 @@ const styles = StyleSheet.create({
     position: 'absolute'
   },
   frameItem: {
+  
     left: 15,
     top: 15,
     width: 35,
     height: 35,
-    zIndex: 0
+    zIndex: 99
+ 
   },
   backButtonIcon: {
-    top: 14,
-    left: 5,
-    width: 18,
-    height: 0,
+    top: 15,
+    left: 15,
+    width: 20,
+    height: 18,
     zIndex: 1,
     position: 'absolute'
   },
@@ -226,10 +217,8 @@ const styles = StyleSheet.create({
     textAlign: 'left'
   },
   polticaDePrivacidadLtimaWrapper: {
-    width: 388,
-    height: 571,
+    width: "100%",
     alignItems: 'center',
-    overflow: 'hidden'
   },
   volver: {
     width: 107
@@ -252,7 +241,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.white,
     flex: 1,
     width: '100%',
-    height: 926,
+    height: "100%",
     overflow: 'hidden'
   }
 })

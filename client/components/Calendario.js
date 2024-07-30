@@ -17,6 +17,15 @@ const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
   const [showYearList, setShowYearList] = useState(false)
   const [displayedYear, setDisplayedYear] = useState(new Date().getFullYear())
   const [displayedMonth, setDisplayedMonth] = useState(new Date().getMonth() + 1) // 1-based month
+  const [selectedYear, setSelectedYear] = useState(new Date());
+
+
+
+
+  useEffect(()=> {
+    console.log(selectedYear,"selected year ")
+
+  },[selectedYear])
 
   const mm = [
     'Enero',
@@ -132,9 +141,13 @@ const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
   }
 
   const handleYearChange = (year) => {
-    setDisplayedYear(year)
+    const day = new Date()
+    const data = day.toISOString().slice(4)
+    const newData = new Date(`${year}${data}`)
+    const fechaFormateada = newData.toISOString().split('T')[0];
+    console.log("selected year ",fechaFormateada)
+    setSelectedYear(fechaFormateada)
     setShowYearList(false)
-    updateCalendar(year, displayedMonth)
   }
 
   const updateCalendar = (year, month) => {
@@ -150,6 +163,12 @@ const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
     setDisplayedMonth(month + 1) // Calendar provides 0-based month, so adjust it
     updateCalendar(displayedYear, month + 1)
   }
+
+  useEffect(() => {
+    if (calendarRef.current) {
+      calendarRef.current.setDate(selectedYear) // Utiliza setDate para actualizar el calendario
+    }
+  }, [selectedYear]) // Agrega selectedYear como dependencia adicional
 
   return (
     <View style={styles.container}>
@@ -179,10 +198,8 @@ const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
       </Modal>
 
       <Calendar
-      ref={calendarRef} // Añade referencia al componente Calendar
         onDayPress={handleDayPress}
         onMonthChange={(month) => handleMonthChange(month.month - 1)}
-        onYearChange={(year) => handleYearChange(year)}
          // Calendar provides 1-based month
         renderHeader={(date) => renderHeader(date)}
         markingType="custom"
@@ -207,7 +224,7 @@ const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
           arrowColor: '#7ec18c',
           todayTextColor: 'black'
         }}
-        current={`${displayedYear}-${String(displayedMonth).padStart(2, '0')}-01`}
+        current={selectedYear}
       />
     </View>
   )

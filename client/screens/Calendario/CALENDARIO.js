@@ -7,7 +7,8 @@ import {
   Pressable,
   ScrollView,
   TextInput,
-  Dimensions
+  Dimensions,
+  ActivityIndicator
 } from 'react-native'
 import { Image } from 'expo-image'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -152,14 +153,16 @@ const CALENDARIO = () => {
         </Pressable>
       </View>
       <View style={{ paddingHorizontal: 5 }}>
-        <Calendario
-          dates={[...dates, ...eventInvited]}
-          selectedDate={selectedDate}
-          setSelectedDate={(e) => {
-            handleItemPress('fechas')
-            setSelectedDate(e)
-          }}
-        />
+     {dates ? (
+         <Calendario
+         dates={[...dates, ...eventInvited]}
+         selectedDate={selectedDate}
+         setSelectedDate={(e) => {
+           handleItemPress('fechas')
+           setSelectedDate(e)
+         }}
+       />
+     ) : <ActivityIndicator></ActivityIndicator>}
       </View>
       <View style={styles.frameParent}>
         <View style={styles.upcomingParent}>

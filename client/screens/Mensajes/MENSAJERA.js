@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import {
   View,
   Text,
@@ -7,7 +7,7 @@ import {
   ScrollView,
   ActivityIndicator
 } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { Color, FontFamily, FontSize } from '../../GlobalStyles'
 import { Image } from 'expo-image'
 import ButtonsMensajeria from '../../components/ButtonsMensajeria'
@@ -16,12 +16,14 @@ import { LinearGradient } from 'expo-linear-gradient'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Context } from '../../context/Context'
 import ChatCard from './ChatCard'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { isLoading } from 'expo-font'
 import axiosInstance from '../../apiBackend'
 import TopBar from '../../components/TopBar'
+import { setScreen } from '../../redux/slices/user.slices'
 
 const MENSAJERA = () => {
+  const dispatch = useDispatch()
   const navigation = useNavigation()
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(true)
@@ -50,90 +52,61 @@ const MENSAJERA = () => {
     }
   }
 
+  useFocusEffect(()=> {
+    dispatch(setScreen("Mensajería"))
+
+  })
  
 
-  const filteredUsers = allUsers
+
+
+
+
+    const filteredUsers = allUsers
     ?.filter(
       (user) =>
         user?.username?.toLowerCase()?.includes(search?.toLowerCase()) ||
         user?.apellido?.toLowerCase()?.includes(search?.toLowerCase())
     )
-    .sort(sortUsers)
+    .sort(sortUsers);
 
-
-
-  useEffect(() => {
+  const filterUsers = useCallback(() => {
     if (selectedFilter.length > 0) {
-      const userFamily =
-        allUsers.filter((user) => user.id === userData.id)[0]?.familyIds || []
-      const userFriends =
-        allUsers.filter((user) => user.id === userData.id)[0]?.friendsIds || []
+      const user = allUsers.find((user) => user.id === userData.id);
+      const userFamily = user?.familyIds || [];
+      const userFriends = user?.friendsIds || [];
+
+      const filterAndSetUsers = (filteredUsers) => {
+        const uniqueUsers = [];
+        const seenUsernames = new Set();
+
+        for (const user of filteredUsers) {
+          if (!seenUsernames.has(user.id)) {
+            seenUsernames.add(user.id);
+            uniqueUsers.push(user);
+          }
+        }
+        setFilteredUsersWithMessages(uniqueUsers);
+        setLoading(false);
+      };
 
       if (selectedFilter === 'All') {
-        const da = usersWithMessages.filter((e) => e.username && e)
-        // Primer filtrado para asegurarte de que `username` exista
-     
-        const uniqueUsers = []
-        const seenUsernames = new Set()
-
-        for (const user of da) {
-          if (!seenUsernames.has(user.id)) {
-            seenUsernames.add(user.id)
-            uniqueUsers.push(user)
-          }
-        }
-        console.log([...uniqueUsers,...groups], 'mennnnnnnnnn')
-        setFilteredUsersWithMessages([...uniqueUsers,...groups])
-        setLoading(false)
+        const da = usersWithMessages.filter((e) => e.username);
+        filterAndSetUsers([...da, ...groups]);
       } else if (selectedFilter === 'Friends') {
-        const da = [...usersWithMessages].filter((user) =>
-          userFriends.includes(user.id)
-        )
-        const uniqueUsers = []
-        const seenUsernames = new Set()
-
-        for (const user of da) {
-          if (!seenUsernames.has(user.id)) {
-            seenUsernames.add(user.id)
-            uniqueUsers.push(user)
-          }
-        }
-        setFilteredUsersWithMessages(uniqueUsers)
-        setLoading(false)
-
+        const da = usersWithMessages.filter((user) => userFriends.includes(user.id));
+        filterAndSetUsers(da);
       } else if (selectedFilter === 'Family') {
-        const da = [...usersWithMessages].filter((user) =>
-          userFamily.includes(user.id)
-        )
-        const uniqueUsers = []
-        const seenUsernames = new Set()
-
-        for (const user of da) {
-          if (!seenUsernames.has(user.id)) {
-            seenUsernames.add(user.id)
-            uniqueUsers.push(user)
-          }
-        }
-        setFilteredUsersWithMessages(uniqueUsers)
-        setLoading(false)
-
+        const da = usersWithMessages.filter((user) => userFamily.includes(user.id));
+        filterAndSetUsers(da);
       } else if (selectedFilter === 'Groups') {
-        const da = groups
-        const uniqueUsers = []
-        const seenUsernames = new Set()
-
-        for (const user of da) {
-          if (!seenUsernames.has(user.room)) {
-            seenUsernames.add(user.room)
-            uniqueUsers.push(user)
-          }
-        }
-        setFilteredUsersWithMessages(uniqueUsers)
-        setLoading(false)
-
+        filterAndSetUsers(groups);
       }
     }
-  }, [selectedFilter])
+  }, [selectedFilter, allUsers, userData.id, usersWithMessages, groups, setFilteredUsersWithMessages, setLoading]);
+
+  useFocusEffect(filterUsers);
+
 
 
 

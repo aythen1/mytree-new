@@ -19,6 +19,7 @@ import SelectEventTypeModal from './SelectEventTypeModal'
 import { Image } from 'expo-image'
 
 import {  getAllUserDiaries } from '../redux/actions/diaries'
+import { setScreen } from '../redux/slices/user.slices'
 
 
 const FooterNavBar = () => {
@@ -32,19 +33,10 @@ const FooterNavBar = () => {
   const dispatch = useDispatch()
 
   const { panelAddFooter } = useSelector((state) => state.panel)
-  const { userData } = useSelector((state) => state.users)
+  const { userData ,screen:selected} = useSelector((state) => state.users)
 
-  const [selected, setSelected] = useState('Muro')
+  // const [selected, setSelected] = useState('Muro')
 
-  // useEffect(() => {
-  //   getUsersMessages()
-  //   dispatch(getAllUsers())
-  //   dispatch(getAllPosts())
-  //   dispatch(getAllEvents())
-  //   dispatch(getAllAlbums())
-  //   dispatch(getAllDiaries())
-  //   dispatch(getAllUserAlbums(userData?.id))
-  // }, [userData])
 
   const showModalAdd = () => {
     dispatch(setPanelAddFooter(!panelAddFooter))
@@ -100,7 +92,8 @@ const FooterNavBar = () => {
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('Muro')
-                setSelected('Muro')
+                // setSelected('Muro')
+                dispatch(setScreen('Muro'))
               }}
             >
               {/* <HomeSVG picked={selected === 'Muro' && true} /> */}
@@ -109,7 +102,9 @@ const FooterNavBar = () => {
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('CALENDARIO')
-                setSelected('Calendario')
+                // setSelected('Calendario')
+                dispatch(setScreen('Calendario'))
+
               }}
               style={{ zIndex: 9999999 }}
             >
@@ -130,7 +125,8 @@ const FooterNavBar = () => {
               onPress={() => {
                 navigation.navigate('MIDIARIOPANTALLAPERSONAL')
                 dispatch(getAllUserDiaries(userData.id))
-                setSelected('MiDiario')
+                dispatch(setScreen('MiDiario'))
+
               }}
               style={{}}
             >
@@ -141,7 +137,8 @@ const FooterNavBar = () => {
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('Perfil')
-                setSelected('Perfil')
+                dispatch(setScreen('Perfil'))
+
               }}
             >
               {/* <UsuarioSVG picked={selected === 'Perfil' && true} /> */}

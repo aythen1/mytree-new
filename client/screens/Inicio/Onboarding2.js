@@ -7,6 +7,7 @@ import ImageVectorSVG from '../../components/svgs/ImageVectorSVG'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useDispatch } from 'react-redux'
 import { getAllUsers, getUserData } from '../../redux/actions/user'
+import BtnProgres from '../../components/svgs/BtnProgres'
 
 const Onboarding2 = () => {
   const navigation = useNavigation()
@@ -39,11 +40,11 @@ const Onboarding2 = () => {
     }
   }
 
-  const handleNext = ()=> {
-    if(step == 3){
+  const handleNext = () => {
+    if (step == 3) {
       navigation.navigate('Splash')
     } else {
-      setStep((e)=> e + 1)
+      setStep((e) => e + 1)
     }
   }
 
@@ -74,23 +75,6 @@ const Onboarding2 = () => {
           <View style={[styles.frameInner, styles.frameLayout]} />
         </View>
       </View>
-      {/* <Pressable
-        style={styles.progressButton}
-        onPress={() => navigation.navigate('Onboarding')}
-      >
-        <View style={[styles.buttonfullcircle, styles.huellaParentFlexBox]}>
-          <Image
-            style={styles.arrowRight}
-            contentFit="cover"
-            source={require('../../assets/arrow--right.png')}
-          />
-        </View>
-        <Image
-          style={[styles.progressButtonChild, styles.progressPosition]}
-          contentFit="cover"
-          source={require('../../assets/progres2.png')}
-        />
-      </Pressable> */}
     </View>
   )
 
@@ -106,23 +90,6 @@ const Onboarding2 = () => {
           <View style={styles.frameChild} />
         </View>
       </View>
-      {/* <Pressable
-        style={styles.progressButton}
-        onPress={() => navigation.navigate('Splash')}
-      >
-        <View style={[styles.buttonfullcircle, styles.huellaParentFlexBox]}>
-          <Image
-            style={styles.arrowRight}
-            contentFit="cover"
-            source={require('../../assets/arrow--right.png')}
-          />
-        </View>
-        <Image
-          style={[styles.progressButtonChild, styles.progressPosition]}
-          contentFit="cover"
-          source={require('../../assets/progres4.png')}
-        />
-      </Pressable> */}
     </View>
   )
 
@@ -137,10 +104,6 @@ const Onboarding2 = () => {
         <ImageVectorSVG />
       </View>
 
-      {/* <View style={[styles.huellaParent]}>
-        {step == 2 && <Step2></Step2>}
-        {step == 3 && <Step3></Step3>}
-      </View> */}
       <View
         style={{
           position: 'absolute',
@@ -153,10 +116,27 @@ const Onboarding2 = () => {
           (step == 2 && <Step2></Step2>) ||
           (step == 3 && <Step3></Step3>)}
         <Pressable
-          style={styles.progressButton}
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 15
+          }}
           onPress={handleNext}
         >
-          {step == 2 && (
+          <BtnProgres progress={step}></BtnProgres>
+          <View style={[styles.buttonfullcircle, styles.huellaParentFlexBox]}>
+            <Image
+              style={styles.arrowRight}
+              contentFit="cover"
+              source={require('../../assets/arrow--right.png')}
+            />
+          </View>
+        </Pressable>
+        {/* <Pressable
+          style={styles.progressButton}
+          onPress={handleNext}
+        > */}
+        {/* {step == 2 && (
             <>
               <View
                 style={[styles.buttonfullcircle, styles.huellaParentFlexBox]}
@@ -214,8 +194,8 @@ const Onboarding2 = () => {
                 source={require('../../assets/progres4.png')}
               />
             </>
-          )}
-        </Pressable>
+          )} */}
+        {/* </Pressable> */}
       </View>
     </ImageBackground>
   )
@@ -264,18 +244,18 @@ const styles = StyleSheet.create({
     height: 6,
     borderRadius: Border.br_3xs,
     width: 34,
-    marginHorizontal:4,
+    marginHorizontal: 4,
     backgroundColor: Color.white
   },
   frameItem: {
     width: 8,
     backgroundColor: Color.colorGray_400,
-    borderRadius:9
+    borderRadius: 9
   },
   frameInner: {
     backgroundColor: Color.colorGray_400,
     width: 8,
-    borderRadius:9
+    borderRadius: 9
   },
   rectangleParent: {
     flexDirection: 'row'
@@ -292,10 +272,9 @@ const styles = StyleSheet.create({
     left: '30%'
   },
   buttonfullcircle: {
-    height: '65.96%',
-    width: '65.96%',
-    top: '17.02%',
-    left: '17.02%',
+    height: 60,
+    width: 60,
+
     borderRadius: Border.br_31xl,
     backgroundColor: Color.negro,
     flexDirection: 'row',

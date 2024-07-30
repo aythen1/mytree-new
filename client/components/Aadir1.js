@@ -1,18 +1,20 @@
 import * as React from 'react'
-import { View, StyleSheet, Text, Pressable, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { Image } from 'expo-image'
 import { useNavigation } from '@react-navigation/native'
-import { FontSize, FontFamily, Color, Border, Padding } from '../GlobalStyles'
-import { useDispatch } from 'react-redux'
+import { FontSize, FontFamily, Color, Border } from '../GlobalStyles'
+import { useDispatch, useSelector } from 'react-redux'
 import { setPanelAddFooter } from '../redux/slices/panel.slices'
 import { LinearGradient } from 'expo-linear-gradient'
 import MessageSVG from './svgs/MessageSVG'
-import CalendarSVG from './svgs/CalendarSVG'
 import DiarioSVG from './svgs/DiarioSVG'
+import { setScreen } from '../redux/slices/user.slices'
 
 const Aadir1 = ({ setShowSelectEventTypeModal }) => {
   const dispatch = useDispatch()
   const navigation = useNavigation()
+const {screen} = useSelector((state)=> state.users)
+
 
   return (
     <LinearGradient
@@ -22,84 +24,100 @@ const Aadir1 = ({ setShowSelectEventTypeModal }) => {
     >
       <View style={styles.frameParent}>
         <TouchableOpacity
-          style={[styles.frameWrapper, styles.frameWrapperFlexBox]}
+    
+          style={[styles.frameWrapperFlexBox,{backgroundColor: screen == 'Añadir recuerdo' ? 'rgba(0, 0, 0, 0.1)' : "transparent"}]}
           onPress={() => {
             dispatch(setPanelAddFooter(false))
+            dispatch(setScreen("Añadir recuerdo"))
             navigation.navigate('UploadMemory')
           }}
         >
           <View style={[styles.groupParent, styles.groupParentFlexBox]}>
-          <View style={{width:27}}>
-        <Image
-              style={{...styles.iconLayout,marginLeft:-2}}
+            <View style={{width:40}}>
+            <Image
+              style={{ ...styles.iconLayout, marginLeft: -2 }}
               contentFit="cover"
               source={require('../assets/group-11712766891.png')}
             />
-        </View>
+            </View>
             <Text style={styles.aadirRecuerdo}>Añadir recuerdo</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.frameContainer, styles.frameFlexBox]}
+          style={[styles.frameWrapperFlexBox,{backgroundColor: screen == 'Añadir familiar' ? 'rgba(0, 0, 0, 0.1)' : "transparent"}]}
           onPress={() => {
             dispatch(setPanelAddFooter(false))
+            dispatch(setScreen("Añadir familiar"))
+
             navigation.navigate('BOTONInvitarAmigos1')
           }}
         >
           <View style={[styles.groupParent, styles.groupParentFlexBox]}>
-          <View style={{width:27}}>
-          <Image
-              style={styles.iconlylightOutline3User}
-              contentFit="cover"
-              source={require('../assets/iconlylightoutline3user2.png')}
-            />
-          </View>
+          <View style={{width:40}}>
+
+              <Image
+                style={styles.iconlylightOutline3User}
+                contentFit="cover"
+                source={require('../assets/iconlylightoutline3user2.png')}
+              />
+            </View>
             <Text style={styles.aadirRecuerdo}>Añadir familiar</Text>
           </View>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.framePressable, styles.frameFlexBox]}
+          style={[styles.frameWrapperFlexBox,{backgroundColor: screen == 'MiDiario' ? 'rgba(0, 0, 0, 0.1)' : "transparent"}]}
           onPress={() => {
             dispatch(setPanelAddFooter(false))
+            dispatch(setScreen("MiDiario"))
+
             navigation.navigate('MIDIARIOPANTALLAPERSONAL')
           }}
         >
-          <View style={styles.groupParentFlexBox}>
+          <View style={[styles.groupParent, styles.groupParentFlexBox]}>
+          <View style={{width:40}}>
+
             <DiarioSVG />
+            </View>
             <Text style={styles.aadirRecuerdo}>Crear entrada al Diario</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.frameWrapper1, styles.frameFlexBox]}
+          style={[styles.frameWrapperFlexBox,{backgroundColor: screen == 'Crear evento' ? 'rgba(0, 0, 0, 0.1)' : "transparent"}]}
           onPress={() => {
             dispatch(setPanelAddFooter(false))
+            dispatch(setScreen("Crear evento"))
+
             setShowSelectEventTypeModal(true)
           }}
         >
-          <View style={styles.groupParentFlexBox}>
-          <View style={{width:35}}>
-           <Image
-              contentFit="cover"
-              style={{ width: 25, height: 25, marginRight: 11 }}
-              source={require('../assets/whiteCalendar.png')}
-            />
-           </View>
-            <Text style={styles.aadirRecuerdo2}>Crear evento</Text>
+          <View style={[styles.groupParent, styles.groupParentFlexBox]}>
+          <View style={{width:40}}>
+
+              <Image
+                contentFit="contain"
+                style={{ width: 25, height: 30, marginRight: 11 }}
+                source={require('../assets/whiteCalendar.png')}
+              />
+            </View>
+            <Text style={styles.aadirRecuerdo}>Crear evento</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.frameFlexBox]}
+          style={[styles.frameWrapperFlexBox,{backgroundColor: screen == 'Mensajería' ? 'rgba(0, 0, 0, 0.1)' : "transparent"}]}
           onPress={() => {
             dispatch(setPanelAddFooter(false))
+            dispatch(setScreen("Mensajería"))
+
             navigation.navigate('MENSAJERA')
           }}
         >
-          <View style={styles.groupParentFlexBox}>
-         <View style={{width:35}}>
-         <MessageSVG isMenu={true} color={Color.white} />
-         </View>
-            <Text style={styles.aadirRecuerdo2}>Mensajería</Text>
+          <View style={[styles.groupParent, styles.groupParentFlexBox]}>
+          <View style={{width:40}}>
+
+              <MessageSVG isMenu={true} color={Color.white} />
+            </View>
+            <Text style={styles.aadirRecuerdo}>Mensajería</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -111,14 +129,16 @@ const styles = StyleSheet.create({
   frameWrapperFlexBox: {
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 10
   },
   groupParentFlexBox: {
     alignItems: 'center',
     flexDirection: 'row'
   },
   frameFlexBox: {
-    marginTop: 20,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row'
@@ -139,7 +159,6 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.lato,
     color: Color.white,
     textAlign: 'justify',
-    marginLeft: 18,
     flex: 1
   },
   aadirRecuerdo2: {
@@ -157,7 +176,7 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   frameWrapper: {
-    zIndex: 0,
+    zIndex: 0
   },
   iconlylightOutline3User: {
     height: 27,
@@ -211,14 +230,16 @@ const styles = StyleSheet.create({
     // alignSelf: 'stretch',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
+    gap:4
   },
   aadir: {
     borderTopLeftRadius: Border.br_11xl,
     borderTopRightRadius: Border.br_11xl,
     width: '100%',
     // height: 321,
-    padding: Padding.p_xl,
+    paddingVertical: 20,
+    paddingHorizontal: 10,
     maxWidth: '100%',
     maxHeight: '100%',
     position: 'absolute',

@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     paddingBottom: 80
   },
   title: {
-    fontSize: 25,
+    fontSize: 16,
     color: Color.primario1,
     fontFamily: FontFamily.lato,
     fontWeight: '700'

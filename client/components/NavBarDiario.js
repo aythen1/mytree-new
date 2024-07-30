@@ -23,7 +23,6 @@ const NavBarDiario = () => {
         backgroundColor: Color.white,
         width: '100%',
         height: 60,
-        marginBottom: 20
       }}
     >
       <View
@@ -35,8 +34,6 @@ const NavBarDiario = () => {
           flexDirection: 'row',
           width: '100%',
           left: 0,
-          top: 20,
-          position: 'absolute',
           justifyContent: 'space-between',
           alignItems: 'center'
         }}

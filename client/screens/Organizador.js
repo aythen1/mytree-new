@@ -597,7 +597,7 @@ const Organizador = () => {
                       transform: [{ rotate: añadirAUnAlbum ? '90deg' : '0deg' }]
                     }}
                     contentFit="cover"
-                    source={require('../assets/arrowdown22.png')}
+                    source={require('../assets/lock3.png')}
                   />
                 </View>
 
@@ -732,7 +732,7 @@ const Organizador = () => {
                     transform: [{ rotate: showPrivacidad ? '90deg' : '0deg' }]
                   }}
                   contentFit="cover"
-                  source={require('../assets/arrowdown23.png')}
+                  source={require('../assets/lock3.png')}
                 />
               </View>
             </View>

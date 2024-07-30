@@ -52,36 +52,7 @@ console.log(usuario,"esto tengo")
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.frameView}>
-        <View style={styles.image6Parent}>
-         <TouchableOpacity onPress={()=>{ onShare()}}>
-         <Image
-            style={[styles.skillIconsinstagram, styles.skillLayout]}
-            contentFit="cover"
-            source={require('../../assets/skilliconsinstagram4.png')}
-          />
-         </TouchableOpacity>
-         <TouchableOpacity onPress={()=>{ onShare()}}>
-         <Image
-            style={[styles.skillIconslinkedin, styles.skillLayout]}
-            contentFit="cover"
-            source={require('../../assets/skilliconslinkedin4.png')}
-          />
-         </TouchableOpacity>
-          <TouchableOpacity onPress={()=>{ onShare()}}>
-          <Image
-            style={[styles.logostiktokIcon, styles.iconLayout]}
-            contentFit="cover"
-            source={require('../../assets/logostiktokicon3.png')}
-          />
-          </TouchableOpacity>
-         <TouchableOpacity onPress={()=>{ onShare()}}>
-         <Image
-            style={[styles.skillIconslinkedin, styles.skillLayout]}
-            contentFit="cover"
-            source={require('../../assets/deviconfacebook4.png')}
-          />
-         </TouchableOpacity>
-        </View>
+       
 
         <View style={styles.frameParent5}>
           <Pressable style={styles.frameContainer}>
@@ -119,20 +90,7 @@ console.log(usuario,"esto tengo")
               </View>
             </View>
           </Pressable>
-          <View style={styles.amigosParent}>
-            <Text style={[styles.logros, styles.text1Typo]}>Logros</Text>
-            <View style={styles.parent}>
-              <Text style={[styles.text1, styles.text1Typo]}>0 Tree’s</Text>
-              <View style={styles.ellipseGroup}>
-            
-                <Image
-                  style={styles.vectorIcon1}
-                  contentFit="scale-down"
-                  source={require('../../assets/vector9.png')}
-                />
-              </View>
-            </View>
-          </View>
+         
         </View>
       </View>
 
@@ -289,9 +247,9 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   frameParent5: {
-    paddingTop: 30,
+    paddingTop: 10,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     paddingHorizontal:10,
     width: '100%'
   },
@@ -352,7 +310,6 @@ const styles = StyleSheet.create({
   perfilMiInfo: {
     borderRadius: Border.br_31xl,
     flex: 1,
- paddingTop:40,
     backgroundColor: Color.white
   }
 })

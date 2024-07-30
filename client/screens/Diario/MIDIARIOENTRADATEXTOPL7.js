@@ -13,7 +13,8 @@ import {
   Modal,
   ScrollView,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  TextInput
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Image } from 'expo-image'
@@ -40,9 +41,10 @@ import * as MediaLibrary from 'expo-media-library'
 import PopUpCalendario from '../../components/PopUpCalendario'
 import MasBusquedaSVG from '../../components/svgs/MasBusquedaSVG'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserDiariesByDateOrCategory } from '../../redux/actions/diaries'
+import { getUserDiariesByDateOrCategory, postDiary } from '../../redux/actions/diaries'
 import ImagePickerModal from '../Modals/ImagePickerModal'
 import TopBar from '../../components/TopBar'
+import { removeUserDiary } from '../../redux/slices/diaries.slices'
 
 const MIDIARIOENTRADATEXTOPL7 = () => {
   const dispatch = useDispatch()
@@ -51,6 +53,8 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
   const [showEdit, setShowEdit] = useState(false)
   const [isSection, setIsSection] = useState('')
   const { userData } = useSelector((state) => state.users)
+  const { userDiaries } = useSelector((state) => state.diaries)
+
   const [modalCreate, setModalCreate] = useState(false)
   const {
     pickImage,
@@ -66,6 +70,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
   const [showCalendar, setShowCalendar] = useState(false)
   const [showImagesModal, setShowImagesModal] = useState(false)
   const [pickedImages, setPickedImages] = useState([])
+  const [diaryImages, setDiaryImages] = useState( [])
 
   const monthsInSpanish = [
     'enero',
@@ -94,7 +99,10 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
     if (selectedDate) {
       obj.date = formatDateToNormal(selectedDate)
     }
-    dispatch(getUserDiariesByDateOrCategory(obj))
+    console.log(obj, 'obj')
+    dispatch(getUserDiariesByDateOrCategory(obj)).then((e) => {
+      console.log(e, 'obj')
+    })
     // Aca cuando tenga la ruta desarrollo logica de get de diarios por categoria y selectedDate.
   }, [selectedDate, selectedSection])
 
@@ -191,6 +199,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
   const onCloseModalCreate = () => {
     setModalCreate(false)
   }
+  const [text, setText] = useState("")
 
   return (
     <View
@@ -288,19 +297,16 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
             <ScrollView
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{
-
-                height:"100%",
-                paddingBottom:100
-
+                height: '100%',
+                paddingBottom: 100
               }}
               style={{
                 width: '100%',
                 paddingTop: 15,
                 paddingHorizontal: 15,
-                height: "100%",
+                height: '100%'
               }}
             >
-           
               <View style={styles.editContainer}>
                 <Pressable
                   onPress={() => setShowCalendar(true)}
@@ -310,10 +316,10 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                   }}
                 >
                   <Text style={[styles.text, styles.textTypo]}>
-                    {selectedDate.getDate()}
+                    {selectedDate?.getDate()}
                   </Text>
                   <Text style={[styles.jul2023, styles.textTypo]}>
-                    {`${monthsInSpanish[selectedDate.getMonth()]} ${selectedDate.getFullYear()}`}
+                    {`${monthsInSpanish[selectedDate?.getMonth()]} ${selectedDate?.getFullYear()}`}
                   </Text>
                   <Image
                     style={styles.iconlycurvedarrowDown2}
@@ -331,15 +337,331 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
 
               {/* renderizado de secciones */}
               {/* {renderSection(selectedSection)} */}
-              <ReflexionDiaria
-                pickedImages={pickedImages}
-                setPickedImages={setPickedImages}
-                openGroupIcon1={openGroupIcon1}
-                modalCreate={modalCreate}
-                setModalCreate={setModalCreate}
-                selectedDate={selectedDate}
-                editing={showEdit}
-              />
+              {editingDiary == 'preDiary' ? (
+                <ScrollView style={{ width: '100%',height:"100%" }} contentContainerStyle={{paddingBottom:500}}>
+                  <View style={{}}>
+                   
+                    <View
+                      style={{
+                        width: '100%',
+                        flexDirection: 'row',
+                        gap: 5
+                      }}
+                    >
+                      {diaryImages?.length > 0 &&
+                        diaryImages?.map((image, i) => (
+                          <View>
+                            <Image
+                              key={i}
+                              source={{ uri: image }}
+                              contentFit={'contain'}
+                              style={{ width: 50, height: 50, borderRadius: 3 }}
+                            />
+                            <Pressable
+                              onPress={() =>
+                                setDiaryImages(
+                                  [...diaryImages].filter(
+                                    (img) => img !== image
+                                  )
+                                )
+                              }
+                              style={{
+                                position: 'absolute',
+                                top: 3,
+                                right: 3,
+                                borderRadius: 3,
+                                backgroundColor: '#fff',
+                                padding: 3.5
+                              }}
+                            >
+                              <Image
+                                contentFit="cover"
+                                style={{ width: 7, height: 7 }}
+                                source={require('../../assets/group-68463.png')}
+                              />
+                            </Pressable>
+                          </View>
+                        ))}
+                      {pickedImages.length > 0 &&
+                        pickedImages.map((image, i) => (
+                          <View>
+                            <Image
+                              key={i + 500}
+                              source={{ uri: image.uri }}
+                              contentFit={'contain'}
+                              style={{ width: 50, height: 50, borderRadius: 3 }}
+                            />
+                            <Pressable
+                              onPress={() => {
+                                setPickedImages(
+                                  pickedImages.filter(
+                                    (img) => img.uri !== image.uri
+                                  )
+                                )
+                              }}
+                              style={{
+                                position: 'absolute',
+                                top: 3,
+                                right: 3,
+                                borderRadius: 3,
+                                backgroundColor: '#fff',
+                                padding: 3.5
+                              }}
+                            >
+                              <Image
+                                contentFit="cover"
+                                style={{ width: 7, height: 7 }}
+                                source={require('../../assets/group-68463.png')}
+                              />
+                            </Pressable>
+                          </View>
+                        ))}
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent:"flex-end",
+                      marginTop:10
+                    }}
+                  >
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        height: '100%'
+                      }}
+                    >
+                      {editingDiary  ? (
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            gap: 15,
+                            paddingRight: 15,
+                          }}
+                        >
+                          <Pressable
+                            style={{ height: 18, width: 18}}
+                            onPress={() => {
+                              if (editingDiary === 'preDiary') {
+                                dispatch(removeUserDiary('preDiary'))
+                              }
+                              setText("")
+                              setEditingDiary()
+                              setPickedImages([])
+                            }}
+                          >
+                            <Image
+                              style={{ height: '100%', width: '100%' }}
+                              contentFit="cover"
+                              source={require('../../assets/group-68463.png')}
+                            />
+                          </Pressable>
+                        </View>
+                      ) : (
+                        <View
+                          style={{
+                            backgroundColor: 'red',
+                            height: '100%',
+                            width: '100%'
+                          }}
+                        >
+                          <Text
+                            style={{
+                              fontSize: FontSize.size_lg,
+                              lineHeight: 27,
+                              textAlign: 'left',
+                              color: Color.negro,
+                              marginTop: !notEditable && 20,
+                              fontFamily: FontFamily.lato,
+                              letterSpacing: 0,
+                              marginBottom: 8
+                            }}
+                          >
+                            {text}
+                          </Text>
+                          <View
+                            style={{
+                              width: '100%',
+                              flexWrap: 'wrap',
+                              flexDirection: 'row',
+                              gap: 5
+                            }}
+                          >
+                            {diaryImages.length > 0 &&
+                              diaryImages.map((image, i) => (
+                                <Image
+                                  key={i}
+                                  source={{ uri: image }}
+                                  contentFit={'contain'}
+                                  style={{
+                                    width: 50,
+                                    height: 50,
+                                    borderRadius: 3
+                                  }}
+                                />
+                              ))}
+                          </View>
+                        </View>
+                      )}
+                      <Pressable
+                        style={{ height: 24, width: 24 }}
+                        onPress={() => setShowEmojisModal(true)}
+                      >
+                        <Image
+                          style={{ height: '100%', width: '100%' }}
+                          contentFit="cover"
+                          source={require('../../assets/group2.png')}
+                        />
+                      </Pressable>
+                      <LinearGradient
+                        style={{ marginLeft: 20, borderRadius: 50 }}
+                        locations={[0, 1]}
+                        colors={['#dee274', '#7ec18c']}
+                      >
+                        <Pressable
+                          style={{
+                            paddingHorizontal: Padding.p_base,
+                            paddingTop: Padding.p_6xs,
+                            paddingBottom: Padding.p_5xs,
+                            backgroundColor: Color.linearBoton
+                          }}
+                          onPress={async () => {
+                            console.log('opening create modal')
+                            const ultimo = userDiaries[userDiaries.length - 1]
+                            const preDiary = { ...ultimo }
+                            preDiary.description = text
+                            const cloudinaryUrls = []
+
+                            // for (const image of pickedImages) {
+                            //   const formData = new FormData()
+                            //   formData.append('file', {
+                            //     uri: image.uri,
+                            //     type: 'image/jpeg',
+                            //     name: image.filename
+                            //       ? image.filename
+                            //       : getFileName(image.uri)
+                            //   })
+                            //   formData.append(
+                            //     'upload_preset',
+                            //     'cfbb_profile_pictures'
+                            //   )
+                            //   formData.append('cloud_name', 'dnewfuuv0')
+
+                            //   const response = await fetch(
+                            //     'https://api.cloudinary.com/v1_1/dnewfuuv0/image/upload',
+                            //     {
+                            //       method: 'POST',
+                            //       body: formData
+                            //     }
+                            //   )
+
+                            //   const data = await response.json()
+                            //   if (response.ok) {
+                            //     cloudinaryUrls.push(data.secure_url)
+                            //   } else {
+                            //     console.error('Error uploading image:', data)
+                            //   }
+                            // }
+                            
+                            if (preDiary.id === 'preDiary') {
+                              console.log(
+                                'its a pre diary, posting it..',
+                                preDiary
+                              )
+                              delete preDiary.id
+                              dispatch(postDiary(preDiary)).then((res) => {
+                                const obj = {
+                                  creatorId: userData.id,
+                                  category: selectedSection
+                                }
+                                obj.images = cloudinaryUrls
+                                console.log(
+                                  'SELECTED DATE BEFORE POSTING',
+                                  selectedDate
+                                )
+                                if (selectedDate) {
+                                  obj.date = formatDateToNormal(selectedDate)
+                                }
+                                dispatch(getUserDiariesByDateOrCategory(obj))
+                              })
+                            } else {
+                              console.log('updating diary...', preDiary)
+                              const updatedData = {
+                                description: preDiary.description
+                              }
+                              updatedData.images = [
+                                ...diaryImages,
+                                ...cloudinaryUrls
+                              ]
+                              dispatch(
+                                updateDiaryById({
+                                  diaryId: preDiary.id,
+                                  diaryData: updatedData
+                                })
+                              ).then((res) => {
+                                const obj = {
+                                  creatorId: userData.id,
+                                  category: selectedSection
+                                }
+                                if (selectedDate) {
+                                  obj.date = formatDateToNormal(selectedDate)
+                                }
+
+                                dispatch(getUserDiariesByDateOrCategory(obj))
+                              })
+                            }
+                            setPickedImages([])
+                            setEditingDiary()
+                          }}
+                        >
+                          <Text
+                            style={{
+                              fontSize: FontSize.size_sm,
+                              lineHeight: 21,
+                              textAlign: 'center',
+                              color: Color.white,
+                              textAlign: 'center',
+                              fontFamily: FontFamily.lato,
+                              letterSpacing: 0
+                            }}
+                          >
+                            Guardar
+                          </Text>
+                        </Pressable>
+                      </LinearGradient>
+                    </View>
+                  </View>
+                  <TextInput
+                      style={{
+                        fontSize: FontSize.size_lg,
+                        lineHeight: 27,
+                        width: "100%",
+                        textAlign: 'left',
+                        color: Color.negro,
+                        fontFamily: FontFamily.lato,
+                        letterSpacing: 0,
+                        marginBottom: 8,
+                        height:"100%"
+                      }}
+                      multiline
+                      value={text}
+                      onChangeText={(text) => setText(text)}
+                    />
+                </ScrollView>
+              ) : (
+                <ReflexionDiaria
+                  pickedImages={pickedImages}
+                  setPickedImages={setPickedImages}
+                  openGroupIcon1={openGroupIcon1}
+                  modalCreate={modalCreate}
+                  setModalCreate={setModalCreate}
+                  selectedDate={selectedDate}
+                  editing={showEdit}
+                />
+              )}
 
               {/* -------------------- */}
             </ScrollView>

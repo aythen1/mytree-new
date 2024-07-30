@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native'
 import { Image } from 'expo-image'
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { FontFamily, Color, FontSize } from '../../GlobalStyles'
 import { useSelector, useDispatch } from 'react-redux'
 import { setPanel } from '../../redux/slices/panel.slices'
@@ -15,6 +15,7 @@ import MasBusquedaSVG from '../../components/svgs/MasBusquedaSVG'
 import { Context } from '../../context/Context'
 import { getAllDiaries, getAllUserDiaries } from '../../redux/actions/diaries'
 import TopBar from '../../components/TopBar'
+import { setScreen } from '../../redux/slices/user.slices'
 
 const MIDIARIOPANTALLAPERSONAL = () => {
   const navigation = useNavigation()
@@ -25,13 +26,15 @@ const MIDIARIOPANTALLAPERSONAL = () => {
   const { showPanel } = useSelector((state) => state.panel)
   const { userData } = useSelector((state) => state.users)
 
-  const navigateTo = () => {
-    navigation.navigate('MIDIARIOEDICINVIDEO')
-  }
 
   useEffect(() => {
-    // dispatch(getAllUserDiaries(userData.id))
+    dispatch(getAllUserDiaries(userData.id))
   }, [])
+
+  useFocusEffect(()=> {
+    dispatch(setScreen("MiDiario"))
+
+  })
 
   return (
     <LinearGradient
@@ -70,45 +73,6 @@ const MIDIARIOPANTALLAPERSONAL = () => {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.miDiarioPantallaPersonal}>
-          {/* <View
-            style={{
-              marginTop: 30,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              paddingHorizontal: 15
-            }}
-          >
-            <Pressable onPress={() => navigation.navigate('Muro')}>
-              <Image
-                style={styles.image6Icon}
-                contentFit="cover"
-                source={require('../../assets/image-6.png')}
-              />
-            </Pressable>
-            <View style={styles.iconlylightOutlinesearchParent}>
-              <HeaderIcons
-                icons={[
-                  <Pressable onPress={() => navigation.navigate('Busqueda')}>
-                    <LupaSVG />
-                  </Pressable>,
-                  <SettingMuroSVG isNavigation={'PerfilAjustes'} />
-                ]}
-              />
-            </View>
-          </View>
-
-          <View style={styles.frameParent12}>
-            <Pressable onPress={() => navigation.openDrawer()}>
-              <Image
-                style={[styles.ionmenuIcon, styles.ionmenuIconLayout]}
-                contentFit="cover"
-                source={require('../../assets/ionmenu2.png')}
-              />
-            </Pressable>
-            <Text style={[styles.miDiario, styles.textTypo]}>
-              Diario Familiar
-            </Text>
-          </View> */}
 
           <View
             style={{ paddingHorizontal: 0, backgroundColor: 'transparent' }}

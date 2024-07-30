@@ -322,7 +322,7 @@ export const ContextProvider = ({ children }) => {
           .filter((singleId) => singleId !== userData.id)[0]
 
         console.log('other user id', otherUserId)
-        const userInfo = allUsers && allUsers.filter((user) => user.id === otherUserId)[0]
+        const userInfo = allUsers.filter((user) => user.id === otherUserId)[0]
         console.log('userInfo==========', userInfo , otherUserId)
         const lastMessage = data[key].sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)

@@ -24,6 +24,7 @@ import ENTRADACREADA from '../../components/ENTRADACREADA'
 import { useNavigation } from '@react-navigation/native'
 import AddGroupMembersModal from '../../components/AddGroupMembersModal'
 import axiosInstance from '../../apiBackend'
+import { chatGroups } from '../../redux/actions/chat'
 
 const CrearGrupo = () => {
   const dispatch = useDispatch()
@@ -60,6 +61,9 @@ const res = axiosInstance.post(`/chat/createGroup`,{
   groupName:name,
   membersIds:[...taggedUsers,userData.id],
   members:[...taggedUsers,{id:userData.id}]
+}).then(()=>{
+  dispatch(chatGroups(userData.id))
+
 })
 console.log(res.data)
   }
@@ -71,22 +75,13 @@ console.log(res.data)
       showsVerticalScrollIndicator={false}
     >
       <View style={[styles.crearEvento]}>
-        <View style={styles.image6Wrapper}>
-          <Image
-            style={styles.image6Icon}
-            contentFit="cover"
-            source={require('../../assets/image-6.png')}
-          />
-        </View>
+       
         <View style={styles.buttonBarFlexBox}>
-          <Pressable
-            style={styles.backLayout}
-            onPress={() => navigation.openDrawer()}
-          >
+        <Pressable style={{ position:"absolute",left:0}} onPress={() => navigation.goBack()}>
             <Image
-              style={styles.iconLayout}
+              style={{ height: 20, width: 20}}
               contentFit="cover"
-              source={require('../../assets/ionmenu2.png')}
+              source={require('../../assets/back.png')}
             />
           </Pressable>
           <Text style={[styles.crearEventoText, styles.titleTypo]}>
@@ -339,8 +334,7 @@ const styles = StyleSheet.create({
   buttonBarFlexBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 15,
-    gap: 30
+    marginBottom: 15,justifyContent:"center"
   },
   backLayout: {
     height: 24,
@@ -350,7 +344,6 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_5xl,
     fontWeight: '700',
     color: Color.negro,
-    marginLeft: 20
   },
   iconLayout: {
     height: '100%',

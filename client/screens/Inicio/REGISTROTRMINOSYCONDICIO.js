@@ -9,7 +9,7 @@ const REGISTROTRMINOSYCONDICIO = () => {
   const navigation = useNavigation()
 
   return (
-    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom:60}}>
       <View style={styles.registroTrminosYCondicio}>
         <Image
           style={styles.vectorIcon}
@@ -30,7 +30,7 @@ const REGISTROTRMINOSYCONDICIO = () => {
               />
               <Image
                 style={styles.backButtonIcon}
-                contentFit="cover"
+                contentFit="contain"
                 source={require('../../assets/back-button1.png')}
               />
             </View>
@@ -119,19 +119,7 @@ Al utilizar este servicio, aceptas cumplir con estos términos y condiciones. Si
                 </View>
               </View>
             </View>
-            <View style={styles.labelledParent}>
-              <Pressable onPress={() => navigation.goBack()}>
-                <Text
-                  style={[styles.volver, styles.volverTypo]}
-                >{`< Volver `}</Text>
-              </Pressable>
-              <Pressable
-                style={styles.labelled1}
-                onPress={() => navigation.navigate('Register')}
-              >
-                <Text style={styles.volverTypo}>{`Continuar >`}</Text>
-              </Pressable>
-            </View>
+          
           </View>
         </View>
       </View>
@@ -192,7 +180,7 @@ const styles = StyleSheet.create({
     top: 15,
     width: 35,
     height: 35,
-    zIndex: 0
+    zIndex: 99
   },
   backButtonIcon: {
     top: 15,
