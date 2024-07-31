@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import {
   FontFamily,
   Padding,
@@ -30,6 +30,7 @@ import { createEvent, getAllUserEvents } from '../../redux/actions/events'
 import Privacidad from '../Privacidad'
 import ImagePickerModal from '../Modals/ImagePickerModal'
 import Maps from '../../components/Maps'
+import { setScreen } from '../../redux/slices/user.slices'
 
 const CrearFechaEspecial = () => {
   const [user, setUser] = useState()
@@ -56,6 +57,11 @@ const CrearFechaEspecial = () => {
     const user = JSON.parse(usuario)
     setUser(user)
   }
+
+  useFocusEffect(()=> {
+    dispatch(setScreen("Crear evento"))
+
+  })
 
   useEffect(() => {
     getUser()
@@ -130,10 +136,11 @@ const CrearFechaEspecial = () => {
 
       event.coverImage = cloudinaryUrls[0]
       console.log('creating special date with values: ', event)
+      setModalCreate(true)
+
       dispatch(createEvent(event)).then(()=> {
         
         dispatch(getAllUserEvents(user.id))})
-        setModalCreate(true)
     }
   }
 
@@ -168,6 +175,7 @@ const CrearFechaEspecial = () => {
               onPress={() => setShowCategoryModal(true)}
               style={{
                 paddingVertical: 13,
+                paddingLeft:10,
                 backgroundColor: Color.fAFAFA,
                 borderRadius: Border.br_3xs,
                 flexDirection: 'row',
@@ -197,6 +205,8 @@ const CrearFechaEspecial = () => {
               value={description}
               onChangeText={(text) => setDescription(text)}
               style={{
+                paddingLeft:10,
+
                 textAlignVertical: 'top',
                 paddingVertical: Padding.p_smi,
                 backgroundColor: Color.fAFAFA,
@@ -224,7 +234,7 @@ const CrearFechaEspecial = () => {
                 justifyContent: 'space-between'
               }}
             >
-              <Text style={{ color: selectedDate ? '#000' : '#606060' }}>
+              <Text style={{ paddingLeft:10,color: selectedDate ? '#000' : '#606060' }}>
                 {selectedDate || 'Selecciona una fecha'}
               </Text>
 
@@ -245,6 +255,8 @@ const CrearFechaEspecial = () => {
             <Pressable
               onPress={() => setShowPickImage(true)}
               style={{
+                paddingLeft:10,
+
                 paddingVertical: 13,
                 backgroundColor: Color.fAFAFA,
                 borderRadius: Border.br_3xs,
@@ -290,7 +302,7 @@ const CrearFechaEspecial = () => {
               onPress={() => setShowLocation(true)}
               style={styles.fieldSpaceBlock2}
             >
-              <Text style={{ color: location.length > 0 ? '#000' : '#606060' }}>
+              <Text style={{ color: location.length > 0 ? '#000' : '#606060' ,paddingLeft:10}}>
                 {location.length > 0 ? location : 'Ubicación'}
               </Text>
               <Pressable>
@@ -309,6 +321,7 @@ const CrearFechaEspecial = () => {
             <Pressable
               onPress={() => setShowTagUsers(true)}
               style={{
+                paddingLeft:10,
                 paddingVertical: 13,
                 backgroundColor: Color.fAFAFA,
                 borderRadius: Border.br_3xs,
@@ -376,7 +389,7 @@ const CrearFechaEspecial = () => {
           <View style={styles.frameChild} />
         </View>
 
-        <Modal animationType="slide" transparent visible={modalCreate}>
+        <Modal animationType="fade" transparent visible={modalCreate}>
           <View style={styles.buttonContainer2Overlay}>
             <Pressable
               style={styles.buttonContainer2Bg}
@@ -390,7 +403,7 @@ const CrearFechaEspecial = () => {
           </View>
         </Modal>
 
-        <Modal animationType="slide" transparent visible={programar}>
+        <Modal animationType="fade" transparent visible={programar}>
           <View style={styles.buttonContainer2Overlay}>
             <Pressable
               style={styles.buttonContainer2Bg}
@@ -403,7 +416,7 @@ const CrearFechaEspecial = () => {
           </View>
         </Modal>
 
-        <Modal animationType="slide" transparent visible={calendario}>
+        <Modal animationType="fade" transparent visible={calendario}>
           <View style={styles.iconlyLightOutlineCalendarOverlay}>
             <Pressable
               style={styles.iconlyLightOutlineCalendarBg}
@@ -417,12 +430,11 @@ const CrearFechaEspecial = () => {
             />
           </View>
         </Modal>
-        <Modal animationType="slide" transparent visible={showTagUsers}>
+        <Modal animationType="fade" transparent visible={showTagUsers}>
           <View
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >
@@ -442,7 +454,6 @@ const CrearFechaEspecial = () => {
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >
@@ -462,7 +473,6 @@ const CrearFechaEspecial = () => {
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >
@@ -480,7 +490,6 @@ const CrearFechaEspecial = () => {
         <Modal animationType="fade" transparent visible={showPickImage}>
           <View
             style={{
-              backgroundColor: 'rgba(113, 113, 113, 0.7)',
               height: '100%'
             }}
           >
@@ -503,7 +512,8 @@ const CrearFechaEspecial = () => {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(113, 113, 113, 0.3)'
+            backgroundColor: 'rgba(113, 113, 113, 0.3)',
+
           }}
         >
           <Pressable
@@ -691,7 +701,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(113, 113, 113, 0.3)'
   },
   iconlyLightOutlineCalendarBg: {
     width: '100%',

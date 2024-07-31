@@ -102,7 +102,7 @@ const CrearReto = () => {
             </View>
           </View>
 
-          <Modal animationType="slide" transparent visible={popupCreate}>
+          <Modal animationType="fade" transparent visible={popupCreate}>
             <View style={styles.buttonContainer2Overlay}>
               <Pressable onPress={onCloseModalCreate} />
               <ENTRADACREADA

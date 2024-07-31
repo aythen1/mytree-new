@@ -364,7 +364,8 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.lato,
     fontWeight: '700',
     lineHeight: 24,
-    fontSize: FontSize.size_xl
+    fontSize: FontSize.size_xl,
+    paddingHorizontal:15
   },
   placeContainer: {
     flexDirection: 'row',

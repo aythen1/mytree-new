@@ -140,7 +140,7 @@ const MasDetallesEventos = () => {
         </LinearGradient>
       </View>
 
-      <Modal animationType="slide" transparent visible={calendar}>
+      <Modal animationType="fade" transparent visible={calendar}>
         <View style={styles.iconlyLightOutlineCalendarOverlay}>
           <Pressable
             style={styles.iconlyLightOutlineCalendarBg}

@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import {
   FontFamily,
   Padding,
@@ -32,6 +32,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createEvent, getAllUserEvents } from './../../redux/actions/events'
 import ImagePickerModal from '../Modals/ImagePickerModal'
 import axiosInstance from '../../apiBackend'
+import { setScreen } from '../../redux/slices/user.slices'
 
 const CrearFechaEspecial = () => {
   const [user, setUser] = useState()
@@ -50,12 +51,18 @@ const CrearFechaEspecial = () => {
   const [showWishList, setShowWishList] = useState(false)
   const [showPickImage, setShowPickImage] = useState(false)
   const [pickedImage, setPickedImage] = useState([])
-
+  const [error, setError] = useState()
   const getUser = async () => {
     const usuario = await AsyncStorage.getItem('user')
     const user = JSON.parse(usuario)
     setUser(user)
   }
+
+
+  useFocusEffect(()=> {
+    dispatch(setScreen("Crear evento"))
+
+  })
 
   useEffect(() => {
     getUser()
@@ -81,11 +88,7 @@ const CrearFechaEspecial = () => {
   }
 
   const handleCreateEvent = async () => {
-    if (
-      description.length > 0 &&
-      title.length > 0 &&
-      selectedDate 
-    ) {
+    if (description.length > 0 && title.length > 0 && selectedDate) {
       const event = {
         type: 'normal',
         creatorId: user?.id.toString(),
@@ -129,6 +132,8 @@ const CrearFechaEspecial = () => {
 
       event.coverImage = cloudinaryUrls[0]
       console.log('creating event with values: ', event)
+      setModalCreate(true)
+
       dispatch(createEvent(event)).then((e) => {
         const users = e.payload.invitedUsers
 
@@ -146,16 +151,15 @@ const CrearFechaEspecial = () => {
           })
         }
         dispatch(getAllUserEvents(user.id))
-        setModalCreate(true)
-
       })
+    } else {
+      setError('debe contener almenos Título , Descripción y Fecha')
     }
   }
   return (
     <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
       <View style={[styles.crearEvento]}>
         <View>
-          
           <View style={[styles.backParent, styles.buttonBarFlexBox]}>
             <Pressable
               style={styles.backLayout}
@@ -184,6 +188,7 @@ const CrearFechaEspecial = () => {
             onChangeText={(text) => setTitle(text)}
             style={{
               paddingVertical: Padding.p_smi,
+              paddingHorizontal:10,
               backgroundColor: Color.fAFAFA,
               borderRadius: Border.br_3xs,
               flexDirection: 'row',
@@ -205,6 +210,8 @@ const CrearFechaEspecial = () => {
             value={description}
             onChangeText={(text) => setDescription(text)}
             style={{
+              paddingHorizontal:10,
+
               textAlignVertical: 'top',
               paddingVertical: Padding.p_smi,
               backgroundColor: Color.fAFAFA,
@@ -225,6 +232,8 @@ const CrearFechaEspecial = () => {
             onPress={openCalendario}
             style={{
               paddingVertical: 13,
+              paddingLeft:10,
+
               backgroundColor: Color.fAFAFA,
               borderRadius: Border.br_3xs,
               flexDirection: 'row',
@@ -254,6 +263,8 @@ const CrearFechaEspecial = () => {
           <Pressable
             onPress={() => setShowPickImage(true)}
             style={{
+              paddingLeft:10,
+
               paddingVertical: 13,
               backgroundColor: Color.fAFAFA,
               borderRadius: Border.br_3xs,
@@ -296,6 +307,8 @@ const CrearFechaEspecial = () => {
 
           <View style={styles.fieldSpaceBlock2}>
             <TextInput
+              
+              style={{paddingLeft:10}}
               value={location}
               onChangeText={(text) => setLocation(text)}
               placeholder="Ubicacion"
@@ -317,6 +330,7 @@ const CrearFechaEspecial = () => {
             onPress={() => setShowTagUsers(true)}
             style={{
               paddingVertical: 13,
+              paddingLeft:10,
               backgroundColor: Color.fAFAFA,
               borderRadius: Border.br_3xs,
               flexDirection: 'row',
@@ -343,6 +357,7 @@ const CrearFechaEspecial = () => {
             onPress={() => setShowWishList(true)}
             style={{
               paddingVertical: 13,
+              paddingLeft:10,
               backgroundColor: Color.fAFAFA,
               borderRadius: Border.br_3xs,
               flexDirection: 'row',
@@ -371,6 +386,7 @@ const CrearFechaEspecial = () => {
             <Text style={[styles.signIn, styles.signTypo]}>Cancelar</Text>
           </Pressable>
         </View>
+        {error && <Text>{error}</Text>}
         <LinearGradient
           style={{
             marginTop: '5%',
@@ -393,7 +409,7 @@ const CrearFechaEspecial = () => {
         <View style={styles.frameChild} />
       </View>
 
-      <Modal animationType="slide" transparent visible={modalCreate}>
+      <Modal animationType="fade" transparent visible={modalCreate}>
         <View style={styles.buttonContainer2Overlay}>
           <Pressable
             style={styles.buttonContainer2Bg}
@@ -407,7 +423,7 @@ const CrearFechaEspecial = () => {
         </View>
       </Modal>
 
-      <Modal animationType="slide" transparent visible={programar}>
+      <Modal animationType="fade" transparent visible={programar}>
         <View style={styles.buttonContainer2Overlay}>
           <Pressable
             style={styles.buttonContainer2Bg}
@@ -420,13 +436,12 @@ const CrearFechaEspecial = () => {
         </View>
       </Modal>
 
-      <Modal animationType="slide" transparent visible={calendario}>
+      <Modal animationType="fade" transparent visible={calendario}>
         <View
           style={{
             flex: 1,
             alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(113, 113, 113, 0.3)'
+            justifyContent: 'center'
           }}
         >
           <Pressable
@@ -441,12 +456,11 @@ const CrearFechaEspecial = () => {
           />
         </View>
       </Modal>
-      <Modal animationType="slide" transparent visible={showTagUsers}>
+      <Modal animationType="fade" transparent visible={showTagUsers}>
         <View
           style={{
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(113, 113, 113, 0.3)',
             height: '100%'
           }}
         >
@@ -461,12 +475,11 @@ const CrearFechaEspecial = () => {
           />
         </View>
       </Modal>
-      <Modal animationType="slide" transparent visible={showWishList}>
+      <Modal animationType="fade" transparent visible={showWishList}>
         <View
           style={{
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(113, 113, 113, 0.3)',
             height: '100%'
           }}
         >
@@ -481,10 +494,9 @@ const CrearFechaEspecial = () => {
           />
         </View>
       </Modal>
-      <Modal animationType="slide" transparent visible={showPickImage}>
+      <Modal animationType="fade" transparent visible={showPickImage}>
         <View
           style={{
-            backgroundColor: 'rgba(113, 113, 113, 0.7)',
             height: '100%'
           }}
         >

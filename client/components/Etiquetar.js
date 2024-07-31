@@ -35,7 +35,11 @@ const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers }) => {
         borderTopLeftRadius: Border.br_11xl,
         position: 'absolute',
         bottom: 0,
-        paddingHorizontal: 30
+        paddingHorizontal: 30,
+        borderWidth:1,
+        borderColor:Color.primario1
+
+
       }}
     >
       <View

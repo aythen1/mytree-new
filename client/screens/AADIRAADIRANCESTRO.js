@@ -120,7 +120,7 @@ const AADIRAADIRANCESTRO = () => {
         </View>
       </View>
 
-      <Modal animationType="slide" transparent visible={calendario}>
+      <Modal animationType="fade" transparent visible={calendario}>
         <View style={styles.iconlyLightOutlineCalendarOverlay}>
           <Pressable
             style={styles.iconlyLightOutlineCalendarBg}

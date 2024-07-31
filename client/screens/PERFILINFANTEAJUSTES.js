@@ -345,7 +345,7 @@ const PERFILINFANTEAJUSTES = () => {
         </View>
       </ScrollView>
 
-      <Modal animationType="slide" transparent visible={frameContainer3Visible}>
+      <Modal animationType="fade" transparent visible={frameContainer3Visible}>
         <View style={styles.frameContainer3Overlay}>
           <Pressable
             style={styles.frameContainer3Bg}
@@ -358,7 +358,7 @@ const PERFILINFANTEAJUSTES = () => {
         </View>
       </Modal>
 
-      <Modal animationType="slide" transparent visible={frameContainer5Visible}>
+      <Modal animationType="fade" transparent visible={frameContainer5Visible}>
         <View style={styles.frameContainer5Overlay}>
           <Pressable
             style={styles.frameContainer5Bg}
@@ -371,7 +371,7 @@ const PERFILINFANTEAJUSTES = () => {
         </View>
       </Modal>
 
-      <Modal animationType="slide" transparent visible={frameContainer9Visible}>
+      <Modal animationType="fade" transparent visible={frameContainer9Visible}>
         <View style={styles.frameContainer9Overlay}>
           <Pressable
             style={styles.frameContainer9Bg}
@@ -386,7 +386,7 @@ const PERFILINFANTEAJUSTES = () => {
       </Modal>
 
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={frameContainer11Visible}
       >
@@ -511,7 +511,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(113, 113, 113, 0.3)'
   },
   frameContainer3Bg: {
     position: 'absolute',
@@ -524,7 +523,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(113, 113, 113, 0.3)'
   },
   frameContainer5Bg: {
     position: 'absolute',
@@ -544,7 +542,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(113, 113, 113, 0.3)'
   },
   frameContainer9Bg: {
     position: 'absolute',

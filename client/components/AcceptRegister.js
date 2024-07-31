@@ -6,9 +6,8 @@ import Checkbox from 'expo-checkbox'
 import { Color, FontFamily, FontSize, Border } from '../GlobalStyles'
 import { useNavigation } from '@react-navigation/native'
 
-const AcceptRegister = () => {
+const AcceptRegister = ({isChecked, setChecked}) => {
   const navigation = useNavigation()
-  const [isChecked, setChecked] = useState(false)
 
   return (
     <View style={styles.frameParent1}>
@@ -65,7 +64,8 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.lato
   },
   trminosYCondiciones: {
-    fontWeight: '700'
+    fontWeight: '700',
+    fontSize:16
   },
   labelledClr: {
     color: Color.negro,
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     lineHeight: 41,
     fontWeight: '900',
-    fontSize: FontSize.size_5xl
+    fontSize: 18
   },
   frameParent1: {
     justifyContent: 'center',

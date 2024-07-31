@@ -249,7 +249,7 @@ const TarjetaDigital = () => {
         </View>
       </ScrollView>
 
-      <Modal animationType="slide" transparent visible={fieldContainerVisible}>
+      <Modal animationType="fade" transparent visible={fieldContainerVisible}>
         <View style={styles.fieldContainerOverlay}>
           <Pressable
             style={styles.fieldContainerBg}
@@ -259,7 +259,7 @@ const TarjetaDigital = () => {
         </View>
       </Modal>
 
-      <Modal animationType="slide" transparent visible={arrowDown2IconVisible}>
+      <Modal animationType="fade" transparent visible={arrowDown2IconVisible}>
         <View style={styles.arrowDown2Icon1Overlay}>
           <Pressable
             style={styles.arrowDown2Icon1Bg}
@@ -272,7 +272,7 @@ const TarjetaDigital = () => {
         </View>
       </Modal>
 
-      <Modal animationType="slide" transparent visible={fieldContainer3Visible}>
+      <Modal animationType="fade" transparent visible={fieldContainer3Visible}>
         <View style={styles.fieldContainer3Overlay}>
           <Pressable
             style={styles.fieldContainer3Bg}
@@ -283,7 +283,7 @@ const TarjetaDigital = () => {
       </Modal>
 
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={buttonContainer1Visible}
       >
@@ -299,7 +299,7 @@ const TarjetaDigital = () => {
         </View>
       </Modal>
 
-      <Modal animationType="slide" transparent visible={calendario}>
+      <Modal animationType="fade" transparent visible={calendario}>
         <View style={styles.buttonContainer1Overlay}>
           <Pressable
             style={styles.buttonContainer1Bg}
@@ -314,7 +314,7 @@ const TarjetaDigital = () => {
       </Modal>
 
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={buttonContainer2Visible}
       >
@@ -343,7 +343,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(113, 113, 113, 0.3)'
   },
   arrowDown2Icon1Bg: {
     position: 'absolute',

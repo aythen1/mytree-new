@@ -232,7 +232,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 500,
     maxWidth: '100%',
-    maxHeight: '100%'
+    maxHeight: '100%',
+    borderWidth:1,
+    borderBottomWidth:0,borderColor:Color.primario1
   }
 })
 

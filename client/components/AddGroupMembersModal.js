@@ -28,6 +28,7 @@ const AddGroupMembersModal = ({ onClose, taggedUsers, setTaggedUsers }) => {
         backgroundColor: Color.white,
         borderTopRightRadius: Border.br_11xl,
         borderTopLeftRadius: Border.br_11xl,
+        borderWidth:1,borderBottomWidth:0,borderColor:Color.primario1,
         position: 'absolute',
         bottom: 0,
         paddingHorizontal: 30

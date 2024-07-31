@@ -10,7 +10,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Keyboard,
-  ActivityIndicator
+  ActivityIndicator,
+  Dimensions
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import Etiquetar from '../components/Etiquetar'
@@ -776,12 +777,11 @@ const Organizador = () => {
           </ScrollView>
         </View>
 
-        <Modal animationType="slide" transparent visible={showEtapas}>
+        <Modal animationType="fade" transparent visible={showEtapas}>
           <View
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >
@@ -792,12 +792,11 @@ const Organizador = () => {
             {/* <Etapas onClose={closeEtapas} /> */}
           </View>
         </Modal>
-        <Modal animationType="slide" transparent visible={selectedAlbum}>
+        <Modal animationType="fade" transparent visible={selectedAlbum}>
           <View
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >
@@ -817,7 +816,6 @@ const Organizador = () => {
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >
@@ -833,7 +831,7 @@ const Organizador = () => {
           </View>
         </Modal>
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent
           visible={frameContainer2Visible}
         >
@@ -841,7 +839,6 @@ const Organizador = () => {
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >
@@ -856,12 +853,11 @@ const Organizador = () => {
             />
           </View>
         </Modal>
-        <Modal animationType="slide" transparent visible={calendario}>
+        <Modal animationType="fade" transparent visible={calendario}>
           <View
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >
@@ -878,28 +874,11 @@ const Organizador = () => {
           </View>
         </Modal>
 
-        {/* <Modal animationType="slide" transparent visible={lugar}>
+        <Modal animationType="fade" transparent visible={showHashtagsModal}>
           <View
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
-              height: '100%'
-            }}
-          >
-            <Pressable
-              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
-              onPress={closeLugar}
-            />
-            <Lugar3 onClose={closeLugar} />
-          </View>
-        </Modal> */}
-        <Modal animationType="slide" transparent visible={showHashtagsModal}>
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >
@@ -910,12 +889,11 @@ const Organizador = () => {
             <Cancion1 onClose={() => setShowHashtagsModal(false)} />
           </View>
         </Modal>
-        <Modal animationType="slide" transparent visible={submit}>
+        <Modal animationType="fade" transparent visible={submit}>
           <View
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >
@@ -937,7 +915,9 @@ const Organizador = () => {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(113, 113, 113, 0.3)'
+            height:Dimensions.get("screen").height,
+            backgroundColor: 'rgba(113, 113, 113, 0.3)',
+
           }}
         >
           <Pressable

@@ -497,7 +497,7 @@ const BOTONInvitarAmigos1 = () => {
       </Modal>
 
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={showInvitationSendModal}
       >

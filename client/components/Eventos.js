@@ -45,7 +45,7 @@ const Eventos = ({ search   }) => {
         {filteredEvents
           .filter((eve) => eve.creatorId.toString() === user.id.toString())
           .map((event) => (
-            <EventCard key={event.id} event={event} />
+         event.type == "normal" &&    <EventCard key={event.id} event={event} />
           ))}
       </View>
     )

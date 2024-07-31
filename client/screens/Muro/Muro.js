@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   View,
@@ -11,7 +11,6 @@ import {
   RefreshControl,
   Platform
 } from 'react-native'
-import { Image } from 'expo-image'
 import {
   Border,
   Padding,
@@ -20,17 +19,10 @@ import {
   Color
 } from '../../GlobalStyles'
 import Post from '../../components/Post'
-import Stories from '../../components/Stories'
 import RetosModal from '../Retos/RetosModal'
 import VotacionDeRetos from '../VotacionDeRetos'
 import MenuPrincipal from '../../components/MenuPrincipal'
-import HeaderIcons from '../../components/HeaderIcons'
-import LupaSVG from '../../components/svgs/LupaSVG'
-import MessageSVG from '../../components/svgs/MessageSVG'
-import NotificationsMuroSVG from '../../components/svgs/NotificationsMuroSVG'
-import CalendarMuroSVG from '../../components/svgs/CalendarMuroSVG'
-import SettingMuroSVG from '../../components/svgs/SettingMuroSVG'
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'
 import { setPanel } from '../../redux/slices/panel.slices'
 import StoriesVideosDiarios from '../../components/StoriesVideosDiarios'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -52,7 +44,6 @@ import TopBar from '../../components/TopBar'
 import { chatGroups } from '../../redux/actions/chat'
 import { getAllPosts } from '../../redux/actions/posts'
 import GestureRecognizer from 'react-native-swipe-gestures'
-import { getAllUserDiaries } from '../../redux/actions/diaries'
 
 const Muro = () => {
   const {
@@ -320,7 +311,7 @@ const Muro = () => {
           </View>
 
           <Modal
-            animationType="slide"
+            animationType="fade"
             transparent={true}
             visible={showModalRetos}
           >
@@ -339,7 +330,7 @@ const Muro = () => {
             </View>
           </Modal>
           <Modal
-            animationType="slide"
+            animationType="fade"
             transparent={true}
             visible={showInviteModal}
           >
@@ -373,7 +364,7 @@ const Muro = () => {
         </View>
 
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           visible={showPanel}
           onRequestClose={() => dispatch(setPanel(false))}
@@ -385,7 +376,7 @@ const Muro = () => {
             </Pressable>
           </View>
         </Modal>
-        <Modal animationType="slide" transparent visible={showShareModal}>
+        <Modal animationType="fade" transparent visible={showShareModal}>
           <View
             style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
           >
@@ -425,7 +416,7 @@ const Muro = () => {
           }}
         >
           <Modal
-            animationType="slide"
+            animationType="fade"
             transparent
             visible={showCommentsModal}
             sw

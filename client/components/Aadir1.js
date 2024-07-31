@@ -6,8 +6,6 @@ import { FontSize, FontFamily, Color, Border } from '../GlobalStyles'
 import { useDispatch, useSelector } from 'react-redux'
 import { setPanelAddFooter } from '../redux/slices/panel.slices'
 import { LinearGradient } from 'expo-linear-gradient'
-import MessageSVG from './svgs/MessageSVG'
-import DiarioSVG from './svgs/DiarioSVG'
 import { setScreen } from '../redux/slices/user.slices'
 
 const Aadir1 = ({ setShowSelectEventTypeModal }) => {
@@ -25,7 +23,7 @@ const {screen} = useSelector((state)=> state.users)
       <View style={styles.frameParent}>
         <TouchableOpacity
     
-          style={[styles.frameWrapperFlexBox,{backgroundColor: screen == 'Añadir recuerdo' ? 'rgba(0, 0, 0, 0.1)' : "transparent"}]}
+          style={[styles.frameWrapperFlexBox]}
           onPress={() => {
             dispatch(setPanelAddFooter(false))
             dispatch(setScreen("Añadir recuerdo"))
@@ -37,14 +35,14 @@ const {screen} = useSelector((state)=> state.users)
             <Image
               style={{ ...styles.iconLayout, marginLeft: -2 }}
               contentFit="cover"
-              source={require('../assets/group-11712766891.png')}
+              source={ screen == 'Añadir recuerdo' ? require('../assets/recuerdobtnhover.png') : require('../assets/recuerdobtn2.png')}
             />
             </View>
             <Text style={styles.aadirRecuerdo}>Añadir recuerdo</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.frameWrapperFlexBox,{backgroundColor: screen == 'Añadir familiar' ? 'rgba(0, 0, 0, 0.1)' : "transparent"}]}
+          style={[styles.frameWrapperFlexBox]}
           onPress={() => {
             dispatch(setPanelAddFooter(false))
             dispatch(setScreen("Añadir familiar"))
@@ -57,8 +55,8 @@ const {screen} = useSelector((state)=> state.users)
 
               <Image
                 style={styles.iconlylightOutline3User}
-                contentFit="cover"
-                source={require('../assets/iconlylightoutline3user2.png')}
+                contentFit="contain"
+                source={screen == 'Añadir familiar' ? require('../assets/familiarbtnhover.png') :require('../assets/familiarbtn.png')}
               />
             </View>
             <Text style={styles.aadirRecuerdo}>Añadir familiar</Text>
@@ -66,7 +64,7 @@ const {screen} = useSelector((state)=> state.users)
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.frameWrapperFlexBox,{backgroundColor: screen == 'MiDiario' ? 'rgba(0, 0, 0, 0.1)' : "transparent"}]}
+          style={[styles.frameWrapperFlexBox]}
           onPress={() => {
             dispatch(setPanelAddFooter(false))
             dispatch(setScreen("MiDiario"))
@@ -75,15 +73,20 @@ const {screen} = useSelector((state)=> state.users)
           }}
         >
           <View style={[styles.groupParent, styles.groupParentFlexBox]}>
-          <View style={{width:40}}>
+          <View style={{width:40 }}>
 
-            <DiarioSVG />
+          <Image
+                style={{...styles.iconlylightOutline3User,marginLeft:-4}}
+                contentFit="contain"
+                source={screen == 'MiDiario' ?  require('../assets/documentbtnhover.png') :require('../assets/documentbtn.png') }
+              />
+          
             </View>
             <Text style={styles.aadirRecuerdo}>Crear entrada al Diario</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.frameWrapperFlexBox,{backgroundColor: screen == 'Crear evento' ? 'rgba(0, 0, 0, 0.1)' : "transparent"}]}
+          style={[styles.frameWrapperFlexBox]}
           onPress={() => {
             dispatch(setPanelAddFooter(false))
             dispatch(setScreen("Crear evento"))
@@ -97,14 +100,14 @@ const {screen} = useSelector((state)=> state.users)
               <Image
                 contentFit="contain"
                 style={{ width: 25, height: 30, marginRight: 11 }}
-                source={require('../assets/whiteCalendar.png')}
+                source={ screen == 'Crear evento' ?  require('../assets/calendarbtnhover.png') : require('../assets/calendarbtn.png') }
               />
             </View>
             <Text style={styles.aadirRecuerdo}>Crear evento</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.frameWrapperFlexBox,{backgroundColor: screen == 'Mensajería' ? 'rgba(0, 0, 0, 0.1)' : "transparent"}]}
+          style={[styles.frameWrapperFlexBox]}
           onPress={() => {
             dispatch(setPanelAddFooter(false))
             dispatch(setScreen("Mensajería"))
@@ -114,8 +117,12 @@ const {screen} = useSelector((state)=> state.users)
         >
           <View style={[styles.groupParent, styles.groupParentFlexBox]}>
           <View style={{width:40}}>
-
-              <MessageSVG isMenu={true} color={Color.white} />
+          <Image
+                contentFit="contain"
+                style={{ width: 25, height: 30, marginRight: 11 }}
+                source={ screen == 'Mensajería' ?  require('../assets/messagebtnhover.png') : require('../assets/messagebtn.png') }
+              />
+              {/* <MessageSVG isMenu={true} color={Color.white} /> */}
             </View>
             <Text style={styles.aadirRecuerdo}>Mensajería</Text>
           </View>
@@ -179,7 +186,7 @@ const styles = StyleSheet.create({
     zIndex: 0
   },
   iconlylightOutline3User: {
-    height: 27,
+    height: 30,
     width: 30
   },
   iconlylightOutline3UserParent: {

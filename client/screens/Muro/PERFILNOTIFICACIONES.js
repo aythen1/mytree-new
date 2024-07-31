@@ -157,7 +157,8 @@ const PERFILNOTIFICACIONES = () => {
                   key={index}
                 >
                   <View style={[styles.frameView, styles.frameViewFlexBox]}>
-                    <Image
+                   <View style={{flexDirection:"row", alignItems:"center"}}>
+                   <Image
                       style={styles.frameChild}
                       contentFit="cover"
                       source={require('../../assets/frame-1547754875.png')}
@@ -172,10 +173,11 @@ const PERFILNOTIFICACIONES = () => {
                         </Text>
                       </Text>
                     </Text>
-                    <Text style={styles.minAgo}>
+                   </View>
+                  </View>
+                    <Text style={{alignSelf:"flex-end",fontSize:10,color:"gray"}}>
                       {formatDate(notification.createdAt)}
                     </Text>
-                  </View>
                   <Image
                     style={styles.frameItem}
                     contentFit="cover"
@@ -200,7 +202,7 @@ const PERFILNOTIFICACIONES = () => {
         </View>
       </View>
 
-      <Modal animationType="slide" transparent visible={showInvitationModal}>
+      <Modal animationType="fade" transparent visible={showInvitationModal}>
         <View style={styles.frameContainer15Overlay}>
           <Pressable
             style={styles.frameContainer15Bg}
@@ -349,8 +351,7 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
     letterSpacing: 0,
     fontFamily: FontFamily.lato,
-    right: 30,
-    top: 30
+    top: 30,
   },
   frameView: {
     justifyContent: 'space-between',

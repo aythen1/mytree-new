@@ -22,9 +22,9 @@ const styles = StyleSheet.create({
   labelled: {
     color: Color.negro,
     textAlign: 'left',
-    lineHeight: 41,
+    lineHeight: 24,
     fontWeight: '500',
-    fontSize: FontSize.size_xl
+    fontSize: 16
   },
   frameParent1: {
     marginTop: 20,
