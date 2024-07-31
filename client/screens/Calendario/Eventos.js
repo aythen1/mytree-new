@@ -54,7 +54,7 @@ const Eventos = ({ route }) => {
   const [pickedImage, setPickedImage] = useState([])
 
   const [selectedImage, setSelectedImage] = useState(null)
-  const { pickImage, provisoryProfileImage, profileImage } = useContext(Context)
+  const { pickImage } = useContext(Context)
 
   const [selectedUsers, setSelectedUsers] = useState([])
 

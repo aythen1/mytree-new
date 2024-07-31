@@ -445,7 +445,6 @@ const PerfilConfiguracion = () => {
                 style={{
                   alignItems: 'center',
                   justifyContent: 'center',
-                  backgroundColor: 'rgba(113, 113, 113, 0.3)',
                   height: '100%'
                 }}
               >
@@ -472,7 +471,6 @@ const PerfilConfiguracion = () => {
                 style={{
                   alignItems: 'center',
                   justifyContent: 'center',
-                  backgroundColor: 'rgba(113, 113, 113, 0.3)',
                   height: '100%'
                 }}
               >
@@ -495,7 +493,6 @@ const PerfilConfiguracion = () => {
                 style={{
                   alignItems: 'center',
                   justifyContent: 'center',
-                  backgroundColor: 'rgba(113, 113, 113, 0.3)',
                   height: '100%'
                 }}
               >

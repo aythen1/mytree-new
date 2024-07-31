@@ -8,11 +8,11 @@ import { Context } from '../context/Context'
 import { useSelector } from 'react-redux'
 
 const Etiquetados = () => {
-  const { selectedPostTags } = useContext(Context)
+  const { selectedPostTags, selectedPost } = useContext(Context)
   const { allUsers, userData } = useSelector((state) => state.users)
   const { setShowTaggedsModal, taggedsData } = useContext(Context)
   const navigation = useNavigation()
-  console.log('selectedPostTags: ', selectedPostTags)
+  console.log('selectedPostTags: ', selectedPost.user)
   return (
     <View
       style={{
@@ -23,6 +23,28 @@ const Etiquetados = () => {
         justifyContent: 'center'
       }}
     >
+      <Pressable
+        onPress={() => {
+          if (selectedPost.user.id !== userData.id) {
+            navigation.navigate('OtherUserProfile', selectedPost.user)
+          } else {
+            navigation.navigate('Perfil')
+          }
+        }}
+        style={{ alignItems: 'center', flexDirection: 'row', gap: 8 }}
+      >
+        <Image
+          style={{ width: 30, height: 30, borderRadius: 8 }}
+          source={
+            selectedPost.user.profilePicture
+              ? { uri: selectedPost.user.profilePicture }
+              : require('../assets/logoo.png')
+          }
+        ></Image>
+        <Text style={{ width: '80%' }}>
+          {selectedPost.user.username} {selectedPost.user.apellido}
+        </Text>
+      </Pressable>
       <Image
         style={styles.image}
         contentFit="cover"
@@ -50,7 +72,15 @@ const Etiquetados = () => {
               <Image
                 style={styles.frameItem}
                 contentFit="cover"
-                source={   allUsers.filter((user) => user.id.toString() === tag)[0] ?  {uri:allUsers.filter((user) => user.id.toString() === tag)[0].profilePicture} :require('../assets/frame-15477548751.png')}
+                source={
+                  allUsers.filter((user) => user.id.toString() === tag)[0]
+                    ? {
+                        uri: allUsers.filter(
+                          (user) => user.id.toString() === tag
+                        )[0].profilePicture
+                      }
+                    : require('../assets/frame-15477548751.png')
+                }
               />
               <Text style={styles.brunoPham}>
                 {allUsers.filter((user) => user.id.toString() === tag)[0]
@@ -101,7 +131,7 @@ const styles = StyleSheet.create({
   frameItem: {
     width: 30,
     height: 30,
-    borderRadius:50
+    borderRadius: 8
   },
   image: {
     height: 1.5,

@@ -90,20 +90,18 @@ const Posteo = ({ data, padding }) => {
   const [expanded, setExpanded] = useState(false)
   if (expanded) {
     return (
-      <Pressable
-      onPress={() => setExpanded(false)}
-      >
+      <Pressable onPress={() => setExpanded(false)}>
         <View
           style={{
             backgroundColor: Color.mytreeClarito,
             left: 0,
             top: padding && padding !== false ? 15 : 5,
-            height: Dimensions.get('screen').height / 1.8,
+            minHeight: Dimensions.get('screen').height / 1.8,
             marginBottom: 30,
             borderRadius: 20,
             transition: 'all 1s ease',
             marginHorizontal: padding && padding !== false && 15,
-            overflow: 'hidden',
+            overflow: 'hidden'
             // opacity,
             // transform: [{translateY}]
           }}
@@ -117,41 +115,112 @@ const Posteo = ({ data, padding }) => {
               overflow: 'hidden',
               justifyContent: 'space-between'
             }}
-            resizeMethod='resize'
+            resizeMethod="resize"
             source={{ uri: data.photos[0] }}
           >
-           
             <LinearGradient
-              style={{ height: "100%", justifyContent: 'flex-start', padding: 15 }}
+              style={{
+                height: '100%',
+                justifyContent: 'flex-start',
+                padding: 15
+              }}
               end={{ x: 0.5, y: 1 }}
               start={{ x: 0.5, y: 0 }}
               colors={['rgba(0,0,0,0.7)', 'transparent']}
             >
-              <Text
-                style={{
-                  fontSize: FontSize.size_5xl,
-                  color: Color.white,
-                  fontWeight: '700',
-                  width:"80%"
-                }}
-              >{`${data?.user?.username} ${data?.user?.apellido}`}</Text>
-              <ScrollView contentContainerStyle={{zIndex:999999999999}} style={{
-                  height:Dimensions.get("window").height / 4,
-                  zIndex:999
+              <View style={{ flexDirection: 'row' }}>
+                <Text
+                  style={{
+                    fontSize: FontSize.size_5xl,
+                    color: Color.white,
+                    fontWeight: '700',
+                    width: '80%'
+                  }}
+                >{`${data?.user?.username} ${data?.user?.apellido}`}</Text>
 
-              }}>
-              <Text
+                <TouchableOpacity
+                  onPress={() => {
+                    console.log('settings post tags to: ', data.tags || [])
+                    setSelectedPost(data)
+                    setSelectedPostTags(data.tags || [])
+                    setShowTaggedsModal(true)
+                  }}
+                  style={{
+                    zIndex: 99999999999
+                  }}
+                >
+                  <LinearGradient
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: 64,
+                      height: 64,
+                      borderRadius: 25,
+                      zIndex: 0
+                    }}
+                    locations={[0, 1]}
+                    colors={['#7ec18c', '#dee274']}
+                  >
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: 59,
+                        borderRadius: 23,
+                        backgroundColor: '#c5eacd',
+                        height: 59
+                      }}
+                    >
+                      <View
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          width: 53,
+                          borderRadius: 23,
+                          backgroundColor: '#b7e4c0',
+                          height: 53
+                        }}
+                      >
+                        <Image
+                          contentFit="cover"
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            borderRadius: 20,
+                            zIndex: 999999999999
+                          }}
+                          source={
+                            data?.user?.profilePicture
+                              ? {
+                                  uri: data?.user?.profilePicture
+                                }
+                              : require('../assets/logoo.png')
+                          }
+                        />
+                      </View>
+                    </View>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+
+              <ScrollView
+                contentContainerStyle={{ zIndex: 999999999999 }}
                 style={{
-                  marginTop: 10,
-                  fontSize: FontSize.size_base,
-                  textAlign: 'left',
-                  fontFamily: FontFamily.lato,
-                  color: Color.white,
-                  width:"70%",
+                  height: Dimensions.get('window').height / 4,
+                  zIndex: 999
                 }}
               >
-                {data.description}
-              </Text>
+                <Text
+                  style={{
+                    fontSize: FontSize.size_base,
+                    textAlign: 'left',
+                    fontFamily: FontFamily.lato,
+                    color: Color.white,
+                    width: '70%'
+                  }}
+                >
+                  {data.description}
+                </Text>
               </ScrollView>
 
               {data.hashtags.length > 0 && (
@@ -161,7 +230,7 @@ const Posteo = ({ data, padding }) => {
                     flexDirection: 'row',
                     flexWrap: 'wrap',
                     gap: 5,
-                    marginTop: 10,
+                    marginTop: 10
                   }}
                 >
                   {data.hashtags.map((hashtag) => (
@@ -182,68 +251,15 @@ const Posteo = ({ data, padding }) => {
               )}
             </LinearGradient>
             <View
-              style={{  position: 'absolute', right: 14,height:"100%",alignItems:"center",paddingVertical:10,paddingBottom:10 ,gap:40}}
-            >
-               <TouchableOpacity
-              onPress={() => {
-                console.log('settings post tags to: ', data.tags || [])
-                setSelectedPostTags(data.tags || [])
-                setShowTaggedsModal(true)
-              }}
               style={{
-                zIndex: 99999999999,
-              
+                position: 'absolute',
+                right: 24,
+                height: '100%',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 40
               }}
             >
-              <LinearGradient
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 64,
-                  height: 64,
-                  borderRadius: 25,
-                  zIndex: 0
-                }}
-                locations={[0, 1]}
-                colors={['#7ec18c', '#dee274']}
-              >
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: 59,
-                    borderRadius: 23,
-                    backgroundColor: '#c5eacd',
-                    height: 59
-                  }}
-                >
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: 53,
-                      borderRadius: 23,
-                      backgroundColor: '#b7e4c0',
-                      height: 53
-                    }}
-                  >
-                    <Image
-                      contentFit="cover"
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        borderRadius: 20,
-                        zIndex: 999999999999
-                      }}
-                      source={ data?.user?.profilePicture  ? {
-                        uri:
-                          data?.user?.profilePicture 
-                      } : require("../assets/logoo.png")}
-                    />
-                  </View>
-                </View>
-              </LinearGradient>
-            </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
                   setSelectedPost(data.id)
@@ -277,24 +293,26 @@ const Posteo = ({ data, padding }) => {
               >
                 <CompartirSVG />
               </TouchableOpacity>
-              <TouchableOpacity   style={{
-                    zIndex:99999999999,
-                    position:"absolute",
-                    bottom:12,right:-6,
+              <TouchableOpacity
+                style={{
+                  zIndex: 99999999999,
+                  position: 'absolute',
+                  bottom: 12,
+                  right: -6,
+                  fontSize: FontSize.size_base,
+                  fontFamily: FontFamily.lato,
+                  color: Color.white
+                }}
+                onPress={() => setExpanded(false)}
+              >
+                <Text
+                  style={{
                     fontSize: FontSize.size_base,
+                    textAlign: 'right',
                     fontFamily: FontFamily.lato,
                     color: Color.white,
-                  }} onPress={() => setExpanded(false)}>
-                <Text
-                style={{
-              
-                  fontSize: FontSize.size_base,
-                  textAlign: 'right',
-                  fontFamily: FontFamily.lato,
-                  color: Color.white,
-                  width:100
-                }}
-                
+                    width: 100
+                  }}
                 >
                   Ver menos...
                 </Text>
@@ -305,8 +323,7 @@ const Posteo = ({ data, padding }) => {
               end={{ x: 0.5, y: 0 }}
               start={{ x: 0.5, y: 1 }}
               colors={['rgba(0,0,0,0.9)', 'transparent']}
-            >
-            </LinearGradient>
+            ></LinearGradient>
           </ImageBackground>
         </View>
       </Pressable>
@@ -314,7 +331,7 @@ const Posteo = ({ data, padding }) => {
   } else {
     return (
       <Pressable
-      onPress={() => setExpanded(true)}
+        onPress={() => setExpanded(true)}
         style={{
           backgroundColor: Color.mytreeClarito,
           left: 0,
@@ -334,12 +351,13 @@ const Posteo = ({ data, padding }) => {
             resizeMode: 'cover',
             overflow: 'hidden'
           }}
-          resizeMethod='resize'
+          resizeMethod="resize"
           source={{ uri: data.photos[0] }}
         >
           <TouchableOpacity
             onPress={() => {
               console.log('settings post tags to: ', data.tags || [])
+              setSelectedPost(data)
               setSelectedPostTags(data.tags || [])
               setShowTaggedsModal(true)
             }}
@@ -378,17 +396,22 @@ const Posteo = ({ data, padding }) => {
                   }}
                 >
                   <Image
-                    contentFit={data?.user?.profilePicture ? "cover" : "contain"}
+                    contentFit={
+                      data?.user?.profilePicture ? 'cover' : 'contain'
+                    }
                     style={{
                       width: '100%',
                       height: '100%',
                       borderRadius: 20,
                       zIndex: 999999999999
                     }}
-                    source={ data?.user?.profilePicture  ?{
-                      uri:
-                        data?.user?.profilePicture 
-                    } : require("../assets/logoo.png")}
+                    source={
+                      data?.user?.profilePicture
+                        ? {
+                            uri: data?.user?.profilePicture
+                          }
+                        : require('../assets/logoo.png')
+                    }
                   />
                 </View>
               </View>
@@ -396,7 +419,13 @@ const Posteo = ({ data, padding }) => {
           </TouchableOpacity>
 
           <View
-            style={{ gap: 40, position: 'absolute', right: 24,height:"100%",justifyContent:"center" }}
+            style={{
+              gap: 40,
+              position: 'absolute',
+              right: 24,
+              height: '100%',
+              justifyContent: 'center'
+            }}
           >
             <TouchableOpacity
               onPress={() => {
@@ -412,7 +441,7 @@ const Posteo = ({ data, padding }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                console.log(data,"datata")
+                console.log(data, 'datata')
                 navigation.navigate('OpenedChat', {
                   receiverId: data.user.id,
                   receiverName: data.nameUser
@@ -439,20 +468,23 @@ const Posteo = ({ data, padding }) => {
             start={{ x: 0.5, y: 1 }}
             colors={['rgba(0,0,0,0.9)', 'transparent']}
           >
-           <View >
-           <Text
-            numberOfLines={1}
-              style={styles.camila}
-            >{`${data?.user?.username} ${data?.user?.apellido}`}</Text>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={styles.yendoALa}
+            <View>
+              <Text
+                numberOfLines={1}
+                style={styles.camila}
+              >{`${data?.user?.username} ${data?.user?.apellido}`}</Text>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.yendoALa}
+              >
+                {data.description}
+              </Text>
+            </View>
+            <Pressable
+              style={{ position: 'absolute', bottom: 10, left: 10 }}
+              onPress={() => setExpanded(true)}
             >
-              {data.description}
-            </Text>
-           </View>
-            <Pressable style={{position:"absolute",bottom:10,left:10}} onPress={() => setExpanded(true)}>
               <Text
                 style={{
                   fontSize: FontSize.size_base,
@@ -545,7 +577,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_5xl,
     color: Color.white,
     fontWeight: '700',
-    width:"70%"
+    width: '70%'
   },
   yendoALa: {
     marginTop: 20,
@@ -553,7 +585,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontFamily: FontFamily.lato,
     color: Color.white,
-    width:"70%"
+    width: '70%'
   },
   textContainer: {
     padding: 15,

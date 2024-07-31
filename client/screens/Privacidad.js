@@ -262,7 +262,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: Color.white,
     borderTopRightRadius: Border.br_11xl,
-    borderTopLeftRadius: Border.br_11xl
+    borderTopLeftRadius: Border.br_11xl,
+    borderLeftWidth:1,borderRightWidth:1,borderTopWidth:1,borderColor:Color.primario1
   }
 })
 

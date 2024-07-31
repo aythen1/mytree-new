@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: Border.br_11xl,
     backgroundColor: Color.white,
     position: 'absolute',
+    borderTopWidth:1,borderLeftWidth:1,borderRightWidth:1,borderColor:Color.primario1,
     bottom: 0,
 
     width: '100%',

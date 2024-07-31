@@ -30,6 +30,7 @@ import {
   getAllUserInvitations
 } from '../../redux/actions/events'
 import TopBar from '../../components/TopBar'
+import { setScreen } from '../../redux/slices/user.slices'
 
 const CALENDARIO = () => {
   const navigation = useNavigation()
@@ -61,6 +62,8 @@ const CALENDARIO = () => {
   useFocusEffect(
     useCallback(() => {
       // Despachar acción para obtener los eventos del usuario
+    dispatch(setScreen("Calendario"))
+
       dispatch(getAllUserEvents(userData?.id))
       dispatch(getAllUserInvitations(userData?.id)).then(() => {
         if (userInvitations) {
@@ -73,6 +76,7 @@ const CALENDARIO = () => {
       console.log(userInvitations, 'userInvitations')
     }, [dispatch])
   )
+ 
 
   useEffect(() => {
     setSelectedDate(getCurrentDate())

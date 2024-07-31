@@ -13,8 +13,9 @@ const PopUpCalendario = ({
   setSelectedDate,
   fromDiary
 }) => {
+  console.log(selectedDate,"selectedDate")
   const [showYearList, setShowYearList] = useState(false)
-  const [yearSelect, setYearSelect] = useState(selectedDate?.slice(0,4) || new Date().getFullYear())
+  const [yearSelect, setYearSelect] = useState(typeof selectedDate == 'string' && selectedDate?.slice(0,4) || new Date().getFullYear())
 
 
   LocaleConfig.locales['es'] = {
@@ -66,9 +67,9 @@ const PopUpCalendario = ({
     const year = currentDate.getFullYear()
     const month = String(currentDate.getMonth() + 1).padStart(2, '0') // El mes es base 0, por eso se suma 1
     const day = String(currentDate.getDate()).padStart(2, '0')
- 
     return `${year}-${month}-${day}`
   }
+
   const mm = [
     'Enero',
     'Febrero',
@@ -84,19 +85,22 @@ const PopUpCalendario = ({
     'Diciembre'
   ]
 
+  
   useEffect(()=>{
  if(!fromDiary){
-  setSelectedDate(getCurrentDate())
- } else {
-  setSelectedDate(new Date())
+   setSelectedDate(getCurrentDate())
+  } else {
+    setSelectedDate(getCurrentDate())
  }
   },[])
+
+
 
   const handleDayPress = (day) => {
     if (fromDiary) {
     
 
-      setSelectedDate(new Date(day.year, day.month - 1, day.day))
+      setSelectedDate(new Date(day.year, day.month - 1, day.day).toISOString())
       setCalendario(false)
       return
     }
@@ -203,6 +207,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     overflow: 'hidden',
     backgroundColor: '#FFFF',
+    borderWidth:1,
+    borderColor:Color.primario1,
     paddingTop: 20
   },
   save: {

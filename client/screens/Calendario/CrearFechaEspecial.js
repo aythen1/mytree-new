@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import {
   FontFamily,
   Padding,
@@ -30,6 +30,7 @@ import { createEvent, getAllUserEvents } from '../../redux/actions/events'
 import Privacidad from '../Privacidad'
 import ImagePickerModal from '../Modals/ImagePickerModal'
 import Maps from '../../components/Maps'
+import { setScreen } from '../../redux/slices/user.slices'
 
 const CrearFechaEspecial = () => {
   const [user, setUser] = useState()
@@ -56,6 +57,11 @@ const CrearFechaEspecial = () => {
     const user = JSON.parse(usuario)
     setUser(user)
   }
+
+  useFocusEffect(()=> {
+    dispatch(setScreen("Crear evento"))
+
+  })
 
   useEffect(() => {
     getUser()
@@ -130,10 +136,11 @@ const CrearFechaEspecial = () => {
 
       event.coverImage = cloudinaryUrls[0]
       console.log('creating special date with values: ', event)
+      setModalCreate(true)
+
       dispatch(createEvent(event)).then(()=> {
         
         dispatch(getAllUserEvents(user.id))})
-        setModalCreate(true)
     }
   }
 
@@ -403,7 +410,7 @@ const CrearFechaEspecial = () => {
           </View>
         </Modal>
 
-        <Modal animationType="slide" transparent visible={calendario}>
+        <Modal animationType="fade" transparent visible={calendario}>
           <View style={styles.iconlyLightOutlineCalendarOverlay}>
             <Pressable
               style={styles.iconlyLightOutlineCalendarBg}
@@ -422,7 +429,6 @@ const CrearFechaEspecial = () => {
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >
@@ -691,7 +697,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(113, 113, 113, 0.3)'
   },
   iconlyLightOutlineCalendarBg: {
     width: '100%',

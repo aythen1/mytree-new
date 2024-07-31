@@ -56,7 +56,8 @@ const BarraBusqueda = ({ navigate, route, fromSearch, search, setSearch }) => {
               fontFamily: FontFamily.nunito,
               color: Color.textPlaceholder,
               letterSpacing: 0,
-              textAlign: 'left'
+              textAlign: 'left',
+              width:"100%"
             }}
             value={search}
             onChangeText={(text) => setSearch(text)}

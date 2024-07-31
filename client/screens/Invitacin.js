@@ -99,7 +99,11 @@ const handleGetEvent = async ()=> {
               />
             </Pressable>
             <Text style={[styles.invitacin1, styles.cdigoTypo]}>
-              Invitación
+              {(event.type == "normal" && event.creatorId == userData.id) && "Evento"}
+              {(event.type == "normal" && event.creatorId !== userData.id) && "Invitación"}
+
+              {event.type == "special" && "Fecha especial"}
+
             </Text>
           </View>
           <View style={styles.lineParent}>
