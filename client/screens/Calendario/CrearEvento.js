@@ -409,7 +409,7 @@ const CrearFechaEspecial = () => {
         <View style={styles.frameChild} />
       </View>
 
-      <Modal animationType="slide" transparent visible={modalCreate}>
+      <Modal animationType="fade" transparent visible={modalCreate}>
         <View style={styles.buttonContainer2Overlay}>
           <Pressable
             style={styles.buttonContainer2Bg}
@@ -423,7 +423,7 @@ const CrearFechaEspecial = () => {
         </View>
       </Modal>
 
-      <Modal animationType="slide" transparent visible={programar}>
+      <Modal animationType="fade" transparent visible={programar}>
         <View style={styles.buttonContainer2Overlay}>
           <Pressable
             style={styles.buttonContainer2Bg}
@@ -436,7 +436,7 @@ const CrearFechaEspecial = () => {
         </View>
       </Modal>
 
-      <Modal animationType="slide" transparent visible={calendario}>
+      <Modal animationType="fade" transparent visible={calendario}>
         <View
           style={{
             flex: 1,
@@ -456,7 +456,7 @@ const CrearFechaEspecial = () => {
           />
         </View>
       </Modal>
-      <Modal animationType="slide" transparent visible={showTagUsers}>
+      <Modal animationType="fade" transparent visible={showTagUsers}>
         <View
           style={{
             alignItems: 'center',
@@ -475,12 +475,11 @@ const CrearFechaEspecial = () => {
           />
         </View>
       </Modal>
-      <Modal animationType="slide" transparent visible={showWishList}>
+      <Modal animationType="fade" transparent visible={showWishList}>
         <View
           style={{
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(113, 113, 113, 0.3)',
             height: '100%'
           }}
         >
@@ -495,10 +494,9 @@ const CrearFechaEspecial = () => {
           />
         </View>
       </Modal>
-      <Modal animationType="slide" transparent visible={showPickImage}>
+      <Modal animationType="fade" transparent visible={showPickImage}>
         <View
           style={{
-            backgroundColor: 'rgba(113, 113, 113, 0.7)',
             height: '100%'
           }}
         >

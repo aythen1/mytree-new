@@ -163,7 +163,7 @@ const MiLegado = ({ fromOther, otherId }) => {
                   source={
                     e.coverImage
                       ? { uri: e.coverImage }
-                      : require('../../assets/thum.png')
+                      : require('../../assets/logoo.png')
                   }
                 />
               </Pressable>

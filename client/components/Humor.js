@@ -97,6 +97,8 @@ const styles = StyleSheet.create({
   humor: {
     borderTopRightRadius: Border.br_11xl,
     borderTopLeftRadius: Border.br_11xl,
+    borderWidth:1,
+    borderBottomWidth:0,borderColor:Color.primario1,
     backgroundColor: Color.white,
     width: '100%',
     position: 'absolute',

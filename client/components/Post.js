@@ -128,7 +128,7 @@ const Posteo = ({ data, padding }) => {
               start={{ x: 0.5, y: 0 }}
               colors={['rgba(0,0,0,0.7)', 'transparent']}
             >
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{ flexDirection: 'row',width:"100%",justifyContent:"space-between" }}>
                 <Text
                   style={{
                     fontSize: FontSize.size_5xl,
@@ -146,7 +146,7 @@ const Posteo = ({ data, padding }) => {
                     setShowTaggedsModal(true)
                   }}
                   style={{
-                    zIndex: 99999999999
+                    zIndex: 99999999999,
                   }}
                 >
                   <LinearGradient

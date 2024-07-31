@@ -777,7 +777,7 @@ const Organizador = () => {
           </ScrollView>
         </View>
 
-        <Modal animationType="slide" transparent visible={showEtapas}>
+        <Modal animationType="fade" transparent visible={showEtapas}>
           <View
             style={{
               alignItems: 'center',
@@ -792,7 +792,7 @@ const Organizador = () => {
             {/* <Etapas onClose={closeEtapas} /> */}
           </View>
         </Modal>
-        <Modal animationType="slide" transparent visible={selectedAlbum}>
+        <Modal animationType="fade" transparent visible={selectedAlbum}>
           <View
             style={{
               alignItems: 'center',

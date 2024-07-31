@@ -175,6 +175,7 @@ const CrearFechaEspecial = () => {
               onPress={() => setShowCategoryModal(true)}
               style={{
                 paddingVertical: 13,
+                paddingLeft:10,
                 backgroundColor: Color.fAFAFA,
                 borderRadius: Border.br_3xs,
                 flexDirection: 'row',
@@ -204,6 +205,8 @@ const CrearFechaEspecial = () => {
               value={description}
               onChangeText={(text) => setDescription(text)}
               style={{
+                paddingLeft:10,
+
                 textAlignVertical: 'top',
                 paddingVertical: Padding.p_smi,
                 backgroundColor: Color.fAFAFA,
@@ -231,7 +234,7 @@ const CrearFechaEspecial = () => {
                 justifyContent: 'space-between'
               }}
             >
-              <Text style={{ color: selectedDate ? '#000' : '#606060' }}>
+              <Text style={{ paddingLeft:10,color: selectedDate ? '#000' : '#606060' }}>
                 {selectedDate || 'Selecciona una fecha'}
               </Text>
 
@@ -252,6 +255,8 @@ const CrearFechaEspecial = () => {
             <Pressable
               onPress={() => setShowPickImage(true)}
               style={{
+                paddingLeft:10,
+
                 paddingVertical: 13,
                 backgroundColor: Color.fAFAFA,
                 borderRadius: Border.br_3xs,
@@ -297,7 +302,7 @@ const CrearFechaEspecial = () => {
               onPress={() => setShowLocation(true)}
               style={styles.fieldSpaceBlock2}
             >
-              <Text style={{ color: location.length > 0 ? '#000' : '#606060' }}>
+              <Text style={{ color: location.length > 0 ? '#000' : '#606060' ,paddingLeft:10}}>
                 {location.length > 0 ? location : 'Ubicación'}
               </Text>
               <Pressable>
@@ -316,6 +321,7 @@ const CrearFechaEspecial = () => {
             <Pressable
               onPress={() => setShowTagUsers(true)}
               style={{
+                paddingLeft:10,
                 paddingVertical: 13,
                 backgroundColor: Color.fAFAFA,
                 borderRadius: Border.br_3xs,
@@ -383,7 +389,7 @@ const CrearFechaEspecial = () => {
           <View style={styles.frameChild} />
         </View>
 
-        <Modal animationType="slide" transparent visible={modalCreate}>
+        <Modal animationType="fade" transparent visible={modalCreate}>
           <View style={styles.buttonContainer2Overlay}>
             <Pressable
               style={styles.buttonContainer2Bg}
@@ -397,7 +403,7 @@ const CrearFechaEspecial = () => {
           </View>
         </Modal>
 
-        <Modal animationType="slide" transparent visible={programar}>
+        <Modal animationType="fade" transparent visible={programar}>
           <View style={styles.buttonContainer2Overlay}>
             <Pressable
               style={styles.buttonContainer2Bg}
@@ -424,7 +430,7 @@ const CrearFechaEspecial = () => {
             />
           </View>
         </Modal>
-        <Modal animationType="slide" transparent visible={showTagUsers}>
+        <Modal animationType="fade" transparent visible={showTagUsers}>
           <View
             style={{
               alignItems: 'center',
@@ -448,7 +454,6 @@ const CrearFechaEspecial = () => {
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >
@@ -468,7 +473,6 @@ const CrearFechaEspecial = () => {
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >
@@ -486,7 +490,6 @@ const CrearFechaEspecial = () => {
         <Modal animationType="fade" transparent visible={showPickImage}>
           <View
             style={{
-              backgroundColor: 'rgba(113, 113, 113, 0.7)',
               height: '100%'
             }}
           >
@@ -509,7 +512,8 @@ const CrearFechaEspecial = () => {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(113, 113, 113, 0.3)'
+            backgroundColor: 'rgba(113, 113, 113, 0.3)',
+
           }}
         >
           <Pressable

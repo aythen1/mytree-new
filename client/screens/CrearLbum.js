@@ -220,13 +220,12 @@ const CrearLbum = () => {
         </View>
       </ScrollView>
 
-      <Modal animationType="slide" transparent visible={vectorIcon1Visible}>
+      <Modal animationType="fade" transparent visible={vectorIcon1Visible}>
         <View
           style={{
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(113, 113, 113, 0.3)'
           }}
         >
           <Pressable

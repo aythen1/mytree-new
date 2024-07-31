@@ -1,21 +1,18 @@
 import React, { useState, useCallback } from 'react'
 import { Image } from 'expo-image'
 import { StyleSheet, View, Text, Pressable, Modal } from 'react-native'
-import { LinearGradient } from 'expo-linear-gradient'
 import { useNavigation } from '@react-navigation/native'
 import { FontSize, Color, FontFamily, Border } from '../../GlobalStyles'
 import { useDispatch, useSelector } from 'react-redux'
-// import { setPaper } from '../../redux/slices/newspapersPublished.slices'
 import PopUpCalendario from '../../components/PopUpCalendario'
 import SingleDiary from '../../components/SingleDiary'
 
 const Papers = () => {
    const { userDiaries } = useSelector((state) => state.diaries)
-   console.log('USER DIARIES', userDiaries.length)
+
   const navigation = useNavigation()
   const dispatch = useDispatch()
 
-  const [frameContainer25Visible, setFrameContainer25Visible] = useState(false)
   const [calendario, setCalendario] = useState(false)
 
   const openCalendario = () => {
@@ -26,13 +23,8 @@ const Papers = () => {
     setCalendario(false)
   }
 
-  const openFrameContainer25 = useCallback(() => {
-    setFrameContainer25Visible(true)
-  }, [])
 
-  const closeFrameContainer25 = useCallback(() => {
-    setFrameContainer25Visible(false)
-  }, [])
+ 
 
   return (
     <>
@@ -55,7 +47,9 @@ const Papers = () => {
             <Text style={[styles.ltimosDiariosFamiliares, styles.textTypo,{color:Color.primario1}]}>
               Últimas entradas
             </Text>
-            <Pressable onPress={openCalendario}>
+            <Pressable >
+            {/* <Pressable onPress={openCalendario}> */}
+
               <Image
                 style={styles.iconlyboldfilter2}
                 contentFit="cover"
@@ -68,43 +62,13 @@ const Papers = () => {
             contentFit="cover"
             source={require('../../assets/line-785.png')}
           />
-          {/* {lastPapers.map((paper) => (
-            <Pressable
-              key={paper.id}
-              style={styles.frameLayout}
-              onPress={() => {
-                dispatch(setPaper(paper))
-                // navigation.navigate('Paper')
-              }}
-            >
-              <View
-                style={[styles.frameContainer, styles.frameContainerFlexBox]}
-              >
-                <View style={styles.aatarWrapper}>
-                  <Image
-                    style={styles.aatarIcon}
-                    contentFit="cover"
-                    source={require('../../assets/aatar7.png')}
-                  />
-                </View>
-                <View style={styles.parent}>
-                  <Text style={styles.text}>{paper.date.slice(0, 2)}</Text>
-                  <Text style={styles.jul2023}>{paper.date.slice(2)}</Text>
-                </View>
-              </View>
-              <Text style={[styles.hoyHemosVisitado, styles.urielYYo2Typo]}>
-                {paper.message.length >= 70
-                  ? `${paper.message.slice(0, 70)}${'...'}`
-                  : paper.message}
-              </Text>
-            </Pressable>
-          ))} */}
+        
           <View style={styles.frameLayout}>
-            {/* <Text style={styles.text}>06/01/2024</Text> */}
            {[...userDiaries].sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         ).slice(0,5).map((diary,index)=>
             <SingleDiary
+            setSelected={()=> navigation.navigate("MIDIARIOENTRADATEXTOPL7",{date:diary})}
             key={diary.id}
             notEditable={true}
             diary={diary}
@@ -116,11 +80,10 @@ const Papers = () => {
         </View>
       </View>
 
-      <Modal animationType="slide" transparent visible={calendario}>
+      <Modal animationType="fade" transparent visible={calendario}>
         <View style={styles.iconlyLightOutlineCalendarOverlay}>
           <Pressable
             style={styles.iconlyLightOutlineCalendarBg}
-            onPress={closeCalendario}
           />
           <PopUpCalendario
             setButtonContainer2Visible={() => {}}

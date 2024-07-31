@@ -134,7 +134,7 @@ const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
   const renderHeader = (date) => {
     console.log(date,"dateeeeeeeee")
     return (
-      <TouchableOpacity onPress={() => setShowYearList(!showYearList)}>
+      <TouchableOpacity >
         <Text>{`${mm[`${date.getMonth()}`]} ${date.getFullYear()}`}</Text>
       </TouchableOpacity>
     )

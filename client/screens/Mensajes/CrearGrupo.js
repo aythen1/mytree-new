@@ -166,7 +166,7 @@ console.log(res.data)
         </LinearGradient>
       </View>
 
-      <Modal animationType="slide" transparent visible={modalCreate}>
+      <Modal animationType="fade" transparent visible={modalCreate}>
         <View style={styles.buttonContainer2Overlay}>
           <Pressable
             style={styles.buttonContainer2Bg}
@@ -180,7 +180,7 @@ console.log(res.data)
         </View>
       </Modal>
 
-      <Modal animationType="slide" transparent visible={modalOpcionesVisible}>
+      <Modal animationType="fade" transparent visible={modalOpcionesVisible}>
         <View style={styles.arrowDown2Icon1Overlay}>
           <Pressable
             style={styles.arrowDown2Icon1Bg}
@@ -200,12 +200,11 @@ console.log(res.data)
           />
         </View>
       </Modal>
-      <Modal animationType="slide" transparent visible={showAddMembers}>
+      <Modal animationType="fade" transparent visible={showAddMembers}>
         <View
           style={{
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(113, 113, 113, 0.3)',
             height: '100%'
           }}
         >
@@ -236,7 +235,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(113, 113, 113, 0.3)'
   },
   titleTypo: {
     textAlign: 'left',

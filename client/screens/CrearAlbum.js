@@ -733,7 +733,7 @@ const CrearAlbum = () => {
             </Text>
           </LinearGradient>
         )} */}
-        <Modal animationType="slide" transparent visible={showEtapas}>
+        <Modal animationType="fade" transparent visible={showEtapas}>
           <View
             style={{
               alignItems: 'center',
@@ -749,7 +749,7 @@ const CrearAlbum = () => {
             {/* <Etapas onClose={closeEtapas} /> */}
           </View>
         </Modal>
-        <Modal animationType="slide" transparent visible={selectedAlbum}>
+        <Modal animationType="fade" transparent visible={selectedAlbum}>
           <View
             style={{
               alignItems: 'center',
@@ -786,7 +786,7 @@ const CrearAlbum = () => {
           </View>
         </Modal>
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent
           visible={frameContainer2Visible}
         >
@@ -808,7 +808,7 @@ const CrearAlbum = () => {
             />
           </View>
         </Modal>
-        <Modal animationType="slide" transparent visible={calendario}>
+        <Modal animationType="fade" transparent visible={calendario}>
           <View
             style={{
               alignItems: 'center',
@@ -830,10 +830,9 @@ const CrearAlbum = () => {
           </View>
         </Modal>
 
-        <Modal animationType="slide" transparent visible={showImagesModal}>
+        <Modal animationType="fade" transparent visible={showImagesModal}>
           <View
             style={{
-              backgroundColor: 'rgba(113, 113, 113, 0.7)',
               height: '100%'
             }}
           >
@@ -848,12 +847,11 @@ const CrearAlbum = () => {
             />
           </View>
         </Modal>
-        <Modal animationType="slide" transparent visible={showHashtagsModal}>
+        <Modal animationType="fade" transparent visible={showHashtagsModal}>
           <View
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >
@@ -864,12 +862,11 @@ const CrearAlbum = () => {
             <Cancion1 onClose={() => setShowHashtagsModal(false)} />
           </View>
         </Modal>
-        <Modal animationType="slide" transparent visible={submit}>
+        <Modal animationType="fade" transparent visible={submit}>
           <View
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >

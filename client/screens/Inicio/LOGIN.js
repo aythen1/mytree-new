@@ -44,7 +44,7 @@ const LOGIN = () => {
     console.log('Nuevo valor de email:', text)
 
     setError('')
-    setEmail(text)
+    setEmail(text.toLowerCase())
     console.log('esto es', email)
   }
 

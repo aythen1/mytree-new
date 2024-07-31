@@ -50,6 +50,11 @@ import TopBar from '../../components/TopBar'
 import { removeUserDiary } from '../../redux/slices/diaries.slices'
 
 const MIDIARIOENTRADATEXTOPL7 = () => {
+  const currentDate = new Date()
+  const year = currentDate.getFullYear()
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0') // Los meses son 0-indexados
+  const day = String(currentDate.getDate()).padStart(2, '0')
+
   const dispatch = useDispatch()
   const { selectedSection, editingDiary, handleAddDiary } = useContext(Context)
   const navigation = useNavigation()
@@ -68,14 +73,13 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
   } = useContext(Context)
   const [images, setImages] = useState([])
   const [selectedImage, setSelectedImage] = useState(null)
-  const [cameraType, setCameraType] = useState(Camera?.Constants?.Type?.back)
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString())
+  const [selectedDate, setSelectedDate] = useState(`${year}-${month}-${day}`)
   const [showCalendar, setShowCalendar] = useState(false)
   const [showImagesModal, setShowImagesModal] = useState(false)
   const [pickedImages, setPickedImages] = useState([])
   const [diaryImages, setDiaryImages] = useState([])
 
-console.log("dasdasjfnaskjfnasklf",new Date().toISOString())
+  console.log('dasdasjfnaskjfnasklf', `${year}-${month}-${day}`)
 
   const monthsInSpanish = [
     'enero',
@@ -161,6 +165,8 @@ console.log("dasdasjfnaskjfnasklf",new Date().toISOString())
   }, [])
 
   const [text, setText] = useState('')
+  const [title, setTitle] = useState('')
+
 
   const monthString = selectedDate?.slice(5, 7).split('0').join('') // Elimina el "0" inicial si existe
   const monthNumber = parseInt(monthString, 10) // Convierte la cadena a un número
@@ -301,11 +307,25 @@ console.log("dasdasjfnaskjfnasklf",new Date().toISOString())
 
               {/* renderizado de secciones */}
               {/* {renderSection(selectedSection)} */}
+
               {editingDiary == 'preDiary' ? (
                 <ScrollView
                   style={{ width: '100%', height: '100%' }}
                   contentContainerStyle={{ paddingBottom: 500 }}
                 >
+                  <Text style={[styles.reflexinDiaria, styles.hoyLoHeFlexBox]}>
+                    {selectedSection === 'nube'
+                      ? 'Reflexión Diaria'
+                      : selectedSection === 'logros'
+                        ? 'Celebrando Logros'
+                        : selectedSection === 'desafios'
+                          ? 'Desafíos Superados'
+                          : selectedSection === 'risas'
+                            ? 'Risas y anécdotas'
+                            : selectedSection === 'mundo'
+                              ? 'Descubriendo el mundo'
+                              : 'Personalizada'}
+                  </Text>
                   <View style={{}}>
                     <View
                       style={{
@@ -388,16 +408,17 @@ console.log("dasdasjfnaskjfnasklf",new Date().toISOString())
                     style={{
                       flexDirection: 'row',
                       alignItems: 'center',
-                      justifyContent: 'flex-end',
+                      justifyContent: 'space-between',
                       marginTop: 10
                     }}
                   >
+                    <TextInput placeholder='Título' value={title} onChangeText={setTitle} maxLength={30} style={{width:"50%" , fontSize:20}}></TextInput>
                     <View
                       style={{
                         justifyContent: 'center',
                         alignItems: 'center',
                         flexDirection: 'row',
-                        height: '100%'
+                        height: '100%',
                       }}
                     >
                       {editingDiary ? (
@@ -415,6 +436,8 @@ console.log("dasdasjfnaskjfnasklf",new Date().toISOString())
                                 dispatch(removeUserDiary('preDiary'))
                               }
                               setText('')
+                              setTitle('')
+
                               setEditingDiary()
                               setPickedImages([])
                             }}
@@ -431,7 +454,8 @@ console.log("dasdasjfnaskjfnasklf",new Date().toISOString())
                           style={{
                             backgroundColor: 'red',
                             height: '100%',
-                            width: '100%'
+                            width: '100%',
+
                           }}
                         >
                           <Text
@@ -499,6 +523,7 @@ console.log("dasdasjfnaskjfnasklf",new Date().toISOString())
                             const ultimo = userDiaries[userDiaries.length - 1]
                             const preDiary = { ...ultimo }
                             preDiary.description = text
+                            preDiary.title = title
                             const cloudinaryUrls = []
 
                             // for (const image of pickedImages) {
@@ -539,9 +564,11 @@ console.log("dasdasjfnaskjfnasklf",new Date().toISOString())
                               )
                               delete preDiary.id
                               dispatch(postDiary(preDiary)).then((res) => {
+                                setText("")
+                                setTitle("")
                                 const obj = {
                                   creatorId: userData.id,
-                                  category: selectedSection
+                                  category: selectedSection,
                                 }
                                 obj.images = cloudinaryUrls
                                 console.log(
@@ -565,9 +592,12 @@ console.log("dasdasjfnaskjfnasklf",new Date().toISOString())
                               dispatch(
                                 updateDiaryById({
                                   diaryId: preDiary.id,
-                                  diaryData: updatedData
+                                  diaryData: updatedData,
+                                  title
                                 })
                               ).then((res) => {
+                                setText("")
+                                setTitle("")
                                 const obj = {
                                   creatorId: userData.id,
                                   category: selectedSection
@@ -581,6 +611,7 @@ console.log("dasdasjfnaskjfnasklf",new Date().toISOString())
                             }
                             setPickedImages([])
                             setEditingDiary()
+                            setText("")
                           }}
                         >
                           <Text
@@ -600,22 +631,24 @@ console.log("dasdasjfnaskjfnasklf",new Date().toISOString())
                       </LinearGradient>
                     </View>
                   </View>
+                  <View style={{borderTopWidth:1,marginTop:10,borderColor:Color.primario1}}>
                   <TextInput
+                  placeholder='Escribe algo..'
                     style={{
                       fontSize: FontSize.size_lg,
-                      lineHeight: 27,
                       width: '100%',
                       textAlign: 'left',
                       color: Color.negro,
                       fontFamily: FontFamily.lato,
                       letterSpacing: 0,
-                      marginBottom: 8,
-                      height: '100%'
+                      paddingTop:5
+
                     }}
                     multiline
                     value={text}
                     onChangeText={(text) => setText(text)}
                   />
+                  </View>
                 </ScrollView>
               ) : (
                 <ReflexionDiaria
@@ -634,13 +667,12 @@ console.log("dasdasjfnaskjfnasklf",new Date().toISOString())
           </View>
 
           {editingDiary && <NavMedia setShowImagesModal={setShowImagesModal} />}
-          <Modal animationType="slide" transparent visible={showCalendar}>
+          <Modal animationType="fade" transparent visible={showCalendar}>
             <View
               style={{
                 flex: 1,
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: 'rgba(113, 113, 113, 0.3)'
               }}
             >
               <Pressable
@@ -657,7 +689,7 @@ console.log("dasdasjfnaskjfnasklf",new Date().toISOString())
             </View>
           </Modal>
 
-          <Modal animationType="slide" transparent visible={groupIcon1Visible}>
+          <Modal animationType="fade" transparent visible={groupIcon1Visible}>
             <View style={styles.arrowDown2Icon1Overlay}>
               <Pressable
                 style={styles.arrowDown2Icon1Bg}
@@ -666,10 +698,9 @@ console.log("dasdasjfnaskjfnasklf",new Date().toISOString())
               <Humor onClose={closeGroupIcon1} />
             </View>
           </Modal>
-          <Modal animationType="slide" transparent visible={showImagesModal}>
+          <Modal animationType="fade" transparent visible={showImagesModal}>
             <View
               style={{
-                backgroundColor: 'rgba(113, 113, 113, 0.7)',
                 height: '100%'
               }}
             >
@@ -691,6 +722,19 @@ console.log("dasdasjfnaskjfnasklf",new Date().toISOString())
 }
 
 const styles = StyleSheet.create({
+  hoyLoHeFlexBox: {
+    textAlign: 'left',
+    alignSelf: 'stretch',
+    color: Color.negro,
+    marginTop: 20,
+    fontFamily: FontFamily.lato,
+    letterSpacing: 0
+  },
+  reflexinDiaria: {
+    lineHeight: 36,
+    fontSize: FontSize.size_5xl,
+    marginBottom: 10
+  },
   arrowDown2Icon1Bg: {
     position: 'absolute',
     width: '100%',

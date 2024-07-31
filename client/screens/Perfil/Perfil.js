@@ -227,9 +227,9 @@ const Perfil = () => {
                 ) : userData?.badge === 'badge8' ? (
                   <Badge8 width={30} height={30} />
                 ) : (
-                  userData?.badge === 'badge9' && (
+                  userData?.badge === 'badge9' ? (
                     <Badge9 width={30} height={30} />
-                  )
+                  ) : ( <Badge1 width={30} height={30} />)
                 )}
               </TouchableOpacity>
             )}
@@ -387,7 +387,7 @@ const Perfil = () => {
             />
           </View>
         </Modal>
-        <Modal animationType="slide" transparent visible={showBadgesModal}>
+        <Modal animationType="fade" transparent visible={showBadgesModal}>
           <View
             style={{
               flex: 1,

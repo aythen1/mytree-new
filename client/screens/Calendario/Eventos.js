@@ -505,10 +505,9 @@ const Eventos = ({ route }) => {
           </ScrollView>
         </TouchableWithoutFeedback>
       </Modal> */}
-      <Modal animationType="slide" transparent visible={pictureModalVisible}>
+      <Modal animationType="fade" transparent visible={pictureModalVisible}>
         <View
           style={{
-            backgroundColor: 'rgba(113, 113, 113, 0.7)',
             height: '100%'
           }}
         >

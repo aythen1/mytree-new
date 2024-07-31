@@ -66,6 +66,8 @@ const SingleDiary = ({
         marginBottom:5
       }}
     >
+      <Text style={{ fontSize:16 , fontWeight:500 }}>{diary?.title || "Sin título"}</Text>
+
       <Text style={{ width: '78%', height: '100%' }}>{diary.description}</Text>
 
       {!notEditable && editingDiary === diary.id && (
@@ -394,7 +396,7 @@ const SingleDiary = ({
       )}
 
       {!notEditable && (
-        <Modal animationType="slide" transparent visible={modalCreate}>
+        <Modal animationType="fade" transparent visible={modalCreate}>
           <View
             style={{
               flex: 1,
@@ -422,7 +424,7 @@ const SingleDiary = ({
         </Modal>
       )}
       {!notEditable && (
-        <Modal animationType="slide" transparent visible={showEmojisModal}>
+        <Modal animationType="fade" transparent visible={showEmojisModal}>
           <View
             style={{
               flex: 1,

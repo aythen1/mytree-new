@@ -270,7 +270,7 @@ const MUROALERTAS1 = () => {
                 </Pressable>
               </LinearGradient>
 
-              <Modal animationType="slide" transparent visible={modalCreate}>
+              <Modal animationType="fade" transparent visible={modalCreate}>
                 <View style={styles.buttonContainer2Overlay}>
                   <Pressable
                     style={styles.buttonContainer2Bg}
@@ -288,7 +288,7 @@ const MUROALERTAS1 = () => {
         </View>
       </ScrollView>
 
-      <Modal animationType="slide" transparent visible={fieldContainerVisible}>
+      <Modal animationType="fade" transparent visible={fieldContainerVisible}>
         <View style={styles.fieldContainerOverlay}>
           <Pressable
             style={styles.fieldContainerBg}
@@ -298,7 +298,7 @@ const MUROALERTAS1 = () => {
         </View>
       </Modal>
 
-      <Modal animationType="slide" transparent visible={opcionesModal}>
+      <Modal animationType="fade" transparent visible={opcionesModal}>
         <View style={styles.fieldContainerOverlay}>
           <Pressable
             style={styles.fieldContainerBg}
@@ -311,7 +311,7 @@ const MUROALERTAS1 = () => {
         </View>
       </Modal>
 
-      <Modal animationType="slide" transparent visible={arrowDown2Icon1Visible}>
+      <Modal animationType="fade" transparent visible={arrowDown2Icon1Visible}>
         <View style={styles.arrowDown2Icon1Overlay}>
           <Pressable
             style={styles.arrowDown2Icon1Bg}
@@ -329,7 +329,7 @@ const MUROALERTAS1 = () => {
         </View>
       </Modal>
 
-      <Modal animationType="slide" transparent visible={fieldContainer3Visible}>
+      <Modal animationType="fade" transparent visible={fieldContainer3Visible}>
         <View style={styles.fieldContainer3Overlay}>
           <Pressable
             style={styles.fieldContainer3Bg}
@@ -340,7 +340,7 @@ const MUROALERTAS1 = () => {
       </Modal>
 
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent
         visible={buttonContainer1Visible}
       >
@@ -597,7 +597,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(113, 113, 113, 0.3)'
   },
   buttonContainer2Bg: {
     position: 'absolute',

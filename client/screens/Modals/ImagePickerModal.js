@@ -199,6 +199,9 @@ const ImagePickerModal = ({
   return (
     <View
       style={{
+        borderWidth:1,
+        borderBottomWidth:0,
+        borderColor:Color.primario1,
         backgroundColor: Color.white,
         width: '100%',
         overflow: 'hidden',

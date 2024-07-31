@@ -25,11 +25,10 @@ const Register = () => {
   const [name, setsetName] = useState('')
   const [text, setText] = useState('')
   const [mail, setMail] = useState('')
+  const [error, setError] = useState('')
+  const [isChecked, setChecked] = useState(false)
+
   const [birthDate, setBIrthDate] = useState('')
-
-  const [openCalendar,setOpenCalendar] = useState(false)
-
-  const [data, setData] = useState(null)
 
   const [dataToSend, setDataToSend] = useState({
     username: '',
@@ -39,59 +38,65 @@ const Register = () => {
     address: '',
     phone: '',
     email: '',
-    password: ''
+    password: '',
+    confirm_password: ''
   })
+
   useEffect(() => {
     console.log(dataToSend, 'dataToSend')
   }, [dataToSend])
-  const handleChangeText = (input) => {
-    const filteredInput = input.replace(/[^0-9/]/g, '')
-    let formattedInput = filteredInput
-    if (filteredInput.length === 2 && filteredInput[2] !== '/') {
-      formattedInput = filteredInput.slice(0, 2) + '/' + filteredInput.slice(2)
-    }
-    if (filteredInput.length === 5 && filteredInput[5] !== '/') {
-      formattedInput = filteredInput.slice(0, 5) + '/' + filteredInput.slice(5)
-    }
-    setText(formattedInput)
-  }
-
-  const handleNombreChange = (text) => {
-    setsetName(text)
-  }
-
-  const handleMailChange = (text) => {
-    setMail(text)
-  }
 
   const next = async () => {
-    if (nextField < 3) {
-      console.log('1dasdasdasdsadsa')
-      setNextField((prev) => prev + 1)
-    } else {
-      try {
-        console.log('USER POST====', dataToSend)
-        const res = await axios.post(`${BACKURL}/user`, dataToSend)
-        console.log('esto es res', res)
-        console.log(res.data, 'usuario nuevo')
-        navigation.navigate('LOGIN')
-      } catch (error) {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          console.log(error.response.data)
-          console.log(error.response.status)
-          console.log(error.response.headers)
-        } else if (error.request) {
-          // The request was made but no response was received
-          console.log(error.request)
-        } else {
-          // Something happened in setting up the request that triggered an error
-          console.log('Error', error.message)
+    const { username, apellido, email, password, confirm_password } = dataToSend;
+  
+    // Expresión regular para validar el formato del email
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+    if (nextField == 1) {
+      if (
+        username.trim() !== '' &&
+        apellido.trim() !== '' &&
+        email.trim() !== '' &&
+        emailPattern.test(email) && // Verificación del formato del email
+        password.trim() !== '' &&
+        confirm_password.trim() !== '' &&
+        password === confirm_password
+      ) {
+        setError('');
+        setNextField((prev) => prev + 1);
+      } else {
+        if(!emailPattern.test(email)){
+          return setError("Ingrese un email válido")
         }
-        console.log(error.config)
+        if(password !== confirm_password){
+          return setError("Las contraseñas no coinciden")
+
+        }
+        setError('Verifica los datos ingresados');
       }
+    } 
+    if(nextField == 2 && isChecked){
+      setNextField((prev) => prev + 1);
+
+    } 
+
+    if(nextField == 3){
+      try {
+        navigation.navigate('LOGIN');
+        console.log('USER POST====', dataToSend);
+        const res = await axios.post(`${BACKURL}/user`, dataToSend);
+        console.log('esto es res', res);
+        console.log(res.data, 'usuario nuevo');
+      } catch (error) {
+     
+        console.log(error);
+      }
+   
+     
     }
-  }
+  };
+  
+  
 
   const previous = () => {
     if (nextField > 1) {
@@ -106,7 +111,7 @@ const Register = () => {
       style={styles.registroNombre}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.scrollViewContent}
-      keyboardShouldPersistTaps={"always"}
+      keyboardShouldPersistTaps={'always'}
     >
       <LinearGradient
         style={styles.frameChild}
@@ -148,12 +153,12 @@ const Register = () => {
             }}
           >
             <View style={styles.icons}>
-             <Svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <Svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <Path
                   d="M12 0C13.5913 0 15.1174 0.632141 16.2426 1.75736C17.3679 2.88258 18 4.4087 18 6C18 7.5913 17.3679 9.11742 16.2426 10.2426C15.1174 11.3679 13.5913 12 12 12C10.4087 12 8.88258 11.3679 7.75736 10.2426C6.63214 9.11742 6 7.5913 6 6C6 4.4087 6.63214 2.88258 7.75736 1.75736C8.88258 0.632141 10.4087 0 12 0ZM12 15C18.63 15 24 17.685 24 21V24H0V21C0 17.685 5.37 15 12 15Z"
                   fill="#7EC18C"
                 />
-              </Svg> 
+              </Svg>
             </View>
 
             <View
@@ -205,9 +210,11 @@ const Register = () => {
           ></View>
         </View>
 
-        <View style={{flex:1}}>
+        <View style={{ flex: 1 }}>
           {nextField === 1 && (
             <NameRegister
+            setError={setError}
+            error={error}
               name={name}
               setsetName={setsetName}
               birthDate={birthDate}
@@ -220,9 +227,10 @@ const Register = () => {
               dataToSend={dataToSend}
             />
           )}
-          {nextField === 2 && <AcceptRegister />}
+          {nextField === 2 && <AcceptRegister isChecked={isChecked} setChecked={setChecked} />}
           {nextField === 3 && <CheckRegister />}
         </View>
+        {error && (<Text style={{fontSize:12,color:"red",width:"100%",textAlign:"center"}}>{error}</Text>)}
         <Pressable style={styles.labelled1} onPress={() => next()}>
           <Text style={[styles.continuar, styles.labelledTypo]}>
             {'Continuar >'}

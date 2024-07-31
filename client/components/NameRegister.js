@@ -6,40 +6,18 @@ import { Color, FontFamily, FontSize, Border } from '../GlobalStyles'
 import PopUpCalendario from './PopUpCalendario'
 import Maps from './Maps'
 
-const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDate, setBIrthDate, setDataToSend ,dataToSend}) => {
+const NameRegister = ({  setDataToSend ,dataToSend,setError}) => {
 
   const [calendario, setCalendario] = useState(false)
-  const [selectedDate, setSelectedDate] = useState()
   const [lugar, setLugar] = useState(false)
-  const [location, setLocation] = useState()
-
-  const handleChangeText = (input) => {
-    const filteredInput = input.replace(/[^0-9/]/g, '')
-    let formattedInput = filteredInput
-    if (filteredInput.length === 2 && filteredInput[2] !== '/') {
-      formattedInput = filteredInput.slice(0, 2) + '/' + filteredInput.slice(2)
-    }
-    if (filteredInput.length === 5 && filteredInput[5] !== '/') {
-      formattedInput = filteredInput.slice(0, 5) + '/' + filteredInput.slice(5)
-    }
-    setDataToSend({...dataToSend,["birthDate"]:formattedInput})
-  }
-
-  const openCalendario = useCallback(() => {
-    setCalendario(true)
-  }, [])
 
   const closeCalendario = useCallback(() => {
     setCalendario(false)
   }, [])
 
-  const openLugar = useCallback(() => {
-    setLugar(true)
-  }, [])
+ 
 
-  const closeLugar = useCallback(() => {
-    setLugar(false)
-  }, [])
+
   return (
     <View style={{flex:1,paddingBottom:20}}>
       <View>
@@ -56,7 +34,7 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
             <TextInput
               style={styles.placeholder}
               placeholder="Nombre"
-              onChangeText={(nombre)=> setDataToSend({...dataToSend,["username"]:nombre})}
+              onChangeText={(nombre)=> {setError("");setDataToSend({...dataToSend,["username"]:nombre})}}
               value={dataToSend.username}
             />
           </View>
@@ -77,7 +55,7 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
             <TextInput
               style={styles.placeholder}
               placeholder="Apellido"
-              onChangeText={(apellido)=> setDataToSend({...dataToSend,["apellido"]:apellido})}
+              onChangeText={(apellido)=> {setError("");setDataToSend({...dataToSend,["apellido"]:apellido})}}
               value={dataToSend.apellido}
             />
           </View>
@@ -107,12 +85,11 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
           </Pressable>
         </View>
       </View>
-      <Modal animationType="slide" transparent visible={calendario}>
+      <Modal animationType="fade" transparent visible={calendario}>
           <View
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >
@@ -124,7 +101,7 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
               setButtonContainer2Visible={() => {}}
               setCalendario={setCalendario}
               selectedDate={dataToSend?.birthDate}
-              setSelectedDate={(birt)=> setDataToSend({...dataToSend,["birthDate"]:birt})}
+              setSelectedDate={(birt)=>{ setError("");setDataToSend({...dataToSend,["birthDate"]:birt})}}
             />
           </View>
         </Modal>
@@ -149,30 +126,10 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
               setLugar(false)
             }}
           />
-          <Maps onClose={() => setLugar(false)} setLocation={(c)=> setDataToSend({...dataToSend,["address"]:c})} />
+          <Maps onClose={() => setLugar(false)} setLocation={(c)=> {setError("");setDataToSend({...dataToSend,["address"]:c})}} />
         </View>
       </Modal>
-      {/* <View>
-        <Text style={[styles.labelled, styles.labelledTypo]}>
-        Direccion
-        </Text>
-        <View style={styles.baseBackgroundParent}>
-          <View style={styles.vectorParent}>
-            <Image
-              style={styles.vectorIconLayout}
-              contentFit="cover"
-              source={require('../assets/vector81.png')}
-            />
-            <TextInput
-              style={styles.placeholder}
-              placeholder="Direccion"
-              onChangeText={(direccion)=> setDataToSend({...dataToSend,["address"]:direccion})}
-              value={dataToSend.address}
-            />
-          </View>
-        </View>
-        
-      </View> */}
+     
       <View>
         <Text style={[styles.labelled, styles.labelledTypo]}>
           Ciudad
@@ -184,12 +141,7 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
               contentFit="cover"
               source={require('../assets/Buildings.png')}
             />
-            {/* <TextInput
-              style={styles.placeholder}
-              placeholder="Ciudad"
-              onChangeText={(ciudad)=> setDataToSend({...dataToSend,["city"]:ciudad})}
-              value={dataToSend.city}
-            /> */}
+      
             <Text style={{...styles.placeholder,color:"gray"}}>{dataToSend.address || "Ciudad"}</Text>
           </Pressable>
         </View>
@@ -205,10 +157,11 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
               source={require('../assets/group4.png')}
             />
             <TextInput
+            maxLength={10}
               keyboardType="numeric"
               placeholder=" ( 00 ) 1234 5678"
               style={styles.placeholder}
-              onChangeText={(phone)=> setDataToSend({...dataToSend,["phone"]:phone})}
+              onChangeText={(phone)=> {setError("");setDataToSend({...dataToSend,["phone"]:phone})}}
               value={dataToSend.phone}
             />
           </View>
@@ -226,7 +179,7 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
             <TextInput
               style={styles.placeholder}
               placeholder="Email"
-              onChangeText={(email)=> setDataToSend({...dataToSend,["email"]:email})}
+              onChangeText={(email)=> {setError("");setDataToSend({...dataToSend,["email"]:email})}}
               value={dataToSend.email}
             />
           </View>
@@ -246,7 +199,7 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
             <TextInput
               style={styles.placeholder}
               placeholder="Contraseña"
-              onChangeText={(password)=> setDataToSend({...dataToSend,["password"]:password})}
+              onChangeText={(password)=> {setError("");setDataToSend({...dataToSend,["password"]:password})}}
               value={dataToSend.password}
               secureTextEntry={true}
 
@@ -270,7 +223,7 @@ const NameRegister = ({ name, setsetName, text, setText, mail, setMail, birthDat
               style={styles.placeholder}
               placeholder="Contraseña"
               secureTextEntry={true}
-              onChangeText={(confirm_password)=> setDataToSend({...dataToSend,["confirm_password"]:confirm_password})}
+              onChangeText={(confirm_password)=> {setError("");setDataToSend({...dataToSend,["confirm_password"]:confirm_password})}}
               value={dataToSend.confirm_password}
             />
           </View>

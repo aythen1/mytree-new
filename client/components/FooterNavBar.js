@@ -191,7 +191,7 @@ const FooterNavBar = () => {
           source={require('../assets/nav.png')}
         />
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent
           visible={showSelectEventTypeModal}
         >
@@ -212,7 +212,7 @@ const FooterNavBar = () => {
           </View>
         </Modal>
         {panelAddFooter && (
-          <Modal transparent={true} animationType="slide">
+          <Modal transparent={true} animationType="fade">
             <TouchableWithoutFeedback onPress={showModalAdd}>
               <View style={{ height: '100%' }}>
                 <Aadir1

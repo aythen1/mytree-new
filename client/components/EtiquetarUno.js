@@ -35,7 +35,8 @@ const EtiquetarUno = ({ onClose, taggedUsers, setTaggedUsers ,data}) => {
         borderTopLeftRadius: Border.br_11xl,
         position: 'absolute',
         bottom: 0,
-        paddingHorizontal: 30
+        paddingHorizontal: 30,
+        borderWidth:1,borderBottomWidth:0,borderColor:Color.primario1
       }}
     >
       <View

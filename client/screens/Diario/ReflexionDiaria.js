@@ -12,11 +12,21 @@ import {
   Image,
   Dimensions
 } from 'react-native'
-import { FontFamily, FontSize, Color, Padding, Border } from '../../GlobalStyles'
+import {
+  FontFamily,
+  FontSize,
+  Color,
+  Padding,
+  Border
+} from '../../GlobalStyles'
 import { useDispatch, useSelector } from 'react-redux'
 import SingleDiary from '../../components/SingleDiary'
 import { Context } from '../../context/Context'
-import { getUserDiariesByDateOrCategory, postDiary, updateDiaryById } from '../../redux/actions/diaries'
+import {
+  getUserDiariesByDateOrCategory,
+  postDiary,
+  updateDiaryById
+} from '../../redux/actions/diaries'
 import { LinearGradient } from 'expo-linear-gradient'
 import Humor from '../../components/Humor'
 
@@ -32,21 +42,22 @@ const ReflexionDiaria = ({
   const { userDiaries, selectedDiary, loading } = useSelector(
     (state) => state.diaries
   )
-  const { userData } = useSelector(
-    (state) => state.users
-  )
+  const { userData } = useSelector((state) => state.users)
   const [showEmojisModal, setShowEmojisModal] = useState(false)
 
   const [selected, setSelected] = useState({})
   const [text, setText] = useState(selected?.description || '')
+  const [title, setTitle] = useState(selected?.title || '')
+
   const [diaryImages, setDiaryImages] = useState(selected?.images || [])
-const dispatch = useDispatch()
+  const dispatch = useDispatch()
   const { selectedSection, formatDateToNormal, editingDiary, setEditingDiary } =
     useContext(Context)
 
   useEffect(() => {
     if (selected) {
       setText(selected?.description)
+      setTitle(selected?.title)
     }
   }, [selected])
 
@@ -93,7 +104,7 @@ const dispatch = useDispatch()
             ¡No hemos encontrado diarios basados en su búsqueda!
           </Text>
         </View>
-      ) : selected ? (
+      ) : selected?.id ? (
         <ScrollView style={{ height: '100%', width: '100%' }}>
           {selected.id == editingDiary ? (
             <View
@@ -103,7 +114,12 @@ const dispatch = useDispatch()
                 justifyContent: 'space-between'
               }}
             >
-              <Text style={{ fontSize: 19 }}>Tíutlo</Text>
+              <TextInput
+                onChangeText={setTitle}
+                value={title}
+                maxLength={30}
+                style={{ fontSize: 19 ,width:"50%"}}
+              ></TextInput>
               <View
                 style={{
                   flexDirection: 'row',
@@ -115,6 +131,8 @@ const dispatch = useDispatch()
                   onPress={() => {
                     setEditingDiary()
                     setSelected(null)
+                    setText("")
+                    setTitle("")
                   }}
                 >
                   <Image
@@ -149,6 +167,8 @@ const dispatch = useDispatch()
                       console.log('opening create modal')
                       const preDiary = { ...selected }
                       preDiary.description = text
+                      preDiary.title = title
+
                       const cloudinaryUrls = []
 
                       for (const image of pickedImages) {
@@ -198,13 +218,13 @@ const dispatch = useDispatch()
                             obj.date = selectedDate
                           }
                           dispatch(getUserDiariesByDateOrCategory(obj))
-                      setSelected({})
-
+                          setSelected({})
                         })
                       } else {
                         console.log('updating diary...', preDiary)
                         const updatedData = {
-                          description: preDiary.description
+                          description: preDiary.description,
+                          title
                         }
                         updatedData.images = [...diaryImages, ...cloudinaryUrls]
                         dispatch(
@@ -227,6 +247,8 @@ const dispatch = useDispatch()
                       setPickedImages([])
                       setEditingDiary()
                       setSelected({})
+                      setText("")
+                      setTitle("")
                     }}
                   >
                     <Text
@@ -247,8 +269,12 @@ const dispatch = useDispatch()
               </View>
             </View>
           ) : (
-            <View style={{flexDirection:"row",justifyContent:"space-between"}}>
-              <Text style={{fontSize:20}}>Titulo</Text>
+            <View
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+            >
+              <Text style={{ fontSize: 20 }}>
+                {selected?.title || 'Sin título'}
+              </Text>
               <Pressable
                 style={{
                   height: 18,
@@ -259,6 +285,8 @@ const dispatch = useDispatch()
                 onPress={() => {
                   setEditingDiary()
                   setSelected(null)
+                  setText("")
+                  setTitle("")
                 }}
               >
                 <Image
@@ -271,44 +299,63 @@ const dispatch = useDispatch()
           )}
           {selected.id == editingDiary ? (
             <TextInput
-            style={{borderTopColor:Color.primario1 , borderTopWidth:1 ,paddingTop:10,marginTop:10}}
+              style={{
+                fontSize:18,
+                borderTopColor: Color.primario1,
+                borderTopWidth: 1,
+                paddingTop: 10,
+                marginTop: 10
+              }}
               multiline
-             
               onChangeText={setText}
               value={text}
             ></TextInput>
           ) : (
-            <Text  style={{ width: '100%', marginTop: 10 ,borderTopColor:Color.primario1 , borderTopWidth:1 ,paddingTop:10}}>{selected.description}</Text>
+            <Text
+              style={{
+                width: '100%',
+                marginTop: 10,
+                borderTopColor: Color.primario1,
+                borderTopWidth: 1,
+                paddingTop: 10,
+                fontSize:18
+              }}
+            >
+              {selected.description}
+            </Text>
           )}
         </ScrollView>
       ) : (
-       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom:100}} style={{height:Dimensions.get("screen").height / 2}}>
-        { userDiaries.map((diary, index) => (
-          <SingleDiary
-            setSelected={setSelected}
-            pickedImages={pickedImages}
-            setPickedImages={setPickedImages}
-            selectedDate={selectedDate}
-            key={diary.id}
-            diary={diary}
-            editing={selectedDiary?.id === diary.id}
-            setModalCreate={setModalCreate}
-            modalCreate={modalCreate}
-            openGroupIcon1={openGroupIcon1}
-            last={index === userDiaries.length - 1}
-          />
-        ))}
-       </ScrollView>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 100 }}
+          style={{ height: Dimensions.get('screen').height / 2 }}
+        >
+          {userDiaries.map((diary, index) => (
+            <SingleDiary
+              setSelected={setSelected}
+              pickedImages={pickedImages}
+              setPickedImages={setPickedImages}
+              selectedDate={selectedDate}
+              key={diary.id}
+              diary={diary}
+              editing={selectedDiary?.id === diary.id}
+              setModalCreate={setModalCreate}
+              modalCreate={modalCreate}
+              openGroupIcon1={openGroupIcon1}
+              last={index === userDiaries.length - 1}
+            />
+          ))}
+        </ScrollView>
       )}
 
       <View style={[styles.miDiarioEntradaTextoPlItem, styles.diarioLayout]} />
-      <Modal animationType="slide" transparent visible={showEmojisModal}>
+      <Modal animationType="fade" transparent visible={showEmojisModal}>
         <View
           style={{
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(113, 113, 113, 0.3)'
           }}
         >
           <Pressable
@@ -331,11 +378,6 @@ const dispatch = useDispatch()
     </View>
   )
 }
-
-
-
-
-
 
 const styles = StyleSheet.create({
   diarioLayout: {

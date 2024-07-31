@@ -108,6 +108,10 @@ const handleGetEvent = async ()=> {
           </View>
           <View style={styles.lineParent}>
             <View style={styles.frameChild} />
+            <Image
+                style={{ width: 100, height: 100, borderRadius: 50 ,alignSelf:"center"}}
+                source={ event.coverImage ?{ uri: event.coverImage }: require("../assets/logoo.png") }
+              ></Image>
             <View
               style={{
                 flexDirection: 'row',
@@ -116,10 +120,7 @@ const handleGetEvent = async ()=> {
                 gap: 5
               }}
             >
-              <Image
-                style={{ width: 60, height: 60, borderRadius: 50 }}
-                source={ event.coverImage ?{ uri: event.coverImage }: require("../assets/logoo.png") }
-              ></Image>
+              
               <Text style={[styles.tituloDelEvento, styles.cdigoTypo]}>
                 {event.title}
               </Text>
@@ -300,7 +301,7 @@ const handleGetEvent = async ()=> {
           )}
         </View>
 
-        <Modal animationType="slide" transparent visible={modalCreate}>
+        <Modal animationType="fade" transparent visible={modalCreate}>
           <View style={styles.buttonContainer2Overlay}>
             <Pressable
               style={styles.buttonContainer2Bg}
@@ -365,6 +366,7 @@ const styles = StyleSheet.create({
   image6Wrapper: {},
   frameChild: {
     marginTop: 20,
+    paddingTop:10,
     borderColor: Color.secundario,
     borderTopWidth: 1,
     width: 369,

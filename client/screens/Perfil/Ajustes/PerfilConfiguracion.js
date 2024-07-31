@@ -292,13 +292,12 @@ const PerfilConfiguracion = () => {
                 </View>
               </View>
             </View>
-            <Modal animationType="slide" transparent visible={calendario}>
+            <Modal animationType="fade" transparent visible={calendario}>
               <View
                 style={{
                   flex: 1,
                   alignItems: 'center',
                   justifyContent: 'center',
-                  backgroundColor: 'rgba(113, 113, 113, 0.3)'
                 }}
               >
                 <Pressable
@@ -440,7 +439,7 @@ const PerfilConfiguracion = () => {
                 />
               </View>
             </Modal>
-            <Modal animationType="slide" transparent visible={showTagUsers}>
+            <Modal animationType="fade" transparent visible={showTagUsers}>
               <View
                 style={{
                   alignItems: 'center',
@@ -463,7 +462,7 @@ const PerfilConfiguracion = () => {
               </View>
             </Modal>
             <Modal
-              animationType="slide"
+              animationType="fade"
               transparent
               visible={showTagUsersPadre}
             >
@@ -488,7 +487,7 @@ const PerfilConfiguracion = () => {
                 />
               </View>
             </Modal>
-            <Modal animationType="slide" transparent visible={showTagBrother}>
+            <Modal animationType="fade" transparent visible={showTagBrother}>
               <View
                 style={{
                   alignItems: 'center',
