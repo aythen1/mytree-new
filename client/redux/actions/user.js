@@ -282,10 +282,10 @@ export const getUserById = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
   'user/updateUser',
-  async ({ userId, userData }, { rejectWithValue }) => {
+  async ({ userId, userData ,property }, { rejectWithValue }) => {
     console.log('userId, userData from updateUser', userId, userData)
     try {
-      const response = await axiosInstance.patch(`/user/${userId}`, userData)
+      const response = await axiosInstance.post(`/user/${userId}/family/${property}/add/${userData}`)
       console.log('RESPONSE FROM UPDATEUSER', response.data)
       return response.data
     } catch (error) {

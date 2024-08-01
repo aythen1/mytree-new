@@ -64,8 +64,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.lato
   },
   trminosYCondiciones: {
-    fontWeight: '700',
-    fontSize:16
+    fontWeight: '700'
   },
   labelledClr: {
     color: Color.negro,
@@ -85,7 +84,8 @@ const styles = StyleSheet.create({
   },
   parentFlexBox: {
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingBottom:10
   },
   checkParent: {
     flexDirection: 'row',
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     lineHeight: 41,
     fontWeight: '900',
-    fontSize: 18
+    fontSize: FontSize.size_5xl
   },
   frameParent1: {
     justifyContent: 'center',

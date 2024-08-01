@@ -16,21 +16,19 @@ const BarraBusqueda = ({ navigate, route, fromSearch, search, setSearch }) => {
       style={{
         alignItems: 'center',
         flexDirection: 'row',
-        width: fromSearch ? '100%' : Dimensions.get('screen').width * 0.9,
-        marginLeft: !fromSearch && Dimensions.get('screen').width * 0.05,
         backgroundColor: Color.white,
         marginTop: fromSearch ? 10 : 20,
         justifyContent: 'space-between',
-        paddingHorizontal:10
       }}
     >
       <View
         style={{
           backgroundColor: Color.fAFAFA,
           paddingHorizontal: Padding.p_sm,
+          paddingRight:0,
           paddingVertical: 3.5,
           borderRadius: Border.br_3xs,
-          width: '85%',
+          width: '100%',
           flexDirection: 'row',
           alignItems: 'center'
         }}
@@ -65,7 +63,6 @@ const BarraBusqueda = ({ navigate, route, fromSearch, search, setSearch }) => {
             placeholderTextColor={Color.textPlaceholder}
           />
         </View>
-      </View>
       <Pressable onPress={handlePress}>
         {fromSearch ? (
           <Pressable
@@ -88,6 +85,7 @@ const BarraBusqueda = ({ navigate, route, fromSearch, search, setSearch }) => {
           <MasBusquedaSVG />
         )}
       </Pressable>
+      </View>
     </View>
   )
 }

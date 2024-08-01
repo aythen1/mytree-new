@@ -162,7 +162,6 @@ const CALENDARIO = () => {
          dates={[...dates, ...eventInvited]}
          selectedDate={selectedDate}
          setSelectedDate={(e) => {
-           handleItemPress('fechas')
            setSelectedDate(e)
          }}
        />

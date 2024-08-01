@@ -5,8 +5,9 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { FontFamily, FontSize, Color, Padding, Border } from '../GlobalStyles'
 import Checkbox from './Checkbox'
 import { useSelector } from 'react-redux'
+import reactotron from 'reactotron-react-native'
 
-const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers }) => {
+const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers ,invites }) => {
   const { allUsers, userData } = useSelector((state) => state.users)
 
   const userFamily =
@@ -24,7 +25,7 @@ const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers }) => {
       setTaggedUsers([...taggedUsers, userId.toString()])
     }
   }
-
+reactotron.log("dataaa",invites)
   return (
     <View
       style={{
@@ -49,7 +50,9 @@ const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers }) => {
           alignItems: 'center'
         }}
       >
-        <View style={{ alignSelf: 'flex-start', alignItems: 'center' }}>
+         {invites && (
+          <>
+           <View style={{ alignSelf: 'flex-start', alignItems: 'center' }}>
           <Text
             style={{
               fontWeight: '500',
@@ -59,6 +62,107 @@ const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers }) => {
               letterSpacing: 0,
               fontFamily: FontFamily.lato,
               fontSize: FontSize.size_base
+            }}
+          >
+            Invitados
+          </Text>
+        </View>
+        <View
+          style={{
+            borderColor: Color.secundario,
+            borderTopWidth: 1,
+            width: '100%',
+            height: 1,
+            marginTop: 15,
+            borderStyle: 'solid'
+          }}
+        />
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{
+            maxHeight: 150,
+            overflow: 'hidden',
+            flexGrow: 1,
+            marginTop: 5
+          }}
+          contentContainerStyle={{
+            width: '100%',
+            alignItems: 'center'
+          }}
+        >
+          {invites.length === 0 && (
+            <Text
+              style={{
+                color: '#000',
+                marginTop: 15,
+                fontSize: 16,
+                alignSelf: 'center',
+                fontWeight: 400
+              }}
+            >
+              ¡Aún no tienes ningún contacto agregado a amigos!
+            </Text>
+          )}
+          {invites.length > 0 &&
+            invites.map((friendMember, index) => (
+              <View
+                key={-index}
+                style={{
+                  marginTop: 15,
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                  width: '100%',
+                  alignItems: 'center'
+                }}
+              >
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Image
+                    style={{ width: 30, height: 30 ,borderRadius:50 }}
+                    contentFit="cover"
+                    source={ allUsers.filter(
+                      (user) => user.id.toString() === friendMember?.userId
+                    )[0]?.profilePicture ? allUsers.filter(
+                      (user) => user.id.toString() === friendMember?.userId
+                    )[0]?.profilePicture : require('../assets/frame-1547754875.png')}
+                  />
+                  <Text
+                    style={{
+                      fontWeight: '700',
+                      color: Color.grisDiscord,
+                      textAlign: 'justify',
+                      marginLeft: 13,
+                      lineHeight: 19,
+                      letterSpacing: 0,
+                      fontFamily: FontFamily.lato,
+                      fontSize: FontSize.size_base
+                    }}
+                  >
+                    {allUsers.filter(
+                      (user) => user.id.toString() === friendMember?.userId
+                    )[0]?.username +
+                      ' ' +
+                      allUsers.filter(
+                        (user) => user.id.toString() === friendMember?.userId
+                      )[0]?.apellido}
+                  </Text>
+                </View>
+                <Text>{friendMember.status == 'pending' ? 'pendiente' : friendMember.status == 'accepted' ? 'aceptó' : friendMember.status == 'rejected' ? 'rechazó' : ""}</Text>
+              </View>
+            ))}
+        </ScrollView>
+          </>
+         )}
+        <View style={{ alignSelf: 'flex-start', alignItems: 'center' }}>
+          <Text
+            style={{
+              fontWeight: '500',
+              color: Color.colorGray_200,
+              textAlign: 'left',
+              lineHeight: 19,
+              letterSpacing: 0,
+              fontFamily: FontFamily.lato,
+              fontSize: FontSize.size_base,
+              paddingTop:12
             }}
           >
             Amigos
@@ -116,7 +220,11 @@ const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers }) => {
                   <Image
                     style={{ width: 30, height: 30 }}
                     contentFit="cover"
-                    source={require('../assets/frame-1547754875.png')}
+                    source={ allUsers.filter(
+                      (user) => user.id.toString() === friendMember?.userId
+                    )[0]?.profilePicture ? allUsers.filter(
+                      (user) => user.id.toString() === friendMember?.userId
+                    )[0]?.profilePicture : require('../assets/frame-1547754875.png')}
                   />
                   <Text
                     style={{

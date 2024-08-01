@@ -87,6 +87,8 @@ const CrearFechaEspecial = () => {
   }
 
   const handleCreateEvent = async () => {
+    setModalCreate(true)
+
     if (
       description.length > 0 &&
       selectedCategory &&
@@ -136,7 +138,6 @@ const CrearFechaEspecial = () => {
 
       event.coverImage = cloudinaryUrls[0]
       console.log('creating special date with values: ', event)
-      setModalCreate(true)
 
       dispatch(createEvent(event)).then(()=> {
         
@@ -397,7 +398,7 @@ const CrearFechaEspecial = () => {
             />
             <ENTRADACREADA
               onClose={onCloseModalCreate}
-              message={'Enviado!'}
+              message={'¡Enviado!'}
               isNavigate={'CALENDARIO'}
             />
           </View>
@@ -565,7 +566,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 19,
     fontSize: FontSize.size_base,
-    textAlign: 'left',
+    textAlign: 'center',
     letterSpacing: 0
   },
   fieldSpaceBlock: {
@@ -584,7 +585,8 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_3xs,
     flexDirection: 'row',
     width: '100%',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    alignItems:"center"
   },
   descriptionField: {
     paddingVertical: Padding.p_smi,
@@ -655,7 +657,8 @@ const styles = StyleSheet.create({
   },
   titleBase: {
     paddingBottom: Padding.p_7xs,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems:"center"
   },
   image6Icon: {
     width: 87,

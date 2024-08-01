@@ -37,7 +37,8 @@ const CreateWishListModal = ({ onClose, wishList, setWishList }) => {
         borderTopLeftRadius: Border.br_11xl,
         position: 'absolute',
         bottom: 0,
-        paddingHorizontal: 30
+        paddingHorizontal: 30,
+        borderWidth:1,borderBottomWidth:0,borderColor:Color.primario1
       }}
     >
       <View
@@ -112,7 +113,7 @@ const CreateWishListModal = ({ onClose, wishList, setWishList }) => {
                       fontSize: FontSize.size_base
                     }}
                   >
-                    {wish}
+                    {typeof wish !== "object" ? wish : wish.description}
                   </Text>
                 </View>
                 <Pressable onPress={() => handleRemoveWish(wish)}>

@@ -32,6 +32,8 @@ import imageMultiPickerModal from '../Modals/imageMultiPickerModal'
 import ImageMultiPickerModal from '../Modals/imageMultiPickerModal'
 import { getAllUserEvents, updateEvent } from '../../redux/actions/events'
 import axiosInstance from '../../apiBackend'
+import CreateWishListModal from '../../components/CreateWishListModal'
+import Etiquetar from '../../components/Etiquetar'
 
 const Eventos = ({ route }) => {
   const event_name = route?.params?.title
@@ -40,6 +42,9 @@ const Eventos = ({ route }) => {
   const event_wishList = route?.params?.wishListItems
   const event_id = route?.params?.id
   const event_images = route?.params?.images
+  const [showWishList, setShowWishList] = useState(false)
+  const [showTagUsers, setShowTagUsers] = useState(false)
+  const [invitedUsers, setInvitedUsers] = useState([])
 
   const navigation = useNavigation()
   const { allUsers, userData } = useSelector((state) => state.users)
@@ -52,6 +57,7 @@ const Eventos = ({ route }) => {
   const [whisModalVisible, setWishModalVisible] = useState(false)
   const [pictureModalVisible, setPictureWishModalVisible] = useState(false)
   const [pickedImage, setPickedImage] = useState([])
+  const [wishList, setWishList] = useState(event_wishList || [])
 
   const [selectedImage, setSelectedImage] = useState(null)
   const { pickImage } = useContext(Context)
@@ -144,15 +150,35 @@ const Eventos = ({ route }) => {
 
     let data
     if (description) {
-      data = { description }
+      data = { description  }
     }
     if (images.length > 0) {
-      data = { images }
+      data = { images  }
     }
     if (description && images.length > 0) {
-      data = { images:[...event_images,...images], description }
+      data = { images:[...event_images,...images], description  }
     }
     console.log(data, 'dataaa')
+  
+      for (let index = 0; index < wishList.length; index++) {
+        const wish = wishList[index]
+        if(!wish.id){
+
+          axiosInstance.post(`/events/${event_id}/wishlist`, {
+            description: wish
+          })
+        }
+      }
+    
+      for (let index = 0; index < invitedUsers.length; index++) {
+        const id = invitedUsers[index]
+        const find = invitedUsers.find((e)=> e.id == id.id )
+        if(!find){
+
+          axiosInstance.post(`/events/${event_id}/invite`, { userId: id })
+        }
+      }
+
     axiosInstance
       .patch(`/events/${event_id}`, data)
       .then(() => dispatch(getAllUserEvents(userData.id)))
@@ -164,11 +190,7 @@ const Eventos = ({ route }) => {
       contentContainerStyle={{ paddingBottom: 130 }}
       style={styles.scrollView}
     >
-      <Image
-        style={styles.image6Icon}
-        contentFit="cover"
-        source={require('../../assets/image-6.png')}
-      />
+    
       <View style={styles.container}>
         <Pressable onPress={() => navigation.goBack()}>
           <Image
@@ -188,7 +210,7 @@ const Eventos = ({ route }) => {
             style={styles.boxContainer}
           >
             <View style={styles.textContainer}>
-              <Text style={styles.subTitle}>{event_name}</Text>
+              <Text style={{...styles.subTitle,fontSize:20}}>{event_name}</Text>
             </View>
             <View
               style={{ flexDirection: 'row', alignItems: 'center', gap: 18 }}
@@ -223,7 +245,7 @@ const Eventos = ({ route }) => {
               <View style={styles.optionContainer}>
                 <Text style={styles.subTitle}>Tus invitados</Text>
                 <TouchableOpacity
-                  onPress={() => setModalVisible(true)}
+                  onPress={() => setShowTagUsers(true)}
                   style={styles.inputContainer}
                 >
                   <Text style={{ color: 'gray' }}>Entra a la lista</Text>
@@ -231,9 +253,19 @@ const Eventos = ({ route }) => {
                 </TouchableOpacity>
               </View>
               <View style={styles.optionContainer}>
+                <Text style={styles.subTitle}>Fecha</Text>
+                <TouchableOpacity
+                  // onPress={() => setModalVisible(true)}
+                  style={styles.inputContainer}
+                >
+                  <Text style={{ color: 'gray' }}>{route?.params?.date.slice(0,10) || "Agrega una fecha"}</Text>
+                  <Image style={{width:20,height:20,marginRight:12}} source={require('../../assets/calendario.png')}></Image>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.optionContainer}>
                 <Text style={styles.subTitle}>Deseos</Text>
                 <TouchableOpacity
-                  onPress={() => setWishModalVisible(true)}
+                  onPress={() => setShowWishList(true)}
                   style={styles.inputContainer}
                 >
                   <Text style={{ color: 'gray' }}>Comprueba la lista</Text>
@@ -241,22 +273,13 @@ const Eventos = ({ route }) => {
                 </TouchableOpacity>
               </View>
               <View style={styles.buttonContainer}>
-                <LinearGradient
-                  style={styles.button}
-                  locations={[0, 1]}
-                  colors={['#dee274', '#7ec18c']}
-                >
-                  <Pressable
-                    onPress={() => navigation.navigate('MasDetallesEventos')}
-                  >
-                    <Text style={styles.save}>Más detalles</Text>
-                  </Pressable>
-                </LinearGradient>
+              
                 <TouchableOpacity
                   onPress={() => setPictureWishModalVisible(true)}
                   style={{
                     width: '100%',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    alignItems:"center"
                   }}
                 >
                   <LinearGradient
@@ -473,38 +496,25 @@ const Eventos = ({ route }) => {
           </ScrollView>
         </TouchableWithoutFeedback>
       </Modal>
-      {/* <Modal
-        visible={pictureModalVisible}
-        transparent
-        onRequestClose={() => setPictureWishModalVisible(false)}
-      >
-        <TouchableWithoutFeedback
-          onPress={() => setPictureWishModalVisible(false)}
+      <Modal animationType="fade" transparent visible={showWishList}>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%'
+          }}
         >
-          <ScrollView
-            contentContainerStyle={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 15,
-              gap: 15
-            }}
-            style={{
-              height: 300,
-              width: '100%',
-              backgroundColor: 'white',
-              bottom: 0,
-              position: 'absolute'
-            }}
-          >
-            <TouchableOpacity>
-              <Text>Tomar foto</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => pickImage('')}>
-              <Text>Elegir de la galeria</Text>
-            </TouchableOpacity>
-          </ScrollView>
-        </TouchableWithoutFeedback>
-      </Modal> */}
+          <Pressable
+            style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+            onPress={() => setShowWishList(false)}
+          />
+          <CreateWishListModal
+            wishList={wishList}
+            setWishList={setWishList}
+            onClose={() => setShowWishList(false)}
+          />
+        </View>
+      </Modal>
       <Modal animationType="fade" transparent visible={pictureModalVisible}>
         <View
           style={{
@@ -520,6 +530,26 @@ const Eventos = ({ route }) => {
             pickedImages={pickedImage}
             setPickedImages={setPickedImage}
             onClose={() => setPictureWishModalVisible(false)}
+          />
+        </View>
+      </Modal>
+      <Modal animationType="fade" transparent visible={showTagUsers}>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%'
+          }}
+        >
+          <Pressable
+            style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+            onPress={() => setShowTagUsers(false)}
+          />
+          <Etiquetar
+            invites={event_invites}
+            taggedUsers={invitedUsers}
+            setTaggedUsers={setInvitedUsers}
+            onClose={() => setShowTagUsers(false)}
           />
         </View>
       </Modal>
@@ -556,7 +586,7 @@ const styles = StyleSheet.create({
     fontWeight: '700'
   },
   bottomContainer: {
-    flex: 1
+    flex: 1,
   },
   viewContainer: {
     backgroundColor: Color.colorWhitesmoke_200,
@@ -570,11 +600,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20
+    padding: 20,
   },
   selected: {
     // alignItems: 'center',
-    padding: 20
+    padding: 20,
+    paddingTop:0,marginTop:-20
   },
   textContainer: {
     flexDirection: 'column',
@@ -583,7 +614,8 @@ const styles = StyleSheet.create({
   subTitle: {
     color: Color.primario1,
     fontWeight: '600',
-    fontSize: 15
+    fontSize: 15,
+    
   },
   name: {
     color: Color.gris
@@ -605,7 +637,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '100%',
     flexDirection: 'row',
-    gap: 20,
     marginTop: 10
   },
   button: {

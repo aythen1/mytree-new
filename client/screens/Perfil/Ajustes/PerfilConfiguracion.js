@@ -39,6 +39,8 @@ import Maps from '../../../components/Maps'
 import EtiquetarUno from '../../../components/EtiquetarUno'
 import useFetchHook from '../../../utils/useFetchHook'
 import TopBar from '../../../components/TopBar'
+import EtiquetarFamiliar from '../../../components/EtiquetarFamiliar'
+import reactotron from 'reactotron-react-native'
 
 const PerfilConfiguracion = () => {
   const { userData: usuario, allUsers } = useSelector((state) => state.users)
@@ -59,12 +61,11 @@ const PerfilConfiguracion = () => {
   const [showTagUsers, setShowTagUsers] = useState(false)
   const [showTagUsersPadre, setShowTagUsersPadre] = useState(false)
   const [showTagBrother, setShowTagBrother] = useState(false)
-  const [inputSelected ,setInputSelected] = useState()
+  const [inputSelected, setInputSelected] = useState(0)
 
   const { data, loading, error } = useFetchHook({
     url: `/user/${usuario?.id}/friendsAndFamily`
   })
-
 
   const [invitedUsers, setInvitedUsers] = useState([])
 
@@ -79,6 +80,9 @@ const PerfilConfiguracion = () => {
   })
 
   const cameraReff = useRef(null)
+  useEffect(() => {
+    console.log('esrto daaa10', dataToSend)
+  }, [dataToSend.brotherIds])
 
   const takePicture = async () => {
     if (cameraReff) {
@@ -101,9 +105,26 @@ const PerfilConfiguracion = () => {
   const handleBrotherInputChange = (index, text) => {
     setInputsBros((prev) => {
       const newInputs = [...prev]
-      console.log(newInputs[index], 'esrto daaa')
       newInputs[index].input = text
+      console.log(newInputs, 'esrto daaa')
+
       return newInputs
+    })
+
+    setDataToSend((prev) => {
+      const newData = { ...prev }
+
+      const array = []
+
+      for (let index = 0; index < inputsBros.length; index++) {
+        const element = inputsBros[index]
+        if (element.input !== '') {
+          array.push(element.input)
+        }
+      }
+      newData.brotherIds = [...array,...usuario.brotherIds]
+
+      return newData
     })
   }
 
@@ -112,15 +133,16 @@ const PerfilConfiguracion = () => {
   }
 
   useEffect(() => {
-    const brothersArray = inputsBros?.map((input) => input?.input)
+    const brothersArray = inputsBros
+      ?.map((input) => input?.input)
       ?.filter((input) => input?.trim() !== '')
-      
-   if(inputsBros[0].input !== ''){
-    setDataToSend((prevData) => ({
-      ...prevData,
-      brotherIds:  [...usuario.brotherIds, ...brothersArray] 
-    }))
-   }
+
+    if (inputsBros[0].input !== '') {
+      setDataToSend((prevData) => ({
+        ...prevData,
+        brotherIds: [...usuario.brotherIds, ...brothersArray]
+      }))
+    }
   }, [inputsBros])
 
   const changePictureMode = async () => {
@@ -159,7 +181,6 @@ const PerfilConfiguracion = () => {
         >
           <TopBar screen={'perfil'}></TopBar>
           <View>
-           
             <View style={[styles.backParent, styles.parentFlexBox]}>
               <Pressable
                 style={styles.iconlylightOutlinecalendar}
@@ -178,7 +199,6 @@ const PerfilConfiguracion = () => {
           <View style={styles.centralContainer}>
             <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
               <View style={{ width: '100%' }}>
-      
                 <View
                   style={{
                     width: '100%',
@@ -237,7 +257,7 @@ const PerfilConfiguracion = () => {
                       />
                     )}
                   </Pressable>
-                 
+
                   <TouchableOpacity
                     onPress={() => pickImage('profile')}
                     style={{
@@ -257,7 +277,7 @@ const PerfilConfiguracion = () => {
             <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
               <View style={styles.nombreCompletoParent}>
                 <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
-                  Nombre completo
+                  Nombre/s
                 </Text>
                 <View
                   style={{
@@ -276,7 +296,7 @@ const PerfilConfiguracion = () => {
                     ]}
                     maxLength={38}
                     ref={nombreInputRef}
-                    placeholder={usuario.username}
+                    placeholder={usuario.username || 'Nombre/s'}
                     onChangeText={(text) =>
                       setDataToSend({ ...dataToSend, ['username']: text })
                     }
@@ -286,9 +306,43 @@ const PerfilConfiguracion = () => {
                     <Image
                       style={[styles.vectorIcon1, styles.vectorIconLayout]}
                       contentFit="cover"
-                      source={ editable ? require('../../../assets/vector47.png') : require('../../../assets/lapizgris.png') }
+                      source={
+                        editable
+                          ? require('../../../assets/vector47.png')
+                          : require('../../../assets/lapizgris.png')
+                      }
                     />
                   </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+            <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
+              <View style={styles.nombreCompletoParent}>
+                <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo]}>
+                  Apellido/s
+                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%'
+                  }}
+                >
+                  <TextInput
+                    editable={editable}
+                    style={[
+                      styles.brunoPham,
+                      styles.brunoPhamTypo,
+                      { width: '100%' }
+                    ]}
+                    maxLength={38}
+                    placeholder={usuario.apellido || 'Apellido/s'}
+                    onChangeText={(text) =>
+                      setDataToSend({ ...dataToSend, ['apellido']: text })
+                    }
+                    value={dataToSend.apellido}
+                  />
                 </View>
               </View>
             </View>
@@ -297,7 +351,7 @@ const PerfilConfiguracion = () => {
                 style={{
                   flex: 1,
                   alignItems: 'center',
-                  justifyContent: 'center',
+                  justifyContent: 'center'
                 }}
               >
                 <Pressable
@@ -327,23 +381,6 @@ const PerfilConfiguracion = () => {
                     width: '100%'
                   }}
                 >
-                  {/* <TextInput
-                    onFocus={() => setCalendario(true)}
-                    style={[
-                      styles.brunoPham,
-                      styles.brunoPhamTypo,
-                      { width: '100%' }
-                    ]}
-                    // ref={nombreInputRef}
-                    editable={editable}
-                    placeholder={
-                      usuario.birthDate || selectedDate || 'Fecha de nacimiento'
-                    }
-                    // onChangeText={(text) =>
-                    //   setDataToSend({ ...dataToSend, ['birthDate']: text })
-                    // }
-                    value={dataToSend.birthDate}
-                  /> */}
                   <Pressable
                     onPress={() => (editable ? setCalendario(true) : null)}
                     style={[
@@ -379,18 +416,6 @@ const PerfilConfiguracion = () => {
                     width: '100%'
                   }}
                 >
-                  {/* <TextInput
-                    style={[
-                      styles.brunoPham,
-                      styles.brunoPhamTypo,
-                      { width: '100%' }
-                    ]}
-                    editable={editable}
-                    onFocus={() => setShowLocation(true)}
-                    placeholder={usuario.address || location || 'Ubicación'}
-                    value={dataToSend.address}
-                  /> */}
-
                   <Pressable
                     onPress={() => (editable ? setShowLocation(true) : null)}
                     style={[
@@ -451,21 +476,24 @@ const PerfilConfiguracion = () => {
                   style={{ width: '100%', height: '100%', left: 0, top: 0 }}
                   onPress={() => setShowTagUsers(false)}
                 />
-                <EtiquetarUno
-                data={data}
+                {/* <EtiquetarUno
+                  data={data}
                   taggedUsers={invitedUsers}
                   setTaggedUsers={(e) =>
                     setDataToSend({ ...dataToSend, ['momId']: e })
                   }
                   onClose={() => setShowTagUsers(false)}
-                />
+                /> */}
+                <EtiquetarFamiliar
+                  taggedUsers={invitedUsers}
+                  setTaggedUsers={(e) =>
+                    setDataToSend({ ...dataToSend, ['momId']: e })
+                  }
+                  onClose={() => setShowTagUsers(false)}
+                ></EtiquetarFamiliar>
               </View>
             </Modal>
-            <Modal
-              animationType="fade"
-              transparent
-              visible={showTagUsersPadre}
-            >
+            <Modal animationType="fade" transparent visible={showTagUsersPadre}>
               <View
                 style={{
                   alignItems: 'center',
@@ -477,14 +505,21 @@ const PerfilConfiguracion = () => {
                   style={{ width: '100%', height: '100%', left: 0, top: 0 }}
                   onPress={() => setShowTagUsersPadre(false)}
                 />
-                <EtiquetarUno
-                data={data}
+                {/* <EtiquetarUno
+                  data={data}
                   taggedUsers={dataToSend}
                   setTaggedUsers={(e) =>
                     setDataToSend({ ...dataToSend, ['dadId']: e })
                   }
                   onClose={() => setShowTagUsersPadre(false)}
-                />
+                /> */}
+                <EtiquetarFamiliar
+                  taggedUsers={invitedUsers}
+                  setTaggedUsers={(e) =>
+                    setDataToSend({ ...dataToSend, ['dadId']: e })
+                  }
+                  onClose={() => setShowTagUsersPadre(false)}
+                ></EtiquetarFamiliar>
               </View>
             </Modal>
             <Modal animationType="fade" transparent visible={showTagBrother}>
@@ -499,14 +534,21 @@ const PerfilConfiguracion = () => {
                   style={{ width: '100%', height: '100%', left: 0, top: 0 }}
                   onPress={() => setShowTagBrother(false)}
                 />
-                <EtiquetarUno
-                data={data}
+                {/* <EtiquetarUno
+                  data={data}
                   taggedUsers={dataToSend}
-                  setTaggedUsers={ (text)=>  handleBrotherInputChange(inputSelected + 1 , text)
-                  
+                  setTaggedUsers={(text) =>
+                    handleBrotherInputChange(inputSelected + 1, text)
                   }
                   onClose={() => setShowTagBrother(false)}
-                />
+                /> */}
+                <EtiquetarFamiliar
+                  taggedUsers={invitedUsers}
+                  setTaggedUsers={(text) =>
+                    handleBrotherInputChange(inputSelected + 1, text)
+                  }
+                  onClose={() => setShowTagBrother(false)}
+                ></EtiquetarFamiliar>
               </View>
             </Modal>
             <Image
@@ -538,7 +580,7 @@ const PerfilConfiguracion = () => {
                     style={[
                       styles.brunoPham,
                       styles.brunoPhamTypo,
-                      { width: '100%' }
+                      { width: '100%', flexDirection: 'row', gap: 3 }
                     ]}
                   >
                     <Text
@@ -549,12 +591,19 @@ const PerfilConfiguracion = () => {
                       {usuario.momId || dataToSend.momId
                         ? allUsers.filter(
                             (user) => user.id.toString() === dataToSend.momId
-                          )[0]?.username +
-                          ' ' +
-                          allUsers.filter(
-                            (user) => user.id.toString() === dataToSend.momId
-                          )[0]?.apellido
+                          )[0]?.username || dataToSend.momId
                         : 'Agregar madre'}
+                    </Text>
+                    <Text
+                      style={{
+                        color: 'gray'
+                      }}
+                    >
+                      {usuario.momId || dataToSend.momId
+                        ? allUsers.filter(
+                            (user) => user.id.toString() === dataToSend?.momId
+                          )[0]?.apellido || ''
+                        : ''}
                     </Text>
                   </Pressable>
                 </View>
@@ -591,12 +640,15 @@ const PerfilConfiguracion = () => {
                       {usuario.dadId || dataToSend.dadId
                         ? allUsers.filter(
                             (user) => user.id.toString() === dataToSend.dadId
-                          )[0]?.username +
-                          ' ' +
-                          allUsers.filter(
-                            (user) => user.id.toString() === dataToSend.dadId
-                          )[0]?.apellido
+                          )[0]?.username || dataToSend.dadId
                         : 'Agregar padre'}
+                    </Text>
+                    <Text>
+                      {usuario.dadId || dataToSend.dadId
+                        ? allUsers.filter(
+                            (user) => user.id.toString() === dataToSend.dadId
+                          )[0]?.apellido || ''
+                        : ''}
                     </Text>
                   </Pressable>
                 </View>
@@ -611,26 +663,23 @@ const PerfilConfiguracion = () => {
 
             <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
               <View style={styles.nombreCompletoParent}>
-                <Text style={[styles.cambiarFotoDe, styles.brunoPhamTypo,{marginBottom:6}]}>
+                <Text
+                  style={[
+                    styles.cambiarFotoDe,
+                    styles.brunoPhamTypo,
+                    { marginBottom: 6 }
+                  ]}
+                >
                   Hermanos
                 </Text>
-                {/* 
-                <TextInput
-                  editable={editable}
-                  style={[styles.brunoPham, styles.brunoPhamTypo]}
-                  ref={nombreInputRef}
-                  placeholder="Agregar hermano"
-                  onChangeText={(text) => handleBrotherInputChange(0, text)}
-                  value={inputsBros[0]?.input || ''}
-                /> */}
 
                 {usuario.brotherIds &&
                   usuario.brotherIds.map((e) => {
                     console.log(e, 'eeeeeeeeeeeee')
                     return (
-                        <Text style={{ color: 'gray',marginBottom:6 }}>
-                          {`${allUsers.find((us) => us.id == e)?.username} ${allUsers.find((us) => us.id == e)?.apellido}`}
-                        </Text>
+                      <Text style={{ color: 'gray', marginBottom: 6 }}>
+                        {`${allUsers.find((us) => us.id == e)?.username || e} ${allUsers.find((us) => us.id == e)?.apellido || ''}`}
+                      </Text>
                     )
                   })}
               </View>
@@ -643,21 +692,19 @@ const PerfilConfiguracion = () => {
             {inputsBros &&
               inputsBros.slice(1).map((e, i) => (
                 <View key={i} style={styles.nombreCompletoParent}>
-                  {/* <TextInput
-                    editable={editable}
-                    style={[styles.brunoPham, styles.brunoPhamTypo]}
-                    ref={nombreInputRef}
-                    placeholder="Agregar hermano"
-                    onChangeText={(text) =>
-                      handleBrotherInputChange(i + 1, text)
-                    }
-                    value={e.input || ''}
-                  /> */}
-                  <TouchableOpacity style={{marginBottom:6}} onPress={()=> {if(editable){
-                    setInputSelected(i);setShowTagBrother(true)
-                  }}}>
-                    <Text style={{color:"gray"}}>
-                      {e.input &&    `${allUsers.find((us) => us.id == e?.input)?.username} ${allUsers.find((us) => us.id == e?.input)?.apellido}` || "Agregar hermano"}
+                  <TouchableOpacity
+                    style={{ marginBottom: 6 }}
+                    onPress={() => {
+                      if (editable) {
+                        setInputSelected(i)
+                        setShowTagBrother(true)
+                      }
+                    }}
+                  >
+                    <Text style={{ color: 'gray' }}>
+                      {(e.input &&
+                        `${allUsers.find((us) => us.id == e?.input)?.username || e?.input} ${allUsers.find((us) => us.id == e?.input)?.apellido || ''}`) ||
+                        'Agregar hermano'}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -698,19 +745,6 @@ const PerfilConfiguracion = () => {
               contentFit="cover"
               source={require('../../../assets/line-811.png')}
             />
-            <TouchableOpacity
-       
-              style={[styles.deleteParent, styles.parentFlexBox]}
-            >
-              <Image
-                style={styles.deleteIcon}
-                contentFit="cover"
-                source={require('../../../assets/delete2.png')}
-              />
-              <Text style={[styles.eliminarDatos, styles.brunoPhamTypo]}>
-                Eliminar datos
-              </Text>
-            </TouchableOpacity>
           </View>
           <LinearGradient
             style={styles.button}
@@ -957,8 +991,7 @@ const styles = StyleSheet.create({
     height: 24,
     width: 24
   },
-  backParent: {
-  },
+  backParent: {},
   icon: {
     height: '100%',
     overflow: 'hidden'

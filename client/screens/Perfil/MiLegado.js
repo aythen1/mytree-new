@@ -155,19 +155,22 @@ const MiLegado = ({ fromOther, otherId }) => {
           style={[styles.maskGroupParent, styles.groupParentFlexBox]}
         >
           {(fromOther ? otherUserEvents : userEvents)?.map((e, i) => {
-            return (
-              <Pressable key={i}>
-                <Image
-                  style={{ ...styles.maskGroupIcon, borderRadius: 100 }}
-                  contentFit="cover"
-                  source={
-                    e.coverImage
-                      ? { uri: e.coverImage }
-                      : require('../../assets/logoo.png')
-                  }
-                />
-              </Pressable>
-            )
+            if(e.type == "normal"){
+              return (
+                <Pressable key={i}>
+                  <Image
+                    style={{ ...styles.maskGroupIcon, borderRadius: 100 }}
+                    contentFit="cover"
+                    source={
+                      e.coverImage
+                        ? { uri: e.coverImage }
+                        : require('../../assets/logoo.png')
+                    }
+                  />
+                </Pressable>
+              )
+            }
+       
           })}
         </ScrollView>
       </View>

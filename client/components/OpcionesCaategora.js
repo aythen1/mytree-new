@@ -121,7 +121,7 @@ const OpcionesCaategora = ({
         />
         <TextInput
           value={text}
-          onChangeText={(text) => setText(text)}
+          onChangeText={(text) => {setOpcion();setText(text)}}
           style={{
             paddingVertical: Padding.p_smi,
             backgroundColor: Color.fAFAFA,

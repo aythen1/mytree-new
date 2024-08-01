@@ -17,7 +17,8 @@ const CheckRegister = () => {
 const styles = StyleSheet.create({
   labelledTypo: {
     textAlign: 'center',
-    fontFamily: FontFamily.lato
+    fontFamily: FontFamily.lato,
+    paddingBottom:10
   },
   labelled: {
     color: Color.negro,

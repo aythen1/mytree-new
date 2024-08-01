@@ -69,6 +69,9 @@ export class User {
   recentSearches: string[];
 
   @Column('simple-array', { nullable: true })
+  userCategories: string[];
+
+  @Column('simple-array', { nullable: true })
   wishList: string[];
 
   @Column('simple-array', { nullable: true })

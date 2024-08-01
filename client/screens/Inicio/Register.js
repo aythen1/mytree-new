@@ -29,6 +29,7 @@ const Register = () => {
   const [isChecked, setChecked] = useState(false)
 
   const [birthDate, setBIrthDate] = useState('')
+  const [isEmailValid, setEmailValid] = useState(false)
 
   const [dataToSend, setDataToSend] = useState({
     username: '',
@@ -47,56 +48,59 @@ const Register = () => {
   }, [dataToSend])
 
   const next = async () => {
-    const { username, apellido, email, password, confirm_password } = dataToSend;
-  
+    const { username, apellido, email, password, confirm_password } = dataToSend
+
     // Expresión regular para validar el formato del email
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    // Expresión regular para validar la contraseña
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?.])[A-Za-z\d@$!%*?.]{4,}$/
+
+
+
     if (nextField == 1) {
       if (
         username.trim() !== '' &&
         apellido.trim() !== '' &&
         email.trim() !== '' &&
-        emailPattern.test(email) && // Verificación del formato del email
+        isEmailValid && // Verificación del formato del email
         password.trim() !== '' &&
         confirm_password.trim() !== '' &&
+        passwordPattern.test(password.trim()) &&
         password === confirm_password
       ) {
-        setError('');
-        setNextField((prev) => prev + 1);
+        setError('')
+        setNextField((prev) => prev + 1)
       } else {
-        if(!emailPattern.test(email)){
-          return setError("Ingrese un email válido")
+        if (!emailPattern.test(email)) {
+          return setError('Ingrese un email válido')
         }
-        if(password !== confirm_password){
-          return setError("Las contraseñas no coinciden")
-
+        if (password !== confirm_password) {
+          return setError('Las contraseñas no coinciden')
         }
-        setError('Verifica los datos ingresados');
+        if (!passwordPattern.test(password.trim())) {
+          console.log(password,"pass")
+          return setError('La contraseñas debe contener una Mayúscula , una minúscula , un número y un símbolo')
+        }
+        setError('Verifica los datos ingresados')
       }
-    } 
-    if(nextField == 2 && isChecked){
-      setNextField((prev) => prev + 1);
-
-    } 
-
-    if(nextField == 3){
-      try {
-        navigation.navigate('LOGIN');
-        console.log('USER POST====', dataToSend);
-        const res = await axios.post(`${BACKURL}/user`, dataToSend);
-        console.log('esto es res', res);
-        console.log(res.data, 'usuario nuevo');
-      } catch (error) {
-     
-        console.log(error);
-      }
-   
-     
     }
-  };
-  
-  
+    if (nextField == 2 && isChecked) {
+      setNextField((prev) => prev + 1)
+    }
+
+    if (nextField == 3) {
+      try {
+        navigation.navigate('LOGIN')
+        console.log('USER POST====', dataToSend)
+        const res = await axios.post(`${BACKURL}/user`, dataToSend)
+        console.log('esto es res', res)
+        console.log(res.data, 'usuario nuevo')
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
 
   const previous = () => {
     if (nextField > 1) {
@@ -213,8 +217,10 @@ const Register = () => {
         <View style={{ flex: 1 }}>
           {nextField === 1 && (
             <NameRegister
-            setError={setError}
-            error={error}
+              isEmailValid={isEmailValid}
+              setEmailValid={setEmailValid}
+              setError={setError}
+              error={error}
               name={name}
               setsetName={setsetName}
               birthDate={birthDate}
@@ -227,10 +233,23 @@ const Register = () => {
               dataToSend={dataToSend}
             />
           )}
-          {nextField === 2 && <AcceptRegister isChecked={isChecked} setChecked={setChecked} />}
+          {nextField === 2 && (
+            <AcceptRegister isChecked={isChecked} setChecked={setChecked} />
+          )}
           {nextField === 3 && <CheckRegister />}
         </View>
-        {error && (<Text style={{fontSize:12,color:"red",width:"100%",textAlign:"center"}}>{error}</Text>)}
+        {error && (
+          <Text
+            style={{
+              fontSize: 12,
+              color: 'red',
+              width: '100%',
+              textAlign: 'center'
+            }}
+          >
+            {error}
+          </Text>
+        )}
         <Pressable style={styles.labelled1} onPress={() => next()}>
           <Text style={[styles.continuar, styles.labelledTypo]}>
             {'Continuar >'}

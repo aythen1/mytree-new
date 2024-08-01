@@ -219,8 +219,11 @@ const StoriesVideosDiarios = () => {
                   borderColor: Color.primario1
                 }}
               >
-                <Text style={{color:Color.primario1,height:80,fontSize:50,fontWeight:300,textAlignVertical:"center",paddingBottom:5}}>+</Text>
-
+                   <Image
+                  style={[styles.aatarIcon, styles.aatarIconPosition]}
+                  contentFit="cover"
+                  source={require('../assets/aatar3.png')}
+                />
          
               
               </Pressable>

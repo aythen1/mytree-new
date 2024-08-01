@@ -33,6 +33,7 @@ const Fechas = ({ selectedDate, dates, user }) => {
       <Text style={styles.title}>Actividad Familiar</Text>
 
     {datesFechas && datesFechas.map((item,i)=> {
+      if(item.type == "special"){
       return (
         <Pressable
         key={i}
@@ -57,6 +58,7 @@ const Fechas = ({ selectedDate, dates, user }) => {
         </View>
       </Pressable>
       )
+    }
     })}
     </View>
   )
