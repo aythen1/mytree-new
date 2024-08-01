@@ -30,7 +30,8 @@ const BarraBusqueda = ({ navigate, route, fromSearch, search, setSearch }) => {
           borderRadius: Border.br_3xs,
           width: '100%',
           flexDirection: 'row',
-          alignItems: 'center'
+          alignItems: 'center',
+
         }}
       >
         <Image

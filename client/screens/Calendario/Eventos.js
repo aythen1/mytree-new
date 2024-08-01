@@ -295,7 +295,7 @@ const Eventos = ({ route }) => {
           )}
           {selected && (
             <View style={{ flexDirection: 'row', paddingBottom: 100, justifyContent:"flex-start",gap:3,flexWrap:"wrap" }}>
-              {event_images.length < 1 && pickedImage.length < 1 && (
+              {/* {event_images.length < 1 && pickedImage.length < 1 && (
                 <View style={{width:"100%",height:90,flexDirection:"row",gap:2}}>
                   <Image
                     source={require('../../assets/coverpicture.png')}
@@ -315,7 +315,7 @@ const Eventos = ({ route }) => {
                   ></Image>
 
                 </View>
-              )}
+              )} */}
               {event_images &&
                 event_images.map((e) => {
                   return (
@@ -346,9 +346,12 @@ const Eventos = ({ route }) => {
                 onPress={() => submit()}
                 style={{
                   width: '100%',
+                  paddingHorizontal:20,
                   justifyContent: 'center',
+                  alignItems:"center",
+                  alignSelf:"center",
                   position: 'absolute',
-                  bottom: 20
+                  bottom: 40
                 }}
               >
                 <LinearGradient
@@ -644,7 +647,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: Border.br_11xl,
-    width: '47%'
+    width: '100%'
   },
   save: {
     letterSpacing: 1,

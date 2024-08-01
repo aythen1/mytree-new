@@ -1,4 +1,4 @@
-import React, { useState, useCallback ,useEffect} from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { Image } from 'expo-image'
 import {
   StyleSheet,
@@ -28,7 +28,7 @@ const Invitacin = ({ route }) => {
   )
   const { userData, allUsers } = useSelector((state) => state.users)
 
-  const [event , setEvent] = useState({})
+  const [event, setEvent] = useState({})
 
   // const event = route?.params?.date
   // const event_location = route?.params?.date.location
@@ -41,19 +41,15 @@ const Invitacin = ({ route }) => {
 
   console.log(event, 'imnvvvvvvvvvvvvvvvvvvvvvvvvvvvv')
 
-const handleGetEvent = async ()=> {
-  const res = await axiosInstance.get(`/events/${route?.params?.date?.id}`)
-  console.log(res.data)
-  setEvent(res.data)
-
-}
-
+  const handleGetEvent = async () => {
+    const res = await axiosInstance.get(`/events/${route?.params?.date?.id}`)
+    console.log(res.data)
+    setEvent(res.data)
+  }
 
   useEffect(() => {
-    
     handleGetEvent()
   }, [route?.params?.date])
-  
 
   const dispatch = useDispatch()
   const navigation = useNavigation()
@@ -84,9 +80,9 @@ const handleGetEvent = async ()=> {
       contentContainerStyle={{ paddingBottom: 100 }}
       showsVerticalScrollIndicator={false}
     >
-        <TopBar screen={"invitacion"}></TopBar>
+      <TopBar screen={'invitacion'}></TopBar>
       <View style={styles.paddingBottom}>
-        <View style={{paddingHorizontal:10}}>
+        <View style={{ paddingHorizontal: 10 }}>
           <View style={styles.backParent}>
             <Pressable
               style={styles.calendarIcon}
@@ -99,28 +95,38 @@ const handleGetEvent = async ()=> {
               />
             </Pressable>
             <Text style={[styles.invitacin1, styles.cdigoTypo]}>
-              {(event.type == "normal" && event.creatorId == userData.id) && "Evento"}
-              {(event.type == "normal" && event.creatorId !== userData.id) && "Invitación"}
+              {event.type == 'normal' &&
+                event.creatorId == userData.id &&
+                'Evento'}
+              {event.type == 'normal' &&
+                event.creatorId !== userData.id &&
+                'Invitación'}
 
-              {event.type == "special" && "Fecha especial"}
-
+              {event.type == 'special' && 'Fecha especial'}
             </Text>
           </View>
           <View style={styles.lineParent}>
             <View style={styles.frameChild} />
             <Image
-                style={{ width: 100, height: 100, borderRadius: 50 ,alignSelf:"center"}}
-                source={ event.coverImage ?{ uri: event.coverImage }: require("../assets/logoo.png") }
-              ></Image>
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 50,
+                alignSelf: 'center',
+              }}
+              source={
+                event.coverImage
+                  ? { uri: event.coverImage }
+                  : require('../assets/logoo.png')
+              }
+            ></Image>
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 marginTop: 20,
-                gap: 5
               }}
             >
-              
               <Text style={[styles.tituloDelEvento, styles.cdigoTypo]}>
                 {event.title}
               </Text>
@@ -234,7 +240,7 @@ const handleGetEvent = async ()=> {
                   letterSpacing: 0
                 }}
               >
-                Lista de deseos
+                { event?.wishListItems.length > 0 && "Lista de deseos" }
               </Text>
               {(event.creatorId === userData.id || inv?.status == 'accepted') &&
                 event?.wishListItems?.map((e) => {
@@ -328,7 +334,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   cdigoTypo: {
-    textAlign: 'left',
+    textAlign: 'center',
     fontFamily: FontFamily.lato,
     letterSpacing: 0
   },
@@ -366,7 +372,7 @@ const styles = StyleSheet.create({
   image6Wrapper: {},
   frameChild: {
     marginTop: 20,
-    paddingTop:10,
+    paddingTop: 10,
     borderColor: Color.secundario,
     borderTopWidth: 1,
     width: 369,
@@ -378,10 +384,10 @@ const styles = StyleSheet.create({
     color: Color.gris,
     fontWeight: '500',
     fontSize: FontSize.size_lg,
-    textAlign: 'left',
+    textAlign: 'center',
     fontFamily: FontFamily.lato,
     letterSpacing: 0,
-    left: 0
+    width:"100%"
   },
   calendarIcon: {
     width: 24,
@@ -397,7 +403,9 @@ const styles = StyleSheet.create({
   calendarParent: {
     marginTop: 20,
     alignItems: 'center',
-    flexDirection: 'row'
+    justifyContent:"center",
+    flexDirection: 'row',
+    width:"100%"
   },
   iconlybulklocation: {
     width: 21,
@@ -409,7 +417,8 @@ const styles = StyleSheet.create({
   iconlybulklocationParent: {
     marginTop: 20,
     alignItems: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    width:"100%",justifyContent:"center"
   },
   cdigo: {
     marginTop: 20,
@@ -524,7 +533,7 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_11xl
   },
   invitacin: {
-    backgroundColor: Color.white,
+    backgroundColor: Color.white
   },
   paddingBottom: {
     paddingBottom: 90

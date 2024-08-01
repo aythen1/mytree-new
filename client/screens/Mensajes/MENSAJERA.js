@@ -70,43 +70,64 @@ const MENSAJERA = () => {
     )
     .sort(sortUsers);
 
-  const filterUsers = useCallback(() => {
-    if (selectedFilter.length > 0) {
+    const filterUsers = useCallback(() => {
+      if (!selectedFilter || !allUsers || !userData || !usersWithMessages) {
+        return;
+      }
+    
+      setLoading(true);
+    
       const user = allUsers.find((user) => user.id === userData.id);
       const userFamily = user?.familyIds || [];
       const userFriends = user?.friendsIds || [];
-
+    
       const filterAndSetUsers = (filteredUsers) => {
         const uniqueUsers = [];
         const seenUsernames = new Set();
-
+    
         for (const user of filteredUsers) {
           if (!seenUsernames.has(user.id)) {
             seenUsernames.add(user.id);
             uniqueUsers.push(user);
           }
         }
+    
         setFilteredUsersWithMessages(uniqueUsers);
         setLoading(false);
       };
-
-      if (selectedFilter === 'All') {
-        const da = usersWithMessages.filter((e) => e.username);
-        filterAndSetUsers([...da, ...groups]);
-      } else if (selectedFilter === 'Friends') {
-        const da = usersWithMessages.filter((user) => userFriends.includes(user.id));
-        filterAndSetUsers(da);
-      } else if (selectedFilter === 'Family') {
-        const da = usersWithMessages.filter((user) => userFamily.includes(user.id));
-        filterAndSetUsers(da);
-      } else if (selectedFilter === 'Groups') {
-        filterAndSetUsers(groups);
+    
+      let filteredUsers = [];
+    
+      switch (selectedFilter) {
+        case 'All':
+          filteredUsers = usersWithMessages.filter((e) => e.username);
+          filteredUsers = [...filteredUsers, ...groups];
+          break;
+        case 'Friends':
+          filteredUsers = usersWithMessages.filter((user) => userFriends.includes(user.id));
+          break;
+        case 'Family':
+          filteredUsers = usersWithMessages.filter((user) => userFamily.includes(user.id));
+          break;
+        case 'Groups':
+          filteredUsers = groups;
+          break;
+        default:
+          break;
       }
-    }
-  }, [selectedFilter, allUsers, userData.id, usersWithMessages, groups, setFilteredUsersWithMessages, setLoading]);
-
-  useFocusEffect(filterUsers);
-
+    
+      filterAndSetUsers(filteredUsers);
+    }, [selectedFilter, allUsers, userData, usersWithMessages, groups]);
+    
+    useFocusEffect(filterUsers);
+    
+    useEffect(() => {
+      getUsersMessages(userData)
+      if (allUsers && userData && usersWithMessages) {
+        filterUsers();
+      }
+    }, [allUsers, userData]);
+    
 
 
 
