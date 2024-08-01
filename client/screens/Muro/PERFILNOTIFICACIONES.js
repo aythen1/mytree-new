@@ -38,6 +38,7 @@ const PERFILNOTIFICACIONES = () => {
   const dispatch = useDispatch()
   const [showInvitationModal, setShowInvitationModal] = useState(false)
   const [selectedNotification, setSelectedNotification] = useState()
+  const [nots, setNots] = useState([])
 
   useEffect(() => {
     dispatch(getAllNotifications())
@@ -74,6 +75,7 @@ const PERFILNOTIFICACIONES = () => {
     )
     const actualUserFamilyIds = userData.familyIds || []
     const actualUserFriendsIds = userData.friendsId || []
+
     const newUserFamilyArray = actualUserFamilyIds.includes(senderId.toString())
       ? actualUserFamilyIds
       : [...actualUserFamilyIds, senderId.toString()]
@@ -103,13 +105,15 @@ const PERFILNOTIFICACIONES = () => {
       dispatch(
         updateUser({
           userId: senderId.toString(),
-          userData: { familyIds: newRequestUserFamilyArray }
+          userData: receiverId.toString(),
+          property:"familyIds"
         })
       )
       dispatch(
         updateUser({
           userId: receiverId.toString(),
-          userData: { familyIds: newUserFamilyArray }
+          userData: senderId.toString(),
+             property:"familyIds"
         })
       )
       dispatch(deleteNotificationById(notificationId))
@@ -118,13 +122,17 @@ const PERFILNOTIFICACIONES = () => {
       dispatch(
         updateUser({
           userId: senderId.toString(),
-          userData: { friendsIds: newRequestUserFriendsArray }
+          userData:receiverId.toString(),
+          property:"friendsIds"
+
         })
       )
       dispatch(
         updateUser({
           userId: receiverId.toString(),
-          userData: { friendsIds: newUserFriendsArray }
+          userData:senderId.toString(),
+          property:"friendsIds"
+
         })
       )
       dispatch(deleteNotificationById(notificationId))
@@ -138,7 +146,7 @@ const PERFILNOTIFICACIONES = () => {
       <View style={styles.perfilNotificaciones}>
         <View>
           <View style={styles.frameViewFlexBox}>
-          <TopBar screen={"notificaciones"}></TopBar>
+            <TopBar screen={'notificaciones'}></TopBar>
           </View>
           <View style={[styles.notificacionesWrapper, styles.frameViewFlexBox]}>
             <Text style={styles.notificaciones}>Notificaciones</Text>
@@ -148,43 +156,55 @@ const PERFILNOTIFICACIONES = () => {
           {/* =============== NOTIFICATIONS RENDERED =============== */}
           {userNotifications.length > 0 ? (
             <ScrollView showsVerticalScrollIndicator={false}>
-              {userNotifications.map((notification, index) => (
-                <Pressable
-                  onPress={async () => {
-                    await setSelectedNotification(notification)
-                    setShowInvitationModal(true)
-                  }}
-                  key={index}
-                >
-                  <View style={[styles.frameView, styles.frameViewFlexBox]}>
-                   <View style={{flexDirection:"row", alignItems:"center"}}>
-                   <Image
-                      style={styles.frameChild}
-                      contentFit="cover"
-                      source={require('../../assets/frame-1547754875.png')}
-                    />
-                    <Text style={styles.hasRecibidoUnaLayout}>
-                      <Text style={styles.brunoTeHaContainer1}>
-                        <Text
-                          style={styles.bruno}
-                        >{`${notification.message.split(' ').slice(0, 2).join(' ')} `}</Text>
-                        <Text style={styles.teHaInvitadoTypo}>
-                          {`${notification.message.split(' ').slice(2).join(' ')}.`}
+              {allNotifications && allNotifications
+                .filter(
+                  (notification) =>
+                    notification.receiverId === userData.id.toString()
+                )?.map((notification, index) => (
+                  <Pressable
+                    onPress={async () => {
+                      await setSelectedNotification(notification)
+                      setShowInvitationModal(true)
+                    }}
+                    key={index}
+                  >
+                    <View style={[styles.frameView, styles.frameViewFlexBox]}>
+                      <View
+                        style={{ flexDirection: 'row', alignItems: 'center' }}
+                      >
+                        <Image
+                          style={styles.frameChild}
+                          contentFit="cover"
+                          source={require('../../assets/frame-1547754875.png')}
+                        />
+                        <Text style={styles.hasRecibidoUnaLayout}>
+                          <Text style={styles.brunoTeHaContainer1}>
+                            <Text
+                              style={styles.bruno}
+                            >{`${notification.message.split(' ').slice(0, 2).join(' ')} `}</Text>
+                            <Text style={styles.teHaInvitadoTypo}>
+                              {`${notification.message.split(' ').slice(2).join(' ')}.`}
+                            </Text>
+                          </Text>
                         </Text>
-                      </Text>
-                    </Text>
-                   </View>
-                  </View>
-                    <Text style={{alignSelf:"flex-end",fontSize:10,color:"gray"}}>
+                      </View>
+                    </View>
+                    <Text
+                      style={{
+                        alignSelf: 'flex-end',
+                        fontSize: 10,
+                        color: 'gray'
+                      }}
+                    >
                       {formatDate(notification.createdAt)}
                     </Text>
-                  <Image
-                    style={styles.frameItem}
-                    contentFit="cover"
-                    source={require('../../assets/line-78.png')}
-                  />
-                </Pressable>
-              ))}
+                    <Image
+                      style={styles.frameItem}
+                      contentFit="cover"
+                      source={require('../../assets/line-78.png')}
+                    />
+                  </Pressable>
+                ))}
             </ScrollView>
           ) : (
             <Text
@@ -351,7 +371,7 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
     letterSpacing: 0,
     fontFamily: FontFamily.lato,
-    top: 30,
+    top: 30
   },
   frameView: {
     justifyContent: 'space-between',

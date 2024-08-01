@@ -29,7 +29,10 @@ const Onboarding2 = () => {
         console.log(JSON.parse(usuarioLogueado).id, 'logeadoooo')
         // Usuario logueado, navega a la pantalla de inicio
         if (usuarioLogueado?.newUser) {
-          return navigation.navigate('Perfil')
+          dispatch(getUserData(JSON.parse(usuarioLogueado).id)).then((e) =>
+            navigation.navigate('Perfil')
+
+        )
         }
         dispatch(getUserData(JSON.parse(usuarioLogueado).id)).then((e) =>
           navigation.replace('Muro')

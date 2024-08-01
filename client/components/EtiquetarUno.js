@@ -84,7 +84,7 @@ const EtiquetarUno = ({ onClose, taggedUsers, setTaggedUsers ,data}) => {
             alignItems: 'center'
           }}
         >
-          {data && data?.length === 0 && (
+          {(data?.length === 0 || data == null ) && (
             <Text
               style={{
                 color: '#000',
@@ -154,35 +154,7 @@ const EtiquetarUno = ({ onClose, taggedUsers, setTaggedUsers ,data}) => {
         />
        
       </View>
-      {/* <TouchableOpacity style={{ marginTop: 40 }} onPress={onClose}>
-        <LinearGradient
-          style={{
-            justifyContent: 'center',
-            paddingHorizontal: Padding.p_5xl,
-            paddingVertical: Padding.p_sm,
-            backgroundColor: Color.linearBoton,
-            width: '100%',
-            flexDirection: 'row',
-            borderRadius: Border.br_11xl
-          }}
-          locations={[0, 1]}
-          colors={['#dee274', '#7ec18c']}
-        >
-          <Text
-            style={{
-              flex: 1,
-              letterSpacing: 1,
-              lineHeight: 24,
-              color: Color.white,
-              textAlign: 'center',
-              fontFamily: FontFamily.lato,
-              fontSize: FontSize.size_base
-            }}
-          >
-            Aceptar
-          </Text>
-        </LinearGradient>
-      </TouchableOpacity> */}
+    
     </View>
   )
 }

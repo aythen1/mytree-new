@@ -33,6 +33,7 @@ import { createEvent, getAllUserEvents } from './../../redux/actions/events'
 import ImagePickerModal from '../Modals/ImagePickerModal'
 import axiosInstance from '../../apiBackend'
 import { setScreen } from '../../redux/slices/user.slices'
+import Maps from '../../components/Maps'
 
 const CrearFechaEspecial = () => {
   const [user, setUser] = useState()
@@ -43,6 +44,7 @@ const CrearFechaEspecial = () => {
   const [location, setLocation] = useState('')
   const [invitedUsers, setInvitedUsers] = useState([])
   const [wishList, setWishList] = useState([])
+  const [showLocation, setShowLocation] = useState(false)
 
   const [modalCreate, setModalCreate] = useState(false)
   const [programar, setProgramar] = useState(false)
@@ -88,6 +90,8 @@ const CrearFechaEspecial = () => {
   }
 
   const handleCreateEvent = async () => {
+    setModalCreate(true)
+
     if (description.length > 0 && title.length > 0 && selectedDate) {
       const event = {
         type: 'normal',
@@ -132,7 +136,6 @@ const CrearFechaEspecial = () => {
 
       event.coverImage = cloudinaryUrls[0]
       console.log('creating event with values: ', event)
-      setModalCreate(true)
 
       dispatch(createEvent(event)).then((e) => {
         const users = e.payload.invitedUsers
@@ -157,7 +160,7 @@ const CrearFechaEspecial = () => {
     }
   }
   return (
-    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="always">
       <View style={[styles.crearEvento]}>
         <View>
           <View style={[styles.backParent, styles.buttonBarFlexBox]}>
@@ -305,18 +308,19 @@ const CrearFechaEspecial = () => {
             <Text style={[styles.title, styles.titleTypo]}>Ubicación</Text>
           </View>
 
-          <View style={styles.fieldSpaceBlock2}>
-            <TextInput
-              
+          <Pressable onPress={()=> setShowLocation(true)} style={styles.fieldSpaceBlock2}>
+            <Text 
               style={{paddingLeft:10}}
               value={location}
-              onChangeText={(text) => setLocation(text)}
-              placeholder="Ubicacion"
-            />
+             
+            >
+
+            {location || "Ubicación"}
+            </Text>
             <Pressable>
               <UbicacionSVG />
             </Pressable>
-          </View>
+          </Pressable>
         </View>
 
         <View>
@@ -417,7 +421,7 @@ const CrearFechaEspecial = () => {
           />
           <ENTRADACREADA
             onClose={onCloseModalCreate}
-            message={'Enviado!'}
+            message={'¡Enviado!'}
             isNavigate={'CALENDARIO'}
           />
         </View>
@@ -513,6 +517,34 @@ const CrearFechaEspecial = () => {
           />
         </View>
       </Modal>
+      <Modal animationType="fade" transparent visible={showLocation}>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(113, 113, 113, 0.3)',
+
+          }}
+        >
+          <Pressable
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              left: 0,
+              top: 0
+            }}
+            onPress={() => {
+              setShowLocation(false)
+            }}
+          />
+          <Maps
+            onClose={() => setShowLocation(false)}
+            setLocation={setLocation}
+          />
+        </View>
+      </Modal>
     </ScrollView>
   )
 }
@@ -563,7 +595,8 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_3xs,
     flexDirection: 'row',
     width: '100%',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    alignItems:"center"
   },
   descriptionField: {
     paddingVertical: Padding.p_smi,

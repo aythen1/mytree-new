@@ -86,9 +86,7 @@ const Muro = () => {
       dispatch(getAllNotifications())
       dispatch(getAllPosts())
       dispatch(chatGroups(id))
-      // dispatch(getAllUserDiaries(id))
-      // dispatch(getAllUserEvents(id))
-
+   
 
       dispatch(getUserData(id))
       dispatch(getAllUserEvents(id))
@@ -128,18 +126,10 @@ const Muro = () => {
         setRefreshing(false)
       })
     }
-    // Aquí puedes agregar la lógica para actualizar la pantalla
-    // Simulación de una actualización de datos
+
   }
 
-  const handleScroll = (event) => {
-    const { contentOffset } = event.nativeEvent
-    const y = contentOffset.y
-    // Check if user is at the top of the scroll view
-    if (y <= -60) {
-      return onRefresh()
-    }
-  }
+
 
   return (
     <LinearGradient
@@ -156,56 +146,7 @@ const Muro = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        {/* <View
-          style={{
-            width: '100%',
-            paddingTop: 5,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingHorizontal: 15,
-            alignItems: 'center'
-          }}
-        >
-          <Pressable onPress={() => navigation.openDrawer()}>
-            <Image
-              style={[
-                {
-                  width: 87,
-                  height: 55
-                }
-              ]}
-              contentFit="cover"
-              source={require('../../assets/image-6.png')}
-            />
-          </Pressable>
-          <View>
-            <HeaderIcons
-              icons={
-                !showRetos
-                  ? [
-                      <Pressable
-                        key={1000}
-                        onPress={() => {
-                          navigation.navigate('Busqueda')
-                        }}
-                      >
-                        <LupaSVG />
-                      </Pressable>,
-                      <MessageSVG key={2000} />,
-                      <NotificationsMuroSVG
-                        key={3000}
-                        isNavigation={'PERFILNOTIFICACIONES'}
-                      />
-                    ]
-                  : [
-                      <MessageSVG key={3000} />,
-                      <CalendarMuroSVG key={4000} />,
-                      <SettingMuroSVG key={5000} />
-                    ]
-              }
-            />
-          </View>
-        </View> */}
+   
         <TopBar screen={'muro'}></TopBar>
         <View>
           <View

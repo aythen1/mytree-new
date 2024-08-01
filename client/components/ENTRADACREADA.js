@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, StyleSheet, Text, Pressable } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -20,7 +20,7 @@ const ENTRADACREADA = ({ onClose, message, isNavigate }) => {
           />
           <Image
             style={styles.checkedSymbolIcon}
-            contentFit="cover"
+            contentFit="contain"
             source={require('../assets/checkedsymbol.png')}
           />
         </View>
@@ -75,23 +75,22 @@ const styles = StyleSheet.create({
     letterSpacing: 0
   },
   ellipseIcon: {
-    width: 116,
-    height: 116,
+    width: 80,
+    height: 80,
     opacity: 0.4,
     zIndex: 0
   },
   checkedSymbolIcon: {
-    width: 50,
-    height: 50,
+    width: 30,
+    height: 30,
     zIndex: 1,
     position: 'absolute',
-    top: 33,
-    left: 33,
     maxHeight: '100%',
     maxWidth: '100%'
   },
   ellipseParent: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent:"center",alignItems:"center"
   },
   cambiosGuardados: {
     fontSize: FontSize.size_5xl,

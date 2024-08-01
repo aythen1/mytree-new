@@ -134,25 +134,7 @@ console.log(usuario,"esto tengo")
             </View>
           </View>
 
-          <View style={styles.frameWrapper2}>
-            <View style={styles.redesSocialesParent}>
-              <Text style={[styles.nombreYApellidos, styles.quEsLoTypo1]}>
-                Redes Sociales
-              </Text>
-              <Text style={[styles.brunoPham1, styles.quEsLoTypo1]}>
-              Sin especificar
-
-              </Text>
-            </View>
-            <View style={styles.redesSocialesParent}>
-              <Text style={[styles.nombreYApellidos, styles.quEsLoTypo1]}>
-                Lista de Deseos
-              </Text>
-              <Text style={[styles.brunoPham1, styles.quEsLoTypo1]}>
-                Sin especificar
-              </Text>
-            </View>
-          </View>
+          
         </View>
       </View>
     </ScrollView>
@@ -199,7 +181,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   frameContainer: {
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
   },
   skillIconsinstagram: {
     height: 30
@@ -249,7 +231,7 @@ const styles = StyleSheet.create({
   frameParent5: {
     paddingTop: 10,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
     paddingHorizontal:10,
     width: '100%'
   },

@@ -44,7 +44,7 @@ const LOGIN = () => {
     console.log('Nuevo valor de email:', text)
 
     setError('')
-    setEmail(text.toLowerCase())
+    setEmail((prev) => text.toLowerCase())
     console.log('esto es', email)
   }
 
@@ -68,11 +68,13 @@ const LOGIN = () => {
       if (result?.payload?.data?.user) {
         console.log('Resultado', result)
         // Inicio de sesión exitoso, redirige a la pantalla "Muro"
-        await AsyncStorage.setItem(
-          'user',
-          JSON.stringify(result?.payload?.data?.user)
-        )
-        if(result?.payload?.data?.user?.newUser){
+        if (checked) {
+          await AsyncStorage.setItem(
+            'user',
+            JSON.stringify(result?.payload?.data?.user)
+          )
+        }
+        if (result?.payload?.data?.user?.newUser) {
           return navigation.navigate('Perfil')
         }
         navigation.navigate('Muro')
@@ -143,6 +145,7 @@ const LOGIN = () => {
               <TextInput
                 placeholder="correo"
                 value={email}
+                maxLength={40}
                 onChangeText={handleEmailChange}
                 style={styles.input}
                 editable={true}
@@ -172,6 +175,8 @@ const LOGIN = () => {
                 secureTextEntry={true}
                 placeholder="••••••••"
                 style={styles.input2}
+                maxLength={40}
+
                 editable={true}
               />
             </View>
@@ -189,15 +194,15 @@ const LOGIN = () => {
           </Text>
         </View>
         {error && <Text>{error}</Text>}
-       <TouchableOpacity onPress={handleSubmit}>
-       <LinearGradient
-          style={[styles.button, styles.buttonFlexBox]}
-          locations={[0, 1]}
-          colors={['#dee274', '#7ec18c']}
-        >
+        <TouchableOpacity onPress={handleSubmit}>
+          <LinearGradient
+            style={[styles.button, styles.buttonFlexBox]}
+            locations={[0, 1]}
+            colors={['#dee274', '#7ec18c']}
+          >
             <Text style={[styles.signIn, styles.signInLayout]}>Ingresar</Text>
-        </LinearGradient>
-       </TouchableOpacity>
+          </LinearGradient>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   )
@@ -256,16 +261,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: FontFamily.lato,
     color: Color.white,
-    fontWeight: '900',
-    lineHeight: 24
+    fontWeight: '900'
   },
   teRecibimosCon: {
     lineHeight: 20,
-    fontWeight: '700',
+    fontWeight: '500',
     display: 'flex',
     width: 286,
-    marginTop: 30,
-    fontSize: FontSize.size_sm,
+    marginTop: 20,
+    fontSize: 18,
     textAlign: 'center',
     fontFamily: FontFamily.lato,
     color: Color.white,

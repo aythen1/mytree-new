@@ -105,7 +105,9 @@ const PerfilAjustes = () => {
                 source={usuario.profilePicture || require('../../../assets/logoo.png')} 
               />
               <View style={styles.brunoPhamWrapper}>
-                <Text style={styles.brunoPham}>{usuario.username}</Text>
+                <Text style={styles.brunoPham}>{usuario?.username} </Text>
+                <Text style={styles.brunoPham}>{usuario?.apellido} </Text>
+
               </View>
             </View>
             <View style={styles.frameParent2}>

@@ -41,7 +41,7 @@ import EmojiPicker, { emojiFromUtf16 } from 'rn-emoji-picker'
 import { emojis } from 'rn-emoji-picker/dist/data'
 import { getAllUserEvents } from '../../redux/actions/events'
 import { getAllUserDiaries } from '../../redux/actions/diaries'
-import { getUserFriendsAndFamilyLength } from '../../redux/actions/user'
+import { getUserData, getUserFriendsAndFamilyLength } from '../../redux/actions/user'
 import TopBar from '../../components/TopBar'
 import Badge1 from '../../assets/Badge_01.svg'
 import Badge2 from '../../assets/Badge_02.svg'
@@ -89,7 +89,12 @@ const Perfil = () => {
     if (cameraReff) {
       const photo = await cameraReff.current.takePictureAsync()
       setSelectedImage(photo)
-      pickImage('profile', photo.uri)
+      pickImage('profile', photo.uri).then((e)=> {
+       axiosInstance.patch(`/user/${userData?.id}`,{profilePicture:e}).then(()=> {
+          dispatch(getUserData(userData?.id))
+
+        })
+      })
       setShowCamera(false)
     }
   }
@@ -273,36 +278,7 @@ const Perfil = () => {
               />
             )}
 
-            {/* <Pressable
-                onPress={() => pickImage('profile')}
-                style={{
-                  width: 30,
-                  height: 30,
-                  backgroundColor: Color.secundario,
-                  borderRadius: 100,
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-              >
-                <SimboloSVG color={'#fff'} />
-              </Pressable> */}
-
-            {/* <Pressable
-              onPress={() => setShowEmojis(true)}
-              style={{
-                width: 30,
-                height: 30,
-                backgroundColor: Color.secundario,
-                position: 'absolute',
-                borderRadius: 100,
-                bottom: 0,
-                left: '35%',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              {emoji && <Text>{emoji}</Text>}
-            </Pressable> */}
+        
           </Pressable>
           <TouchableOpacity
             onPress={() => pickImage('profile')}

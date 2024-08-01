@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react'
 import axiosInstance from '../apiBackend';
+import { useSelector } from 'react-redux';
 
 const useFetchHook = ({url}) => {
+
 
     const [data, setData] = React.useState(null);
     const [loading, setLoading] = React.useState(null);
     const [error, setError] = React.useState(null);
-
+const {allUsers} = useSelector((state)=> state.users)
     
     const fetch = async ()=> {
         try{
@@ -26,7 +28,7 @@ const useFetchHook = ({url}) => {
     useEffect(()=>{
         console.log(url,"esta url me llega")
         fetch()
-    },[url])
+    },[url,allUsers ])
 
 
     return {data , error ,loading}

@@ -37,5 +37,6 @@ export class UpdateUserDto {
     fixedChat?: string;
     maritalStatus?:string;
     badge?: string; 
+    userCategories?:string[]
   }
   
