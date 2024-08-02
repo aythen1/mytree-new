@@ -360,15 +360,16 @@ const SingleDiary = ({
             alignItems: 'flex-end',
             paddingBottom: 5,
             position: 'absolute',
+            paddingTop:5,
             right: 0
           }}
         >
           {!notEditable && (
             <Pressable onPress={() => handleDeleteDiary(diary.id)}>
               <Image
-                style={{ width: 25, height: 25 }}
+                style={{ width: 20, height: 20 }}
                 resizeMode="contain"
-                source={require('../assets/trash.png')}
+                source={require('../assets/trashbtn.png')}
               />
             </Pressable>
           )}
@@ -377,8 +378,8 @@ const SingleDiary = ({
             // <Pressable onPress={() => setEditingDiary(diary.id)}>
             <Pressable onPress={() => { setEditingDiary(diary.id);setSelected(diary)}}>
 
-              <View style={{ marginBottom: -3, marginRight: 4 }}>
-                <Editar2SVG />
+              <View style={{  marginRight: 4 }}>
+               <Image style={{width:20,height:20}} source={require("../assets/vector47.png")}/>
               </View>
             </Pressable>
           )}

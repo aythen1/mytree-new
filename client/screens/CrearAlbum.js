@@ -652,7 +652,9 @@ const CrearAlbum = () => {
                 flexDirection: 'row'
               }}
               locations={[0, 1]}
-              colors={['#dee274', '#7ec18c']}
+              colors={['#7ec18c','#dee274' ]}
+              start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+              end={{ x: 1, y: 0 }}
             >
               {loading ? (
                 <ActivityIndicator size="small" color="#fff" />
@@ -711,7 +713,6 @@ const CrearAlbum = () => {
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >
@@ -743,7 +744,6 @@ const CrearAlbum = () => {
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >
@@ -786,7 +786,6 @@ const CrearAlbum = () => {
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(113, 113, 113, 0.3)',
               height: '100%'
             }}
           >

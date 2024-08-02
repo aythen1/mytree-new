@@ -32,6 +32,11 @@ export class CreateAlbumDto {
 
   @IsString()
   @IsOptional()
+  @Length(1, 255)
+  coverPicture: string;
+
+  @IsString()
+  @IsOptional()
   description?: string;
 
   @IsString()

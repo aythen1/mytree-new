@@ -16,6 +16,9 @@ export class Album {
   @Column({ type: 'varchar', length: 255, nullable: true })
   location: string;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  coverPicture: string;
+
   @Column({ type: 'varchar', length: 100, nullable: true })
   albumCategory: string;
 

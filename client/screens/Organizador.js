@@ -29,7 +29,7 @@ import { useNavigation } from '@react-navigation/native'
 import { getAllPosts } from '../redux/actions/posts'
 import Maps from '../components/Maps'
 import TopBar from '../components/TopBar'
-const Organizador = () => {
+const Organizador = ({route}) => {
   const dispatch = useDispatch()
   const [taggedUsers, setTaggedUsers] = useState([])
   const { showPanel } = useSelector((state) => state.panel)
@@ -40,7 +40,8 @@ const Organizador = () => {
     showHashtagsModal,
     setShowHashtagsModal,
     selectedHashtags,
-    setSelectedHashtags
+    setSelectedHashtags,
+    pickImage
   } = useContext(Context)
 
   const [album, setAlbum] = useState(false)
@@ -56,6 +57,8 @@ const Organizador = () => {
 
 
   useEffect(() => {}, [taggedUsers])
+
+console.log(route.params)
 
   const [dataToSend, setDataToSend] = useState({
     nameUser: '',
@@ -159,41 +162,69 @@ const Organizador = () => {
     }
   }, [])
 
+  const uploadImages = async (data) => {
+    if (data) {
+      const uploadPromises = data.map(async (element) => {
+        console.log(element)
+        const imageUrl = await pickImage('profile',element?.uri);
+        return imageUrl;
+      });
+  
+      try {
+        const imageUrls = await Promise.all(uploadPromises);
+        return imageUrls;
+      } catch (error) {
+        console.error('Error uploading images:', error);
+        return [];
+      }
+    }
+    return [];
+  };
+
   const handleSubmit = async () => {
-    setLoading(true)
-    try {
-      const finalData = {}
-      finalData.tags = taggedUsers
-      finalData.etiquets = taggedUsers
-      finalData.hashtags = selectedHashtags
-      finalData.albums = albums
-      finalData.userId = userData.id
-      finalData.fecha = selectedDate ? selectedDate : new Date()
-      finalData.nameUser = userData.username
-      finalData.photos = [libraryImage]
-      finalData.description = dataToSend.description
-      finalData.privacyMode = privacy
-      const res = await axios.post(`${BACKURL}/posts`, finalData)
 
-
-      if (res.data) {
+    const fil = route.params.data.filter((e)=> e)
+    
+ 
+    uploadImages(route.params.data).then(async (e)=> {
+      setLoading(true)
+      try {
+        const finalData = {}
+        finalData.tags = taggedUsers
+        finalData.etiquets = taggedUsers
+        finalData.hashtags = selectedHashtags
+        finalData.albums = albums
+        finalData.userId = userData.id
+        finalData.fecha = selectedDate ? selectedDate : new Date()
+        finalData.nameUser = userData.username
+        finalData.photos = e
+        finalData.description = dataToSend.description
+        finalData.privacyMode = privacy
+        const res = await axios.post(`${BACKURL}/posts`, finalData)
+  
+  
+        if (res.data) {
+          setSelectedHashtags([])
+          setTaggedUsers([])
+          setAlbums([])
+          setAlbum(false)
+          dispatch(getAllPosts(userData.id)).then(() => {
+            setSubmit(true)
+            setLoading(false)
+          })
+        }
+      } catch (error) {
+        console.log(error)
         setSelectedHashtags([])
         setTaggedUsers([])
         setAlbums([])
         setAlbum(false)
-        dispatch(getAllPosts(userData.id)).then(() => {
-          setSubmit(true)
-          setLoading(false)
-        })
+        setLoading(false)
       }
-    } catch (error) {
-      console.log(error)
-      setSelectedHashtags([])
-      setTaggedUsers([])
-      setAlbums([])
-      setAlbum(false)
-      setLoading(false)
-    }
+    })
+
+ 
+    
   }
 
 
@@ -250,7 +281,7 @@ const Organizador = () => {
               Subir recuerdo
             </Text>
             <Pressable
-              disabled={!libraryImage || dataToSend.description === ''}
+              disabled={dataToSend.description === ''}
               onPress={handleSubmit}
             >
               <Text
@@ -732,7 +763,7 @@ const Organizador = () => {
               </View>
             </View>
             <TouchableOpacity
-              disabled={ loading|| submit ||!libraryImage || dataToSend.description === ''}
+              disabled={ loading|| submit  || dataToSend.description === ''}
               onPress={handleSubmit}
             >
               <LinearGradient

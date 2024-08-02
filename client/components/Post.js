@@ -27,6 +27,7 @@ import { Context } from '../context/Context'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllPosts } from '../redux/actions/posts'
 import { getAllCommentsByPostId } from '../redux/actions/comments'
+import PagerView from 'react-native-pager-view'
 
 const Posteo = ({ data, padding }) => {
   const {
@@ -329,7 +330,7 @@ const Posteo = ({ data, padding }) => {
   } else {
     return (
       <Pressable
-        onPress={() => setExpanded(true)}
+        // onPress={() => setExpanded(true)}
         style={{
           backgroundColor: Color.mytreeClarito,
           left: 0,
@@ -341,17 +342,20 @@ const Posteo = ({ data, padding }) => {
           overflow: 'hidden'
         }}
       >
-        <ImageBackground
+        <PagerView
           style={{
             height: Dimensions.get('screen').height / 1.8,
-            zIndex: -1000,
-            justifyContent: 'flex-end',
+            width:"100%",
             resizeMode: 'cover',
-            overflow: 'hidden'
           }}
           resizeMethod="resize"
-          source={{ uri: data.photos[0] }}
         >
+          {data.photos && data.photos.map((e)=> (
+            <Image style={{height:"100%",width:"100%"}} source={{uri:e}}></Image>
+          ))}
+
+        </PagerView>
+
           <TouchableOpacity
             onPress={() => {
               setSelectedPost(data)
@@ -458,14 +462,14 @@ const Posteo = ({ data, padding }) => {
             </TouchableOpacity>
           </View>
           <LinearGradient
-            style={{ paddingHorizontal: 10, height: 130 }}
+            style={{ paddingHorizontal: 10, height: 130 ,width:"100%",position:"absolute",bottom:0}}
             end={{ x: 0.5, y: 0 }}
             start={{ x: 0.5, y: 1 }}
             colors={['rgba(0,0,0,0.9)', 'transparent']}
           >
             <View>
               <Text
-                numberOfLines={1}
+                numberOfLines={2}
                 style={styles.camila}
               >{`${data?.user?.username} ${data?.user?.apellido}`}</Text>
               <Text
@@ -492,7 +496,6 @@ const Posteo = ({ data, padding }) => {
               </Text>
             </Pressable>
           </LinearGradient>
-        </ImageBackground>
       </Pressable>
     )
   }
@@ -572,7 +575,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_5xl,
     color: Color.white,
     fontWeight: '700',
-    width: '70%'
+    width: '100%'
   },
   yendoALa: {
     marginTop: 20,

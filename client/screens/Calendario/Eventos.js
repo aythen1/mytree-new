@@ -229,6 +229,7 @@ const Eventos = ({ route }) => {
               <View style={styles.optionContainer}>
                 <Text style={styles.subTitle}>Descripción</Text>
                 <TextInput
+                
                   value={description}
                   onChangeText={(e) => setDescription(e)}
                   placeholder={event_desc}

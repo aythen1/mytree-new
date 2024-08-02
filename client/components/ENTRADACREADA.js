@@ -130,7 +130,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: Border.br_11xl,
     borderTopRightRadius: Border.br_11xl,
     position: 'absolute',
-    bottom: 0
+    bottom: 0,
+    borderWidth:1,borderBottomWidth:0,borderColor:Color.primario1
   }
 })
 

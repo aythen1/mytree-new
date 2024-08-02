@@ -130,7 +130,7 @@ const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
   const renderHeader = (date) => {
     return (
       <TouchableOpacity >
-        <Text>{`${mm[`${date.getMonth()}`]} ${date.getFullYear()}`}</Text>
+        <Text style={{fontSize:16}}>{`${mm[`${date.getMonth()}`]} ${date.getFullYear()}`}</Text>
       </TouchableOpacity>
     )
   }

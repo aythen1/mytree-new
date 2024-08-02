@@ -48,6 +48,8 @@ const ReflexionDiaria = ({
   const [selected, setSelected] = useState({})
   const [text, setText] = useState(selected?.description || '')
   const [title, setTitle] = useState(selected?.title || '')
+  const [edition, setEdition] = useState(false)
+
 
   const [diaryImages, setDiaryImages] = useState(selected?.images || [])
   const dispatch = useDispatch()
@@ -68,7 +70,8 @@ const ReflexionDiaria = ({
         width: '100%'
       }}
     >
-      <Text style={[styles.reflexinDiaria, styles.hoyLoHeFlexBox]}>
+     <View style={{flexDirection:"row",alignItems:"center",justifyContent:"space-between"}}>
+     <Text style={[styles.reflexinDiaria, styles.hoyLoHeFlexBox]}>
         {selectedSection === 'nube'
           ? 'Reflexión Diaria'
           : selectedSection === 'logros'
@@ -81,6 +84,19 @@ const ReflexionDiaria = ({
                   ? 'Descubriendo el mundo'
                   : 'Personalizada'}
       </Text>
+      <Pressable
+        onPress={() => {
+          setEdition(!edition)
+          // setEditingDiary(diary.id)
+          // setSelected(diary)
+        }}
+      >
+          <Image
+            style={{ width: 20, height: 20 ,marginTop:10}}
+            source={edition ? require('../../assets/lapizgris.png') : require('../../assets/vector47.png')}
+          />
+      </Pressable>
+     </View>
       {loading ? (
         <ActivityIndicator
           style={{
@@ -118,7 +134,7 @@ const ReflexionDiaria = ({
                 onChangeText={setTitle}
                 value={title}
                 maxLength={30}
-                style={{ fontSize: 19 ,width:"50%"}}
+                style={{ fontSize: 19, width: '50%' }}
               ></TextInput>
               <View
                 style={{
@@ -131,8 +147,8 @@ const ReflexionDiaria = ({
                   onPress={() => {
                     setEditingDiary()
                     setSelected(null)
-                    setText("")
-                    setTitle("")
+                    setText('')
+                    setTitle('')
                   }}
                 >
                   <Image
@@ -208,7 +224,7 @@ const ReflexionDiaria = ({
                             category: selectedSection
                           }
                           obj.images = cloudinaryUrls
-                       
+
                           if (selectedDate) {
                             obj.date = selectedDate
                           }
@@ -242,8 +258,8 @@ const ReflexionDiaria = ({
                       setPickedImages([])
                       setEditingDiary()
                       setSelected({})
-                      setText("")
-                      setTitle("")
+                      setText('')
+                      setTitle('')
                     }}
                   >
                     <Text
@@ -274,14 +290,14 @@ const ReflexionDiaria = ({
                 style={{
                   height: 18,
                   width: 18,
-                  marginRight: 15,
+                  marginRight: 2,
                   alignSelf: 'flex-end'
                 }}
                 onPress={() => {
                   setEditingDiary()
                   setSelected(null)
-                  setText("")
-                  setTitle("")
+                  setText('')
+                  setTitle('')
                 }}
               >
                 <Image
@@ -295,7 +311,7 @@ const ReflexionDiaria = ({
           {selected.id == editingDiary ? (
             <TextInput
               style={{
-                fontSize:18,
+                fontSize: 18,
                 borderTopColor: Color.primario1,
                 borderTopWidth: 1,
                 paddingTop: 10,
@@ -313,7 +329,7 @@ const ReflexionDiaria = ({
                 borderTopColor: Color.primario1,
                 borderTopWidth: 1,
                 paddingTop: 10,
-                fontSize:18
+                fontSize: 18
               }}
             >
               {selected.description}
@@ -350,7 +366,7 @@ const ReflexionDiaria = ({
           style={{
             flex: 1,
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'center'
           }}
         >
           <Pressable
@@ -385,7 +401,7 @@ const styles = StyleSheet.create({
   },
   hoyLoHeFlexBox: {
     textAlign: 'left',
-    alignSelf: 'stretch',
+    textAlignVertical:"center",
     color: Color.negro,
     marginTop: 20,
     fontFamily: FontFamily.lato,
@@ -560,7 +576,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   reflexinDiaria: {
-    lineHeight: 36,
     fontSize: FontSize.size_5xl,
     marginBottom: 10
   },

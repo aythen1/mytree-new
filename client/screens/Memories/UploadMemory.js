@@ -55,7 +55,7 @@ const UploadMemory = () => {
 
   const handleSeleccionarImagen = (imagen) => {
     setSelectedImage(imagen)
-    pickImage('a', imagen.uri)
+    // pickImage('a', imagen.uri)
   }
 
   const changePictureMode = () => {
@@ -176,7 +176,7 @@ const UploadMemory = () => {
             </Text>
             <TouchableOpacity
               disabled={!selectedImage}
-              onPress={() => navigation.navigate('Organizador')}
+              onPress={() => navigation.navigate('Organizador',{data: multiSelect ? [...multiSelect] : selectedImage })}
             >
               <Image
                 contentFit="cover"

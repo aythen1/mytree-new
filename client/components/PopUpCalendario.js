@@ -114,7 +114,7 @@ const PopUpCalendario = ({
   const renderHeader = (date) => {
     return (
       <TouchableOpacity onPress={() => setShowYearList(!showYearList)}>
-        <Text>{`${mm[`${date.getMonth()}`]} ${yearSelect}`}</Text>
+        <Text style={{fontSize:16}}>{`${mm[`${date.getMonth()}`]} ${yearSelect}`}</Text>
       </TouchableOpacity>
     )
   }
