@@ -46,13 +46,7 @@ export const ContextProvider = ({ children }) => {
   const handleAddDiary = (category, date) => {
     const dateEdit = new Date(date)
     const dateString = dateEdit.toISOString().split('T')[0] // Obtener solo el año-mes-día
-    console.log(
-      'Agregando nuevo diario en categoria',
-      category,
-      'con fecha',
-      date,
-      '...'
-    )
+
     dispatch(
       addUserDiary({
         images: [],
@@ -90,8 +84,7 @@ export const ContextProvider = ({ children }) => {
   }
 
   const pickImage = async (source, imageUri) => {
-    console.log('source: ', source)
-    console.log('imageUri:', imageUri)
+
     if (imageUri) {
       const profileImageData = {
         uri: imageUri,
@@ -188,7 +181,6 @@ export const ContextProvider = ({ children }) => {
     const day = String(date.getDate()).padStart(2, '0')
 
     const formattedDate = `${year}-${month}-${day}`
-    console.log(formattedDate) // Output: '2024-07-08'
     return formattedDate
   }
 
@@ -287,10 +279,8 @@ export const ContextProvider = ({ children }) => {
       userId: userData.id
     })
 
-    console.log('DATA', data)
     const convs = Object.keys(data)
-    console.log('convs', convs)
-    console.log('userData.id', userData.id)
+
     const notReadedConvMessages = convs
       .map((conv) =>
         data[conv].filter(
@@ -300,7 +290,6 @@ export const ContextProvider = ({ children }) => {
       )
       .flat()
 
-    console.log('notReaded', notReadedConvMessages)
 
     setNotReadedMessages(notReadedConvMessages)
     const notReaded = convs
@@ -312,25 +301,20 @@ export const ContextProvider = ({ children }) => {
           ).length
       )
       .reduce((acc, curr) => acc + curr, 0)
-    console.log('setting not readed to', notReaded)
     setNotReaded(notReaded)
 
     if (Object.keys(data).length > 0) {
-      console.log('has messages')
       const finalInfo = Object.keys(data).map((key) => {
         const otherUserId = key
           .split('_')
           .filter((singleId) => singleId !== userData.id)[0]
 
-        console.log('other user id', otherUserId)
         const userInfo = allUsers.filter((user) => user.id === otherUserId)[0]
-        console.log('userInfo==========', userInfo , otherUserId)
         const lastMessage = data[key].sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         )[0]
         return { room: key, ...userInfo, lastMessage }
       })
-      console.log('Setting users with messages to: ', finalInfo)
       //fix
       const res = finalInfo.sort(
         (a, b) =>
@@ -359,7 +343,7 @@ export const ContextProvider = ({ children }) => {
   })
 
   socket.on('disconnect', () => {
-    console.log('Disconnected from server')
+    // console.log('Disconnected from server')
     setRoomId()
   })
 

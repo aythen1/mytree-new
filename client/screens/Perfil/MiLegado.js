@@ -25,7 +25,6 @@ const MiLegado = ({ fromOther, otherId }) => {
   )
   const otherUserPosts = allPosts.filter((post) => post?.user?.id === otherId)
 
-  console.log('ALBUMS', otherId)
 
   const { setShowSelectEventTypeModal } = useContext(Context)
 

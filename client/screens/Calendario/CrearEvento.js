@@ -135,7 +135,6 @@ const CrearFechaEspecial = () => {
       }
 
       event.coverImage = cloudinaryUrls[0]
-      console.log('creating event with values: ', event)
 
       dispatch(createEvent(event)).then((e) => {
         const users = e.payload.invitedUsers
@@ -398,7 +397,9 @@ const CrearFechaEspecial = () => {
             marginBottom: -15
           }}
           locations={[0, 1]}
-          colors={['#dee274', '#7ec18c']}
+          colors={['#7ec18c','#dee274' ]}
+          start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+          end={{ x: 1, y: 0 }}
         >
           <TouchableOpacity
             style={[styles.pressable1, styles.pressableFlexBox]}

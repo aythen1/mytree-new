@@ -5,7 +5,6 @@ import { Border, Color } from '../GlobalStyles'
 import { useNavigation } from '@react-navigation/native'
 
 const EventCard = ({ event }) => {
-  console.log('event', event)
   const navigation = useNavigation()
   return (
     <Pressable

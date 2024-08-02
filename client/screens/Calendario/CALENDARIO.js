@@ -73,7 +73,6 @@ const CALENDARIO = () => {
       })
       // Establecer la fecha actual como valor por defecto al enfocar el componente
 
-      console.log(userInvitations, 'userInvitations')
     }, [dispatch])
   )
  

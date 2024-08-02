@@ -14,7 +14,6 @@ const Etiquetar = ({ onClose, taggedUsers, setTaggedUsers ,invites }) => {
     allUsers.filter((user) => user.id === userData.id)[0]?.familyIds || []
   const userFriends =
     allUsers.filter((user) => user.id === userData.id)[0]?.friendsIds || []
-
   const handleToggleTag = (userId) => {
     if (taggedUsers.includes(userId.toString())) {
       const newArray = taggedUsers.filter(
@@ -218,12 +217,12 @@ reactotron.log("dataaa",invites)
               >
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image
-                    style={{ width: 30, height: 30 }}
+                    style={{ width: 30, height: 30 ,borderRadius:50 }}
                     contentFit="cover"
                     source={ allUsers.filter(
-                      (user) => user.id.toString() === friendMember?.userId
+                      (user) => user.id.toString() == friendMember
                     )[0]?.profilePicture ? allUsers.filter(
-                      (user) => user.id.toString() === friendMember?.userId
+                      (user) => user.id.toString() == friendMember
                     )[0]?.profilePicture : require('../assets/frame-1547754875.png')}
                   />
                   <Text
@@ -326,9 +325,13 @@ reactotron.log("dataaa",invites)
               >
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image
-                    style={{ width: 30, height: 30 }}
+                    style={{ width: 30, height: 30  , borderRadius:50}}
                     contentFit="cover"
-                    source={require('../assets/frame-1547754875.png')}
+                    source={ allUsers.filter(
+                      (user) => user.id.toString() == familyMember
+                    )[0]?.profilePicture ? allUsers.filter(
+                      (user) => user.id.toString() == familyMember
+                    )[0]?.profilePicture : require('../assets/frame-1547754875.png')}
                   />
                   <Text
                     style={{
@@ -371,7 +374,9 @@ reactotron.log("dataaa",invites)
             borderRadius: Border.br_11xl
           }}
           locations={[0, 1]}
-          colors={['#dee274', '#7ec18c']}
+          colors={['#7ec18c','#dee274' ]}
+          start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+          end={{ x: 1, y: 0 }}
         >
           <Text
             style={{

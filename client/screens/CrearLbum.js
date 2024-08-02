@@ -18,6 +18,7 @@ import PlusSVG from '../components/svgs/PlusSVG'
 import SettingMuroSVG from '../components/svgs/SettingMuroSVG'
 import { FontAwesome } from '@expo/vector-icons'
 import { useSelector } from 'react-redux'
+import TopBar from '../components/TopBar'
 
 const CrearLbum = () => {
   const route = useRoute()
@@ -40,8 +41,6 @@ const CrearLbum = () => {
           .flat()
       )
     }
-    console.log('album id', route.params.album.id)
-    console.log('user post')
   }, [])
 
   const openVectorIcon1 = useCallback(() => {
@@ -51,6 +50,36 @@ const CrearLbum = () => {
   const closeVectorIcon1 = useCallback(() => {
     setVectorIcon1Visible(false)
   }, [])
+  const formatDate2 = (dateString) => {
+    const date = new Date(dateString);
+    const today = new Date();
+  
+    if (date > today) {
+      return dateString.slice(0,10);
+    }
+  
+    const diffInMilliseconds = today - date;
+    const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
+    const diffInMonths = Math.floor(diffInDays / 30);
+    const diffInYears = Math.floor(diffInDays / 365);
+  
+    if (diffInDays === 0) {
+      return 'Hoy';
+    } else if (diffInDays === 1) {
+      return 'Hace un día';
+    } else if (diffInDays < 30) {
+      return `Hace ${diffInDays} días`;
+    } else if (diffInMonths === 1) {
+      return 'Hace un mes';
+    } else if (diffInMonths < 12) {
+      return `Hace ${diffInMonths} meses`;
+    } else if (diffInYears === 1) {
+      return 'Hace un año';
+    } else {
+      return `Hace ${diffInYears} años`;
+    }
+  };
+  
 
   const formatDate = (dateStr) => {
     const date = new Date(dateStr)
@@ -60,37 +89,22 @@ const CrearLbum = () => {
     const year = String(date.getUTCFullYear())
 
     const formattedDate = `${day}/${month}/${year}`
-    return formattedDate
+
+    return formatDate2(formattedDate)
   }
 
   return (
     <>
       <ScrollView
         contentContainerStyle={{
-          paddingHorizontal: 20,
+          paddingHorizontal: 0,
           paddingBottom: 110,
           backgroundColor: '#fff'
         }}
         showsVerticalScrollIndicator={false}
       >
+        <TopBar></TopBar>
         <View style={styles.crearLbum}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginTop: 15,
-              justifyContent: 'space-between'
-            }}
-          >
-            <Image
-              style={styles.image6Icon}
-              contentFit="cover"
-              source={require('../assets/image-6.png')}
-            />
-            <HeaderIcons
-              icons={[<TreeSVG />, <PlusSVG />, <SettingMuroSVG />]}
-            />
-          </View>
           <View style={styles.backParent}>
             <Pressable
               style={styles.vectorIconLayout}
@@ -119,13 +133,10 @@ const CrearLbum = () => {
                 style={[
                   styles.bienvenidosAMi,
                   styles.textTypo,
-                  { textAlign: 'flex-start' }
+                  { textAlign: 'flex-start',fontSize:20 }
                 ]}
               >
                 {route?.params?.album?.description}
-              </Text>
-              <Text style={[styles.text, styles.textTypo]}>
-                {formatDate(route?.params?.album?.date)}
               </Text>
             </View>
           </View>
@@ -141,14 +152,10 @@ const CrearLbum = () => {
               contentFit="cover"
               source={{ uri: selectedImage }}
             />
-            <Pressable style={styles.vector} onPress={openVectorIcon1}>
-              <Image
-                style={styles.iconLayout}
-                contentFit="cover"
-                source={require('../assets/vector8.png')}
-              />
-            </Pressable>
           </View>
+          <Text style={[styles.text, styles.textTypo,{fontSize:12}]}>
+            {formatDate2(route?.params?.album?.date)}
+          </Text>
 
           <View
             style={{
@@ -156,7 +163,7 @@ const CrearLbum = () => {
               flexWrap: 'wrap',
               gap: 5,
               flexDirection: 'row',
-              marginTop: 30
+              marginTop: 0
             }}
           >
             {route?.params?.album?.images?.map((image, index) => (
@@ -225,7 +232,7 @@ const CrearLbum = () => {
           style={{
             flex: 1,
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'center'
           }}
         >
           <Pressable
@@ -270,11 +277,11 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   textTypo: {
-    textAlign: 'center',
+    textAlign: 'left',
     color: Color.negro,
     fontFamily: FontFamily.lato,
     lineHeight: 24,
-    fontSize: FontSize.size_xl
+    fontSize: FontSize.size_2xs
   },
   image6Icon: {
     // top: 3,
@@ -349,7 +356,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontWeight: '300',
-    marginTop: 20
+    paddingBottom: 5
   },
   bienvenidosAMiLbumConNoeParent: {
     marginLeft: 17
@@ -361,6 +368,7 @@ const styles = StyleSheet.create({
   crearLbum: {
     backgroundColor: Color.white,
     flex: 1,
+    paddingHorizontal: 10,
     overflow: 'hidden',
     width: '100%',
     paddingBottom: 30

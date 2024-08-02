@@ -14,7 +14,6 @@ const Fechas = ({ selectedDate, dates, user }) => {
   useEffect(() => {
     const searchDate = async () => {
       const nuevasDates = dates.filter((e) => {
-        console.log(e.date.slice(0, 10), selectedDate, 'eee')
         const date = e.date.slice(0, 10)
         if (date === selectedDate) return e
       })
@@ -22,7 +21,6 @@ const Fechas = ({ selectedDate, dates, user }) => {
       setDatesFechas(nuevasDates)
     }
     searchDate()
-    console.log("cambiaron las cosassss")
   }, [selectedDate ])
 
   const navigation = useNavigation()

@@ -29,7 +29,6 @@ export const eventsSlices = createSlice({
     builder
       // =================== GET ALL EVENTS ===================
       .addCase(getAllEvents.pending, (state) => {
-        console.log('pending: ')
         state.loading = true
       })
       .addCase(getAllEvents.fulfilled, (state, action) => {
@@ -42,7 +41,6 @@ export const eventsSlices = createSlice({
       })
       // =================== GET USER EVENTS ===================
       .addCase(getAllUserEvents.pending, (state) => {
-        console.log('pending: ')
         state.loading = true
       })
       .addCase(getAllUserEvents.fulfilled, (state, action) => {
@@ -55,7 +53,6 @@ export const eventsSlices = createSlice({
       })
       //=====================USER INVITATIONS=======================
       .addCase(getAllUserInvitations.pending, (state) => {
-        console.log('pending: ')
         state.loading = true
       })
       .addCase(getAllUserInvitations.fulfilled, (state, action) => {

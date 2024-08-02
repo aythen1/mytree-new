@@ -80,7 +80,6 @@ const Muro = () => {
   }, [queryParams])
 
   const dispatches = async (id) => {
-    console.log('pasa por aca y tiene este ID', id)
     dispatch(getAllUsers()).finally(() => {
       getUsersMessages()
       dispatch(getAllNotifications())
@@ -106,7 +105,6 @@ const Muro = () => {
       const res = await axiosInstance.patch(`/user/${userData.id}`, {
         [queryParams.property]: queryParams.memberId
       })
-      console.log(res.data, 'datasss')
       if (res) {
         dispatch(getAllUsers())
       }

@@ -90,25 +90,19 @@ const ImagePickerModal = ({
   }, [selectedAlbum])
 
   const handleSeleccionarImagen = (imagen) => {
-    console.log('imagen: ', imagen)
     setSelectedImage(imagen)
     pickImage('a', imagen.uri)
   }
 
   const changePictureMode = () => {
-    console.log(
-      'setting camera mode to: ',
-      facing === 'back' ? 'front' : 'back'
-    )
+   
     setFacing((prev) => (prev === 'back' ? 'front' : 'back'))
   }
 
   const takePicture = async () => {
-    console.log('ON TAKE PICTURE')
     if (cameraReff?.current) {
       const photo = await cameraReff.current.takePictureAsync()
       // pickImage('a', photo.uri)
-      console.log('PHOTO', photo)
       if (fromEvent) {
         setPickedImages([photo])
       } else {
@@ -119,7 +113,6 @@ const ImagePickerModal = ({
       setShowCamera(false)
     }
   }
-  console.log('pickedImages', pickedImages)
   if (showCamera)
     return (
       <CameraView
@@ -239,7 +232,6 @@ const ImagePickerModal = ({
             }}
             selectedValue={selectedAlbum}
             onValueChange={(itemValue, itemIndex) => {
-              console.log(itemValue, 'value')
               setSelectedAlbum(itemValue)
             }}
           >
@@ -276,13 +268,11 @@ const ImagePickerModal = ({
             <TouchableOpacity
               key={index}
               onPress={() => {
-                console.log(imagen)
                 if (fromEvent) {
                   setPickedImages([imagen])
                   return
                 }
                 if (showSelection) {
-                  console.log(imagen)
                   handleSelect(
                     imagen,
                     setSelectedImage,

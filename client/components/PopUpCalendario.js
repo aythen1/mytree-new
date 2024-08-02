@@ -13,7 +13,6 @@ const PopUpCalendario = ({
   setSelectedDate,
   fromDiary
 }) => {
-  console.log(selectedDate,"selectedDate")
   const [showYearList, setShowYearList] = useState(false)
   const [yearSelect, setYearSelect] = useState(typeof selectedDate == 'string' && selectedDate?.slice(0,4) || new Date().getFullYear())
 
@@ -107,14 +106,12 @@ const PopUpCalendario = ({
     if (selectedDate === day.dateString) {
       setSelectedDate(null)
     } else {
-      console.log("dayyyy",`${yearSelect}${day.dateString.slice(4)}`)
       setSelectedDate(`${yearSelect}${day.dateString.slice(4)}`)
       setCalendario(false)
     }
   }
 
   const renderHeader = (date) => {
-    console.log(date,"dateeeeeeeee")
     return (
       <TouchableOpacity onPress={() => setShowYearList(!showYearList)}>
         <Text>{`${mm[`${date.getMonth()}`]} ${yearSelect}`}</Text>

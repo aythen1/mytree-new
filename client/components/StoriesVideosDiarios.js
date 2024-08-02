@@ -27,12 +27,10 @@ const StoriesVideosDiarios = () => {
 
   React.useEffect(() => {
     if (data) {
-      console.log(data, 'dartaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
       const uniqueData = data.filter(
         (item, index, self) => index === self.findIndex((t) => t.id === item.id)
       )
       setUsers(uniqueData)
-      console.log(uniqueData, 'data del hoooksss')
     }
   }, [data])
 
@@ -54,10 +52,8 @@ const StoriesVideosDiarios = () => {
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
           // compartido con el tipo de actividad de result.activityType
-          console.log('evento conmpartido con ', result.activityType)
         } else {
           // compartido
-          console.log('evento conmpartido')
         }
       } else if (result.action === Share.dismissedAction) {
         // descartado
@@ -85,7 +81,6 @@ const StoriesVideosDiarios = () => {
             {userData.profilePicture && userData.profilePicture !== '' ? (
               <Pressable
                 onPress={() => {
-                  console.log('navigating to')
                   navigation.navigate('Perfil')
                 }}
                 style={{
@@ -132,7 +127,6 @@ const StoriesVideosDiarios = () => {
             ) : (
               <Pressable
                 onPress={() => {
-                  console.log('navigating to')
                   navigation.navigate('Perfil')
                 }}
                 style={{
@@ -157,7 +151,6 @@ const StoriesVideosDiarios = () => {
                   <TouchableOpacity
                     key={i}
                     onPress={() => {
-                      console.log('navigating to')
                       navigation.navigate(
                         'OtherUserProfile',
                         allUsers.filter(

@@ -79,6 +79,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import DrawerContent from './components/DrawerContent'
 import { NavigationContainer, useRoute } from '@react-navigation/native'
 import OtherUserProfile from './screens/Perfil/OtherUserProfile'
+import StorybookUI from './StorybookUI'
 if (__DEV__) {
   require("./ReactotronConfig");
 }
@@ -104,7 +105,6 @@ const App = () => {
       const { hostname, path, queryParams } = Linking.parse(e.url)
       console.log(queryParams,"parms")
       // const re =await Linking.openURL("http://mytreeappoficial.com")
-      // console.log(re,"navsss")
       navigationRef.current?.navigate('Muro', queryParams) // Usar
     })
     loadApp()
@@ -113,7 +113,7 @@ const App = () => {
 
   
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Color.primario1 }}>
+     <SafeAreaView style={{ flex: 1, backgroundColor: Color.primario1 }}>
       <StatusBar
         hidden={!isFooterShow && !onConv}
         barStyle={'dark-content'}
@@ -517,4 +517,8 @@ const MainStackNavigator = ({ setIsFooterShow }) => {
   )
 }
 
-export default App
+
+
+ let AppEntryPoint = App;
+
+export default AppEntryPoint

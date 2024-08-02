@@ -100,9 +100,7 @@ const OtherUserProfile = () => {
   //     })
   //   }, [])
 
-  useEffect(() => {
-    console.log('USER ALBUMS', userAlbums)
-  }, [])
+
 
   return (
     <ScrollView

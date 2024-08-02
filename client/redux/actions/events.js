@@ -9,7 +9,6 @@ export const getAllEvents = createAsyncThunk(
       const { data } = await axiosInstance.get('/events')
       return data
     } catch (error) {
-      console.log('error from getAllEvents')
       throw new Error(error)
     }
   }
@@ -21,7 +20,6 @@ export const getAllUserEvents = createAsyncThunk(
   async (userId) => {
     try {
       const { data } = await axiosInstance.get(`/events/by-creator/${userId}`)
-      console.log(data,"data")
       const filter = data?.map((e)=> e.type == "normal") || data
       return data
     } catch (error) {

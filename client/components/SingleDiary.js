@@ -40,7 +40,6 @@ const SingleDiary = ({
   const { editingDiary, setEditingDiary } = useContext(Context)
 
   const handleDeleteDiary = (id) => {
-    console.log('deleting diary', id, '...')
     dispatch(deleteDiaryById(diary.id))
   }
 
@@ -50,9 +49,6 @@ const SingleDiary = ({
     return fileName
   }
 
-  useEffect(() => {
-    console.log('userData from singlediary', userData)
-  }, [])
 
   return (
     <TouchableOpacity
@@ -268,7 +264,6 @@ const SingleDiary = ({
                     backgroundColor: Color.linearBoton
                   }}
                   onPress={async () => {
-                    console.log('opening create modal')
                     const preDiary = { ...diary }
                     preDiary.description = text
                     const cloudinaryUrls = []
@@ -301,7 +296,6 @@ const SingleDiary = ({
                       }
                     }
                     if (preDiary.id === 'preDiary') {
-                      console.log('its a pre diary, posting it..', preDiary)
                       delete preDiary.id
                       dispatch(postDiary(preDiary)).then((res) => {
                         const obj = {
@@ -309,17 +303,13 @@ const SingleDiary = ({
                           category: selectedSection
                         }
                         obj.images = cloudinaryUrls
-                        console.log(
-                          'SELECTED DATE BEFORE POSTING',
-                          selectedDate
-                        )
+                     
                         if (selectedDate) {
                           obj.date = formatDateToNormal(selectedDate)
                         }
                         dispatch(getUserDiariesByDateOrCategory(obj))
                       })
                     } else {
-                      console.log('updating diary...', preDiary)
                       const updatedData = { description: preDiary.description }
                       updatedData.images = [...diaryImages, ...cloudinaryUrls]
                       dispatch(

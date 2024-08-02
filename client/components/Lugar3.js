@@ -34,7 +34,6 @@ const Lugar3 = ({ onClose }) => {
       <MapView
         onPress={(e) => {
           setMarkerPosition(e.nativeEvent.coordinate)
-          console.log(e.nativeEvent.coordinate, 'coo', e.currentTarget)
         }}
         provider={PROVIDER_GOOGLE}
         initialRegion={{

@@ -68,7 +68,6 @@ const PerfilExterno = ({ route }) => {
   const cameraReff = useRef(null)
 
   // const user_name = route.params.username
-  console.log(route.params, 'Asdasdasdas')
 
   const id_user = route.params.id
   const user_img = route.params.profilePicture
@@ -77,7 +76,6 @@ const PerfilExterno = ({ route }) => {
 
   const getUser =async ()=> {
     const  {data}  = await axiosInstance.get(`user/${id_user}`)
-    console.log(data,"dataaaaaa")
     setUser(data)
   }
 
@@ -96,7 +94,6 @@ const PerfilExterno = ({ route }) => {
 
   const getEvents =async ()=> {
     const { data } = await axiosInstance.get(`/events/by-creator/${id_user}`)
-    console.log(data,"eventsssssssssssssssssssss")
     setUserEvents(data)
   }
 
@@ -104,7 +101,6 @@ const PerfilExterno = ({ route }) => {
     const { data } = await axiosInstance.post(`/diary/user/diaries`, {
       creatorId: id_user
     })
-    console.log(data,"eventsssssssssssssssssssss")
     setUserDiaries(data)
   }
 
@@ -154,7 +150,6 @@ const PerfilExterno = ({ route }) => {
     dispatch(getAllUserEvents(userData?.id)).then((res) => {})
     dispatch(getAllUserDiaries(userData?.id)).then((res) => {})
     dispatch(getUserFriendsAndFamilyLength(userData?.id)).then((res) => {
-      console.log(res, 'asdasdas')
     })
   }
 
@@ -168,7 +163,6 @@ const PerfilExterno = ({ route }) => {
 
   useEffect(() => {
     if (profileImage) {
-      console.log('llego')
       axiosInstance.patch(`/user/${userData?.id}`, {
         profilePicture: profileImage
       })

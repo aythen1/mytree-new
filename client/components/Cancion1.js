@@ -19,7 +19,6 @@ const Cancion1 = ({ onClose }) => {
   const [value, setValue] = useState('')
 
   const handleAddHashtag = (tag) => {
-    console.log('value: ', value)
     if (selectedHashtags.length >= 4) {
       setValue('')
       return
@@ -38,7 +37,6 @@ const Cancion1 = ({ onClose }) => {
     }
     setValue('')
   }
-  console.log('selectedHashtags', selectedHashtags)
   return (
     <View
       style={{
@@ -50,10 +48,11 @@ const Cancion1 = ({ onClose }) => {
         borderTopLeftRadius: Border.br_11xl,
         borderTopRightRadius: Border.br_11xl,
         position: 'absolute',
-        bottom: 0
+        bottom: 0,
+        borderWidth:1,borderColor:Color.primario1,borderBottomWidth:0
       }}
     >
-      <Text
+      {/* <Text
         style={{
           fontSize: FontSize.size_xl,
           color: Color.negro,
@@ -63,7 +62,7 @@ const Cancion1 = ({ onClose }) => {
         }}
       >
         Añadir evento
-      </Text>
+      </Text> */}
       <LinearGradient
         style={{
           bottom: 15,
@@ -151,7 +150,7 @@ const Cancion1 = ({ onClose }) => {
                 fontWeight: '500'
               }}
             >
-              Añada Hashtags!
+              ¡Añada Hashtags!
             </Text>
           </View>
         )}

@@ -7,7 +7,9 @@
     "lint": "eslint --fix --ext .js,.jsx .",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "storybook:web": "storybook dev -p 6006",
+    "storybook-generate": "sb-rn-get-stories"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.23.1",
@@ -19,6 +21,7 @@
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.17",
     "@reduxjs/toolkit": "^2.1.0",
+    "@types/react": "~18.2.79",
     "axios": "^1.6.8",
     "crypto": "^1.0.1",
     "expo": "~51.0.22",
@@ -63,10 +66,20 @@
     "react-redux": "^9.1.0",
     "redux-thunk": "^3.1.0",
     "rn-emoji-picker": "^1.1.6",
-    "socket.io-client": "^4.7.5"
+    "socket.io-client": "^4.7.5",
+    "storybook": "^8.2.7",
+    "typescript": "~5.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
+    "@chromatic-com/storybook": "^1.6.1",
+    "@react-native-community/datetimepicker": "^8.2.0",
+    "@react-native-community/slider": "^4.5.2",
+    "@storybook/addon-ondevice-actions": "^7.6.20",
+    "@storybook/addon-ondevice-controls": "^7.6.20",
+    "@storybook/addon-webpack5-compiler-babel": "^3.0.3",
+    "@storybook/react-native": "^7.6.20",
+    "babel-loader": "^8.3.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-standard": "^17.1.0",

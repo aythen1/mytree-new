@@ -39,11 +39,9 @@ const Invitacin = ({ route }) => {
 
   const inv = userInvitations.find((e) => e.event.id == event.id)
 
-  console.log(event, 'imnvvvvvvvvvvvvvvvvvvvvvvvvvvvv')
 
   const handleGetEvent = async () => {
     const res = await axiosInstance.get(`/events/${route?.params?.date?.id}`)
-    console.log(res.data)
     setEvent(res.data)
   }
 
@@ -64,14 +62,12 @@ const Invitacin = ({ route }) => {
     const res = await axiosInstance
       .put(`events/invite/${inv.id}/respond`, { response: text })
       .then(() => dispatch(getAllUserInvitations(userData.id)))
-    console.log(res, 'ressssssssssssssssssss')
   }
 
   const handleTake = async (id) => {
     const res = await axiosInstance
       .put(`events/wishlist/${id}/take`, { userId: userData.id })
       .then(() => handleGetEvent())
-    console.log(res, 'ressssssssssssssssssss')
   }
 
   return (

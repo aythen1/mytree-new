@@ -34,18 +34,14 @@ const LOGIN = () => {
   const dispatch = useDispatch()
 
   const handlePasswordChange = (text) => {
-    console.log('Nuevo valor de contraseña:', text)
     setPassword(text)
     setError('')
-    console.log('esto es', password)
   }
 
   const handleEmailChange = (text) => {
-    console.log('Nuevo valor de email:', text)
 
     setError('')
     setEmail((prev) => text.toLowerCase())
-    console.log('esto es', email)
   }
 
   const handleSubmit = async () => {
@@ -56,17 +52,14 @@ const LOGIN = () => {
         return
       }
 
-      console.log('Enviando credenciales:', { email, password })
 
       // Despachar la acción login con las credenciales como argumento
       const result = await dispatch(
         login({ email: email.toLocaleLowerCase(), password })
       )
 
-      console.log('Resultado de la acción login:', result?.payload?.data?.user)
 
       if (result?.payload?.data?.user) {
-        console.log('Resultado', result)
         // Inicio de sesión exitoso, redirige a la pantalla "Muro"
         if (checked) {
           await AsyncStorage.setItem(
@@ -81,7 +74,6 @@ const LOGIN = () => {
       } else {
         setError('Email o contraseña no validos')
         // Inicio de sesión fallido, muestra un mensaje de error
-        console.log('Inicio de sesión fallido:', result.payload.error)
         // Puedes mostrar un mensaje de error al usuario aquí
       }
     } catch (error) {
@@ -198,7 +190,9 @@ const LOGIN = () => {
           <LinearGradient
             style={[styles.button, styles.buttonFlexBox]}
             locations={[0, 1]}
-            colors={['#dee274', '#7ec18c']}
+            colors={['#7ec18c','#dee274' ]}
+            start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+            end={{ x: 1, y: 0 }}
           >
             <Text style={[styles.signIn, styles.signInLayout]}>Ingresar</Text>
           </LinearGradient>

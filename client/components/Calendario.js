@@ -22,10 +22,6 @@ const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
 
 
 
-  useEffect(()=> {
-    console.log(selectedYear,"selected year ")
-
-  },[selectedYear])
 
   const mm = [
     'Enero',
@@ -132,7 +128,6 @@ const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
   }, [])
 
   const renderHeader = (date) => {
-    console.log(date,"dateeeeeeeee")
     return (
       <TouchableOpacity >
         <Text>{`${mm[`${date.getMonth()}`]} ${date.getFullYear()}`}</Text>
@@ -145,7 +140,6 @@ const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
     const data = day.toISOString().slice(4)
     const newData = new Date(`${year}${data}`)
     const fechaFormateada = newData.toISOString().split('T')[0];
-    console.log("selected year ",fechaFormateada)
     setSelectedYear(fechaFormateada)
     setShowYearList(false)
   }

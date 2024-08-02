@@ -164,7 +164,6 @@ const ReflexionDiaria = ({
                       backgroundColor: Color.linearBoton
                     }}
                     onPress={async () => {
-                      console.log('opening create modal')
                       const preDiary = { ...selected }
                       preDiary.description = text
                       preDiary.title = title
@@ -202,7 +201,6 @@ const ReflexionDiaria = ({
                         }
                       }
                       if (preDiary.id === 'preDiary') {
-                        console.log('its a pre diary, posting it..', preDiary)
                         delete preDiary.id
                         dispatch(postDiary(preDiary)).then((res) => {
                           const obj = {
@@ -210,10 +208,7 @@ const ReflexionDiaria = ({
                             category: selectedSection
                           }
                           obj.images = cloudinaryUrls
-                          console.log(
-                            'SELECTED DATE BEFORE POSTING',
-                            selectedDate
-                          )
+                       
                           if (selectedDate) {
                             obj.date = selectedDate
                           }

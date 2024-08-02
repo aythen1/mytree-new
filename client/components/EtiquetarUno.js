@@ -11,7 +11,6 @@ const EtiquetarUno = ({ onClose, taggedUsers, setTaggedUsers ,data}) => {
   const { allUsers, userData } = useSelector((state) => state.users)
   const [users ,setUsers] = React.useState([])
 
-  console.log(data,"dataaaaaaa")
 
 
 
@@ -21,7 +20,6 @@ const EtiquetarUno = ({ onClose, taggedUsers, setTaggedUsers ,data}) => {
           index === self.findIndex((t) => t.id === item.id)
         );
         setUsers(uniqueData);
-        console.log(uniqueData, 'data del hoooksss');
       }
     }, [data]);
 

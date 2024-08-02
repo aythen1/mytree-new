@@ -70,7 +70,6 @@ const Organizador = () => {
     const getUser = async () => {
       const usuario = await AsyncStorage.getItem('user')
       const par = JSON.parse(usuario)
-      console.log(par, 'parrr')
       setDataToSend({ ...dataToSend, ['nameUser']: par.username })
       setDataToSend({ ...dataToSend, ['userId']: par.id })
 
@@ -174,13 +173,10 @@ const Organizador = () => {
       finalData.photos = [libraryImage]
       finalData.description = dataToSend.description
       finalData.privacyMode = privacy
-      console.log('sending post...', finalData)
       const res = await axios.post(`${BACKURL}/posts`, finalData)
 
-      console.log('res:', res)
 
       if (res.data) {
-        console.log('res.data: ', res.data)
         setSelectedHashtags([])
         setTaggedUsers([])
         setAlbums([])
@@ -200,9 +196,7 @@ const Organizador = () => {
     }
   }
 
-  useEffect(() => {
-    console.log('albums changed', albums)
-  }, [albums])
+
 
   const navigation = useNavigation()
 
@@ -754,7 +748,9 @@ const Organizador = () => {
                   flexDirection: 'row'
                 }}
                 locations={[0, 1]}
-                colors={['#dee274', '#7ec18c']}
+                colors={['#7ec18c','#dee274' ]}
+                start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+                end={{ x: 1, y: 0 }}
               >
                 <Text
                   style={{

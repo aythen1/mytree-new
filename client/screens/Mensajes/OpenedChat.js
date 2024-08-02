@@ -52,7 +52,6 @@ const OpenedChat = () => {
     )[0]
 
     setSelectedUserDetails(userrr)
-    console.log(userrr, 'Dettt')
   }, [])
   useEffect(() => {
     const isGroup = route?.params?.isGroup
@@ -80,14 +79,12 @@ const OpenedChat = () => {
 
 
   const setAllToRead = async () => {
-    console.log('on setAllToRead')
 
     const messagesToSetReaded = allMessages?.filter(
       (message) =>
         message.senderId !== userData?.id && message?.isReaded === false
     )
 
-    console.log('messagesToSetReaded', messagesToSetReaded)
 
     if (messagesToSetReaded.length > 0) {
       try {
@@ -219,7 +216,6 @@ const OpenedChat = () => {
         >
           <Pressable
             onPress={() => {
-              console.log('triggered CA1')
               getUsersMessages()
               navigation.goBack()
             }}

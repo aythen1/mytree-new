@@ -49,7 +49,6 @@ const Eventos = ({ route }) => {
   const navigation = useNavigation()
   const { allUsers, userData } = useSelector((state) => state.users)
 
-  console.log(route?.params, 'asdasfasfasfas')
   const [selected, setSelected] = useState(null)
   const [description, setDescription] = useState(event_desc)
 
@@ -125,15 +124,11 @@ const Eventos = ({ route }) => {
         .then((data) => {
           return data.url
         })
-      console.log(res, 'fuynca')
       return transformHttpToHttps(res)
     }
   }
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    console.log(pickedImage, 'pickeddd')
-  }, [pickedImage])
 
   const submit = async () => {
     const images = []
@@ -146,7 +141,6 @@ const Eventos = ({ route }) => {
       }
     }
 
-    console.log(images, 'uploaded images')
 
     let data
     if (description) {
@@ -158,7 +152,6 @@ const Eventos = ({ route }) => {
     if (description && images.length > 0) {
       data = { images:[...event_images,...images], description  }
     }
-    console.log(data, 'dataaa')
   
       for (let index = 0; index < wishList.length; index++) {
         const wish = wishList[index]
@@ -285,7 +278,9 @@ const Eventos = ({ route }) => {
                   <LinearGradient
                     style={styles.button}
                     locations={[0, 1]}
-                    colors={['#dee274', '#7ec18c']}
+                    colors={['#7ec18c','#dee274' ]}
+                    start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+                    end={{ x: 1, y: 0 }}
                   >
                     <Text style={styles.save}>Añadir recuerdos</Text>
                   </LinearGradient>
@@ -357,7 +352,9 @@ const Eventos = ({ route }) => {
                 <LinearGradient
                   style={{ ...styles.button, alignSelf: 'center' }}
                   locations={[0, 1]}
-                  colors={['#dee274', '#7ec18c']}
+                  colors={['#7ec18c','#dee274' ]}
+                  start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+                  end={{ x: 1, y: 0 }}
                 >
                   <Text style={styles.save}>Guardar</Text>
                 </LinearGradient>

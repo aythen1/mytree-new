@@ -140,7 +140,6 @@ const Posteo = ({ data, padding }) => {
 
                 <TouchableOpacity
                   onPress={() => {
-                    console.log('settings post tags to: ', data.tags || [])
                     setSelectedPost(data)
                     setSelectedPostTags(data.tags || [])
                     setShowTaggedsModal(true)
@@ -285,7 +284,6 @@ const Posteo = ({ data, padding }) => {
               <TouchableOpacity
                 style={{ zIndex: 999999999999999 }}
                 onPress={() => {
-                  console.log('SHARING...')
                   onShare(
                     `¡Da un vistazo al diario de ${data?.user?.username} ${data?.user?.apellido}!. Si aún no te bajaste la app descargala en Google Play https://play.google.com/store/apps/details?id=com.aythenapps.mytree`
                   )
@@ -356,7 +354,6 @@ const Posteo = ({ data, padding }) => {
         >
           <TouchableOpacity
             onPress={() => {
-              console.log('settings post tags to: ', data.tags || [])
               setSelectedPost(data)
               setSelectedPostTags(data.tags || [])
               setShowTaggedsModal(true)
@@ -441,7 +438,6 @@ const Posteo = ({ data, padding }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                console.log(data, 'datata')
                 navigation.navigate('OpenedChat', {
                   receiverId: data.user.id,
                   receiverName: data.nameUser
@@ -453,7 +449,6 @@ const Posteo = ({ data, padding }) => {
             <TouchableOpacity
               style={{ zIndex: 999999999999999 }}
               onPress={() => {
-                console.log('SHARING...')
                 onShare(
                   `¡Da un vistazo al diario de ${data?.user?.username} ${data?.user?.apellido}!. Si aún no te bajaste la app descargala en Google Play https://play.google.com/store/apps/details?id=com.aythenapps.mytree`
                 )
@@ -533,11 +528,11 @@ const Post = ({ padding, posts }) => {
     <Pressable style={styles.rectangleParent} onPress={toggleIcons}>
       {posts
         ? [...posts]
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0,10)
             .map((e, i) => <Posteo padding={padding} data={e} key={i}></Posteo>)
         : allPosts &&
           [...allPosts]
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0,10)
             .map((e, i) => (
               <Posteo padding={padding} data={e} key={i}></Posteo>
             ))}

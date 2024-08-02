@@ -26,7 +26,6 @@ const {allUsers} = useSelector((state)=> state.users)
     }
 
     useEffect(()=>{
-        console.log(url,"esta url me llega")
         fetch()
     },[url,allUsers ])
 

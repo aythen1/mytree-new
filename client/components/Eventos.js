@@ -11,6 +11,8 @@ const Eventos = ({ search  ,selectedDate   }) => {
   const navigation = useNavigation()
   const { allEvents } = useSelector((state) => state.events)
   const { userEvents:dates } = useSelector((state) => state.events)
+  const { userData } = useSelector((state) => state.users)
+
 
   const [user, setUser] = useState()
   const [filteredEvents, setFilteredEvents] = useState( [])
@@ -18,7 +20,6 @@ const Eventos = ({ search  ,selectedDate   }) => {
     const getUser = async () => {
       const usuario = await AsyncStorage.getItem('user')
       const user = JSON.parse(usuario)
-      console.log('user===============', user)
       setUser(user)
     }
     getUser()
@@ -36,7 +37,6 @@ const Eventos = ({ search  ,selectedDate   }) => {
     } else {
       const searchDate = async () => {
         const nuevasDates = dates.filter((e) => {
-          console.log(e.date.slice(0, 10), selectedDate, 'eee')
           const date = e.date.slice(0, 10)
           if (date === selectedDate && e.type == "normal") return e
         })
@@ -48,14 +48,13 @@ const Eventos = ({ search  ,selectedDate   }) => {
     }
   }, [search,dates,selectedDate])
 
-  if (user)
+
     return (
       <View style={styles.frameGroup}>
         <Text style={styles.title}>Eventos</Text>
         {filteredEvents
-          .filter((eve) => eve.creatorId.toString() === user.id.toString())
-          .map((event) => (
-         event.type == "normal" &&    <EventCard key={event.id} event={event} />
+          .filter((eve) => eve?.creatorId.toString() === userData?.id?.toString()).map((event) => (
+         event?.type == "normal" &&    <EventCard key={event?.id} event={event} />
           ))}
       </View>
     )

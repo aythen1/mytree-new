@@ -11,9 +11,7 @@ const PERFILMIINFO = ({ setSelectedComponent ,usuario}) => {
   const { familyLength , friendLength } = useSelector((state) => state.users)
 
 
-  useEffect(()=>{
-console.log(usuario,"esto tengo")
-  },[usuario])
+
 
   const onShare = async (eventLink) => {
     try {
@@ -33,10 +31,8 @@ console.log(usuario,"esto tengo")
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
           // compartido con el tipo de actividad de result.activityType
-          console.log('evento conmpartido con ', result.activityType)
         } else {
           // compartido
-          console.log('evento conmpartido')
         }
       } else if (result.action === Share.dismissedAction) {
         // descartado

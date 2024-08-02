@@ -30,15 +30,12 @@ export const getDiaryById = createAsyncThunk(
 export const getAllUserDiaries = createAsyncThunk(
   'getAllUserDiaries/diaries',
   async (userId) => {
-    console.log('getting diaries of', userId)
     try {
       const { data } = await axiosInstance.post(`/diary/user/diaries`, {
         creatorId: userId
       })
-      console.log('RESPONSE FROM GETALLUSERDIARIES', data)
       return data
     } catch (error) {
-      console.log('error from getuserdiaries', error)
     }
   }
 )
@@ -46,10 +43,8 @@ export const getAllUserDiaries = createAsyncThunk(
 export const getUserDiariesByDateOrCategory = createAsyncThunk(
   'getUserDiariesByDateOrCategory/diaries',
   async (body) => {
-    console.log('GETTING DIARIES BASED ON', body)
     try {
       const { data } = await axiosInstance.post(`/diary/filter`, body)
-      console.log('response from getbycat', data)
       return data
     } catch (error) {
       throw new Error(error)
@@ -62,7 +57,6 @@ export const postDiary = createAsyncThunk(
   async (diary) => {
     try {
       const { data } = await axiosInstance.post(`/diary`, diary)
-      console.log('RESPONSE FROM POSTDIARY', data)
       return data
     } catch (error) {
       throw new Error(error)
@@ -74,13 +68,10 @@ export const postDiary = createAsyncThunk(
 export const updateDiaryById = createAsyncThunk(
   'updateDiaryById/diaries',
   async ({ diaryId, diaryData }) => {
-    console.log(`updating diary ${diaryId} with `, diaryData)
     try {
       const { data } = await axiosInstance.put(`/diary/${diaryId}`, diaryData)
-      console.log('returning data from updatediary', data)
       return data
     } catch (error) {
-      console.log('error from updatediary', error)
     }
   }
 )

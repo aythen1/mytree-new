@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setPanelAddFooter } from '../redux/slices/panel.slices'
 import { LinearGradient } from 'expo-linear-gradient'
 import { setScreen } from '../redux/slices/user.slices'
+import MessageSVG from './svgs/MessageSVG'
 
 const Aadir1 = ({ setShowSelectEventTypeModal }) => {
   const dispatch = useDispatch()
@@ -56,10 +57,10 @@ const {screen} = useSelector((state)=> state.users)
               <Image
                 style={styles.iconlylightOutline3User}
                 contentFit="contain"
-                source={screen == 'Añadir familiar' ? require('../assets/familiarbtnhover.png') :require('../assets/familiarbtn.png')}
+                source={screen == 'Añadir familiar' ? require('../assets/familiarbtnhover.png') :require('../assets/familiarbtn2.png')}
               />
             </View>
-            <Text style={styles.aadirRecuerdo}>Añadir familiar</Text>
+            <Text style={styles.aadirRecuerdo}>Añadir contacto</Text>
           </View>
         </TouchableOpacity>
 
@@ -117,12 +118,12 @@ const {screen} = useSelector((state)=> state.users)
         >
           <View style={[styles.groupParent, styles.groupParentFlexBox]}>
           <View style={{width:40}}>
-          <Image
+          {/* <Image
                 contentFit="contain"
                 style={{ width: 25, height: 30, marginRight: 11 }}
-                source={ screen == 'Mensajería' ?  require('../assets/messagebtnhover.png') : require('../assets/messagebtn.png') }
-              />
-              {/* <MessageSVG isMenu={true} color={Color.white} /> */}
+                source={ screen == 'Mensajería' && require('../assets/messagebtn.png') }
+              /> */}
+              <MessageSVG isMenu={true} color={Color.white} />
             </View>
             <Text style={styles.aadirRecuerdo}>Mensajería</Text>
           </View>

@@ -25,7 +25,7 @@ import Album from './Album'
 import PopUpCalendario from '../components/PopUpCalendario'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
-import { BACKURL } from '../apiBackend'
+import axiosInstance, { BACKURL } from '../apiBackend'
 import Privacidad from './Privacidad'
 import { Context } from '../context/Context'
 import { StatusBar } from 'react-native'
@@ -79,7 +79,6 @@ const CrearAlbum = () => {
     const getUser = async () => {
       const usuario = await AsyncStorage.getItem('user')
       const par = JSON.parse(usuario)
-      console.log(par, 'parrr')
       setDataToSend({ ...dataToSend, ['nameUser']: par.username })
       setDataToSend({ ...dataToSend, ['userId']: par.id })
 
@@ -226,7 +225,6 @@ const CrearAlbum = () => {
 
       finalData.images = cloudinaryUrls
 
-      console.log('CREATING ALBUM...', finalData)
 
       const res = await axios.post(`${BACKURL}/albums`, finalData)
 
@@ -235,6 +233,7 @@ const CrearAlbum = () => {
         setSelectedHashtags([])
         setPickedImages([])
         setTaggedUsers([])
+        navigation.goBack()
         dispatch(getAllUserAlbums(userData.id))
       }
     } catch (error) {
@@ -264,18 +263,7 @@ const CrearAlbum = () => {
           padding: Padding.p_xl
         }}
       >
-        <Pressable onPress={() => navigation.openDrawer()}>
-          <Image
-            style={[
-              {
-                width: 87,
-                height: 55
-              }
-            ]}
-            contentFit="cover"
-            source={require('../assets/image-6.png')}
-          />
-        </Pressable>
+ 
         <View style={{ width: '100%' }}>
           <View
             style={{
@@ -310,22 +298,7 @@ const CrearAlbum = () => {
             >
               Crear álbum
             </Text>
-            {/* <Pressable
-              disabled={dataToSend.description === ''}
-              onPress={handleSubmit}
-            >
-              <Text
-                style={{
-                  color: Color.primario1,
-                  fontWeight: '500',
-                  letterSpacing: 0,
-                  fontSize: FontSize.size_lg,
-                  fontFamily: FontFamily.lato
-                }}
-              >
-                Subir
-              </Text>
-            </Pressable> */}
+         
           </View>
           <ScrollView
             style={{

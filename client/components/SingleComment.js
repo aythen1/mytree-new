@@ -37,8 +37,7 @@ const SingleComment = ({
   } = useContext(Context)
 
   const handleLike = () => {
-    console.log('handling like on post', selectedPost)
-    console.log('disliked?: ', dislikes.includes(userData.id.toString()))
+
     if (dislikes.includes(userData.id.toString())) {
       dispatch(
         dislikeComment({
@@ -53,7 +52,6 @@ const SingleComment = ({
   }
 
   const handleDislike = () => {
-    console.log('handling dislike on post', selectedPost)
     if (likes.includes(userData.id.toString())) {
       dispatch(
         likeComment({ commentId, body: { likes: [userData.id.toString()] } })
@@ -66,7 +64,6 @@ const SingleComment = ({
       })
     ).then((data) => dispatch(getAllCommentsByPostId(selectedPost)))
   }
-  console.log('commment responses', responses)
   return (
     <View
       style={{
@@ -239,7 +236,9 @@ const SingleComment = ({
               commentId={comment?.id || ''}
               response={true}
               image={
-                'https://res.cloudinary.com/dnewfuuv0/image/upload/v1716389822/idv5sw3zoyvual6moptl.jpg'
+                allUsers.filter(
+                  (user) => user?.id.toString() === comment.creatorId
+                )[0]?.profilePicture
               }
               createdAt={comment?.createdAt || new Date()}
               creatorId={comment?.creatorId || ''}

@@ -12,7 +12,7 @@ const Etiquetados = () => {
   const { allUsers, userData } = useSelector((state) => state.users)
   const { setShowTaggedsModal, taggedsData } = useContext(Context)
   const navigation = useNavigation()
-  console.log('selectedPostTags: ', selectedPost.user)
+  
   return (
     <View
       style={{

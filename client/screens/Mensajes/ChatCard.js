@@ -36,7 +36,6 @@ const ChatCard = ({ name, selectedUserId, value , userInfo ,isGroup }) => {
     }
   }
 
-  console.log(userInfo,"userrrrrrrrrrrrrrrrrr")
   useEffect(() => {
     getChatMessages()
   }, [usersWithMessages, value])

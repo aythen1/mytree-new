@@ -79,7 +79,6 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
   const [pickedImages, setPickedImages] = useState([])
   const [diaryImages, setDiaryImages] = useState([])
 
-  console.log('dasdasjfnaskjfnasklf', `${year}-${month}-${day}`)
 
   const monthsInSpanish = [
     'enero',
@@ -106,7 +105,6 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
     if (selectedDate) {
       obj.date = selectedDate
     }
-    console.log(obj, 'obj')
     dispatch(getUserDiariesByDateOrCategory(obj)).then((e) => {})
     // Aca cuando tenga la ruta desarrollo logica de get de diarios por categoria y selectedDate.
   }, [selectedDate, selectedSection])
@@ -135,10 +133,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
   }, [])
 
   const changePictureMode = () => {
-    console.log(
-      'setting camera mode to: ',
-      facing === 'back' ? 'front' : 'back'
-    )
+ 
     setFacing((prev) => (prev === 'back' ? 'front' : 'back'))
   }
 
@@ -188,7 +183,6 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
           style={{ flex: 1 }}
           mode="picture"
           FocusMode="on"
-          onCameraReady={(e) => console.log(e, 'esto es e')}
 
           // cameraType="back"
         >
@@ -519,7 +513,6 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                             backgroundColor: Color.linearBoton
                           }}
                           onPress={async () => {
-                            console.log('opening create modal')
                             const ultimo = userDiaries[userDiaries.length - 1]
                             const preDiary = { ...ultimo }
                             preDiary.description = text
@@ -558,10 +551,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                             // }
 
                             if (preDiary.id === 'preDiary') {
-                              console.log(
-                                'its a pre diary, posting it..',
-                                preDiary
-                              )
+                          
                               delete preDiary.id
                               dispatch(postDiary(preDiary)).then((res) => {
                                 setText("")
@@ -571,17 +561,13 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                                   category: selectedSection,
                                 }
                                 obj.images = cloudinaryUrls
-                                console.log(
-                                  'SELECTED DATE BEFORE POSTING',
-                                  selectedDate
-                                )
+                            
                                 if (selectedDate) {
                                   obj.date = selectedDate
                                 }
                                 dispatch(getUserDiariesByDateOrCategory(obj))
                               })
                             } else {
-                              console.log('updating diary...', preDiary)
                               const updatedData = {
                                 description: preDiary.description
                               }

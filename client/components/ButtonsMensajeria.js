@@ -47,7 +47,9 @@ const ButtonsMensajeria = ({ selectedFilter, setSelectedFilter }) => {
                 flexDirection: 'row'
               }}
               locations={[0, 1]}
-              colors={['#dee274', '#7ec18c']}
+              colors={['#7ec18c','#dee274' ]}
+              start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+              end={{ x: 1, y: 0 }}
             >
               <View
                 style={{
@@ -86,7 +88,9 @@ const ButtonsMensajeria = ({ selectedFilter, setSelectedFilter }) => {
                 zIndex: 0
               }}
               locations={[0, 1]}
-              colors={['#dee274', '#7ec18c']}
+              colors={['#7ec18c','#dee274' ]}
+              start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+              end={{ x: 1, y: 0 }}
             >
               <View
                 style={{
@@ -125,7 +129,9 @@ const ButtonsMensajeria = ({ selectedFilter, setSelectedFilter }) => {
                 zIndex: 0
               }}
               locations={[0, 1]}
-              colors={['#dee274', '#7ec18c']}
+              colors={['#7ec18c','#dee274' ]}
+            start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+            end={{ x: 1, y: 0 }}
             >
               <View
                 style={{
@@ -164,7 +170,9 @@ const ButtonsMensajeria = ({ selectedFilter, setSelectedFilter }) => {
                 zIndex: 0
               }}
               locations={[0, 1]}
-              colors={['#dee274', '#7ec18c']}
+              colors={['#7ec18c','#dee274' ]}
+            start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+            end={{ x: 1, y: 0 }}
             >
               <View
                 style={{

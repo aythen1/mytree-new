@@ -54,16 +54,12 @@ const UploadMemory = () => {
   }
 
   const handleSeleccionarImagen = (imagen) => {
-    console.log('imagen: ', imagen)
     setSelectedImage(imagen)
     pickImage('a', imagen.uri)
   }
 
   const changePictureMode = () => {
-    console.log(
-      'setting camera mode to: ',
-      facing === 'back' ? 'front' : 'back'
-    )
+   
     setFacing((prev) => (prev === 'back' ? 'front' : 'back'))
   }
 

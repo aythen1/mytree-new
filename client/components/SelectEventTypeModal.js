@@ -39,7 +39,9 @@ const SelectEventTypeModal = ({ onClose }) => {
             borderRadius: Border.br_11xl
           }}
           locations={[0, 1]}
-          colors={['#dee274', '#7ec18c']}
+          colors={['#7ec18c','#dee274' ]}
+          start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+          end={{ x: 1, y: 0 }}
         >
           <Text
             style={{
@@ -74,7 +76,9 @@ const SelectEventTypeModal = ({ onClose }) => {
             borderRadius: Border.br_11xl
           }}
           locations={[0, 1]}
-          colors={['#dee274', '#7ec18c']}
+          colors={['#7ec18c','#dee274' ]}
+          start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+          end={{ x: 1, y: 0 }}
         >
           <Text
             style={{
