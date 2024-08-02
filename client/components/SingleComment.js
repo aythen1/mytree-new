@@ -87,7 +87,7 @@ const SingleComment = ({
           style={{ width: 30, height: 30, borderRadius: 50, marginTop: 5 }}
           contentFit="cover"
           contentPosition={'center'}
-          source={{ uri: image }}
+          source={ image ?{ uri: image } : require("../assets/logoo.png")}
         />
         <View
           style={{

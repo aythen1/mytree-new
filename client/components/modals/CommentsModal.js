@@ -216,7 +216,7 @@ const CommentsModal = ({ onClose }) => {
                   image={
                     allUsers.filter(
                       (user) => user?.id.toString() === comment.creatorId
-                    )[0]?.profilePicture
+                    )[0]?.profilePicture 
                   }
                   createdAt={comment.createdAt || new Date()}
                   creatorId={comment.creatorId}
