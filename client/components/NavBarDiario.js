@@ -1,12 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
-import { Image } from "expo-image";
-import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, Padding, Border, FontSize } from "../GlobalStyles";
 import NubeSVG from "./svgs/NubeSVG";
 import LogrosSVG from "./svgs/LogrosSVG";
-import { Path, Svg } from "react-native-svg";
 import DesafiosSVG from "./svgs/DesafiosSVG";
 import BurbujaAnecdotaSVG from "./svgs/BurbujaAnecdotaSVG";
 import AvionSVG from "./svgs/AviosSVG";
@@ -14,7 +11,6 @@ import EditarSVG from "./svgs/EditarSVG";
 import { Context } from "../context/Context";
 
 const NavBarDiario = () => {
-  const navigation = useNavigation();
   const { selectedSection, setSelectedSection } = useContext(Context);
 
   return (
@@ -34,7 +30,6 @@ const NavBarDiario = () => {
           flexDirection: "row",
           width: "100%",
           left: 0,
-          justifyContent: "space-between",
           alignItems: "center",
         }}
       >

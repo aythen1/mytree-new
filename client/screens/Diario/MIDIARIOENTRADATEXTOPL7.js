@@ -12,7 +12,6 @@ import {
   Pressable,
   Modal,
   ScrollView,
-  Dimensions,
   TouchableOpacity,
   TextInput,
 } from "react-native";
@@ -23,17 +22,7 @@ import { Color, FontFamily, Padding, FontSize } from "../../GlobalStyles";
 import NavBarDiario from "../../components/NavBarDiario";
 import Humor from "../../components/Humor";
 import ReflexionDiaria from "./ReflexionDiaria";
-import DescubriendoElMundo from "../../components/DescubriendoElMundo";
-import CalebrandoLogros from "../../components/CelebrandoLogros";
-import DesafiosSuperados from "../../components/DesafiosSuperados";
-import RisaAnecdotas from "../../components/RisaAnecdotas";
-import Personalizada from "../../components/Personalizada";
 import NavMedia from "../../components/NavMedia";
-import ENTRADACREADA from "../../components/ENTRADACREADA";
-import LupaSVG from "../../components/svgs/LupaSVG";
-import SettingMuroSVG from "../../components/svgs/SettingMuroSVG";
-import HeaderIcons from "../../components/HeaderIcons";
-import Editar2SVG from "../../components/svgs/Editar2SVG";
 import { Context } from "../../context/Context";
 import { Entypo } from "@expo/vector-icons";
 import { Camera, CameraView } from "expo-camera";
@@ -44,6 +33,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getUserDiariesByDateOrCategory,
   postDiary,
+  updateDiaryById,
 } from "../../redux/actions/diaries";
 import ImagePickerModal from "../Modals/ImagePickerModal";
 import TopBar from "../../components/TopBar";
@@ -64,18 +54,15 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
   const { userDiaries } = useSelector((state) => state.diaries);
 
   const [modalCreate, setModalCreate] = useState(false);
-  const {
-    pickImage,
-    showCamera,
-    setShowCamera,
-    formatDateToNormal,
-    setEditingDiary,
-  } = useContext(Context);
+  const { pickImage, showCamera, setShowCamera, setEditingDiary } =
+    useContext(Context);
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedDate, setSelectedDate] = useState(`${year}-${month}-${day}`);
   const [showCalendar, setShowCalendar] = useState(false);
   const [showImagesModal, setShowImagesModal] = useState(false);
+  const [showEmojisModal, setShowEmojisModal] = useState(false);
+
   const [pickedImages, setPickedImages] = useState([]);
   const [diaryImages, setDiaryImages] = useState([]);
 
@@ -299,7 +286,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
               {/* renderizado de secciones */}
               {/* {renderSection(selectedSection)} */}
 
-              {editingDiary == "preDiary" ? (
+              {editingDiary === "preDiary" ? (
                 <ScrollView
                   style={{ width: "100%", height: "100%" }}
                   contentContainerStyle={{ paddingBottom: 500 }}
@@ -460,7 +447,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                               lineHeight: 27,
                               textAlign: "left",
                               color: Color.negro,
-                              marginTop: !notEditable && 20,
+                              marginTop: 20,
                               fontFamily: FontFamily.lato,
                               letterSpacing: 0,
                               marginBottom: 8,
@@ -607,7 +594,6 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                               lineHeight: 21,
                               textAlign: "center",
                               color: Color.white,
-                              textAlign: "center",
                               fontFamily: FontFamily.lato,
                               letterSpacing: 0,
                             }}
