@@ -43,9 +43,7 @@ const Register = () => {
     confirm_password: ''
   })
 
-  useEffect(() => {
-    console.log(dataToSend, 'dataToSend')
-  }, [dataToSend])
+ 
 
   const next = async () => {
     const { username, apellido, email, password, confirm_password } = dataToSend
@@ -79,7 +77,6 @@ const Register = () => {
           return setError('Las contraseñas no coinciden')
         }
         if (!passwordPattern.test(password.trim())) {
-          console.log(password,"pass")
           return setError('La contraseñas debe contener una Mayúscula , una minúscula , un número y un símbolo')
         }
         setError('Verifica los datos ingresados')
@@ -92,10 +89,7 @@ const Register = () => {
     if (nextField == 3) {
       try {
         navigation.navigate('LOGIN')
-        console.log('USER POST====', dataToSend)
         const res = await axios.post(`${BACKURL}/user`, dataToSend)
-        console.log('esto es res', res)
-        console.log(res.data, 'usuario nuevo')
       } catch (error) {
         console.log(error)
       }

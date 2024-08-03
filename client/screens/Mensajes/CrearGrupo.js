@@ -65,7 +65,6 @@ const res = axiosInstance.post(`/chat/createGroup`,{
   dispatch(chatGroups(userData.id))
 
 })
-console.log(res.data)
   }
 
   return (
@@ -153,7 +152,9 @@ console.log(res.data)
         <LinearGradient
           style={styles.button2}
           locations={[0, 1]}
-          colors={['#dee274', '#7ec18c']}
+          colors={['#7ec18c','#dee274' ]}
+          start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+          end={{ x: 1, y: 0 }}
         >
           <Pressable
             style={styles.pressable1}

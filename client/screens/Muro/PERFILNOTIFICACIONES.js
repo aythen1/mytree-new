@@ -66,13 +66,7 @@ const PERFILNOTIFICACIONES = () => {
     receiverId,
     requestType
   ) => {
-    console.log(
-      'notificationId,senderId,receiverId, requestType: ',
-      notificationId,
-      senderId,
-      receiverId,
-      requestType
-    )
+  
     const actualUserFamilyIds = userData.familyIds || []
     const actualUserFriendsIds = userData.friendsId || []
 

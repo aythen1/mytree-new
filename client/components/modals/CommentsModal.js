@@ -107,14 +107,7 @@ const CommentsModal = ({ onClose }) => {
   }
 
   const handleSendResponse = (responseTo, comment) => {
-    console.log(
-      'sending',
-      comment,
-      'to: ',
-      responseTo?.username,
-      'on commentId:',
-      selectedComment
-    )
+ 
     dispatch(
       sendResponseToCommentById({
         commentId: selectedComment,
@@ -223,7 +216,7 @@ const CommentsModal = ({ onClose }) => {
                   image={
                     allUsers.filter(
                       (user) => user?.id.toString() === comment.creatorId
-                    )[0]?.profilePicture
+                    )[0]?.profilePicture 
                   }
                   createdAt={comment.createdAt || new Date()}
                   creatorId={comment.creatorId}
@@ -280,7 +273,7 @@ const CommentsModal = ({ onClose }) => {
      {emojis.map((image, index) => (
           <Text key={index}
             onPress={() => {
-              setComment(`${comment}😞`)
+              setComment(`${comment}${image}`)
             }}
             style={{fontSize: 26,
               fontFamily: FontFamily.lato,
@@ -317,13 +310,13 @@ const CommentsModal = ({ onClose }) => {
         />
         <View
           style={{
-            flexDirection: 'row',
+            flexDirection: 'column',
             backgroundColor: '#fff',
             borderRadius: 10,
             width: '80%',
-            justifyContent: 'space-between',
+            justifyContent:"flex-start",
             paddingRight: 12,
-            alignItems: 'center'
+            alignItems: 'flex-start'
           }}
         >
           {responseTo && (
@@ -339,7 +332,9 @@ const CommentsModal = ({ onClose }) => {
               {'@' + responseTo?.username + responseTo?.apellido}
             </Text>
           )}
-          <TextInput
+         <View style={{width:"100%",flexDirection:"row",alignItems:"center"}}>
+         <TextInput
+          multiline
             style={{
               color: '#505050',
               fontWeight: 'regular',
@@ -354,7 +349,6 @@ const CommentsModal = ({ onClose }) => {
             placeholderTextColor={'#bdbdbd'}
             placeholder={responseTo ? '' : 'Añadir comentario...'}
             onChangeText={(text) => {
-              console.log('text:', text)
               if (text === '') {
                 setResponseTo()
                 setSelectedComment()
@@ -363,7 +357,7 @@ const CommentsModal = ({ onClose }) => {
                 setComment(text)
               }
             }}
-            value={comment}
+            value={ comment}
           />
           <Pressable
             disabled={comment === ''}
@@ -382,6 +376,7 @@ const CommentsModal = ({ onClose }) => {
               source={require('../../assets/send.png')}
             />
           </Pressable>
+         </View>
         </View>
       </View>
       {/* ========================================================= */}

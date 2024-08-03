@@ -75,7 +75,6 @@ const BOTONInvitarAmigos1 = () => {
   }, [])
 
   useEffect(() => {
-    console.log('value: ', value)
     const filterUsers = () => {
       const filtered = allUsers.filter((user) => {
         const apellido = user.apellido.toLowerCase()
@@ -99,7 +98,6 @@ const BOTONInvitarAmigos1 = () => {
   const handleScroll = (event) => {
     const { contentOffset } = event.nativeEvent
     const height = contentOffset.y
-    console.log('height: ', height)
     setScrolledHeight(height)
   }
 
@@ -114,7 +112,6 @@ const BOTONInvitarAmigos1 = () => {
       extraData: {},
       photos: []
     }
-    console.log('Sending notification: ', body)
     dispatch(postNotification(body)).then(() => dispatch(getAllNotifications()))
     setSelectedRelationShip()
     setSelectedRelationType()
@@ -145,13 +142,16 @@ const BOTONInvitarAmigos1 = () => {
           style={{
             width: '100%',
             alignItems: 'center',
-            justifyContent:"center",
-            flexDirection:"row"
+            justifyContent: 'center',
+            flexDirection: 'row'
           }}
         >
-          <Pressable style={{ position:"absolute",left:0}} onPress={() => navigation.goBack()}>
+          <Pressable
+            style={{ position: 'absolute', left: 0 }}
+            onPress={() => navigation.goBack()}
+          >
             <Image
-              style={{ height: 20, width: 20, alignSelf:"center"}}
+              style={{ height: 20, width: 20, alignSelf: 'center' }}
               contentFit="cover"
               source={require('../assets/back.png')}
             />
@@ -162,10 +162,10 @@ const BOTONInvitarAmigos1 = () => {
               fontSize: FontSize.size_5xl,
               fontWeight: 700,
               fontFamily: FontFamily.lato,
-              color: Color.negro,
+              color: Color.negro
             }}
           >
-            Añadir familia
+            Añadir contacto
           </Text>
         </View>
 
@@ -198,7 +198,6 @@ const BOTONInvitarAmigos1 = () => {
               placeholder="Búsqueda"
               value={value}
               onChangeText={(text) => {
-                console.log('setting value to: ', text)
                 setValue(text)
               }}
             />
@@ -235,7 +234,6 @@ const BOTONInvitarAmigos1 = () => {
               collapsable={false}
               onLayout={(event) => {
                 event.target.measure((x, y, width, height, pageX, pageY) => {
-                  console.log(pageY)
                   setRelationtypeTop(pageY)
                 })
               }}
@@ -300,7 +298,6 @@ const BOTONInvitarAmigos1 = () => {
               collapsable={false}
               onLayout={(event) => {
                 event.target.measure((x, y, width, height, pageX, pageY) => {
-                  console.log(pageY)
                   setRelationshipTop(pageY)
                 })
               }}
@@ -474,7 +471,9 @@ const BOTONInvitarAmigos1 = () => {
               flexDirection: 'row'
             }}
             locations={[0, 1]}
-            colors={['#dee274', '#7ec18c']}
+            colors={['#7ec18c','#dee274' ]}
+            start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+            end={{ x: 1, y: 0 }}
           >
             <Text style={styles.signIn}>Crear link de invitación</Text>
           </LinearGradient>
@@ -496,11 +495,7 @@ const BOTONInvitarAmigos1 = () => {
         </TouchableWithoutFeedback>
       </Modal>
 
-      <Modal
-        animationType="fade"
-        transparent
-        visible={showInvitationSendModal}
-      >
+      <Modal animationType="fade" transparent visible={showInvitationSendModal}>
         <View style={styles.buttonContainer2Overlay}>
           <Pressable
             style={styles.buttonContainer2Bg}

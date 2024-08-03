@@ -58,7 +58,6 @@ const dispatch = useDispatch()
     setModalCreate(false)
   }
 
-  console.log(userData, "user data")
 
   const handleSubmit = async () => {
     // Filtrar las propiedades que tienen algún valor en el objeto input
@@ -67,7 +66,6 @@ const dispatch = useDispatch()
     );
   
     const res = await axiosInstance.patch(`/user/${userData?.id}`, filteredInput);
-    console.log("Esto actualizó: ", res.data);
     dispatch(getUserData(userData?.id))
     setModalCreate(true);
   };
@@ -132,7 +130,9 @@ const dispatch = useDispatch()
         <LinearGradient
           style={styles.button}
           locations={[0, 1]}
-          colors={['#dee274', '#7ec18c']}
+          colors={['#7ec18c','#dee274' ]}
+          start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+          end={{ x: 1, y: 0 }}
         >
           <TouchableOpacity
             style={[styles.pressable, styles.pressableFlexBox]}

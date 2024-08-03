@@ -72,7 +72,6 @@ const Perfil = () => {
   const [showBadgesModal, setShowBadgesModal] = useState(false)
   const cameraReff = useRef(null)
 
-  console.log('userData.badge=====================', userData.badge)
 
   useEffect(() => {
     ;(async () => {
@@ -128,7 +127,6 @@ const Perfil = () => {
     dispatch(getAllUserEvents(userData?.id)).then((res) => {})
     dispatch(getAllUserDiaries(userData?.id)).then((res) => {})
     dispatch(getUserFriendsAndFamilyLength(userData?.id)).then((res) => {
-      console.log(res, 'asdasdas')
     })
   }
 
@@ -136,15 +134,12 @@ const Perfil = () => {
     if (userData?.newUser) {
       axiosInstance.patch(`/user/${userData?.id}`, { newUser: false })
     }
-    console.log(
-      'pasa por este ladoooooooooooooooooooooooooooooooooooooooooooooo'
-    )
+   
     iniciar()
   }, [])
 
   useEffect(() => {
     if (profileImage) {
-      console.log('llego')
       axiosInstance.patch(`/user/${userData?.id}`, {
         profilePicture: profileImage
       })

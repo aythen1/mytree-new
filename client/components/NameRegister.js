@@ -36,23 +36,19 @@ const NameRegister = ({
   const handleSearch = async (email) => {
     try {
       const res = await axiosInstance.post('/user/findEmail', { email })
-      console.log('res10', res.data)
       if (res?.data) {
         setEmailValid(false)
       }
     } catch (error) {
-      console.log(emailPattern.test(email), 'res10')
       if (emailPattern.test(email)) {
         setEmailValid(true)
       }
 
-      console.log(error, 'res10')
     }
   }
 
   const handleChange = (value) => {
     const valueLow = value
-    console.log(value, 'valor que no anda')
 
     setDataToSend((prev)=> ({ ...prev, ['email']: value }))
 

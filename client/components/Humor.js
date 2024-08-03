@@ -3,8 +3,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import { FontSize, FontFamily, Color, Border, Padding } from '../GlobalStyles'
 
 const Humor = ({ onClose,setText,text}) => {
-  console.log('text',text)
-  console.log('settext',setText)
+
   return (
     <View style={styles.humor}>
       <Text style={styles.cmoEstTu}>¿Cómo está tu día?</Text>

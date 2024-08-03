@@ -14,13 +14,11 @@ const BusquedaContactos = ({ searchOnContacts }) => {
   )
 
   useEffect(() => {
-    console.log('searchOnContacts changed', searchOnContacts)
 
     if (searchOnContacts?.length > 0) {
       const searchLower = searchOnContacts.toLowerCase()
 
       const filterUsers = (userIds) => {
-        console.log('userIds', userIds)
         return userIds.filter((userId) => {
           const user = allUsers.find((user) => user.id === userId)
           if (user) {

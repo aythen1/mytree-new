@@ -47,12 +47,10 @@ const Busqueda = () => {
     useState('BusquedaContactos')
 
   useEffect(() => {
-    console.log('selectedComponent changed', selectedComponent)
     setSearch('')
   }, [selectedComponent])
 
   useEffect(() => {
-    console.log('search changed: ', search)
     if (search?.length > 0) {
       if (selectedComponent === 'BusquedaPublicaciones') {
         const postFilteredBySearch = [...allPosts].filter((post) => {
@@ -61,7 +59,6 @@ const Busqueda = () => {
               .map((hashtag) => hashtag.toLowerCase())
               .includes(search.toLowerCase())
           ) {
-            console.log('returning true')
             return true
           }
           if (post.description.toLowerCase().includes(search.toLowerCase())) {
@@ -75,13 +72,11 @@ const Busqueda = () => {
         setFilteredPosts(postFilteredBySearch)
       }
       if (selectedComponent === 'BusquedaEventos') {
-        console.log('ON eeeeee')
 
         const eventsFilteredBySearch = allEvents.filter((e)=> e.creatorId == userData.id)
         setFilteredEvents(eventsFilteredBySearch)
       }
       if (selectedComponent === 'BusquedaHashtags') {
-        console.log('ON BusquedaHashtags')
 
         const postFilteredBySearch = [...allPosts].filter((post) => {
           if (post.hashtags && post?.hashtags?.length > 0) {
@@ -96,7 +91,6 @@ const Busqueda = () => {
             return false
           }
         })
-        console.log('setting filtered to', postFilteredBySearch)
         setFilteredPosts(postFilteredBySearch)
       }
     } else {

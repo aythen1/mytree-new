@@ -48,11 +48,15 @@
       "bundler": "metro"
     },
     "extra": {
+   
+        "storybookEnabled": true,
+    
       "eas": {
         "projectId": "4f6d3b77-0567-441d-8b63-8d0d9373c7dd"
       }
     },
     "plugins": [
+      "expo-community-flipper",
       "expo-font",
       [
         "expo-build-properties",

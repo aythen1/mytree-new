@@ -80,9 +80,7 @@ const PerfilConfiguracion = () => {
   })
 
   const cameraReff = useRef(null)
-  useEffect(() => {
-    console.log('esrto daaa10', dataToSend)
-  }, [dataToSend.brotherIds])
+
 
   const takePicture = async () => {
     if (cameraReff) {
@@ -94,7 +92,6 @@ const PerfilConfiguracion = () => {
   }
   useEffect(() => {
     if (profileImage) {
-      console.log('llego')
       axiosInstance.patch(`/user/${usuario?.id}`, {
         profilePicture: profileImage
       })
@@ -106,7 +103,6 @@ const PerfilConfiguracion = () => {
     setInputsBros((prev) => {
       const newInputs = [...prev]
       newInputs[index].input = text
-      console.log(newInputs, 'esrto daaa')
 
       return newInputs
     })
@@ -675,7 +671,6 @@ const PerfilConfiguracion = () => {
 
                 {usuario.brotherIds &&
                   usuario.brotherIds.map((e) => {
-                    console.log(e, 'eeeeeeeeeeeee')
                     return (
                       <Text style={{ color: 'gray', marginBottom: 6 }}>
                         {`${allUsers.find((us) => us.id == e)?.username || e} ${allUsers.find((us) => us.id == e)?.apellido || ''}`}
@@ -749,7 +744,9 @@ const PerfilConfiguracion = () => {
           <LinearGradient
             style={styles.button}
             locations={[0, 1]}
-            colors={['#dee274', '#7ec18c']}
+            colors={['#7ec18c','#dee274' ]}
+            start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+            end={{ x: 1, y: 0 }}
           >
             <TouchableOpacity
               style={[styles.pressable, styles.pressableFlexBox]}

@@ -6,7 +6,6 @@ const Maps = ({ onClose, setLocation }) => {
 
   useEffect(() => {
     if (searchValue) {
-      console.log('setting value')
       setLocation(searchValue)
       onClose()
     }
@@ -23,7 +22,6 @@ const Maps = ({ onClose, setLocation }) => {
       styles={{ container: { width: '90%', height: '100%', top: 30 } }}
       fetchDetails={true}
       onPress={(data, details = null) => {
-        console.log('setting value to ', data.description)
         setSearchValue(data.description)
       }}
       onFail={(error) => console.log(error)}

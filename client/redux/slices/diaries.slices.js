@@ -60,7 +60,6 @@ export const diariesSlices = createSlice({
       })
       .addCase(getAllUserDiaries.fulfilled, (state, action) => {
         state.loading = false
-        console.log('setting diaries to', action.payload)
         state.userDiaries = action.payload
       })
       .addCase(getAllUserDiaries.rejected, (state, action) => {

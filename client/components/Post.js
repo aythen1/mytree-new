@@ -27,6 +27,8 @@ import { Context } from '../context/Context'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllPosts } from '../redux/actions/posts'
 import { getAllCommentsByPostId } from '../redux/actions/comments'
+import PagerView from 'react-native-pager-view'
+
 
 const Posteo = ({ data, padding }) => {
   const {
@@ -140,7 +142,6 @@ const Posteo = ({ data, padding }) => {
 
                 <TouchableOpacity
                   onPress={() => {
-                    console.log('settings post tags to: ', data.tags || [])
                     setSelectedPost(data)
                     setSelectedPostTags(data.tags || [])
                     setShowTaggedsModal(true)
@@ -285,7 +286,6 @@ const Posteo = ({ data, padding }) => {
               <TouchableOpacity
                 style={{ zIndex: 999999999999999 }}
                 onPress={() => {
-                  console.log('SHARING...')
                   onShare(
                     `¡Da un vistazo al diario de ${data?.user?.username} ${data?.user?.apellido}!. Si aún no te bajaste la app descargala en Google Play https://play.google.com/store/apps/details?id=com.aythenapps.mytree`
                   )
@@ -331,7 +331,7 @@ const Posteo = ({ data, padding }) => {
   } else {
     return (
       <Pressable
-        onPress={() => setExpanded(true)}
+        // onPress={() => setExpanded(true)}
         style={{
           backgroundColor: Color.mytreeClarito,
           left: 0,
@@ -343,20 +343,24 @@ const Posteo = ({ data, padding }) => {
           overflow: 'hidden'
         }}
       >
-        <ImageBackground
+        <PagerView
           style={{
             height: Dimensions.get('screen').height / 1.8,
-            zIndex: -1000,
-            justifyContent: 'flex-end',
-            resizeMode: 'cover',
-            overflow: 'hidden'
+            width:"100%",
           }}
-          resizeMethod="resize"
-          source={{ uri: data.photos[0] }}
+          renderToHardwareTextureAndroid
+          initialPage={0}
+
+        
         >
+          {data.photos && data.photos.map((e)=> (
+            <Image  contentFit='cover'  style={{height:"100%",width:"100%"}} source={{uri:e}}></Image>
+          ))}
+
+        </PagerView>
+
           <TouchableOpacity
             onPress={() => {
-              console.log('settings post tags to: ', data.tags || [])
               setSelectedPost(data)
               setSelectedPostTags(data.tags || [])
               setShowTaggedsModal(true)
@@ -441,7 +445,6 @@ const Posteo = ({ data, padding }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                console.log(data, 'datata')
                 navigation.navigate('OpenedChat', {
                   receiverId: data.user.id,
                   receiverName: data.nameUser
@@ -453,7 +456,6 @@ const Posteo = ({ data, padding }) => {
             <TouchableOpacity
               style={{ zIndex: 999999999999999 }}
               onPress={() => {
-                console.log('SHARING...')
                 onShare(
                   `¡Da un vistazo al diario de ${data?.user?.username} ${data?.user?.apellido}!. Si aún no te bajaste la app descargala en Google Play https://play.google.com/store/apps/details?id=com.aythenapps.mytree`
                 )
@@ -463,14 +465,14 @@ const Posteo = ({ data, padding }) => {
             </TouchableOpacity>
           </View>
           <LinearGradient
-            style={{ paddingHorizontal: 10, height: 130 }}
+            style={{ paddingHorizontal: 10, height: 130 ,width:"100%",position:"absolute",bottom:0}}
             end={{ x: 0.5, y: 0 }}
             start={{ x: 0.5, y: 1 }}
             colors={['rgba(0,0,0,0.9)', 'transparent']}
           >
             <View>
               <Text
-                numberOfLines={1}
+                numberOfLines={2}
                 style={styles.camila}
               >{`${data?.user?.username} ${data?.user?.apellido}`}</Text>
               <Text
@@ -497,7 +499,6 @@ const Posteo = ({ data, padding }) => {
               </Text>
             </Pressable>
           </LinearGradient>
-        </ImageBackground>
       </Pressable>
     )
   }
@@ -533,11 +534,11 @@ const Post = ({ padding, posts }) => {
     <Pressable style={styles.rectangleParent} onPress={toggleIcons}>
       {posts
         ? [...posts]
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0,10)
             .map((e, i) => <Posteo padding={padding} data={e} key={i}></Posteo>)
         : allPosts &&
           [...allPosts]
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0,10)
             .map((e, i) => (
               <Posteo padding={padding} data={e} key={i}></Posteo>
             ))}
@@ -577,7 +578,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_5xl,
     color: Color.white,
     fontWeight: '700',
-    width: '70%'
+    width: '100%'
   },
   yendoALa: {
     marginTop: 20,

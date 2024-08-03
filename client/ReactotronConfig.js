@@ -1,14 +1,18 @@
-import Reactotron, { asyncStorage, trackGlobalLogs } from "reactotron-react-native";
+import Reactotron, { asyncStorage, trackGlobalLogs ,storybook } from "reactotron-react-native";
 import { reactotronRedux } from 'reactotron-redux'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const reactotron = Reactotron
   .configure({ name: 'React Native Demo' })
-  .use(asyncStorage())
-  .useReactNative({ storybook: true,}) // add all built-in react native plugins
-  .use(reactotronRedux()) //  <- here i am!
-  
+  .useReactNative({ storybook: true}) // add all built-in react native plugins
+  .use(reactotronRedux())
+  .use(asyncStorage())//  <- here i am!
   .connect() //Don't forget about me!
 
+  if (Reactotron.clear) {
+    Reactotron.clear()
+  }
+  console.tron = reactotron
   reactotron.onCustomCommand("test", () => console.log("This is an example"))
   reactotron.clear();
  export default reactotron 

@@ -137,7 +137,6 @@ const CrearFechaEspecial = () => {
       }
 
       event.coverImage = cloudinaryUrls[0]
-      console.log('creating special date with values: ', event)
 
       dispatch(createEvent(event)).then(()=> {
         

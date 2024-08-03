@@ -18,8 +18,7 @@ const ScrollableModal = ({
   visible,
   scrollHeight
 }) => {
-  console.log('parentTop: ', parentTop)
-  console.log('scrollHeight: ', scrollHeight)
+
   return (
     <Modal transparent={true} visible={visible} onRequestClose={closeModal}>
       <TouchableWithoutFeedback onPress={closeModal}>

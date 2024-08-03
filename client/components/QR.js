@@ -61,10 +61,8 @@ const QR = ({ onClose, relation, selectedUserToInvite, relationType }) => {
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
           // compartido con el tipo de actividad de result.activityType
-          console.log('evento conmpartido con ', result.activityType)
         } else {
           // compartido
-          console.log('evento conmpartido')
         }
       } else if (result.action === Share.dismissedAction) {
         // descartado

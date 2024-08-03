@@ -29,7 +29,7 @@ import { useNavigation } from '@react-navigation/native'
 import { getAllPosts } from '../redux/actions/posts'
 import Maps from '../components/Maps'
 import TopBar from '../components/TopBar'
-const Organizador = () => {
+const Organizador = ({route}) => {
   const dispatch = useDispatch()
   const [taggedUsers, setTaggedUsers] = useState([])
   const { showPanel } = useSelector((state) => state.panel)
@@ -40,7 +40,8 @@ const Organizador = () => {
     showHashtagsModal,
     setShowHashtagsModal,
     selectedHashtags,
-    setSelectedHashtags
+    setSelectedHashtags,
+    pickImage
   } = useContext(Context)
 
   const [album, setAlbum] = useState(false)
@@ -57,6 +58,8 @@ const Organizador = () => {
 
   useEffect(() => {}, [taggedUsers])
 
+console.log(route.params)
+
   const [dataToSend, setDataToSend] = useState({
     nameUser: '',
     description: '',
@@ -70,7 +73,6 @@ const Organizador = () => {
     const getUser = async () => {
       const usuario = await AsyncStorage.getItem('user')
       const par = JSON.parse(usuario)
-      console.log(par, 'parrr')
       setDataToSend({ ...dataToSend, ['nameUser']: par.username })
       setDataToSend({ ...dataToSend, ['userId']: par.id })
 
@@ -160,49 +162,72 @@ const Organizador = () => {
     }
   }, [])
 
+  const uploadImages = async (data) => {
+    if (data) {
+      const uploadPromises = data.map(async (element) => {
+        console.log(element)
+        const imageUrl = await pickImage('profile',element?.uri);
+        return imageUrl;
+      });
+  
+      try {
+        const imageUrls = await Promise.all(uploadPromises);
+        return imageUrls;
+      } catch (error) {
+        console.error('Error uploading images:', error);
+        return [];
+      }
+    }
+    return [];
+  };
+
   const handleSubmit = async () => {
-    setLoading(true)
-    try {
-      const finalData = {}
-      finalData.tags = taggedUsers
-      finalData.etiquets = taggedUsers
-      finalData.hashtags = selectedHashtags
-      finalData.albums = albums
-      finalData.userId = userData.id
-      finalData.fecha = selectedDate ? selectedDate : new Date()
-      finalData.nameUser = userData.username
-      finalData.photos = [libraryImage]
-      finalData.description = dataToSend.description
-      finalData.privacyMode = privacy
-      console.log('sending post...', finalData)
-      const res = await axios.post(`${BACKURL}/posts`, finalData)
 
-      console.log('res:', res)
-
-      if (res.data) {
-        console.log('res.data: ', res.data)
+    const fil = route.params.data.filter((e)=> e)
+    
+ 
+    uploadImages(route.params.data).then(async (e)=> {
+      setLoading(true)
+      try {
+        const finalData = {}
+        finalData.tags = taggedUsers
+        finalData.etiquets = taggedUsers
+        finalData.hashtags = selectedHashtags
+        finalData.albums = albums
+        finalData.userId = userData.id
+        finalData.fecha = selectedDate ? selectedDate : new Date()
+        finalData.nameUser = userData.username
+        finalData.photos = e
+        finalData.description = dataToSend.description
+        finalData.privacyMode = privacy
+        const res = await axios.post(`${BACKURL}/posts`, finalData)
+  
+  
+        if (res.data) {
+          setSelectedHashtags([])
+          setTaggedUsers([])
+          setAlbums([])
+          setAlbum(false)
+          dispatch(getAllPosts(userData.id)).then(() => {
+            setSubmit(true)
+            setLoading(false)
+          })
+        }
+      } catch (error) {
+        console.log(error)
         setSelectedHashtags([])
         setTaggedUsers([])
         setAlbums([])
         setAlbum(false)
-        dispatch(getAllPosts(userData.id)).then(() => {
-          setSubmit(true)
-          setLoading(false)
-        })
+        setLoading(false)
       }
-    } catch (error) {
-      console.log(error)
-      setSelectedHashtags([])
-      setTaggedUsers([])
-      setAlbums([])
-      setAlbum(false)
-      setLoading(false)
-    }
+    })
+
+ 
+    
   }
 
-  useEffect(() => {
-    console.log('albums changed', albums)
-  }, [albums])
+
 
   const navigation = useNavigation()
 
@@ -256,7 +281,7 @@ const Organizador = () => {
               Subir recuerdo
             </Text>
             <Pressable
-              disabled={!libraryImage || dataToSend.description === ''}
+              disabled={dataToSend.description === ''}
               onPress={handleSubmit}
             >
               <Text
@@ -738,7 +763,7 @@ const Organizador = () => {
               </View>
             </View>
             <TouchableOpacity
-              disabled={ loading|| submit ||!libraryImage || dataToSend.description === ''}
+              disabled={ loading|| submit  || dataToSend.description === ''}
               onPress={handleSubmit}
             >
               <LinearGradient
@@ -754,7 +779,9 @@ const Organizador = () => {
                   flexDirection: 'row'
                 }}
                 locations={[0, 1]}
-                colors={['#dee274', '#7ec18c']}
+                colors={['#7ec18c','#dee274' ]}
+                start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+                end={{ x: 1, y: 0 }}
               >
                 <Text
                   style={{

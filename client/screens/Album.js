@@ -8,9 +8,7 @@ import { useNavigation } from '@react-navigation/native'
 const Album = ({ albums, setAlbums, onClose }) => {
   const navigation = useNavigation()
   const { userAlbums } = useSelector((state) => state.albums)
-  useEffect(() => {
-    console.log('userAlbums from Album', userAlbums)
-  }, [])
+
 
   if (userAlbums.length === 0)
     return (
@@ -38,7 +36,6 @@ const Album = ({ albums, setAlbums, onClose }) => {
             justifyContent: 'space-between'
           }}
           onPress={() => {
-            console.log('triggering album pick')
             const actualAlbums = [...albums]
             if (actualAlbums.includes(album.id)) {
               setAlbums(actualAlbums.filter((alb) => alb.id === album.id))

@@ -22,13 +22,9 @@ export const login = createAsyncThunk(
   'user/login',
   async (credentials, { rejectWithValue }) => {
     try {
-      console.log('entra al redux')
-      console.log('credentials', credentials)
       const response = await axiosInstance.post('/user/login', credentials)
-      console.log(response, 'success')
       return response.data
     } catch (error) {
-      console.log('sale mal el redux', error)
       return rejectWithValue(error.response.data)
     }
   }
@@ -283,10 +279,8 @@ export const getUserById = createAsyncThunk(
 export const updateUser = createAsyncThunk(
   'user/updateUser',
   async ({ userId, userData ,property }, { rejectWithValue }) => {
-    console.log('userId, userData from updateUser', userId, userData)
     try {
       const response = await axiosInstance.post(`/user/${userId}/family/${property}/add/${userData}`)
-      console.log('RESPONSE FROM UPDATEUSER', response.data)
       return response.data
     } catch (error) {
       return rejectWithValue(error.response.data)
@@ -321,9 +315,7 @@ export const getUserData = createAsyncThunk(
   'getUserData/users',
   async (userId) => {
     try {
-      console.log('on getUserData')
       const { data } = await axiosInstance.get(`/user/${userId}`)
-      console.log('data from getUserData action ======: ', data)
       return data
     } catch (error) {
       throw new Error(error)

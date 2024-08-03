@@ -24,13 +24,9 @@ export const login = createAsyncThunk(
   'user/login',
   async (credentials, { rejectWithValue }) => {
     try {
-      console.log('entra al redux')
-      console.log('credentials', credentials)
       const response = await axios.post(`${BACKURL}/user/login`, credentials)
-      console.log(response, 'success')
       return response.data
     } catch (error) {
-      console.log('sale mal el redux', error)
       return rejectWithValue(error.response.data)
     }
   }
@@ -365,7 +361,6 @@ export const userSlice = createSlice({
       })
       .addCase(getAllUsers.fulfilled, (state, action) => {
         state.loading = false
-        console.log('setting allUsers to', action.payload)
         state.allUsers = action.payload
       })
       .addCase(getAllUsers.rejected, (state, action) => {

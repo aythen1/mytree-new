@@ -91,24 +91,18 @@ import {
     }, [selectedAlbum]);
   
     const handleSeleccionarImagen = (imagen) => {
-      console.log('imagen: ', imagen);
       setSelectedImage(imagen);
       pickImage('a', imagen.uri);
     };
   
     const changePictureMode = () => {
-      console.log(
-        'setting camera mode to: ',
-        facing === 'back' ? 'front' : 'back'
-      );
+     
       setFacing((prev) => (prev === 'back' ? 'front' : 'back'));
     };
   
     const takePicture = async () => {
-      console.log('ON TAKE PICTURE');
       if (cameraReff?.current) {
         const photo = await cameraReff.current.takePictureAsync();
-        console.log('PHOTO', photo);
         setPickedImages([...pickedImages, photo]);
         setShowCamera(false);
       }
@@ -207,7 +201,6 @@ import {
               style={styles.picker}
               selectedValue={selectedAlbum}
               onValueChange={(itemValue, itemIndex) => {
-                console.log(itemValue, 'value');
                 setSelectedAlbum(itemValue);
               }}
             >

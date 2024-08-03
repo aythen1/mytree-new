@@ -18,13 +18,10 @@ export const getAllComments = createAsyncThunk(
 export const getAllCommentsByPostId = createAsyncThunk(
   'getAllCommentsByPostId/comments',
   async (postId) => {
-    console.log('getting comments of postId: ', postId)
     try {
       const { data } = await axiosInstance.get(`/comments/post/${postId}`)
-      console.log('Response from getAllCommentsByPostId: ', data)
       return data
     } catch (error) {
-      console.log('error from getAllCommentsByPostId', error)
       throw new Error(error)
     }
   }
@@ -54,7 +51,6 @@ export const likeComment = createAsyncThunk(
       )
       return data
     } catch (error) {
-      console.log('error from like', error)
       throw new Error(error)
     }
   }
@@ -81,15 +77,12 @@ export const postComment = createAsyncThunk(
   'postComment/comments',
   async ({ userId, postId, comment }) => {
     try {
-      console.log('sendind comment with data', { userId, postId, comment })
       const { data } = await axiosInstance.post(
         `/comments/${postId}/${userId}`,
         comment
       )
-      console.log('data from postComment', data)
       return data
     } catch (error) {
-      console.log('error from postComment:', error)
       throw new Error(error)
     }
   }

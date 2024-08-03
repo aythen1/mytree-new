@@ -3,8 +3,8 @@ import React, {
   useContext,
   useEffect,
   useRef,
-  useState
-} from 'react'
+  useState,
+} from "react";
 import {
   StyleSheet,
   View,
@@ -12,173 +12,152 @@ import {
   Pressable,
   Modal,
   ScrollView,
-  Dimensions,
   TouchableOpacity,
-  TextInput
-} from 'react-native'
-import { LinearGradient } from 'expo-linear-gradient'
-import { Image } from 'expo-image'
-import { useNavigation } from '@react-navigation/native'
-import { Color, FontFamily, Padding, FontSize } from '../../GlobalStyles'
-import NavBarDiario from '../../components/NavBarDiario'
-import Humor from '../../components/Humor'
-import ReflexionDiaria from './ReflexionDiaria'
-import DescubriendoElMundo from '../../components/DescubriendoElMundo'
-import CalebrandoLogros from '../../components/CelebrandoLogros'
-import DesafiosSuperados from '../../components/DesafiosSuperados'
-import RisaAnecdotas from '../../components/RisaAnecdotas'
-import Personalizada from '../../components/Personalizada'
-import NavMedia from '../../components/NavMedia'
-import ENTRADACREADA from '../../components/ENTRADACREADA'
-import LupaSVG from '../../components/svgs/LupaSVG'
-import SettingMuroSVG from '../../components/svgs/SettingMuroSVG'
-import HeaderIcons from '../../components/HeaderIcons'
-import Editar2SVG from '../../components/svgs/Editar2SVG'
-import { Context } from '../../context/Context'
-import { Entypo } from '@expo/vector-icons'
-import { Camera, CameraView } from 'expo-camera'
-import * as MediaLibrary from 'expo-media-library'
-import PopUpCalendario from '../../components/PopUpCalendario'
-import MasBusquedaSVG from '../../components/svgs/MasBusquedaSVG'
-import { useDispatch, useSelector } from 'react-redux'
+  TextInput,
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { Image } from "expo-image";
+import { useNavigation } from "@react-navigation/native";
+import { Color, FontFamily, Padding, FontSize } from "../../GlobalStyles";
+import NavBarDiario from "../../components/NavBarDiario";
+import Humor from "../../components/Humor";
+import ReflexionDiaria from "./ReflexionDiaria";
+import NavMedia from "../../components/NavMedia";
+import { Context } from "../../context/Context";
+import { Entypo } from "@expo/vector-icons";
+import { Camera, CameraView } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
+import PopUpCalendario from "../../components/PopUpCalendario";
+import MasBusquedaSVG from "../../components/svgs/MasBusquedaSVG";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getUserDiariesByDateOrCategory,
-  postDiary
-} from '../../redux/actions/diaries'
-import ImagePickerModal from '../Modals/ImagePickerModal'
-import TopBar from '../../components/TopBar'
-import { removeUserDiary } from '../../redux/slices/diaries.slices'
+  postDiary,
+  updateDiaryById,
+} from "../../redux/actions/diaries";
+import ImagePickerModal from "../Modals/ImagePickerModal";
+import TopBar from "../../components/TopBar";
+import { removeUserDiary } from "../../redux/slices/diaries.slices";
 
 const MIDIARIOENTRADATEXTOPL7 = () => {
-  const currentDate = new Date()
-  const year = currentDate.getFullYear()
-  const month = String(currentDate.getMonth() + 1).padStart(2, '0') // Los meses son 0-indexados
-  const day = String(currentDate.getDate()).padStart(2, '0')
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Los meses son 0-indexados
+  const day = String(currentDate.getDate()).padStart(2, "0");
 
-  const dispatch = useDispatch()
-  const { selectedSection, editingDiary, handleAddDiary } = useContext(Context)
-  const navigation = useNavigation()
-  const [showEdit, setShowEdit] = useState(false)
-  const [isSection, setIsSection] = useState('')
-  const { userData } = useSelector((state) => state.users)
-  const { userDiaries } = useSelector((state) => state.diaries)
+  const dispatch = useDispatch();
+  const { selectedSection, editingDiary, handleAddDiary } = useContext(Context);
+  const navigation = useNavigation();
+  const [showEdit, setShowEdit] = useState(false);
+  const [isSection, setIsSection] = useState("");
+  const { userData } = useSelector((state) => state.users);
+  const { userDiaries } = useSelector((state) => state.diaries);
 
-  const [modalCreate, setModalCreate] = useState(false)
-  const {
-    pickImage,
-    showCamera,
-    setShowCamera,
-    formatDateToNormal,
-    setEditingDiary
-  } = useContext(Context)
-  const [images, setImages] = useState([])
-  const [selectedImage, setSelectedImage] = useState(null)
-  const [selectedDate, setSelectedDate] = useState(`${year}-${month}-${day}`)
-  const [showCalendar, setShowCalendar] = useState(false)
-  const [showImagesModal, setShowImagesModal] = useState(false)
-  const [pickedImages, setPickedImages] = useState([])
-  const [diaryImages, setDiaryImages] = useState([])
+  const [modalCreate, setModalCreate] = useState(false);
+  const { pickImage, showCamera, setShowCamera, setEditingDiary } =
+    useContext(Context);
+  const [images, setImages] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(`${year}-${month}-${day}`);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [showImagesModal, setShowImagesModal] = useState(false);
+  const [showEmojisModal, setShowEmojisModal] = useState(false);
 
-  console.log('dasdasjfnaskjfnasklf', `${year}-${month}-${day}`)
+  const [pickedImages, setPickedImages] = useState([]);
+  const [diaryImages, setDiaryImages] = useState([]);
 
   const monthsInSpanish = [
-    'enero',
-    'febrero',
-    'marzo',
-    'abril',
-    'mayo',
-    'junio',
-    'julio',
-    'agosto',
-    'septiembre',
-    'octubre',
-    'noviembre',
-    'diciembre'
-  ]
+    "enero",
+    "febrero",
+    "marzo",
+    "abril",
+    "mayo",
+    "junio",
+    "julio",
+    "agosto",
+    "septiembre",
+    "octubre",
+    "noviembre",
+    "diciembre",
+  ];
 
   useEffect(() => {
-    obtenerImagenesDeGaleria()
-  }, [])
+    obtenerImagenesDeGaleria();
+  }, []);
 
   useEffect(() => {
-    setEditingDiary()
-    const obj = { creatorId: userData.id, category: selectedSection }
+    setEditingDiary();
+    const obj = { creatorId: userData.id, category: selectedSection };
     if (selectedDate) {
-      obj.date = selectedDate
+      obj.date = selectedDate;
     }
-    console.log(obj, 'obj')
-    dispatch(getUserDiariesByDateOrCategory(obj)).then((e) => {})
+    dispatch(getUserDiariesByDateOrCategory(obj)).then((e) => {});
     // Aca cuando tenga la ruta desarrollo logica de get de diarios por categoria y selectedDate.
-  }, [selectedDate, selectedSection])
+  }, [selectedDate, selectedSection]);
 
   const obtenerImagenesDeGaleria = async () => {
-    const { status } = await MediaLibrary.requestPermissionsAsync()
-    if (status !== 'granted') {
-      console.error('Permiso denegado para acceder a la galería de imágenes.')
-      return
+    const { status } = await MediaLibrary.requestPermissionsAsync();
+    if (status !== "granted") {
+      console.error("Permiso denegado para acceder a la galería de imágenes.");
+      return;
     }
 
-    const assets = await MediaLibrary.getAssetsAsync()
-    const imagesArray = assets?.assets ?? []
-    setImages(imagesArray)
-  }
+    const assets = await MediaLibrary.getAssetsAsync();
+    const imagesArray = assets?.assets ?? [];
+    setImages(imagesArray);
+  };
 
-  const [hasPermission, setHasPermission] = useState(null)
-  const cameraReff = useRef(null)
-  const [facing, setFacing] = useState('back')
+  const [hasPermission, setHasPermission] = useState(null);
+  const cameraReff = useRef(null);
+  const [facing, setFacing] = useState("back");
 
   useEffect(() => {
-    ;(async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync()
-      setHasPermission(status === 'granted')
-    })()
-  }, [])
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === "granted");
+    })();
+  }, []);
 
   const changePictureMode = () => {
-    console.log(
-      'setting camera mode to: ',
-      facing === 'back' ? 'front' : 'back'
-    )
-    setFacing((prev) => (prev === 'back' ? 'front' : 'back'))
-  }
+    setFacing((prev) => (prev === "back" ? "front" : "back"));
+  };
 
   const takePicture = async () => {
     if (cameraReff?.current) {
-      const photo = await cameraReff.current.takePictureAsync()
-      pickImage('a', photo.uri)
-      setSelectedImage(photo)
+      const photo = await cameraReff.current.takePictureAsync();
+      pickImage("a", photo.uri);
+      setSelectedImage(photo);
       // pickImageFromCamera(selectedPicture, photo.uri);
 
-      setShowCamera(false)
+      setShowCamera(false);
       // You can handle the taken photo here, such as displaying it or saving it.
     }
-  }
+  };
 
-  const [groupIcon1Visible, setGroupIcon1Visible] = useState(false)
+  const [groupIcon1Visible, setGroupIcon1Visible] = useState(false);
 
   const openGroupIcon1 = useCallback(() => {
-    setGroupIcon1Visible(true)
-  }, [])
+    setGroupIcon1Visible(true);
+  }, []);
 
   const closeGroupIcon1 = useCallback(() => {
-    setGroupIcon1Visible(false)
-  }, [])
+    setGroupIcon1Visible(false);
+  }, []);
 
-  const [text, setText] = useState('')
-  const [title, setTitle] = useState('')
+  const [text, setText] = useState("");
+  const [title, setTitle] = useState("");
 
-
-  const monthString = selectedDate?.slice(5, 7).split('0').join('') // Elimina el "0" inicial si existe
-  const monthNumber = parseInt(monthString, 10) // Convierte la cadena a un número
+  const monthString = selectedDate?.slice(5, 7).split("0").join(""); // Elimina el "0" inicial si existe
+  const monthNumber = parseInt(monthString, 10); // Convierte la cadena a un número
 
   return (
     <View
       style={{
         backgroundColor: Color.white,
-        width: '100%',
-        justifyContent: 'space-between',
+        width: "100%",
+        justifyContent: "space-between",
         flexGrow: 1,
-        paddingBottom: showCamera ? 0 : 105
+        paddingBottom: showCamera ? 0 : 105,
       }}
     >
       {showCamera ? (
@@ -188,46 +167,45 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
           style={{ flex: 1 }}
           mode="picture"
           FocusMode="on"
-          onCameraReady={(e) => console.log(e, 'esto es e')}
 
           // cameraType="back"
         >
           <View
             style={{
               flex: 1,
-              backgroundColor: 'transparent',
-              flexDirection: 'row'
+              backgroundColor: "transparent",
+              flexDirection: "row",
             }}
           >
             <TouchableOpacity
-              style={{ position: 'absolute', top: 22, left: 18 }}
+              style={{ position: "absolute", top: 22, left: 18 }}
               onPress={() => setShowCamera(false)}
             >
               <Image
                 style={{
                   height: 20,
-                  width: 20
+                  width: 20,
                 }}
                 contentFit="cover"
-                source={require('../../assets/whiteCross.png')}
+                source={require("../../assets/whiteCross.png")}
               />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={changePictureMode}
-              style={{ position: 'absolute', top: 18, right: 18 }}
+              style={{ position: "absolute", top: 18, right: 18 }}
             >
-              <Entypo name="cycle" color={'#fff'} size={29} />
+              <Entypo name="cycle" color={"#fff"} size={29} />
             </TouchableOpacity>
 
             <TouchableOpacity
               style={{
-                alignSelf: 'flex-end',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'row',
-                width: '100%',
+                alignSelf: "flex-end",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "row",
+                width: "100%",
                 marginBottom: 30,
-                position: 'relative'
+                position: "relative",
               }}
             >
               <TouchableOpacity
@@ -235,11 +213,11 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                   width: 90,
                   height: 90,
                   borderRadius: 100,
-                  backgroundColor: 'transparent',
+                  backgroundColor: "transparent",
                   borderWidth: 6,
-                  borderColor: '#7EC18C',
-                  justifyContent: 'center',
-                  alignItems: 'center'
+                  borderColor: "#7EC18C",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
                 onPress={takePicture}
               >
@@ -248,9 +226,9 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                     width: 70,
                     height: 70,
                     borderRadius: 100,
-                    backgroundColor: '#7EC18C',
+                    backgroundColor: "#7EC18C",
 
-                    color: 'white'
+                    color: "white",
                   }}
                 ></View>
               </TouchableOpacity>
@@ -267,22 +245,22 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
             <ScrollView
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{
-                height: '100%',
-                paddingBottom: 100
+                height: "100%",
+                paddingBottom: 100,
               }}
               style={{
-                width: '100%',
+                width: "100%",
                 paddingTop: 15,
                 paddingHorizontal: 15,
-                height: '100%'
+                height: "100%",
               }}
             >
               <View style={styles.editContainer}>
                 <Pressable
                   onPress={() => setShowCalendar(true)}
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center'
+                    flexDirection: "row",
+                    alignItems: "center",
                   }}
                 >
                   <Text style={[styles.text, styles.textTypo]}>
@@ -294,7 +272,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                   <Image
                     style={styles.iconlycurvedarrowDown2}
                     resizeMode="contain"
-                    source={require('../../assets/iconlycurvedarrowdown2.png')}
+                    source={require("../../assets/iconlycurvedarrowdown2.png")}
                   />
                   {/* <Editar2SVG style={{ marginLeft: '45%' }} /> */}
                 </Pressable>
@@ -308,30 +286,30 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
               {/* renderizado de secciones */}
               {/* {renderSection(selectedSection)} */}
 
-              {editingDiary == 'preDiary' ? (
+              {editingDiary === "preDiary" ? (
                 <ScrollView
-                  style={{ width: '100%', height: '100%' }}
+                  style={{ width: "100%", height: "100%" }}
                   contentContainerStyle={{ paddingBottom: 500 }}
                 >
                   <Text style={[styles.reflexinDiaria, styles.hoyLoHeFlexBox]}>
-                    {selectedSection === 'nube'
-                      ? 'Reflexión Diaria'
-                      : selectedSection === 'logros'
-                        ? 'Celebrando Logros'
-                        : selectedSection === 'desafios'
-                          ? 'Desafíos Superados'
-                          : selectedSection === 'risas'
-                            ? 'Risas y anécdotas'
-                            : selectedSection === 'mundo'
-                              ? 'Descubriendo el mundo'
-                              : 'Personalizada'}
+                    {selectedSection === "nube"
+                      ? "Reflexión Diaria"
+                      : selectedSection === "logros"
+                        ? "Celebrando Logros"
+                        : selectedSection === "desafios"
+                          ? "Desafíos Superados"
+                          : selectedSection === "risas"
+                            ? "Risas y anécdotas"
+                            : selectedSection === "mundo"
+                              ? "Descubriendo el mundo"
+                              : "Personalizada"}
                   </Text>
                   <View style={{}}>
                     <View
                       style={{
-                        width: '100%',
-                        flexDirection: 'row',
-                        gap: 5
+                        width: "100%",
+                        flexDirection: "row",
+                        gap: 5,
                       }}
                     >
                       {diaryImages?.length > 0 &&
@@ -340,30 +318,30 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                             <Image
                               key={i}
                               source={{ uri: image }}
-                              contentFit={'contain'}
+                              contentFit={"contain"}
                               style={{ width: 50, height: 50, borderRadius: 3 }}
                             />
                             <Pressable
                               onPress={() =>
                                 setDiaryImages(
                                   [...diaryImages].filter(
-                                    (img) => img !== image
-                                  )
+                                    (img) => img !== image,
+                                  ),
                                 )
                               }
                               style={{
-                                position: 'absolute',
+                                position: "absolute",
                                 top: 3,
                                 right: 3,
                                 borderRadius: 3,
-                                backgroundColor: '#fff',
-                                padding: 3.5
+                                backgroundColor: "#fff",
+                                padding: 3.5,
                               }}
                             >
                               <Image
                                 contentFit="cover"
                                 style={{ width: 7, height: 7 }}
-                                source={require('../../assets/group-68463.png')}
+                                source={require("../../assets/group-68463.png")}
                               />
                             </Pressable>
                           </View>
@@ -374,30 +352,30 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                             <Image
                               key={i + 500}
                               source={{ uri: image.uri }}
-                              contentFit={'contain'}
+                              contentFit={"contain"}
                               style={{ width: 50, height: 50, borderRadius: 3 }}
                             />
                             <Pressable
                               onPress={() => {
                                 setPickedImages(
                                   pickedImages.filter(
-                                    (img) => img.uri !== image.uri
-                                  )
-                                )
+                                    (img) => img.uri !== image.uri,
+                                  ),
+                                );
                               }}
                               style={{
-                                position: 'absolute',
+                                position: "absolute",
                                 top: 3,
                                 right: 3,
                                 borderRadius: 3,
-                                backgroundColor: '#fff',
-                                padding: 3.5
+                                backgroundColor: "#fff",
+                                padding: 3.5,
                               }}
                             >
                               <Image
                                 contentFit="cover"
                                 style={{ width: 7, height: 7 }}
-                                source={require('../../assets/group-68463.png')}
+                                source={require("../../assets/group-68463.png")}
                               />
                             </Pressable>
                           </View>
@@ -406,78 +384,83 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                   </View>
                   <View
                     style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      marginTop: 10
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      marginTop: 10,
                     }}
                   >
-                    <TextInput placeholder='Título' value={title} onChangeText={setTitle} maxLength={30} style={{width:"50%" , fontSize:20}}></TextInput>
+                    <TextInput
+                      placeholder="Título"
+                      value={title}
+                      onChangeText={setTitle}
+                      maxLength={30}
+                      style={{ width: "50%", fontSize: 20 }}
+                    ></TextInput>
                     <View
                       style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        height: '100%',
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "row",
+                        height: "100%",
                       }}
                     >
                       {editingDiary ? (
                         <View
                           style={{
-                            flexDirection: 'row',
+                            flexDirection: "row",
                             gap: 15,
-                            paddingRight: 15
+                            paddingRight: 15,
                           }}
                         >
                           <Pressable
                             style={{ height: 18, width: 18 }}
                             onPress={() => {
-                              if (editingDiary === 'preDiary') {
-                                dispatch(removeUserDiary('preDiary'))
+                              if (editingDiary === "preDiary") {
+                                dispatch(removeUserDiary("preDiary"));
                               }
-                              setText('')
-                              setTitle('')
+                              setText("");
+                              setTitle("");
 
-                              setEditingDiary()
-                              setPickedImages([])
+                              setEditingDiary();
+                              setPickedImages([]);
                             }}
                           >
                             <Image
-                              style={{ height: '100%', width: '100%' }}
+                              style={{ height: "100%", width: "100%" }}
                               contentFit="cover"
-                              source={require('../../assets/group-68463.png')}
+                              source={require("../../assets/group-68463.png")}
                             />
                           </Pressable>
                         </View>
                       ) : (
                         <View
                           style={{
-                            backgroundColor: 'red',
-                            height: '100%',
-                            width: '100%',
-
+                            backgroundColor: "red",
+                            height: "100%",
+                            width: "100%",
                           }}
                         >
                           <Text
                             style={{
                               fontSize: FontSize.size_lg,
                               lineHeight: 27,
-                              textAlign: 'left',
+                              textAlign: "left",
                               color: Color.negro,
-                              marginTop: !notEditable && 20,
+                              marginTop: 20,
                               fontFamily: FontFamily.lato,
                               letterSpacing: 0,
-                              marginBottom: 8
+                              marginBottom: 8,
                             }}
                           >
                             {text}
                           </Text>
                           <View
                             style={{
-                              width: '100%',
-                              flexWrap: 'wrap',
-                              flexDirection: 'row',
-                              gap: 5
+                              width: "100%",
+                              flexWrap: "wrap",
+                              flexDirection: "row",
+                              gap: 5,
                             }}
                           >
                             {diaryImages.length > 0 &&
@@ -485,11 +468,11 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                                 <Image
                                   key={i}
                                   source={{ uri: image }}
-                                  contentFit={'contain'}
+                                  contentFit={"contain"}
                                   style={{
                                     width: 50,
                                     height: 50,
-                                    borderRadius: 3
+                                    borderRadius: 3,
                                   }}
                                 />
                               ))}
@@ -501,30 +484,29 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                         onPress={() => setShowEmojisModal(true)}
                       >
                         <Image
-                          style={{ height: '100%', width: '100%' }}
+                          style={{ height: "100%", width: "100%" }}
                           contentFit="cover"
-                          source={require('../../assets/group2.png')}
+                          source={require("../../assets/group2.png")}
                         />
                       </Pressable>
                       <LinearGradient
                         style={{ marginLeft: 20, borderRadius: 50 }}
                         locations={[0, 1]}
-                        colors={['#dee274', '#7ec18c']}
+                        colors={["#dee274", "#7ec18c"]}
                       >
                         <Pressable
                           style={{
                             paddingHorizontal: Padding.p_base,
                             paddingTop: Padding.p_6xs,
                             paddingBottom: Padding.p_5xs,
-                            backgroundColor: Color.linearBoton
+                            backgroundColor: Color.linearBoton,
                           }}
                           onPress={async () => {
-                            console.log('opening create modal')
-                            const ultimo = userDiaries[userDiaries.length - 1]
-                            const preDiary = { ...ultimo }
-                            preDiary.description = text
-                            preDiary.title = title
-                            const cloudinaryUrls = []
+                            const ultimo = userDiaries[userDiaries.length - 1];
+                            const preDiary = { ...ultimo };
+                            preDiary.description = text;
+                            preDiary.title = title;
+                            const cloudinaryUrls = [];
 
                             // for (const image of pickedImages) {
                             //   const formData = new FormData()
@@ -557,72 +539,63 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                             //   }
                             // }
 
-                            if (preDiary.id === 'preDiary') {
-                              console.log(
-                                'its a pre diary, posting it..',
-                                preDiary
-                              )
-                              delete preDiary.id
+                            if (preDiary.id === "preDiary") {
+                              delete preDiary.id;
                               dispatch(postDiary(preDiary)).then((res) => {
-                                setText("")
-                                setTitle("")
+                                setText("");
+                                setTitle("");
                                 const obj = {
                                   creatorId: userData.id,
                                   category: selectedSection,
-                                }
-                                obj.images = cloudinaryUrls
-                                console.log(
-                                  'SELECTED DATE BEFORE POSTING',
-                                  selectedDate
-                                )
+                                };
+                                obj.images = cloudinaryUrls;
+
                                 if (selectedDate) {
-                                  obj.date = selectedDate
+                                  obj.date = selectedDate;
                                 }
-                                dispatch(getUserDiariesByDateOrCategory(obj))
-                              })
+                                dispatch(getUserDiariesByDateOrCategory(obj));
+                              });
                             } else {
-                              console.log('updating diary...', preDiary)
                               const updatedData = {
-                                description: preDiary.description
-                              }
+                                description: preDiary.description,
+                              };
                               updatedData.images = [
                                 ...diaryImages,
-                                ...cloudinaryUrls
-                              ]
+                                ...cloudinaryUrls,
+                              ];
                               dispatch(
                                 updateDiaryById({
                                   diaryId: preDiary.id,
                                   diaryData: updatedData,
-                                  title
-                                })
+                                  title,
+                                }),
                               ).then((res) => {
-                                setText("")
-                                setTitle("")
+                                setText("");
+                                setTitle("");
                                 const obj = {
                                   creatorId: userData.id,
-                                  category: selectedSection
-                                }
+                                  category: selectedSection,
+                                };
                                 if (selectedDate) {
-                                  obj.date = selectedDate
+                                  obj.date = selectedDate;
                                 }
 
-                                dispatch(getUserDiariesByDateOrCategory(obj))
-                              })
+                                dispatch(getUserDiariesByDateOrCategory(obj));
+                              });
                             }
-                            setPickedImages([])
-                            setEditingDiary()
-                            setText("")
+                            setPickedImages([]);
+                            setEditingDiary();
+                            setText("");
                           }}
                         >
                           <Text
                             style={{
                               fontSize: FontSize.size_sm,
                               lineHeight: 21,
-                              textAlign: 'center',
+                              textAlign: "center",
                               color: Color.white,
-                              textAlign: 'center',
                               fontFamily: FontFamily.lato,
-                              letterSpacing: 0
+                              letterSpacing: 0,
                             }}
                           >
                             Guardar
@@ -631,23 +604,28 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                       </LinearGradient>
                     </View>
                   </View>
-                  <View style={{borderTopWidth:1,marginTop:10,borderColor:Color.primario1}}>
-                  <TextInput
-                  placeholder='Escribe algo..'
+                  <View
                     style={{
-                      fontSize: FontSize.size_lg,
-                      width: '100%',
-                      textAlign: 'left',
-                      color: Color.negro,
-                      fontFamily: FontFamily.lato,
-                      letterSpacing: 0,
-                      paddingTop:5
-
+                      borderTopWidth: 1,
+                      marginTop: 10,
+                      borderColor: Color.primario1,
                     }}
-                    multiline
-                    value={text}
-                    onChangeText={(text) => setText(text)}
-                  />
+                  >
+                    <TextInput
+                      placeholder="Escribe algo.."
+                      style={{
+                        fontSize: FontSize.size_lg,
+                        width: "100%",
+                        textAlign: "left",
+                        color: Color.negro,
+                        fontFamily: FontFamily.lato,
+                        letterSpacing: 0,
+                        paddingTop: 5,
+                      }}
+                      multiline
+                      value={text}
+                      onChangeText={(text) => setText(text)}
+                    />
                   </View>
                 </ScrollView>
               ) : (
@@ -671,12 +649,12 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
             <View
               style={{
                 flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               <Pressable
-                style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+                style={{ width: "100%", height: "100%", left: 0, top: 0 }}
                 onPress={() => setShowCalendar(false)}
               />
               <PopUpCalendario
@@ -701,11 +679,11 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
           <Modal animationType="fade" transparent visible={showImagesModal}>
             <View
               style={{
-                height: '100%'
+                height: "100%",
               }}
             >
               <Pressable
-                style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+                style={{ width: "100%", height: "100%", left: 0, top: 0 }}
                 onPress={() => setShowImagesModal(false)}
               />
               <ImagePickerModal
@@ -718,128 +696,128 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
         </View>
       )}
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   hoyLoHeFlexBox: {
-    textAlign: 'left',
-    alignSelf: 'stretch',
+    textAlign: "left",
+    alignSelf: "stretch",
     color: Color.negro,
     marginTop: 20,
     fontFamily: FontFamily.lato,
-    letterSpacing: 0
+    letterSpacing: 0,
   },
   reflexinDiaria: {
     lineHeight: 36,
     fontSize: FontSize.size_5xl,
-    marginBottom: 10
+    marginBottom: 10,
   },
   arrowDown2Icon1Bg: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
+    position: "absolute",
+    width: "100%",
+    height: "100%",
     left: 0,
-    top: 0
+    top: 0,
   },
   arrowDown2Icon1Overlay: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(113, 113, 113, 0.3)'
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(113, 113, 113, 0.3)",
   },
   groupParent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingHorizontal: 5,
-    alignItems: 'center'
+    alignItems: "center",
   },
   groupFlexBox: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row'
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
   pressable: {
     paddingHorizontal: Padding.p_base,
     paddingTop: Padding.p_6xs,
     paddingBottom: Padding.p_5xs,
-    backgroundColor: Color.linearBoton
+    backgroundColor: Color.linearBoton,
   },
   wrapper: {
     height: 24,
-    width: 24
+    width: 24,
   },
   icon: {
-    height: '100%',
-    width: '100%'
+    height: "100%",
+    width: "100%",
   },
   container: {
-    marginLeft: 20
+    marginLeft: 20,
   },
   signIn: {
     fontSize: FontSize.size_sm,
     lineHeight: 21,
-    textAlign: 'center'
+    textAlign: "center",
   },
   ttTypo: {
     color: Color.white,
-    textAlign: 'center',
+    textAlign: "center",
     fontFamily: FontFamily.lato,
-    letterSpacing: 0
+    letterSpacing: 0,
   },
   textTypo: {
-    textAlign: 'center',
+    textAlign: "center",
     color: Color.negro,
     fontFamily: FontFamily.lato,
-    letterSpacing: 0
+    letterSpacing: 0,
   },
   text: {
-    fontWeight: '700',
+    fontWeight: "700",
     lineHeight: 36,
-    fontSize: FontSize.size_5xl
+    fontSize: FontSize.size_5xl,
   },
   jul2023: {
     fontSize: FontSize.size_xl,
     lineHeight: 30,
-    marginLeft: 10
+    marginLeft: 10,
   },
   iconlycurvedarrowDown2: {
     width: 49 * 0.3,
     height: 27 * 0.3,
     marginLeft: 10,
-    marginTop: 1
+    marginTop: 1,
   },
   frameParent: {
-    width: '100%'
+    width: "100%",
   },
   image6Icon: {
     width: 87,
-    height: 55
+    height: 55,
   },
   miDiarioEntradaTextoPl: {
     backgroundColor: Color.white,
-    width: '100%',
-    flex: 1
+    width: "100%",
+    flex: 1,
   },
   innerContainer: {
     flex: 1,
     marginTop: 20,
-    width: '100%',
-    padding: 15
+    width: "100%",
+    padding: 15,
   },
   topContainer: {
     top: 10,
     height: 80,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 15
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
   },
   editContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  }
-})
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+});
 
-export default MIDIARIOENTRADATEXTOPL7
+export default MIDIARIOENTRADATEXTOPL7;
