@@ -26,6 +26,7 @@ import { removeUserDiary } from "../redux/slices/diaries.slices";
 import Humor from "./Humor";
 
 const SingleDiary = ({
+  setEditedDiaries,
   multiEditing,
   diary,
   editing,
@@ -59,7 +60,15 @@ const SingleDiary = ({
     const fileName = parts[parts.length - 1];
     return fileName;
   };
-  useEffect(() => {}, [multiEditing]);
+  useEffect(() => {
+    if (multiEditing) {
+      setEditedDiaries((prevState) => {
+        return prevState.map((d) =>
+          d.id === diary.id ? { ...d, title, description: text } : d,
+        );
+      });
+    }
+  }, [title, text, multiEditing, diary.id, setEditedDiaries]);
 
   // useEffect(() => {
   //   if (multiEditing) {

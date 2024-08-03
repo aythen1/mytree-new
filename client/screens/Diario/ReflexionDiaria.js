@@ -50,10 +50,21 @@ const ReflexionDiaria = ({
   const [title, setTitle] = useState(selected?.title || "");
   const [edition, setEdition] = useState(false);
 
+  const [isEditingAll, setIsEditingAll] = useState(false);
+  const [editedDiaries, setEditedDiaries] = useState(userDiaries);
+
   const [diaryImages, setDiaryImages] = useState(selected?.images || []);
   const dispatch = useDispatch();
   const { selectedSection, formatDateToNormal, editingDiary, setEditingDiary } =
     useContext(Context);
+
+  // Mantén un estado para el valor anterior de isEditingAll
+  const [previousIsEditingAll, setPreviousIsEditingAll] =
+    useState(isEditingAll);
+
+  useEffect(() => {
+    setPreviousIsEditingAll(isEditingAll);
+  }, [isEditingAll]);
 
   useEffect(() => {
     if (selected) {
@@ -355,6 +366,7 @@ const ReflexionDiaria = ({
         >
           {userDiaries.map((diary, index) => (
             <SingleDiary
+              setEditedDiaries={setEditedDiaries}
               multiEditing={!edition}
               setSelected={setSelected}
               pickedImages={pickedImages}
