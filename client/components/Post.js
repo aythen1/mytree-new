@@ -29,6 +29,7 @@ import { getAllPosts } from '../redux/actions/posts'
 import { getAllCommentsByPostId } from '../redux/actions/comments'
 import PagerView from 'react-native-pager-view'
 
+
 const Posteo = ({ data, padding }) => {
   const {
     setShowShareModal,
@@ -346,12 +347,14 @@ const Posteo = ({ data, padding }) => {
           style={{
             height: Dimensions.get('screen').height / 1.8,
             width:"100%",
-            resizeMode: 'cover',
           }}
-          resizeMethod="resize"
+          renderToHardwareTextureAndroid
+          initialPage={0}
+
+        
         >
           {data.photos && data.photos.map((e)=> (
-            <Image style={{height:"100%",width:"100%"}} source={{uri:e}}></Image>
+            <Image  contentFit='cover'  style={{height:"100%",width:"100%"}} source={{uri:e}}></Image>
           ))}
 
         </PagerView>

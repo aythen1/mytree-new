@@ -1,142 +1,138 @@
-import 'react-native-gesture-handler'
-import React, { useEffect, useRef, useState } from 'react'
-import AadirAlbum from './screens/AadirAlbum'
-import Album from './screens/Album'
-import Privacidad from './screens/Privacidad'
-import LOGIN from './screens/Inicio/LOGIN'
-import Onboarding from './screens/Inicio/Onboarding'
-import Onboarding1 from './screens/Inicio/Onboarding1'
-import RETOSMSVOTADOS from './screens/Retos/RETOSMSVOTADOS'
-import CrearLbum from './screens/CrearLbum'
-import AadirAUnAlbum from './screens/AadirAUnAlbum'
-import CrearAlbum from './screens/CrearAlbum'
-import Organizador from './screens/Organizador'
-import RetosFamiliaresCumplido from './screens/Retos/RetosFamiliaresCumplido'
-import RetosFamiliaresSinCumplir from './screens/Retos/RetosFamiliaresSinCumplir'
-import Chat from './screens/Mensajes/Chat'
-import AADIRAADIRANCESTRO from './screens/AADIRAADIRANCESTRO'
-import AADIRAADIRINFANTE from './screens/AADIRAADIRINFANTE'
-import TarjetaDigital from './screens/TarjetaDigital'
-import MUROALERTAS1 from './screens/MUROALERTAS1'
-import MENSAJERA from './screens/Mensajes/MENSAJERA'
-import Busqueda from './screens/Busqueda/Busqueda'
-import BIO2Ancestro from './screens/BIO2Ancestro'
-import BIO2Infante from './screens/BIO2Infante'
-import PERFILIDANCESTRO from './screens/PERFILIDANCESTRO'
-import PERFILIDINFANTE from './screens/PERFILIDINFANTE'
-import PERFILCREARIDINFANTEANCE from './screens/PERFILCREARIDINFANTEANCE'
-import Novedades from './screens/Novedades'
-import Recompensas from './screens/Recompensas'
-import Invitacin from './screens/Invitacin'
-import MIDIARIOPANTALLAPERSONAL from './screens/Diario/MIDIARIOPANTALLAPERSONAL'
-import MIDIARIOEDICINVIDEO from './screens/Diario/MIDIARIOEDICINVIDEO'
-import MIDIARIOENTRADAVIDEO from './screens/MIDIARIOENTRADAVIDEO'
-import Onboarding2 from './screens/Inicio/Onboarding2'
-import Muro from './screens/Muro/Muro'
-import CrearEvento from './screens/Calendario/CrearEvento'
-import BOTONInvitarAmigos1 from './screens/BOTONInvitarAmigos1'
-import PERFILNOTIFICACIONES from './screens/Muro/PERFILNOTIFICACIONES'
-import PerfilSeguridad from './screens/Perfil/Ajustes/PerfilSeguridad'
-import PerfilPrivacidad from './screens/Perfil/Ajustes/PerfilPrivacidad'
-import PerfilVisualizacionMyTree from './screens/Perfil/Ajustes/PerfilVisualizacionMyTree'
-import PERFILANCESTROAJUSTES from './screens/PERFILANCESTROAJUSTES'
-import PERFILANCESTROAJUSTES1 from './screens/PERFILANCESTROAJUSTES1'
-import PERFILINFANTEAJUSTES from './screens/PERFILINFANTEAJUSTES'
-import PerfilConfiguracion from './screens/Perfil/Ajustes/PerfilConfiguracion'
-import PerfilAjustes from './screens/Perfil/Ajustes/PerfilAjustes'
-import PERFILMIINFO from './screens/Perfil/PERFILMIINFO'
-import RetosBienvenida from './screens/Retos/RetosBienvenida'
-import MisAlbumes from './screens/Perfil/MisAlbumes'
-import SOLOYO from './screens/Perfil/SOLOYO'
-import Perfil from './screens/Perfil/Perfil'
-import MIDIARIOENTRADATEXTOPL7 from './screens/Diario/MIDIARIOENTRADATEXTOPL7'
-import CALENDARIO from './screens/Calendario/CALENDARIO'
-import Splash from './screens/Inicio/Splash'
-import REGISTROPOLTICASDEPRIVAC from './screens/Inicio/REGISTROPOLTICASDEPRIVAC'
-import REGISTROTRMINOSYCONDICIO from './screens/Inicio/REGISTROTRMINOSYCONDICIO'
-import Suscripciones from './screens/Perfil/Ajustes/Suscripciones'
-import CrearGrupo from './screens/Mensajes/CrearGrupo'
-import CrearFechaEspecial from './screens/Calendario/CrearFechaEspecial'
-import CrearReto from './screens/Retos/CrearReto'
-import FooterNavBar from './components/FooterNavBar'
-import Papers from './screens/Diario/Papers'
-import FiltroEdicion from './components/FiltroEdicion'
-import FiltroEdicionRecuerdo from './components/FiltroEdicionRecuerdo'
-import Register from './screens/Inicio/Register'
-import Eventos from './screens/Calendario/Eventos'
-import MasDetallesEventos from './screens/Calendario/MasDetallesEventos'
+import "react-native-gesture-handler";
+import React, { useEffect, useRef, useState } from "react";
+import AadirAlbum from "./screens/AadirAlbum";
+import Album from "./screens/Album";
+import Privacidad from "./screens/Privacidad";
+import LOGIN from "./screens/Inicio/LOGIN";
+import Onboarding from "./screens/Inicio/Onboarding";
+import Onboarding1 from "./screens/Inicio/Onboarding1";
+import RETOSMSVOTADOS from "./screens/Retos/RETOSMSVOTADOS";
+import CrearLbum from "./screens/CrearLbum";
+import AadirAUnAlbum from "./screens/AadirAUnAlbum";
+import CrearAlbum from "./screens/CrearAlbum";
+import Organizador from "./screens/Organizador";
+import RetosFamiliaresCumplido from "./screens/Retos/RetosFamiliaresCumplido";
+import RetosFamiliaresSinCumplir from "./screens/Retos/RetosFamiliaresSinCumplir";
+import Chat from "./screens/Mensajes/Chat";
+import AADIRAADIRANCESTRO from "./screens/AADIRAADIRANCESTRO";
+import AADIRAADIRINFANTE from "./screens/AADIRAADIRINFANTE";
+import TarjetaDigital from "./screens/TarjetaDigital";
+import MUROALERTAS1 from "./screens/MUROALERTAS1";
+import MENSAJERA from "./screens/Mensajes/MENSAJERA";
+import Busqueda from "./screens/Busqueda/Busqueda";
+import BIO2Ancestro from "./screens/BIO2Ancestro";
+import BIO2Infante from "./screens/BIO2Infante";
+import PERFILIDANCESTRO from "./screens/PERFILIDANCESTRO";
+import PERFILIDINFANTE from "./screens/PERFILIDINFANTE";
+import PERFILCREARIDINFANTEANCE from "./screens/PERFILCREARIDINFANTEANCE";
+import Novedades from "./screens/Novedades";
+import Recompensas from "./screens/Recompensas";
+import Invitacin from "./screens/Invitacin";
+import MIDIARIOPANTALLAPERSONAL from "./screens/Diario/MIDIARIOPANTALLAPERSONAL";
+import MIDIARIOEDICINVIDEO from "./screens/Diario/MIDIARIOEDICINVIDEO";
+import MIDIARIOENTRADAVIDEO from "./screens/MIDIARIOENTRADAVIDEO";
+import Onboarding2 from "./screens/Inicio/Onboarding2";
+import Muro from "./screens/Muro/Muro";
+import CrearEvento from "./screens/Calendario/CrearEvento";
+import BOTONInvitarAmigos1 from "./screens/BOTONInvitarAmigos1";
+import PERFILNOTIFICACIONES from "./screens/Muro/PERFILNOTIFICACIONES";
+import PerfilSeguridad from "./screens/Perfil/Ajustes/PerfilSeguridad";
+import PerfilPrivacidad from "./screens/Perfil/Ajustes/PerfilPrivacidad";
+import PerfilVisualizacionMyTree from "./screens/Perfil/Ajustes/PerfilVisualizacionMyTree";
+import PERFILANCESTROAJUSTES from "./screens/PERFILANCESTROAJUSTES";
+import PERFILANCESTROAJUSTES1 from "./screens/PERFILANCESTROAJUSTES1";
+import PERFILINFANTEAJUSTES from "./screens/PERFILINFANTEAJUSTES";
+import PerfilConfiguracion from "./screens/Perfil/Ajustes/PerfilConfiguracion";
+import PerfilAjustes from "./screens/Perfil/Ajustes/PerfilAjustes";
+import PERFILMIINFO from "./screens/Perfil/PERFILMIINFO";
+import RetosBienvenida from "./screens/Retos/RetosBienvenida";
+import MisAlbumes from "./screens/Perfil/MisAlbumes";
+import SOLOYO from "./screens/Perfil/SOLOYO";
+import Perfil from "./screens/Perfil/Perfil";
+import MIDIARIOENTRADATEXTOPL7 from "./screens/Diario/MIDIARIOENTRADATEXTOPL7";
+import CALENDARIO from "./screens/Calendario/CALENDARIO";
+import Splash from "./screens/Inicio/Splash";
+import REGISTROPOLTICASDEPRIVAC from "./screens/Inicio/REGISTROPOLTICASDEPRIVAC";
+import REGISTROTRMINOSYCONDICIO from "./screens/Inicio/REGISTROTRMINOSYCONDICIO";
+import Suscripciones from "./screens/Perfil/Ajustes/Suscripciones";
+import CrearGrupo from "./screens/Mensajes/CrearGrupo";
+import CrearFechaEspecial from "./screens/Calendario/CrearFechaEspecial";
+import CrearReto from "./screens/Retos/CrearReto";
+import FooterNavBar from "./components/FooterNavBar";
+import Papers from "./screens/Diario/Papers";
+import FiltroEdicion from "./components/FiltroEdicion";
+import FiltroEdicionRecuerdo from "./components/FiltroEdicionRecuerdo";
+import Register from "./screens/Inicio/Register";
+import Eventos from "./screens/Calendario/Eventos";
+import MasDetallesEventos from "./screens/Calendario/MasDetallesEventos";
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { Provider } from 'react-redux'
-import { store } from './redux/store'
-import { Color, loadFonts } from './GlobalStyles'
-import { Platform, SafeAreaView, StatusBar } from 'react-native'
-import UploadMemory from './screens/Memories/UploadMemory'
-import { ContextProvider } from './context/Context'
-import * as Linking from 'expo-linking'
-import OpenedChat from './screens/Mensajes/OpenedChat'
-import { createDrawerNavigator } from '@react-navigation/drawer'
-import DrawerContent from './components/DrawerContent'
-import { NavigationContainer, useRoute } from '@react-navigation/native'
-import OtherUserProfile from './screens/Perfil/OtherUserProfile'
-import StorybookUI from './StorybookUI'
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
+import { Color, loadFonts } from "./GlobalStyles";
+import { Platform, SafeAreaView, StatusBar } from "react-native";
+import UploadMemory from "./screens/Memories/UploadMemory";
+import { ContextProvider } from "./context/Context";
+import * as Linking from "expo-linking";
+import OpenedChat from "./screens/Mensajes/OpenedChat";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import DrawerContent from "./components/DrawerContent";
+import { NavigationContainer } from "@react-navigation/native";
+import OtherUserProfile from "./screens/Perfil/OtherUserProfile";
+
 if (__DEV__) {
   require("./ReactotronConfig");
 }
-const Drawer = createDrawerNavigator()
-const Stack = createNativeStackNavigator()
+const Drawer = createDrawerNavigator();
+const Stack = createNativeStackNavigator();
 
-const prefix = Platform.OS == 'android' ? 'mytree://mytree/' : 'mytree://'
+const prefix = Platform.OS === "android" ? "mytree://mytree/" : "mytree://";
 
 const linking = {
-  prefixes: [prefix, 'https://app.mytree.com']
-}
-
+  prefixes: [prefix, "https://app.mytree.com"],
+};
 const App = () => {
-  const navigationRef = useRef()
-  const [onConv, setOnConv] = useState(false)
-  const [isFooterShow, setIsFooterShow] = useState(null)
+  const navigationRef = useRef();
+  const [onConv, setOnConv] = useState(false);
+  const [isFooterShow, setIsFooterShow] = useState(null);
   const loadApp = async () => {
-    await loadFonts()
-  }
+    await loadFonts();
+  };
 
   useEffect(() => {
-    Linking.addEventListener('url', async (e) => {
-      const { hostname, path, queryParams } = Linking.parse(e.url)
-      console.log(queryParams,"parms")
+    Linking.addEventListener("url", async (e) => {
+      const { queryParams } = Linking.parse(e.url);
+      console.log(queryParams, "parms");
       // const re =await Linking.openURL("http://mytreeappoficial.com")
-      navigationRef.current?.navigate('Muro', queryParams) // Usar
-    })
-    loadApp()
-  }, [])
+      navigationRef.current?.navigate("Muro", queryParams); // Usar
+    });
+    loadApp();
+  }, []);
 
-
-  
   return (
-     <SafeAreaView style={{ flex: 1, backgroundColor: Color.primario1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Color.primario1 }}>
       <StatusBar
         hidden={!isFooterShow && !onConv}
-        barStyle={'dark-content'}
+        barStyle={"dark-content"}
         backgroundColor="#fff"
       />
       <Provider store={store}>
         <ContextProvider>
-          <NavigationContainer  ref={navigationRef} linking={linking}>
-            <Drawer.Navigator            
+          <NavigationContainer ref={navigationRef} linking={linking}>
+            <Drawer.Navigator
               screenOptions={{
-                drawerContentContainerStyle:{
-                  backgroundColor: 'transparent',
+                drawerContentContainerStyle: {
+                  backgroundColor: "transparent",
                 },
                 drawerStyle: {
-                  backgroundColor: 'transparent',
-                }
-              }}              
-              drawerContent={(props) => <DrawerContent  {...props} />}
+                  backgroundColor: "transparent",
+                },
+              }}
+              drawerContent={(props) => <DrawerContent {...props} />}
             >
               <Drawer.Screen options={{ headerShown: false }} name="Main">
                 {(props) => (
                   <MainStackNavigator
-
                     {...props}
                     setIsFooterShow={setIsFooterShow}
                     setOnConv={setOnConv}
@@ -149,8 +145,8 @@ const App = () => {
         </ContextProvider>
       </Provider>
     </SafeAreaView>
-  )
-}
+  );
+};
 
 const MainStackNavigator = ({ setIsFooterShow }) => {
   return (
@@ -158,24 +154,23 @@ const MainStackNavigator = ({ setIsFooterShow }) => {
       initialRouteName="Onboarding2"
       transitionConfig={() => ({
         containerStyle: {
-          backgroundColor: '#f0f0f0', // Cambia el color de fondo aquí
+          backgroundColor: "#f0f0f0", // Cambia el color de fondo aquí
         },
       })}
-
       screenOptions={({ route }) => ({
         headerShown: false,
-        
+
         footerShown: setIsFooterShow(
-          route.name !== 'Register' &&
-            route.name !== 'Splash' &&
-            route.name !== 'Onboarding' &&
-            route.name !== 'Onboarding1' &&
-            route.name !== 'Onboarding2' &&
-            route.name !== 'OpenedChat' &&
-            route.name !== 'LOGIN' && 
-            route.name !== 'REGISTROTRMINOSYCONDICIO' &&
-             route.name !== 'REGISTROPOLTICASDEPRIVAC'
-        )
+          route.name !== "Register" &&
+            route.name !== "Splash" &&
+            route.name !== "Onboarding" &&
+            route.name !== "Onboarding1" &&
+            route.name !== "Onboarding2" &&
+            route.name !== "OpenedChat" &&
+            route.name !== "LOGIN" &&
+            route.name !== "REGISTROTRMINOSYCONDICIO" &&
+            route.name !== "REGISTROPOLTICASDEPRIVAC",
+        ),
       })}
     >
       <Stack.Screen
@@ -514,11 +509,9 @@ const MainStackNavigator = ({ setIsFooterShow }) => {
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
-  )
-}
+  );
+};
 
+let AppEntryPoint = App;
 
-
- let AppEntryPoint = App;
-
-export default AppEntryPoint
+export default AppEntryPoint;

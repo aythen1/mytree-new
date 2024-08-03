@@ -15,44 +15,40 @@ export class NotificationService {
     private readonly notificationRepository: Repository<Notification>,
   ) {}
 
-  async create(createNotificationDto: CreateNotificationDto): Promise<Notification> {
-    const notification = this.notificationRepository.create(createNotificationDto);
+  async create(
+    createNotificationDto: CreateNotificationDto,
+  ): Promise<Notification> {
+    const notification = this.notificationRepository.create(
+      createNotificationDto,
+    );
     return await this.notificationRepository.save(notification);
   }
 
-  async update(id: number, updateNotificationDto: UpdateNotificationDto): Promise<Notification | undefined> {
-    const existingNotification = await this.notificationRepository.findOne({where:{id:id}});
+  async update(
+    id: number,
+    updateNotificationDto: UpdateNotificationDto,
+  ): Promise<Notification | undefined> {
+    const existingNotification = await this.notificationRepository.findOne({
+      where: { id: id },
+    });
     if (!existingNotification) {
       return undefined;
     }
-    const updatedNotification = { ...existingNotification, ...updateNotificationDto };
+    const updatedNotification = {
+      ...existingNotification,
+      ...updateNotificationDto,
+    };
     return await this.notificationRepository.save(updatedNotification);
   }
-
-  // async createNotification(userId: number, description: string, photos: string[]): Promise<Notification> {
-  //   const user = await this.userRepository.findOne({where:{id:userId}});
-  //   import {FrontendNotification} from './entities/frontend-notification.interface'
-
-  //   if (!user) {
-  //     throw new Error('Usuario no encontrado');
-  //   }
-
-  //   const notification = new Notification();
-  //   notification.photos = photos;
-  //   notification.user = user;
-
-  //   // Agregar fecha y hora de creación
-  //   notification.createdAt = new Date();
-
-  //   return await this.notificationRepository.save(notification);
-  // }
 
   async findAll(): Promise<Notification[]> {
     return await this.notificationRepository.find();
   }
 
   async findOne(id: number): Promise<Notification> {
-    const notification = await this.notificationRepository.findOne({ where: { id: id } });
+    const notification = await this.notificationRepository.findOne({
+      where: { id: id },
+    });
 
     if (!notification) {
       throw new NotFoundException(`Notificación con ID ${id} no encontrada`);
@@ -61,10 +57,10 @@ export class NotificationService {
     return notification;
   }
 
-
-
   async remove(id: number): Promise<void> {
-    const notification = await this.notificationRepository.findOne({ where: { id: id } });
+    const notification = await this.notificationRepository.findOne({
+      where: { id: id },
+    });
 
     if (!notification) {
       throw new NotFoundException(`Notificación con ID ${id} no encontrada`);
@@ -83,12 +79,14 @@ export class NotificationService {
 
     // Construir objeto de opciones para la consulta
     const options: any = { where: { id: notifId }, relations: validRelations };
-console.log("options es", options)
+    console.log('options es', options);
     // Realizar la consulta del post con las relaciones especificadas
     const notif = await this.notificationRepository.findOne(options);
 
     if (!notif) {
-      throw new NotFoundException(`No se encontró ningún post con el ID ${notifId}.`);
+      throw new NotFoundException(
+        `No se encontró ningún post con el ID ${notifId}.`,
+      );
     }
 
     return notif;
@@ -98,9 +96,9 @@ console.log("options es", options)
     const validRelations: string[] = [];
 
     // Definir relaciones válidas permitidas en la entidad Post
-    const allowedRelations = ['user'];  
+    const allowedRelations = ['user'];
     // Filtrar relaciones válidas
-    relations.forEach(relation => {
+    relations.forEach((relation) => {
       if (allowedRelations.includes(relation)) {
         validRelations.push(relation);
       }
@@ -110,6 +108,8 @@ console.log("options es", options)
   }
 
   async findByReceiverId(receiverId: string): Promise<Notification[]> {
-    return await this.notificationRepository.find({ where: { receiverId: receiverId } });
+    return await this.notificationRepository.find({
+      where: { receiverId: receiverId },
+    });
   }
 }

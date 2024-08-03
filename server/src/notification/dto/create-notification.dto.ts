@@ -1,5 +1,3 @@
-import { Type } from 'class-transformer';
-import { CreateUserDto } from '../../user/dto/create-user.dto';
 import { IsOptional, IsString, IsBoolean, IsArray } from 'class-validator';
 
 export class CreateNotificationDto {
