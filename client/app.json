@@ -56,7 +56,6 @@
       }
     },
     "plugins": [
-      "expo-community-flipper",
       "expo-font",
       [
         "expo-build-properties",

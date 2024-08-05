@@ -75,8 +75,9 @@ const Eventos = ({ route }) => {
 
   const handleGetEvent = async () => {
     const res = await axiosInstance.get(`/events/${event_id}`);
-    console.log(res.data, "datitaa", event_wishList);
-    setEvent(res.data);
+    // console.log(res.data, "datitaa", event_wishList);
+    setWishList(res?.data?.wishListItems);
+    setEvent(res?.data);
   };
   useEffect(() => {
     handleGetEvent();
@@ -176,7 +177,7 @@ const Eventos = ({ route }) => {
 
     for (let index = 0; index < wishList.length; index++) {
       const wish = wishList[index];
-      if (!wish.id) {
+      if (wish) {
         axiosInstance.post(`/events/${event_id}/wishlist`, {
           description: wish,
         });
@@ -185,7 +186,7 @@ const Eventos = ({ route }) => {
 
     for (let index = 0; index < invitedUsers.length; index++) {
       const id = invitedUsers[index];
-      const find = invitedUsers.find((e) => e.id == id.id);
+      const find = invitedUsers.find((e) => e.id === id.id);
       if (!find) {
         axiosInstance.post(`/events/${event_id}/invite`, { userId: id });
       }
@@ -609,7 +610,10 @@ const Eventos = ({ route }) => {
             onPress={() => setShowWishList(false)}
           />
           <CreateWishListModal
-            wishList={wishList}
+            event={event}
+            setEvent={setEvent}
+            invitado={event?.invites?.find((e) => e.userId === userData.id)}
+            wishList={event?.wishListItems}
             setWishList={setWishList}
             onClose={() => setShowWishList(false)}
           />
