@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from 'react'
+import React, { useState, useRef, useEffect, useContext } from "react";
 import {
   Text,
   StyleSheet,
@@ -9,65 +9,66 @@ import {
   TouchableWithoutFeedback,
   TextInput,
   KeyboardAvoidingView,
-  TouchableOpacity
-} from 'react-native'
-import { Image } from 'expo-image'
-import { LinearGradient } from 'expo-linear-gradient'
-import { useNavigation } from '@react-navigation/native'
+  TouchableOpacity,
+} from "react-native";
+import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
+import { useNavigation } from "@react-navigation/native";
 import {
   FontFamily,
   Color,
   FontSize,
   Border,
-  Padding
-} from '../../../GlobalStyles'
-import ENTRADACREADA from '../../../components/ENTRADACREADA'
-import HeaderIcons from '../../../components/HeaderIcons'
-import CalendarMuroSVG from '../../../components/svgs/CalendarMuroSVG'
-import BookSVG from '../../../components/svgs/BookSVG'
-import NotificationsMuroSVG from '../../../components/svgs/NotificationsMuroSVG'
-import axios from 'axios'
-import axiosInstance, { BACKURL } from '../../../apiBackend'
-import { useDispatch, useSelector } from 'react-redux'
-import { getUserData } from '../../../redux/actions/user'
-import { Context } from '../../../context/Context'
-import { CameraView } from 'expo-camera'
-import SimboloSVG from '../SimboloSVG'
-import { Entypo } from '@expo/vector-icons'
-import PopUpCalendario from '../../../components/PopUpCalendario'
-import Maps from '../../../components/Maps'
-import EtiquetarUno from '../../../components/EtiquetarUno'
-import useFetchHook from '../../../utils/useFetchHook'
-import TopBar from '../../../components/TopBar'
-import EtiquetarFamiliar from '../../../components/EtiquetarFamiliar'
-import reactotron from 'reactotron-react-native'
+  Padding,
+} from "../../../GlobalStyles";
+import ENTRADACREADA from "../../../components/ENTRADACREADA";
+import HeaderIcons from "../../../components/HeaderIcons";
+import CalendarMuroSVG from "../../../components/svgs/CalendarMuroSVG";
+import BookSVG from "../../../components/svgs/BookSVG";
+import NotificationsMuroSVG from "../../../components/svgs/NotificationsMuroSVG";
+import axios from "axios";
+import axiosInstance, { BACKURL } from "../../../apiBackend";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserData } from "../../../redux/actions/user";
+import { Context } from "../../../context/Context";
+import { CameraView } from "expo-camera";
+import SimboloSVG from "../SimboloSVG";
+import { Entypo } from "@expo/vector-icons";
+import PopUpCalendario from "../../../components/PopUpCalendario";
+import Maps from "../../../components/Maps";
+import EtiquetarUno from "../../../components/EtiquetarUno";
+import useFetchHook from "../../../utils/useFetchHook";
+import TopBar from "../../../components/TopBar";
+import EtiquetarFamiliar from "../../../components/EtiquetarFamiliar";
+import reactotron from "reactotron-react-native";
 
 const PerfilConfiguracion = () => {
-  const { userData: usuario, allUsers } = useSelector((state) => state.users)
-  const [showImageOptions, setShowImageOptions] = useState(false)
-  const [facing, setFacing] = useState('back')
-  const { pickImage, provisoryProfileImage, profileImage } = useContext(Context)
-  const dispatch = useDispatch()
-  const [showCamera, setShowCamera] = useState(false)
-  const [selectedDate, setSelectedDate] = useState('')
-  const [calendario, setCalendario] = useState(false)
-  const [showLocation, setShowLocation] = useState(false)
-  const navigation = useNavigation()
-  const nombreInputRef = useRef(null)
-  const [modalCreate, setModalCreate] = useState(false)
-  const [inputsBros, setInputsBros] = useState([{ input: '' }])
-  const [editable, setEditable] = useState(false)
-  const [location, setLocation] = useState('')
-  const [showTagUsers, setShowTagUsers] = useState(false)
-  const [showTagUsersPadre, setShowTagUsersPadre] = useState(false)
-  const [showTagBrother, setShowTagBrother] = useState(false)
-  const [inputSelected, setInputSelected] = useState(0)
+  const { userData: usuario, allUsers } = useSelector((state) => state.users);
+  const [showImageOptions, setShowImageOptions] = useState(false);
+  const [facing, setFacing] = useState("back");
+  const { pickImage, provisoryProfileImage, profileImage } =
+    useContext(Context);
+  const dispatch = useDispatch();
+  const [showCamera, setShowCamera] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [calendario, setCalendario] = useState(false);
+  const [showLocation, setShowLocation] = useState(false);
+  const navigation = useNavigation();
+  const nombreInputRef = useRef(null);
+  const [modalCreate, setModalCreate] = useState(false);
+  const [inputsBros, setInputsBros] = useState([{ input: "" }]);
+  const [editable, setEditable] = useState(false);
+  const [location, setLocation] = useState("");
+  const [showTagUsers, setShowTagUsers] = useState(false);
+  const [showTagUsersPadre, setShowTagUsersPadre] = useState(false);
+  const [showTagBrother, setShowTagBrother] = useState(false);
+  const [inputSelected, setInputSelected] = useState(0);
 
   const { data, loading, error } = useFetchHook({
-    url: `/user/${usuario?.id}/friendsAndFamily`
-  })
+    url: `/user/${usuario?.id}/friendsAndFamily`,
+  });
 
-  const [invitedUsers, setInvitedUsers] = useState([])
+  const [invitedUsers, setInvitedUsers] = useState([]);
 
   const [dataToSend, setDataToSend] = useState({
     username: usuario.username,
@@ -76,95 +77,97 @@ const PerfilConfiguracion = () => {
     momId: usuario.momId,
     dadId: usuario.dadId,
     brotherIds: usuario.brotherIds || [],
-    maritalStatus: usuario.maritalStatus
-  })
+    maritalStatus: usuario.maritalStatus,
+  });
 
-  const cameraReff = useRef(null)
-
+  const cameraReff = useRef(null);
 
   const takePicture = async () => {
     if (cameraReff) {
-      const photo = await cameraReff.current.takePictureAsync()
+      const photo = await cameraReff.current.takePictureAsync();
       // setSelectedImage(photo)
-      pickImage('profile', photo.uri)
-      setShowCamera(false)
+      pickImage("profile", photo.uri);
+      setShowCamera(false);
     }
-  }
+  };
   useEffect(() => {
     if (profileImage) {
       axiosInstance.patch(`/user/${usuario?.id}`, {
-        profilePicture: profileImage
-      })
+        profilePicture: profileImage,
+      });
     }
-    dispatch(getUserData(usuario?.id))
-  }, [profileImage])
+    dispatch(getUserData(usuario?.id));
+  }, [profileImage]);
 
   const handleBrotherInputChange = (index, text) => {
     setInputsBros((prev) => {
-      const newInputs = [...prev]
-      newInputs[index].input = text
+      const newInputs = [...prev];
+      newInputs[index].input = text;
 
-      return newInputs
-    })
+      return newInputs;
+    });
 
     setDataToSend((prev) => {
-      const newData = { ...prev }
+      const newData = { ...prev };
 
-      const array = []
+      const array = [];
 
       for (let index = 0; index < inputsBros.length; index++) {
-        const element = inputsBros[index]
-        if (element.input !== '') {
-          array.push(element.input)
+        const element = inputsBros[index];
+        if (element.input !== "") {
+          array.push(element.input);
         }
       }
-      newData.brotherIds = [...array,...usuario.brotherIds]
+      newData.brotherIds = [...array, ...usuario.brotherIds];
 
-      return newData
-    })
-  }
+      return newData;
+    });
+  };
 
   const handleAddBrotherInput = () => {
-    setInputsBros((prev) => [...prev, { input: '' }])
-  }
+    setInputsBros((prev) => [...prev, { input: "" }]);
+  };
 
   useEffect(() => {
     const brothersArray = inputsBros
       ?.map((input) => input?.input)
-      ?.filter((input) => input?.trim() !== '')
+      ?.filter((input) => input?.trim() !== "");
 
-    if (inputsBros[0].input !== '') {
+    if (inputsBros[0].input !== "") {
       setDataToSend((prevData) => ({
         ...prevData,
-        brotherIds: [...usuario.brotherIds, ...brothersArray]
-      }))
+        brotherIds: [...usuario.brotherIds, ...brothersArray],
+      }));
     }
-  }, [inputsBros])
+  }, [inputsBros]);
 
   const changePictureMode = async () => {
-    setFacing((prev) => (prev == 'back' ? 'front' : 'back'))
-  }
+    setFacing((prev) => (prev == "back" ? "front" : "back"));
+  };
 
   const onCloseModalCreate = () => {
-    setModalCreate(false)
-    navigation.goBack()
-  }
+    setModalCreate(false);
+    navigation.goBack();
+  };
 
   const handleSubmit = async () => {
     try {
-      const res = await axios.patch(`${BACKURL}/user/${usuario.id}`, dataToSend)
+      const res = await axios.patch(
+        `${BACKURL}/user/${usuario.id}`,
+        dataToSend,
+      );
       if (res.data) {
-        setModalCreate(true)
-        dispatch(getUserData(usuario.id))
+        setModalCreate(true);
+        dispatch(getUserData(usuario.id));
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const closeCalendario = () => {
-    setCalendario(false)
-  }
+    setCalendario(false);
+  };
 
   if (!showCamera) {
     return (
@@ -175,17 +178,17 @@ const PerfilConfiguracion = () => {
           style={styles.frameParent}
           showsVerticalScrollIndicator={false}
         >
-          <TopBar screen={'perfil'}></TopBar>
+          <TopBar screen={"perfil"}></TopBar>
           <View>
             <View style={[styles.backParent, styles.parentFlexBox]}>
               <Pressable
                 style={styles.iconlylightOutlinecalendar}
-                onPress={() => navigation.navigate('PerfilAjustes')}
+                onPress={() => navigation.navigate("PerfilAjustes")}
               >
                 <Image
                   style={[styles.icon, styles.iconLayout1]}
                   contentFit="cover"
-                  source={require('../../../assets/back.png')}
+                  source={require("../../../assets/back.png")}
                 />
               </Pressable>
               <Text style={styles.ajustes}>Configuración</Text>
@@ -194,23 +197,23 @@ const PerfilConfiguracion = () => {
 
           <View style={styles.centralContainer}>
             <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
-              <View style={{ width: '100%' }}>
+              <View style={{ width: "100%" }}>
                 <View
                   style={{
-                    width: '100%',
+                    width: "100%",
                     height: 200,
-                    justifyContent: 'center',
-                    alignItems: 'center'
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
                   <Pressable
                     onPress={() => setShowImageOptions(!showImageOptions)}
                     style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                      alignItems: "center",
+                      justifyContent: "center",
                       flex: 1,
-                      flexDirection: 'row',
-                      position: 'relative'
+                      flexDirection: "row",
+                      position: "relative",
                     }}
                   >
                     <Pressable
@@ -220,25 +223,25 @@ const PerfilConfiguracion = () => {
                         height: 30,
                         backgroundColor: Color.secundario,
                         borderRadius: 100,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        position: 'absolute',
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "absolute",
                         top: 30,
                         right: 0,
-                        zIndex: 999
+                        zIndex: 999,
                       }}
                     >
                       <Image
                         style={{ width: 16, height: 16 }}
                         contentFit="cover"
-                        source={require('../../../assets/cameraIcon.png')}
+                        source={require("../../../assets/cameraIcon.png")}
                       />
                     </Pressable>
                     {!provisoryProfileImage && !usuario?.profilePicture ? (
                       <Image
                         style={{ ...styles.perfilItem, borderRadius: 100 }}
                         contentFit="cover"
-                        source={require('../../../assets/logoo.png')}
+                        source={require("../../../assets/logoo.png")}
                       />
                     ) : (
                       <Image
@@ -248,24 +251,24 @@ const PerfilConfiguracion = () => {
                           uri:
                             profileImage ||
                             provisoryProfileImage ||
-                            usuario.profilePicture
+                            usuario.profilePicture,
                         }}
                       />
                     )}
                   </Pressable>
 
                   <TouchableOpacity
-                    onPress={() => pickImage('profile')}
+                    onPress={() => pickImage("profile")}
                     style={{
                       width: 120,
                       height: 30,
                       backgroundColor: Color.secundario,
                       borderRadius: 100,
-                      justifyContent: 'center',
-                      alignItems: 'center'
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
                   >
-                    <Text style={{ color: 'white' }}>Subir imagen</Text>
+                    <Text style={{ color: "white" }}>Subir imagen</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -277,10 +280,10 @@ const PerfilConfiguracion = () => {
                 </Text>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '100%'
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
                   }}
                 >
                   <TextInput
@@ -288,13 +291,13 @@ const PerfilConfiguracion = () => {
                     style={[
                       styles.brunoPham,
                       styles.brunoPhamTypo,
-                      { width: '100%' }
+                      { width: "100%" },
                     ]}
                     maxLength={38}
                     ref={nombreInputRef}
-                    placeholder={usuario.username || 'Nombre/s'}
+                    placeholder={usuario.username || "Nombre/s"}
                     onChangeText={(text) =>
-                      setDataToSend({ ...dataToSend, ['username']: text })
+                      setDataToSend({ ...dataToSend, ["username"]: text })
                     }
                     value={dataToSend.username}
                   />
@@ -304,8 +307,8 @@ const PerfilConfiguracion = () => {
                       contentFit="cover"
                       source={
                         editable
-                          ? require('../../../assets/vector47.png')
-                          : require('../../../assets/lapizgris.png')
+                          ? require("../../../assets/vector47.png")
+                          : require("../../../assets/lapizgris.png")
                       }
                     />
                   </TouchableOpacity>
@@ -319,10 +322,10 @@ const PerfilConfiguracion = () => {
                 </Text>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '100%'
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
                   }}
                 >
                   <TextInput
@@ -330,12 +333,12 @@ const PerfilConfiguracion = () => {
                     style={[
                       styles.brunoPham,
                       styles.brunoPhamTypo,
-                      { width: '100%' }
+                      { width: "100%" },
                     ]}
                     maxLength={38}
-                    placeholder={usuario.apellido || 'Apellido/s'}
+                    placeholder={usuario.apellido || "Apellido/s"}
                     onChangeText={(text) =>
-                      setDataToSend({ ...dataToSend, ['apellido']: text })
+                      setDataToSend({ ...dataToSend, ["apellido"]: text })
                     }
                     value={dataToSend.apellido}
                   />
@@ -346,18 +349,18 @@ const PerfilConfiguracion = () => {
               <View
                 style={{
                   flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center'
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
                 <Pressable
-                  style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+                  style={{ width: "100%", height: "100%", left: 0, top: 0 }}
                   onPress={closeCalendario}
                 />
                 <PopUpCalendario
                   selectedDate={dataToSend.birthDate}
                   setSelectedDate={(v) =>
-                    setDataToSend({ ...dataToSend, ['birthDate']: v })
+                    setDataToSend({ ...dataToSend, ["birthDate"]: v })
                   }
                   setButtonContainer2Visible={() => {}}
                   setCalendario={setCalendario}
@@ -371,10 +374,10 @@ const PerfilConfiguracion = () => {
                 </Text>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '100%'
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
                   }}
                 >
                   <Pressable
@@ -382,17 +385,17 @@ const PerfilConfiguracion = () => {
                     style={[
                       styles.brunoPham,
                       styles.brunoPhamTypo,
-                      { width: '100%' }
+                      { width: "100%" },
                     ]}
                   >
                     <Text
                       style={{
-                        color: 'gray'
+                        color: "gray",
                       }}
                     >
                       {usuario.birthDate ||
                         dataToSend.birthDate ||
-                        'Fecha de nacimiento'}
+                        "Fecha de nacimiento"}
                     </Text>
                   </Pressable>
                 </View>
@@ -406,10 +409,10 @@ const PerfilConfiguracion = () => {
                 </Text>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '100%'
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
                   }}
                 >
                   <Pressable
@@ -417,15 +420,15 @@ const PerfilConfiguracion = () => {
                     style={[
                       styles.brunoPham,
                       styles.brunoPhamTypo,
-                      { width: '100%' }
+                      { width: "100%" },
                     ]}
                   >
                     <Text
                       style={{
-                        color: 'gray'
+                        color: "gray",
                       }}
                     >
-                      {usuario.address || dataToSend.address || 'Ubicación'}
+                      {usuario.address || dataToSend.address || "Ubicación"}
                     </Text>
                   </Pressable>
                 </View>
@@ -435,27 +438,27 @@ const PerfilConfiguracion = () => {
               <View
                 style={{
                   flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: 'rgba(113, 113, 113, 0.3)'
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "rgba(113, 113, 113, 0.3)",
                 }}
               >
                 <Pressable
                   style={{
-                    position: 'absolute',
-                    width: '100%',
-                    height: '100%',
+                    position: "absolute",
+                    width: "100%",
+                    height: "100%",
                     left: 0,
-                    top: 0
+                    top: 0,
                   }}
                   onPress={() => {
-                    setShowLocation(false)
+                    setShowLocation(false);
                   }}
                 />
                 <Maps
                   onClose={() => setShowLocation(false)}
                   setLocation={(e) =>
-                    setDataToSend({ ...dataToSend, ['address']: e })
+                    setDataToSend({ ...dataToSend, ["address"]: e })
                   }
                 />
               </View>
@@ -463,13 +466,13 @@ const PerfilConfiguracion = () => {
             <Modal animationType="fade" transparent visible={showTagUsers}>
               <View
                 style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: '100%'
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "100%",
                 }}
               >
                 <Pressable
-                  style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+                  style={{ width: "100%", height: "100%", left: 0, top: 0 }}
                   onPress={() => setShowTagUsers(false)}
                 />
                 {/* <EtiquetarUno
@@ -483,7 +486,7 @@ const PerfilConfiguracion = () => {
                 <EtiquetarFamiliar
                   taggedUsers={invitedUsers}
                   setTaggedUsers={(e) =>
-                    setDataToSend({ ...dataToSend, ['momId']: e })
+                    setDataToSend({ ...dataToSend, ["momId"]: e })
                   }
                   onClose={() => setShowTagUsers(false)}
                 ></EtiquetarFamiliar>
@@ -492,13 +495,13 @@ const PerfilConfiguracion = () => {
             <Modal animationType="fade" transparent visible={showTagUsersPadre}>
               <View
                 style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: '100%'
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "100%",
                 }}
               >
                 <Pressable
-                  style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+                  style={{ width: "100%", height: "100%", left: 0, top: 0 }}
                   onPress={() => setShowTagUsersPadre(false)}
                 />
                 {/* <EtiquetarUno
@@ -512,7 +515,7 @@ const PerfilConfiguracion = () => {
                 <EtiquetarFamiliar
                   taggedUsers={invitedUsers}
                   setTaggedUsers={(e) =>
-                    setDataToSend({ ...dataToSend, ['dadId']: e })
+                    setDataToSend({ ...dataToSend, ["dadId"]: e })
                   }
                   onClose={() => setShowTagUsersPadre(false)}
                 ></EtiquetarFamiliar>
@@ -521,13 +524,13 @@ const PerfilConfiguracion = () => {
             <Modal animationType="fade" transparent visible={showTagBrother}>
               <View
                 style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: '100%'
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "100%",
                 }}
               >
                 <Pressable
-                  style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+                  style={{ width: "100%", height: "100%", left: 0, top: 0 }}
                   onPress={() => setShowTagBrother(false)}
                 />
                 {/* <EtiquetarUno
@@ -550,7 +553,7 @@ const PerfilConfiguracion = () => {
             <Image
               style={styles.frameChild}
               contentFit="cover"
-              source={require('../../../assets/line-811.png')}
+              source={require("../../../assets/line-811.png")}
             />
             <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
               <View style={styles.nombreCompletoParent}>
@@ -559,10 +562,10 @@ const PerfilConfiguracion = () => {
                 </Text>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '100%'
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
                   }}
                 >
                   {/* <TextInput
@@ -576,30 +579,30 @@ const PerfilConfiguracion = () => {
                     style={[
                       styles.brunoPham,
                       styles.brunoPhamTypo,
-                      { width: '100%', flexDirection: 'row', gap: 3 }
+                      { width: "100%", flexDirection: "row", gap: 3 },
                     ]}
                   >
                     <Text
                       style={{
-                        color: 'gray'
+                        color: "gray",
                       }}
                     >
                       {usuario.momId || dataToSend.momId
                         ? allUsers.filter(
-                            (user) => user.id.toString() === dataToSend.momId
+                            (user) => user.id.toString() === dataToSend.momId,
                           )[0]?.username || dataToSend.momId
-                        : 'Agregar madre'}
+                        : "Agregar madre"}
                     </Text>
                     <Text
                       style={{
-                        color: 'gray'
+                        color: "gray",
                       }}
                     >
                       {usuario.momId || dataToSend.momId
                         ? allUsers.filter(
-                            (user) => user.id.toString() === dataToSend?.momId
-                          )[0]?.apellido || ''
-                        : ''}
+                            (user) => user.id.toString() === dataToSend?.momId,
+                          )[0]?.apellido || ""
+                        : ""}
                     </Text>
                   </Pressable>
                 </View>
@@ -612,10 +615,10 @@ const PerfilConfiguracion = () => {
                 </Text>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '100%'
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
                   }}
                 >
                   <Pressable
@@ -625,26 +628,26 @@ const PerfilConfiguracion = () => {
                     style={[
                       styles.brunoPham,
                       styles.brunoPhamTypo,
-                      { width: '100%' }
+                      { width: "100%" },
                     ]}
                   >
                     <Text
                       style={{
-                        color: 'gray'
+                        color: "gray",
                       }}
                     >
                       {usuario.dadId || dataToSend.dadId
                         ? allUsers.filter(
-                            (user) => user.id.toString() === dataToSend.dadId
+                            (user) => user.id.toString() === dataToSend.dadId,
                           )[0]?.username || dataToSend.dadId
-                        : 'Agregar padre'}
+                        : "Agregar padre"}
                     </Text>
                     <Text>
                       {usuario.dadId || dataToSend.dadId
                         ? allUsers.filter(
-                            (user) => user.id.toString() === dataToSend.dadId
-                          )[0]?.apellido || ''
-                        : ''}
+                            (user) => user.id.toString() === dataToSend.dadId,
+                          )[0]?.apellido || ""
+                        : ""}
                     </Text>
                   </Pressable>
                 </View>
@@ -654,7 +657,7 @@ const PerfilConfiguracion = () => {
             <Image
               style={styles.frameChild}
               contentFit="cover"
-              source={require('../../../assets/line-811.png')}
+              source={require("../../../assets/line-811.png")}
             />
 
             <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
@@ -663,7 +666,7 @@ const PerfilConfiguracion = () => {
                   style={[
                     styles.cambiarFotoDe,
                     styles.brunoPhamTypo,
-                    { marginBottom: 6 }
+                    { marginBottom: 6 },
                   ]}
                 >
                   Hermanos
@@ -672,15 +675,15 @@ const PerfilConfiguracion = () => {
                 {usuario.brotherIds &&
                   usuario.brotherIds.map((e) => {
                     return (
-                      <Text style={{ color: 'gray', marginBottom: 6 }}>
-                        {`${allUsers.find((us) => us.id == e)?.username || e} ${allUsers.find((us) => us.id == e)?.apellido || ''}`}
+                      <Text style={{ color: "gray", marginBottom: 6 }}>
+                        {`${allUsers.find((us) => us.id == e)?.username || e} ${allUsers.find((us) => us.id == e)?.apellido || ""}`}
                       </Text>
-                    )
+                    );
                   })}
               </View>
-              <View style={{ alignItems: 'center', width: '20%' }}>
+              <View style={{ alignItems: "center", width: "20%" }}>
                 <Pressable onPress={handleAddBrotherInput}>
-                  <Text style={{ textAlign: 'center', fontSize: 22 }}>+</Text>
+                  <Text style={{ textAlign: "center", fontSize: 22 }}>+</Text>
                 </Pressable>
               </View>
             </View>
@@ -691,15 +694,15 @@ const PerfilConfiguracion = () => {
                     style={{ marginBottom: 6 }}
                     onPress={() => {
                       if (editable) {
-                        setInputSelected(i)
-                        setShowTagBrother(true)
+                        setInputSelected(i);
+                        setShowTagBrother(true);
                       }
                     }}
                   >
-                    <Text style={{ color: 'gray' }}>
+                    <Text style={{ color: "gray" }}>
                       {(e.input &&
-                        `${allUsers.find((us) => us.id == e?.input)?.username || e?.input} ${allUsers.find((us) => us.id == e?.input)?.apellido || ''}`) ||
-                        'Agregar hermano'}
+                        `${allUsers.find((us) => us.id == e?.input)?.username || e?.input} ${allUsers.find((us) => us.id == e?.input)?.apellido || ""}`) ||
+                        "Agregar hermano"}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -707,7 +710,7 @@ const PerfilConfiguracion = () => {
             <Image
               style={styles.frameChild}
               contentFit="cover"
-              source={require('../../../assets/line-811.png')}
+              source={require("../../../assets/line-811.png")}
             />
             <View style={[styles.frameContainer, styles.frameContainerFlexBox]}>
               <View style={styles.nombreCompletoParent}>
@@ -716,21 +719,21 @@ const PerfilConfiguracion = () => {
                 </Text>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '100%'
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
                   }}
                 >
                   <TextInput
                     editable={editable}
                     onChangeText={(text) =>
-                      setDataToSend({ ...dataToSend, ['maritalStatus']: text })
+                      setDataToSend({ ...dataToSend, ["maritalStatus"]: text })
                     }
                     style={[styles.brunoPham, styles.brunoPhamTypo]}
                     ref={nombreInputRef}
                     value={dataToSend.maritalStatus}
-                    placeholder={dataToSend.maritalStatus || 'Estado Civíl'}
+                    placeholder={dataToSend.maritalStatus || "Estado Civíl"}
                   />
                 </View>
               </View>
@@ -738,13 +741,13 @@ const PerfilConfiguracion = () => {
             <Image
               style={styles.frameChild}
               contentFit="cover"
-              source={require('../../../assets/line-811.png')}
+              source={require("../../../assets/line-811.png")}
             />
           </View>
           <LinearGradient
             style={styles.button}
             locations={[0, 1]}
-            colors={['#7ec18c','#dee274' ]}
+            colors={["#7ec18c", "#dee274"]}
             start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
             end={{ x: 1, y: 0 }}
           >
@@ -764,10 +767,10 @@ const PerfilConfiguracion = () => {
             >
               <TouchableWithoutFeedback onPress={() => setModalCreate(false)}>
                 <View style={styles.modalOverlay}>
-                  <View style={{ width: '100%', height: '100%' }}>
+                  <View style={{ width: "100%", height: "100%" }}>
                     <ENTRADACREADA
                       onClose={onCloseModalCreate}
-                      message={'Guardado!'}
+                      message={"Guardado!"}
                     />
                   </View>
                 </View>
@@ -776,48 +779,48 @@ const PerfilConfiguracion = () => {
           )}
         </ScrollView>
       </KeyboardAvoidingView>
-    )
+    );
   } else {
     return (
-      <View style={{ zIndex: 9999, height: '100%' }}>
+      <View style={{ zIndex: 9999, height: "100%" }}>
         <CameraView
           ref={cameraReff}
           facing={facing}
           style={{ flex: 1 }}
           mode="picture"
           FocusMode="on"
-          onCameraReady={(e) => console.log(e, 'esto es e')}
+          onCameraReady={(e) => console.log(e, "esto es e")}
         >
           <View
             style={{
               flex: 1,
-              backgroundColor: 'transparent',
-              flexDirection: 'row'
+              backgroundColor: "transparent",
+              flexDirection: "row",
             }}
           >
             <TouchableOpacity
-              style={{ position: 'absolute', top: 49, left: 20 }}
+              style={{ position: "absolute", top: 49, left: 20 }}
               onPress={() => setShowCamera(false)}
             >
               <Image
                 style={{
                   height: 16,
-                  width: 16
+                  width: 16,
                 }}
                 contentFit="cover"
-                source={require('../../../assets/group-565.png')}
+                source={require("../../../assets/group-565.png")}
               />
             </TouchableOpacity>
 
             <TouchableOpacity
               style={{
-                alignSelf: 'flex-end',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'row',
-                width: '100%',
+                alignSelf: "flex-end",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "row",
+                width: "100%",
                 marginBottom: 30,
-                position: 'relative'
+                position: "relative",
               }}
             >
               <TouchableOpacity
@@ -827,193 +830,193 @@ const PerfilConfiguracion = () => {
                   height: 60,
                   bottom: 100,
                   borderRadius: 100,
-                  backgroundColor: '#cecece',
+                  backgroundColor: "#cecece",
 
-                  color: 'white'
+                  color: "white",
                 }}
               ></TouchableOpacity>
               <TouchableOpacity
                 onPress={changePictureMode}
                 style={{
-                  position: 'absolute',
+                  position: "absolute",
                   right: 20,
                   bottom: 100,
-                  color: 'white',
-                  justifyContent: 'center',
-                  alignItems: 'center'
+                  color: "white",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
-                <Entypo name="cycle" color={'#fff'} size={25} />
+                <Entypo name="cycle" color={"#fff"} size={25} />
               </TouchableOpacity>
             </TouchableOpacity>
           </View>
         </CameraView>
       </View>
-    )
+    );
   }
-}
+};
 
 const styles = StyleSheet.create({
   frameParent: {
     flex: 1,
     backgroundColor: Color.white,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
   viewContainer: {
     backgroundColor: Color.white,
-    flex: 1
+    flex: 1,
   },
   perfilItem: {
     height: 130,
-    width: 130
+    width: 130,
   },
   parentFlexBox: {
-    flexDirection: 'row',
-    alignItems: 'center'
+    flexDirection: "row",
+    alignItems: "center",
   },
   brunoPhamTypo: {
-    textAlign: 'left',
+    textAlign: "left",
     fontFamily: FontFamily.lato,
-    width: '100%'
+    width: "100%",
   },
   vectorIconLayout: {
     height: 21,
-    width: 21
+    width: 21,
   },
   frameContainerFlexBox: {
-    flexDirection: 'row'
+    flexDirection: "row",
   },
   pressableFlexBox: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row'
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
   cambiarFotoDe: {
     color: Color.negro,
-    textAlign: 'left',
-    fontWeight: '600',
+    textAlign: "left",
+    fontWeight: "600",
     letterSpacing: 0,
     lineHeight: 19,
-    fontSize: FontSize.size_base
+    fontSize: FontSize.size_base,
   },
   brunoPham: {
     color: Color.grisGeneral,
     marginTop: 10,
-    fontWeight: '500',
+    fontWeight: "500",
     letterSpacing: 0,
     lineHeight: 19,
-    fontSize: FontSize.size_base
+    fontSize: FontSize.size_base,
   },
   nombreCompletoParent: {
-    width: '80%'
+    width: "80%",
   },
   vectorIcon1: {
-    marginLeft: 20
+    marginLeft: 20,
   },
   frameContainer: {
     marginTop: 20,
-    alignItems: 'center'
+    alignItems: "center",
   },
   frameChild: {
-    height: '0.5%',
+    height: "0.5%",
     width: 388,
-    marginTop: 20
+    marginTop: 20,
   },
   deleteIcon: {
     width: 18,
     height: 20,
-    overflow: 'hidden'
+    overflow: "hidden",
   },
   eliminarDatos: {
     fontSize: FontSize.size_lg,
     lineHeight: 22,
     marginLeft: 15,
     color: Color.negro,
-    textAlign: 'left',
-    fontWeight: '500',
-    letterSpacing: 0
+    textAlign: "left",
+    fontWeight: "500",
+    letterSpacing: 0,
   },
   deleteParent: {
     marginTop: 38,
-    alignItems: 'center'
+    alignItems: "center",
   },
   signIn: {
     letterSpacing: 1,
     lineHeight: 24,
     color: Color.white,
-    textAlign: 'center',
+    textAlign: "center",
     fontFamily: FontFamily.lato,
     fontSize: FontSize.size_base,
-    flex: 1
+    flex: 1,
   },
   pressable: {
     borderRadius: Border.br_11xl,
     paddingHorizontal: Padding.p_5xl,
     paddingVertical: Padding.p_sm,
-    backgroundColor: Color.linearBoton
+    backgroundColor: Color.linearBoton,
   },
   button: {
     marginTop: 38,
-    borderRadius: Border.br_11xl
+    borderRadius: Border.br_11xl,
   },
   icon: {
-    height: '100%',
-    overflow: 'hidden',
-    width: '100%'
+    height: "100%",
+    overflow: "hidden",
+    width: "100%",
   },
   image6Icon: {
     top: 3,
     width: 87,
-    height: 55
+    height: 55,
   },
   documentIcon: {
-    overflow: 'hidden'
+    overflow: "hidden",
   },
   parentIcons: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    top: '5%'
+    alignItems: "center",
+    flexDirection: "row",
+    top: "5%",
   },
   iconlylightOutlinecalendarParent: {
-    width: '100%',
-    left: '45%',
-    flexDirection: 'row'
+    width: "100%",
+    left: "45%",
+    flexDirection: "row",
   },
   iconlylightOutlinecalendar: {
     height: 24,
-    width: 24
+    width: 24,
   },
   documentIconLayout: {
     marginLeft: 30,
     height: 24,
-    width: 24
+    width: 24,
   },
   backParent: {},
   icon: {
-    height: '100%',
-    overflow: 'hidden'
+    height: "100%",
+    overflow: "hidden",
   },
   iconLayout1: {
-    width: '100%',
-    overflow: 'hidden'
+    width: "100%",
+    overflow: "hidden",
   },
   ajustes: {
     fontSize: FontSize.size_5xl,
     marginLeft: 20,
-    textAlign: 'left',
+    textAlign: "left",
     color: Color.negro,
     fontFamily: FontFamily.lato,
-    fontWeight: '700'
+    fontWeight: "700",
   },
   centralContainer: {
-    left: '3%'
+    left: "3%",
   },
   modalOverlay: {
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
 
-export default PerfilConfiguracion
+export default PerfilConfiguracion;
