@@ -28,7 +28,7 @@ const Fechas = ({ selectedDate, dates, user }) => {
     <View style={styles.frameGroup}>
       <Text style={styles.title}>Actividad Familiar</Text>
 
-      {datesFechas &&
+      {datesFechas?.length > 0 ? (
         datesFechas.map((item, i) => {
           if (item.type === "special") {
             return (
@@ -65,7 +65,10 @@ const Fechas = ({ selectedDate, dates, user }) => {
               </Pressable>
             );
           }
-        })}
+        })
+      ) : (
+        <Text>No tienes fechas especiales</Text>
+      )}
     </View>
   );
 };

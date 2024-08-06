@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Image } from "expo-image";
-import {
-  StyleSheet,
-  View,
-  Pressable,
-  Text,
-  ScrollView,
-  TextInput,
-} from "react-native";
+import { StyleSheet, View, Pressable, Text, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import {
   Padding,
@@ -17,11 +10,9 @@ import {
   Color,
 } from "../../GlobalStyles";
 import BusquedaContactos from "./BusquedaComponents/BusquedaContactos";
-import BusquedaPublicaciones from "./BusquedaComponents/BusquedaPublicaciones";
 import BusquedaDiarios from "./BusquedaComponents/BusquedaDiarios";
 import BusquedaHashtags from "./BusquedaComponents/BusquedaHashtags";
 import BusquedaEventos from "./BusquedaComponents/BusquedaEventos";
-import MasBusquedaSVG from "../../components/svgs/MasBusquedaSVG";
 import BarraBusqueda from "../../components/BarraBusqueda";
 import Post from "../../components/Post";
 import { LinearGradient } from "expo-linear-gradient";
@@ -103,12 +94,6 @@ const Busqueda = () => {
       if (selectedComponent === "BusquedaHashtags") {
         setFilteredEvents([]);
       }
-      // if (selectedComponent === 'BusquedaContactos') {
-      //   setFilteredContacts(allUsers)
-      // }
-      // if (selectedComponent === 'BusquedaDiarios') {
-      //   setFilteredDiaries(allDiaries)
-      // }
     }
   }, [search]);
 
@@ -163,18 +148,6 @@ const Busqueda = () => {
             shadowColor: "black",
           }}
         >
-          {/* <Pressable onPress={() => navigation.openDrawer()}>
-            <Image
-              style={[
-                {
-                  width: 87,
-                  height: 55
-                }
-              ]}
-              contentFit="cover"
-              source={require('../../assets/image-6.png')}
-            />
-          </Pressable> */}
           <TopBar screen={"busqueda"}></TopBar>
           <View style={styles.backParent}>
             <Pressable
@@ -190,12 +163,13 @@ const Busqueda = () => {
             <Text style={[styles.bsqueda1, styles.bsqueda1Typo]}>Búsqueda</Text>
           </View>
 
-          <BarraBusqueda
-            search={search}
-            setSearch={setSearch}
-            fromSearch={true}
-          />
-
+          <View style={{ paddingHorizontal: 10 }}>
+            <BarraBusqueda
+              search={search}
+              setSearch={setSearch}
+              fromSearch={true}
+            />
+          </View>
           <ScrollView
             style={styles.tabsParent}
             horizontal={true}

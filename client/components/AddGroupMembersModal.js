@@ -1,56 +1,63 @@
-import * as React from 'react'
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
-import { Image } from 'expo-image'
-import { LinearGradient } from 'expo-linear-gradient'
-import { FontFamily, FontSize, Color, Padding, Border } from '../GlobalStyles'
-import Checkbox from './Checkbox'
-import { useSelector } from 'react-redux'
+import * as React from "react";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
+import { FontFamily, FontSize, Color, Padding, Border } from "../GlobalStyles";
+import Checkbox from "./Checkbox";
+import { useSelector } from "react-redux";
 
 const AddGroupMembersModal = ({ onClose, taggedUsers, setTaggedUsers }) => {
-  const { allUsers } = useSelector((state) => state.users)
+  const { allUsers, userData } = useSelector((state) => state.users);
 
   const handleToggleTag = (userId) => {
     if (taggedUsers.includes(userId.toString())) {
       const newArray = taggedUsers.filter(
-        (id) => id.toString() !== userId.toString()
-      )
-      setTaggedUsers(newArray)
+        (id) => id.toString() !== userId.toString(),
+      );
+      setTaggedUsers(newArray);
     } else {
-      setTaggedUsers([...taggedUsers, userId.toString()])
+      setTaggedUsers([...taggedUsers, userId.toString()]);
     }
-  }
+  };
+
+  const userFamily =
+    allUsers.filter((user) => user.id === userData.id)[0]?.familyIds || [];
+  const userFriends =
+    allUsers.filter((user) => user.id === userData.id)[0]?.friendsIds || [];
 
   return (
     <View
       style={{
-        width: '100%',
+        width: "100%",
         height: 510,
         backgroundColor: Color.white,
         borderTopRightRadius: Border.br_11xl,
         borderTopLeftRadius: Border.br_11xl,
-        borderWidth:1,borderBottomWidth:0,borderColor:Color.primario1,
-        position: 'absolute',
+        borderWidth: 1,
+        borderBottomWidth: 0,
+        borderColor: Color.primario1,
+        position: "absolute",
         bottom: 0,
-        paddingHorizontal: 30
+        paddingHorizontal: 30,
       }}
     >
       <View
         style={{
           top: 20,
-          width: '100%',
-          alignItems: 'center'
+          width: "100%",
+          alignItems: "center",
         }}
       >
-        <View style={{ alignSelf: 'flex-start', alignItems: 'center' }}>
+        <View style={{ alignSelf: "flex-start", alignItems: "center" }}>
           <Text
             style={{
-              fontWeight: '500',
+              fontWeight: "500",
               color: Color.colorGray_200,
-              textAlign: 'left',
+              textAlign: "left",
               lineHeight: 19,
               letterSpacing: 0,
               fontFamily: FontFamily.lato,
-              fontSize: FontSize.size_base
+              fontSize: FontSize.size_base,
             }}
           >
             Amigos
@@ -60,83 +67,103 @@ const AddGroupMembersModal = ({ onClose, taggedUsers, setTaggedUsers }) => {
           style={{
             borderColor: Color.secundario,
             borderTopWidth: 1,
-            width: '100%',
+            width: "100%",
             height: 1,
             marginTop: 15,
-            borderStyle: 'solid'
+            borderStyle: "solid",
           }}
         />
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{
             maxHeight: 150,
-            overflow: 'hidden',
+            overflow: "hidden",
             flexGrow: 1,
-            marginTop: 5
+            marginTop: 5,
           }}
           contentContainerStyle={{
-            width: '100%',
-            alignItems: 'center'
+            width: "100%",
+            alignItems: "center",
           }}
         >
-          {allUsers
-            .filter((user) => user.username)
-            .map((user, index) => (
-              <View
-                key={-index}
-                style={{
-                  marginTop: 15,
-                  justifyContent: 'space-between',
-                  flexDirection: 'row',
-                  width: '100%',
-                  alignItems: 'center'
-                }}
-              >
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Image
-                    style={{ width: 30, height: 30 }}
-                    contentFit="cover"
-                    source={require('../assets/frame-1547754875.png')}
-                  />
-                  <Text
+          {userFamily.length > 0 &&
+            userFamily.map((familyMember, index) => {
+              if (true)
+                return (
+                  <View
+                    key={index}
                     style={{
-                      fontWeight: '700',
-                      color: Color.grisDiscord,
-                      textAlign: 'justify',
-                      marginLeft: 13,
-                      lineHeight: 19,
-                      letterSpacing: 0,
-                      fontFamily: FontFamily.lato,
-                      fontSize: FontSize.size_base
+                      marginTop: 15,
+                      justifyContent: "space-between",
+                      flexDirection: "row",
+                      width: "100%",
+                      alignItems: "center",
                     }}
                   >
-                    {user.username + ' ' + user.apellido}
-                  </Text>
-                </View>
-                <Checkbox
-                  checked={taggedUsers.includes(user.id.toString())}
-                  setChecked={() => handleToggleTag(user.id.toString())}
-                />
-              </View>
-            ))}
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <Image
+                        style={{ width: 30, height: 30, borderRadius: 50 }}
+                        contentFit="cover"
+                        source={
+                          allUsers.filter(
+                            (user) => user.id.toString() === familyMember,
+                          )[0]?.profilePicture
+                            ? allUsers.filter(
+                                (user) => user.id.toString() === familyMember,
+                              )[0]?.profilePicture
+                            : require("../assets/frame-1547754875.png")
+                        }
+                      />
+                      <Text
+                        style={{
+                          fontWeight: "700",
+                          color: Color.grisDiscord,
+                          textAlign: "justify",
+                          marginLeft: 13,
+                          lineHeight: 19,
+                          letterSpacing: 0,
+                          fontFamily: FontFamily.lato,
+                          fontSize: FontSize.size_base,
+                        }}
+                      >
+                        {allUsers.filter(
+                          (user) => user.id.toString() === familyMember,
+                        )[0]?.username +
+                          " " +
+                          allUsers.filter(
+                            (user) => user.id.toString() === familyMember,
+                          )[0]?.apellido}
+                      </Text>
+                    </View>
+                    <Checkbox
+                      checked={taggedUsers.includes(familyMember.toString())}
+                      setChecked={() =>
+                        handleToggleTag(familyMember.toString())
+                      }
+                    />
+                  </View>
+                );
+            })}
         </ScrollView>
 
         <View
           style={{
-            alignSelf: 'flex-start',
+            alignSelf: "flex-start",
             marginTop: 20,
-            alignItems: 'center'
+            alignItems: "center",
           }}
         >
           <Text
             style={{
-              fontWeight: '500',
+              fontWeight: "500",
               color: Color.colorGray_200,
-              textAlign: 'left',
+              textAlign: "left",
               lineHeight: 19,
               letterSpacing: 0,
               fontFamily: FontFamily.lato,
-              fontSize: FontSize.size_base
+              fontSize: FontSize.size_base,
             }}
           >
             Familia
@@ -146,80 +173,100 @@ const AddGroupMembersModal = ({ onClose, taggedUsers, setTaggedUsers }) => {
           style={{
             borderColor: Color.secundario,
             borderTopWidth: 1,
-            width: '100%',
+            width: "100%",
             height: 1,
             marginTop: 15,
-            borderStyle: 'solid'
+            borderStyle: "solid",
           }}
         />
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{
             maxHeight: 150,
-            overflow: 'hidden',
+            overflow: "hidden",
             flexGrow: 1,
-            marginTop: 5
+            marginTop: 5,
           }}
           contentContainerStyle={{
-            width: '100%',
-            alignItems: 'center'
+            width: "100%",
+            alignItems: "center",
           }}
         >
-          {allUsers
-            .filter((user) => user.username)
-            .map((user, index) => (
-              <View
-                key={index}
-                style={{
-                  marginTop: 15,
-                  justifyContent: 'space-between',
-                  flexDirection: 'row',
-                  width: '100%',
-                  alignItems: 'center'
-                }}
-              >
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Image
-                    style={{ width: 30, height: 30 }}
-                    contentFit="cover"
-                    source={require('../assets/frame-1547754875.png')}
-                  />
-                  <Text
+          {userFriends.length > 0 &&
+            userFriends.map((friendMember, index) => {
+              if (true)
+                return (
+                  <View
+                    key={-index}
                     style={{
-                      fontWeight: '700',
-                      color: Color.grisDiscord,
-                      textAlign: 'justify',
-                      marginLeft: 13,
-                      lineHeight: 19,
-                      letterSpacing: 0,
-                      fontFamily: FontFamily.lato,
-                      fontSize: FontSize.size_base
+                      marginTop: 15,
+                      justifyContent: "space-between",
+                      flexDirection: "row",
+                      width: "100%",
+                      alignItems: "center",
                     }}
                   >
-                    {user.username + ' ' + user.apellido}
-                  </Text>
-                </View>
-                <Checkbox
-                  checked={taggedUsers.includes(user.id.toString())}
-                  setChecked={() => handleToggleTag(user.id.toString())}
-                />
-              </View>
-            ))}
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <Image
+                        style={{ width: 30, height: 30, borderRadius: 50 }}
+                        contentFit="cover"
+                        source={
+                          allUsers.filter(
+                            (user) => user.id.toString() === friendMember,
+                          )[0]?.profilePicture
+                            ? allUsers.filter(
+                                (user) => user.id.toString() === friendMember,
+                              )[0]?.profilePicture
+                            : require("../assets/frame-1547754875.png")
+                        }
+                      />
+                      <Text
+                        style={{
+                          fontWeight: "700",
+                          color: Color.grisDiscord,
+                          textAlign: "justify",
+                          marginLeft: 13,
+                          lineHeight: 19,
+                          letterSpacing: 0,
+                          fontFamily: FontFamily.lato,
+                          fontSize: FontSize.size_base,
+                        }}
+                      >
+                        {allUsers.filter(
+                          (user) => user.id.toString() === friendMember,
+                        )[0]?.username +
+                          " " +
+                          allUsers.filter(
+                            (user) => user.id.toString() === friendMember,
+                          )[0]?.apellido}
+                      </Text>
+                    </View>
+                    <Checkbox
+                      checked={taggedUsers.includes(friendMember.toString())}
+                      setChecked={() =>
+                        handleToggleTag(friendMember.toString())
+                      }
+                    />
+                  </View>
+                );
+            })}
         </ScrollView>
       </View>
       <TouchableOpacity style={{ marginTop: 40 }} onPress={onClose}>
         <LinearGradient
           style={{
-            justifyContent: 'center',
+            justifyContent: "center",
             paddingHorizontal: Padding.p_5xl,
             paddingVertical: Padding.p_sm,
             backgroundColor: Color.linearBoton,
-            width: '100%',
-            flexDirection: 'row',
-            borderRadius: Border.br_11xl
+            width: "100%",
+            flexDirection: "row",
+            borderRadius: Border.br_11xl,
           }}
           locations={[0, 1]}
-          colors={['#7ec18c','#dee274' ]}
+          colors={["#7ec18c", "#dee274"]}
           start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
           end={{ x: 1, y: 0 }}
         >
@@ -229,9 +276,9 @@ const AddGroupMembersModal = ({ onClose, taggedUsers, setTaggedUsers }) => {
               letterSpacing: 1,
               lineHeight: 24,
               color: Color.white,
-              textAlign: 'center',
+              textAlign: "center",
               fontFamily: FontFamily.lato,
-              fontSize: FontSize.size_base
+              fontSize: FontSize.size_base,
             }}
           >
             Aceptar
@@ -239,7 +286,7 @@ const AddGroupMembersModal = ({ onClose, taggedUsers, setTaggedUsers }) => {
         </LinearGradient>
       </TouchableOpacity>
     </View>
-  )
-}
+  );
+};
 
-export default AddGroupMembersModal
+export default AddGroupMembersModal;

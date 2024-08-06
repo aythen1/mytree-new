@@ -41,11 +41,13 @@ const Eventos = ({ search, selectedDate, invitations }) => {
   return (
     <View style={styles.frameGroup}>
       <Text style={styles.title}>Eventos</Text>
-      {filteredEvents.map(
-        (event) =>
-          event?.type === "normal" && (
-            <EventCard key={event?.id} event={event} />
-          ),
+      {filteredEvents?.length > 0 ? (
+        filteredEvents?.map(
+          (event, i) =>
+            event?.type === "normal" && <EventCard key={i} event={event} />,
+        )
+      ) : (
+        <Text>No tienes eventos</Text>
       )}
     </View>
   );

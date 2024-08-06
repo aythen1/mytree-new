@@ -224,7 +224,6 @@ const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
           arrowColor: "#7ec18c",
           todayTextColor: "black",
         }}
-        current={selectedYear}
       />
     </View>
   );
