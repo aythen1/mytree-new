@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Notification } from './entities/notification.entity';
 import { Repository } from 'typeorm';
+import { ChatGateway } from 'src/chat/chat.gateway';
 
 @Injectable()
 export class NotificationService {
@@ -13,6 +14,7 @@ export class NotificationService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Notification)
     private readonly notificationRepository: Repository<Notification>,
+    private chatGateway: ChatGateway,
   ) {}
 
   async create(
@@ -20,6 +22,13 @@ export class NotificationService {
   ): Promise<Notification> {
     const notification = this.notificationRepository.create(
       createNotificationDto,
+    );
+    this.chatGateway.sendNotificationToUser(
+      createNotificationDto.receiverId,
+      'notification',
+      {
+        message: 'Hello!',
+      },
     );
     return await this.notificationRepository.save(notification);
   }

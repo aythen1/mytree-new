@@ -78,10 +78,13 @@ const MiLegado = ({ fromOther, otherId }) => {
                 }
                 contentFit="cover"
                 source={
-                  album.images.length > 0
-                    ? { uri: album.images[0] }
-                    : require("../../assets/claire.png")
+                  album.coverPicture
+                    ? { uri: album.coverPicture }
+                    : album.images[0]
+                      ? { uri: album.images[0] }
+                      : require("../../assets/claire.png")
                 }
+                //
               />
             </Pressable>
           ))}

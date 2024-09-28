@@ -1,10 +1,11 @@
-import React from 'react'
-import { Svg, Path } from 'react-native-svg'
+import React from "react";
+import { Svg, Path } from "react-native-svg";
+import { scaleFont } from "../../screens/utils/funcionEscalable";
 
 const EnviarMensajeSVG = () => {
   return (
     <Svg
-      width="40"
+      width={scaleFont(25)}
       height="40"
       viewBox="0 0 40 40"
       fill="none"
@@ -15,7 +16,7 @@ const EnviarMensajeSVG = () => {
         fill="white"
       />
     </Svg>
-  )
-}
+  );
+};
 
-export default EnviarMensajeSVG
+export default EnviarMensajeSVG;

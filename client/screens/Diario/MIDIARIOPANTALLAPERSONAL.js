@@ -206,7 +206,10 @@ const MIDIARIOPANTALLAPERSONAL = () => {
               </View>
             </Pressable>
             <Pressable
-              style={styles.rectangleGroup5}
+              style={{
+                ...styles.rectangleGroup5,
+                backgroundColor: Color.primario1,
+              }}
               onPress={() => {
                 setSelectedSection("personalizada");
                 navigation.navigate("MIDIARIOENTRADATEXTOPL7");

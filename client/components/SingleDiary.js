@@ -48,6 +48,7 @@ const SingleDiary = ({
   const dispatch = useDispatch();
   const [title, setTitle] = useState(diary?.title);
   const [save, setSave] = useState(false);
+  const [vermas, setVermas] = useState(false);
 
   const { editingDiary, setEditingDiary } = useContext(Context);
 
@@ -150,52 +151,87 @@ const SingleDiary = ({
         borderBottomColor: last && "#B7E4C0",
         borderTopColor: "#B7E4C0",
         minHeight: 70,
-        marginBottom: 5,
       }}
     >
       {multiEditing ? (
-        <Text style={{ fontSize: 16, fontWeight: 500 }}>
+        <Text numberOfLines={1} style={{ fontSize: 16, fontWeight: 500 }}>
           {diary?.title || "Sin título"}
         </Text>
       ) : (
         <TextInput
-          multiline
-          style={{ fontSize: 16 }}
+          maxLength={30}
+          style={{ fontSize: 16, width: "78%" }}
           onChangeText={setTitle}
           value={title}
         ></TextInput>
       )}
       {multiEditing ? (
-        <Text style={{ width: "78%" }}>{diary.description}</Text>
+        <Text numberOfLines={1} style={{ width: "78%" }}>
+          {diary.description}
+        </Text>
       ) : (
         <TextInput
-          multiline
+          multiline={vermas && !multiEditing}
           style={{ fontSize: 16 }}
           onChangeText={setText}
           value={text}
         ></TextInput>
       )}
       {save && !multiEditing && (
-        <TouchableOpacity onPress={handleUno} style={{ alignSelf: "flex-end" }}>
-          <LinearGradient
-            style={{ marginLeft: 20, borderRadius: 50, height: 25, width: 60 }}
-            locations={[0, 1]}
-            colors={["#dee274", "#7ec18c"]}
-          >
-            <Text
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingVertical: 10,
+          }}
+        >
+          <TouchableOpacity onPress={handleUno} style={{}}>
+            <LinearGradient
               style={{
-                fontSize: FontSize.size_sm,
-                lineHeight: 21,
-                textAlign: "center",
-                color: Color.white,
-                fontFamily: FontFamily.lato,
-                letterSpacing: 0,
+                borderRadius: 50,
+                height: 25,
+                width: 60,
               }}
+              locations={[0, 1]}
+              colors={["#dee274", "#7ec18c"]}
             >
-              Guardar
-            </Text>
-          </LinearGradient>
-        </TouchableOpacity>
+              <Text
+                style={{
+                  fontSize: FontSize.size_sm,
+                  lineHeight: 21,
+                  textAlign: "center",
+                  color: Color.white,
+                  fontFamily: FontFamily.lato,
+                  letterSpacing: 0,
+                }}
+              >
+                Guardar
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+          {text.length > 40 && (
+            <TouchableOpacity onPress={() => setVermas(!vermas)} style={{}}>
+              <LinearGradient
+                style={{ borderRadius: 50, height: 25, width: 60 }}
+                locations={[0, 1]}
+                colors={["#dee274", "#7ec18c"]}
+              >
+                <Text
+                  style={{
+                    fontSize: FontSize.size_sm,
+                    lineHeight: 21,
+                    textAlign: "center",
+                    color: Color.white,
+                    fontFamily: FontFamily.lato,
+                    letterSpacing: 0,
+                  }}
+                >
+                  Ver más
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          )}
+        </View>
       )}
 
       {!notEditable && editingDiary === diary.id && (

@@ -87,8 +87,6 @@ const CALENDARIO = () => {
       contentContainerStyle={styles.scrollViewContent}
       showsVerticalScrollIndicator={false}
     >
-      <TopBar screen="calendario" />
-
       <View
         style={{
           alignItems: "center",

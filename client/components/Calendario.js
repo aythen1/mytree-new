@@ -11,6 +11,7 @@ import { Calendar, LocaleConfig } from "react-native-calendars";
 
 import { Color } from "../GlobalStyles";
 import { dataYears } from "../utils/dataLocal";
+import { scaleFont } from "../screens/utils/funcionEscalable";
 
 const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
   const calendarRef = useRef(null); // Añadir referencia al Calendar
@@ -74,6 +75,7 @@ const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
     ],
     dayNamesShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
     today: "Hoy",
+    firstDay: 1, // Establece que el primer día es Lunes (1)
   };
 
   LocaleConfig.defaultLocale = "es";
@@ -198,6 +200,7 @@ const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
       </Modal>
 
       <Calendar
+        firstDay={1}
         onDayPress={handleDayPress}
         onMonthChange={(month) => handleMonthChange(month.month - 1)}
         // Calendar provides 1-based month
@@ -222,7 +225,6 @@ const Calendario = ({ selectedDate, setSelectedDate, dates }) => {
         }}
         theme={{
           arrowColor: "#7ec18c",
-          todayTextColor: "black",
         }}
       />
     </View>

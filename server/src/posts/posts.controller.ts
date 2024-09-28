@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -17,8 +26,6 @@ export class PostsController {
     return this.postsService.findAll();
   }
 
-
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.postsService.findOne(+id);
@@ -36,21 +43,20 @@ export class PostsController {
 
   @Post(':postId/info-relation')
   async findInfoRelation(
-    @Param('postId') postId: number, 
-    @Body() requestBody: { relations: string }
+    @Param('postId') postId: number,
+    @Body() requestBody: { relations: string },
   ): Promise<any[]> {
     // Verificar si se proporcionaron relaciones
     if (!requestBody.relations || typeof requestBody.relations !== 'string') {
-      
-      throw new Error('Debe proporcionar al menos una relación como una cadena de texto.');
-
+      throw new Error(
+        'Debe proporcionar al menos una relación como una cadena de texto.',
+      );
     }
-  console.log(requestBody.relations)
+    console.log(requestBody.relations);
     // Convertir las relaciones en un arrays
     const relationsArray = requestBody.relations.split(',');
-  
+
     // Llamar al servicio para obtener la información relacionada
     return this.postsService.findInfoRelation(postId, relationsArray);
   }
-  
 }

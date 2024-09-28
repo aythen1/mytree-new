@@ -1,9 +1,10 @@
-import React from 'react'
-import { Svg, Path } from 'react-native-svg'
+import React from "react";
+import { Svg, Path } from "react-native-svg";
+import { scaleFont } from "../../screens/utils/funcionEscalable";
 const CompartirSVG = () => {
   return (
     <Svg
-      width="40"
+      width={scaleFont(25)}
       height="34"
       viewBox="0 0 40 34"
       fill="none"
@@ -17,7 +18,7 @@ const CompartirSVG = () => {
         strokeLinejoin="round"
       />
     </Svg>
-  )
-}
+  );
+};
 
-export default CompartirSVG
+export default CompartirSVG;

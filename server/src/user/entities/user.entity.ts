@@ -111,6 +111,10 @@ export class User {
   @Column('simple-array', { nullable: true })
   friendsIds: string[];
 
+  @ManyToMany(() => User)
+  @JoinTable()
+  brothers: User[];
+
   // @OneToMany(() => Comment, (comments) => comments.user)
   // comments: Comment[];
 
@@ -134,10 +138,9 @@ export class User {
   // @ManyToMany(() => GroupInfo, (group) => group.members)
   // @JoinTable()
   // groups: GroupInfo[];
-  @ManyToMany(() => GroupInfo, group => group.members)
+  @ManyToMany(() => GroupInfo, (group) => group.members)
   groups: GroupInfo[];
 
-
   @Column({ nullable: true, default: null })
-  badge: string; 
+  badge: string;
 }

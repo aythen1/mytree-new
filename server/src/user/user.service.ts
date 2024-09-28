@@ -133,8 +133,8 @@ export class UserService {
       </html>
     `;
 
-    const user = this.userRepository.create(createUserDto);
     this.sendMail(email, 'SportsMatch', html);
+    const user = this.userRepository.create(createUserDto);
     return await this.userRepository.save(user);
   }
 
@@ -150,6 +150,14 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
     return user;
+  }
+
+  async searchUsers(query: string): Promise<User[]> {
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.username ILIKE :query', { query: `%${query}%` }) // Buscar coincidencias en el nombre
+      .orWhere('user.apellido ILIKE :query', { query: `%${query}%` }) // Buscar coincidencias en el apellido
+      .getMany();
   }
 
   // ACTUALIZA UN USUARIO POR ID
@@ -776,6 +784,14 @@ export class UserService {
     let familyCount = 0;
 
     const getUserInfo = async (id: string) => {
+      if (
+        !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(
+          id,
+        )
+      ) {
+        return; // Ignorar si no es un UUID
+      }
+
       const userInfo = await this.userRepository.findOne({ where: { id: id } });
       if (userInfo) {
         usersInfo.push({

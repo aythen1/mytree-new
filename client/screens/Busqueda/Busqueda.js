@@ -148,7 +148,7 @@ const Busqueda = () => {
             shadowColor: "black",
           }}
         >
-          <TopBar screen={"busqueda"}></TopBar>
+          {/* <TopBar screen={"busqueda"}></TopBar> */}
           <View style={styles.backParent}>
             <Pressable
               style={styles.back}
@@ -349,6 +349,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     paddingHorizontal: 10,
+    marginTop: 10,
   },
   iconlylightsendCopyWrapper: {
     borderRadius: Border.br_xl,

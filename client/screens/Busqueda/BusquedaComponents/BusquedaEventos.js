@@ -39,8 +39,17 @@ function BusquedaEventos({ events }) {
           >
             <View style={styles.notificationInner}>
               <View style={styles.frameParent}>
-                <View style={styles.retoSemanal08112023Wrapper}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
+                >
                   <Text style={styles.retoSemanal}>{evnt.title}</Text>
+                  <Text style={styles.retoSemanal}>
+                    {evnt.type === "normal" ? "Evento" : "Fecha especial"}
+                  </Text>
                 </View>
                 <Text style={styles.descubreCulEs}>
                   Más información del evento

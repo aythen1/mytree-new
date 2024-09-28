@@ -333,7 +333,7 @@ const Eventos = ({ route }) => {
             <View
               style={{
                 flexDirection: "row",
-                paddingBottom: 100,
+                paddingBottom: 20,
                 justifyContent: "flex-start",
                 gap: 3,
                 flexWrap: "wrap",
@@ -697,6 +697,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.colorWhitesmoke_200,
     borderRadius: Border.br_base,
     marginTop: 10,
+    flex: 1,
   },
   boxContainer: {
     height: 100,

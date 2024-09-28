@@ -196,6 +196,7 @@ const Perfil = () => {
               </View>
             ) : (
               <TouchableOpacity
+                disabled
                 onPress={() => setShowBadgesModal(true)}
                 style={{
                   width: 30,
@@ -208,30 +209,11 @@ const Perfil = () => {
                   zIndex: 999,
                 }}
               >
-                {!userData?.badge && loading === true && (
-                  <Badge1 width={30} height={30} />
-                )}
-                {userData?.badge === "badge1" ? (
-                  <Badge1 width={30} height={30} />
-                ) : userData?.badge === "badge2" ? (
-                  <Badge2 width={30} height={30} />
-                ) : userData?.badge === "badge3" ? (
-                  <Badge3 width={30} height={30} />
-                ) : userData?.badge === "badge4" ? (
-                  <Badge4 width={30} height={30} />
-                ) : userData?.badge === "badge5" ? (
-                  <Badge5 width={30} height={30} />
-                ) : userData?.badge === "badge6" ? (
-                  <Badge6 width={30} height={30} />
-                ) : userData?.badge === "badge7" ? (
-                  <Badge7 width={30} height={30} />
-                ) : userData?.badge === "badge8" ? (
-                  <Badge8 width={30} height={30} />
-                ) : userData?.badge === "badge9" ? (
-                  <Badge9 width={30} height={30} />
-                ) : (
-                  <Badge1 width={30} height={30} />
-                )}
+                <Image
+                  contentFit="cover"
+                  style={{ width: 22, height: 22, marginRight: 13 }}
+                  source={require("../../assets/gift.png")}
+                />
               </TouchableOpacity>
             )}
             <Pressable
@@ -291,9 +273,19 @@ const Perfil = () => {
         </View>
 
         <View style={styles.nameContainer}>
-          <Text style={styles.brunoPham}>
-            {userData.username} {userData.apellido}
-          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 5,
+            }}
+          >
+            <Text style={styles.brunoPham}>
+              {userData.username} {userData.apellido}
+            </Text>
+            <Badge1 width={30} height={30} />
+          </View>
           <View style={styles.placeContainer}>
             <Text style={[styles.daNangVietnam, styles.miInfoTypo]}>
               {userData.adress && userData.adress + ","}

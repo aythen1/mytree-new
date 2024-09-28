@@ -3,8 +3,8 @@ import React, {
   useContext,
   useEffect,
   useRef,
-  useState
-} from 'react'
+  useState,
+} from "react";
 import {
   StyleSheet,
   View,
@@ -15,63 +15,63 @@ import {
   Animated,
   Share,
   Dimensions,
-  ScrollView
-} from 'react-native'
-import { Image } from 'expo-image'
-import { LinearGradient } from 'expo-linear-gradient'
-import { FontFamily, FontSize, Color } from '../GlobalStyles'
-import EnviarMensajeSVG from '../components/svgs/EnviarMensajeSVG'
-import CompartirSVG from '../components/svgs/CompartirSVG'
-import { useNavigation } from '@react-navigation/native'
-import { Context } from '../context/Context'
-import { useDispatch, useSelector } from 'react-redux'
-import { getAllPosts } from '../redux/actions/posts'
-import { getAllCommentsByPostId } from '../redux/actions/comments'
-import PagerView from 'react-native-pager-view'
-
+  ScrollView,
+} from "react-native";
+import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
+import { FontFamily, FontSize, Color } from "../GlobalStyles";
+import EnviarMensajeSVG from "../components/svgs/EnviarMensajeSVG";
+import CompartirSVG from "../components/svgs/CompartirSVG";
+import { useNavigation } from "@react-navigation/native";
+import { Context } from "../context/Context";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllPosts } from "../redux/actions/posts";
+import { getAllCommentsByPostId } from "../redux/actions/comments";
+import PagerView from "react-native-pager-view";
+import { scaleFont } from "../screens/utils/funcionEscalable";
 
 const Posteo = ({ data, padding }) => {
   const {
-    setShowShareModal,
     setShowTaggedsModal,
     setShowCommentsModal,
     setSelectedPost,
-    setSelectedPostTags
-  } = useContext(Context)
-  const navigation = useNavigation()
-  const dispatch = useDispatch()
-  const opacity = useRef(new Animated.Value(0)).current
-  const translateY = useRef(new Animated.Value(300)).current
+    setSelectedPostTags,
+  } = useContext(Context);
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const opacity = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(300)).current;
 
   useEffect(() => {
     Animated.parallel([
       Animated.timing(opacity, {
         toValue: expanded ? 1 : 0,
         duration: 300,
-        useNativeDriver: true
+        useNativeDriver: true,
       }),
       Animated.timing(translateY, {
         toValue: expanded ? 0 : 300,
         duration: 300,
-        useNativeDriver: true
-      })
-    ]).start()
-  }, [expanded])
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [expanded]);
 
+  const [currentPage, setCurrentPage] = useState(0);
   const onShare = async (message) => {
     try {
       const result = await Share.share(
         {
           message,
-          title: 'Echa un vistazo!'
+          title: "Echa un vistazo!",
         },
         {
           // Android only:
-          dialogTitle: 'Compartir esta publicación con',
+          dialogTitle: "Compartir esta publicación con",
           // iOS only:
-          excludedActivityTypes: ['com.apple.UIKit.activity.PostToTwitter']
-        }
-      )
+          excludedActivityTypes: ["com.apple.UIKit.activity.PostToTwitter"],
+        },
+      );
 
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -85,11 +85,11 @@ const Posteo = ({ data, padding }) => {
         // descartado
       }
     } catch (error) {
-      alert(error.message)
+      alert(error.message);
     }
-  }
+  };
 
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(false);
   if (expanded) {
     return (
       <Pressable onPress={() => setExpanded(false)}>
@@ -98,53 +98,59 @@ const Posteo = ({ data, padding }) => {
             backgroundColor: Color.mytreeClarito,
             left: 0,
             top: padding && padding !== false ? 15 : 5,
-            minHeight: Dimensions.get('screen').height / 1.8,
+            minHeight: Dimensions.get("screen").height / 1.8,
             marginBottom: 30,
             borderRadius: 20,
-            transition: 'all 1s ease',
+            transition: "all 1s ease",
             marginHorizontal: padding && padding !== false && 15,
-            overflow: 'hidden'
+            overflow: "hidden",
             // opacity,
             // transform: [{translateY}]
           }}
         >
           <ImageBackground
             style={{
-              height: Dimensions.get('screen').height / 1.8,
+              height: Dimensions.get("screen").height / 1.8,
               zIndex: -1000,
-              justifyContent: 'flex-end',
-              resizeMode: 'cover',
-              overflow: 'hidden',
-              justifyContent: 'space-between'
+              justifyContent: "flex-end",
+              resizeMode: "cover",
+              overflow: "hidden",
+              justifyContent: "space-between",
             }}
             resizeMethod="resize"
             source={{ uri: data.photos[0] }}
           >
             <LinearGradient
               style={{
-                height: '100%',
-                justifyContent: 'flex-start',
-                padding: 15
+                height: "100%",
+                justifyContent: "flex-start",
+                padding: 15,
               }}
               end={{ x: 0.5, y: 1 }}
               start={{ x: 0.5, y: 0 }}
-              colors={['rgba(0,0,0,0.7)', 'transparent']}
+              colors={["rgba(0,0,0,0.7)", "transparent"]}
             >
-              <View style={{ flexDirection: 'row',width:"100%",justifyContent:"space-between" }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  width: "100%",
+                  justifyContent: "space-between",
+                }}
+              >
                 <Text
                   style={{
-                    fontSize: FontSize.size_5xl,
+                    fontSize: scaleFont(20),
                     color: Color.white,
-                    fontWeight: '700',
-                    width: '80%'
+                    fontWeight: "700",
+                    width: "80%",
                   }}
                 >{`${data?.user?.username} ${data?.user?.apellido}`}</Text>
 
                 <TouchableOpacity
                   onPress={() => {
-                    setSelectedPost(data)
-                    setSelectedPostTags(data.tags || [])
-                    setShowTaggedsModal(true)
+                    setSelectedPost(data);
+                    setSelectedPostTags(data.tags || []);
+                    setShowTaggedsModal(true);
                   }}
                   style={{
                     zIndex: 99999999999,
@@ -152,50 +158,50 @@ const Posteo = ({ data, padding }) => {
                 >
                   <LinearGradient
                     style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
+                      justifyContent: "center",
+                      alignItems: "center",
                       width: 64,
                       height: 64,
                       borderRadius: 25,
-                      zIndex: 0
+                      zIndex: 0,
                     }}
                     locations={[0, 1]}
-                    colors={['#7ec18c', '#dee274']}
+                    colors={["#7ec18c", "#dee274"]}
                   >
                     <View
                       style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
+                        justifyContent: "center",
+                        alignItems: "center",
                         width: 59,
                         borderRadius: 23,
-                        backgroundColor: '#c5eacd',
-                        height: 59
+                        backgroundColor: "#c5eacd",
+                        height: 59,
                       }}
                     >
                       <View
                         style={{
-                          justifyContent: 'center',
-                          alignItems: 'center',
+                          justifyContent: "center",
+                          alignItems: "center",
                           width: 53,
                           borderRadius: 23,
-                          backgroundColor: '#b7e4c0',
-                          height: 53
+                          backgroundColor: "#b7e4c0",
+                          height: 53,
                         }}
                       >
                         <Image
                           contentFit="cover"
                           style={{
-                            width: '100%',
-                            height: '100%',
+                            width: "100%",
+                            height: "100%",
                             borderRadius: 20,
-                            zIndex: 999999999999
+                            zIndex: 999999999999,
                           }}
                           source={
                             data?.user?.profilePicture
                               ? {
-                                  uri: data?.user?.profilePicture
+                                  uri: data?.user?.profilePicture,
                                 }
-                              : require('../assets/logoo.png')
+                              : require("../assets/logoo.png")
                           }
                         />
                       </View>
@@ -207,17 +213,17 @@ const Posteo = ({ data, padding }) => {
               <ScrollView
                 contentContainerStyle={{ zIndex: 999999999999 }}
                 style={{
-                  height: Dimensions.get('window').height / 4,
-                  zIndex: 999
+                  height: Dimensions.get("window").height / 4,
+                  zIndex: 999,
                 }}
               >
                 <Text
                   style={{
-                    fontSize: FontSize.size_base,
-                    textAlign: 'left',
+                    fontSize: scaleFont(15),
+                    textAlign: "left",
                     fontFamily: FontFamily.lato,
                     color: Color.white,
-                    width: '70%'
+                    width: "70%",
                   }}
                 >
                   {data.description}
@@ -227,23 +233,23 @@ const Posteo = ({ data, padding }) => {
               {data.hashtags.length > 0 && (
                 <View
                   style={{
-                    width: '75%',
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
+                    width: "75%",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
                     gap: 5,
-                    marginTop: 10
+                    marginTop: 10,
                   }}
                 >
                   {data.hashtags.map((hashtag) => (
                     <View
                       style={{
-                        backgroundColor: '#B7E4C0',
+                        backgroundColor: "#B7E4C0",
                         borderRadius: 5,
                         paddingVertical: 4,
-                        paddingHorizontal: 8
+                        paddingHorizontal: 8,
                       }}
                     >
-                      <Text style={{ color: '#fafafa', fontWeight: '600' }}>
+                      <Text style={{ color: "#fafafa", fontWeight: "600" }}>
                         #{hashtag}
                       </Text>
                     </View>
@@ -253,32 +259,33 @@ const Posteo = ({ data, padding }) => {
             </LinearGradient>
             <View
               style={{
-                position: 'absolute',
-                right: 24,
-                height: '100%',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 40
+                position: "absolute",
+                right: "5%",
+                height: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: scaleFont(25),
               }}
             >
               <TouchableOpacity
                 onPress={() => {
-                  setSelectedPost(data.id)
-                  dispatch(getAllCommentsByPostId(data.id))
-                  setShowCommentsModal(true)
+                  setSelectedPost(data.id);
+                  dispatch(getAllCommentsByPostId(data.id));
+                  setShowCommentsModal(true);
                 }}
               >
                 <Image
-                  style={{ width: 40, height: 40 }}
-                  source={require('../assets/iconlyboldchat.png')}
+                  contentFit="contain"
+                  style={{ width: scaleFont(25), height: 40 }}
+                  source={require("../assets/iconlyboldchat.png")}
                 />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('OpenedChat', {
+                  navigation.navigate("OpenedChat", {
                     receiverId: data.id,
-                    receiverName: data.nameUser
-                  })
+                    receiverName: data.nameUser,
+                  });
                 }}
               >
                 <EnviarMensajeSVG />
@@ -287,8 +294,8 @@ const Posteo = ({ data, padding }) => {
                 style={{ zIndex: 999999999999999 }}
                 onPress={() => {
                   onShare(
-                    `¡Da un vistazo al diario de ${data?.user?.username} ${data?.user?.apellido}!. Si aún no te bajaste la app descargala en Google Play https://play.google.com/store/apps/details?id=com.aythenapps.mytree`
-                  )
+                    `¡Da un vistazo al diario de ${data?.user?.username} ${data?.user?.apellido}!. Si aún no te bajaste la app descargala en Google Play https://play.google.com/store/apps/details?id=com.aythenapps.mytree`,
+                  );
                 }}
               >
                 <CompartirSVG />
@@ -296,22 +303,22 @@ const Posteo = ({ data, padding }) => {
               <TouchableOpacity
                 style={{
                   zIndex: 99999999999,
-                  position: 'absolute',
+                  position: "absolute",
                   bottom: 12,
                   right: -6,
                   fontSize: FontSize.size_base,
                   fontFamily: FontFamily.lato,
-                  color: Color.white
+                  color: Color.white,
                 }}
                 onPress={() => setExpanded(false)}
               >
                 <Text
                   style={{
-                    fontSize: FontSize.size_base,
-                    textAlign: 'right',
+                    fontSize: scaleFont(12),
+                    textAlign: "right",
                     fontFamily: FontFamily.lato,
                     color: Color.white,
-                    width: 100
+                    width: 100,
                   }}
                 >
                   Ver menos...
@@ -319,239 +326,266 @@ const Posteo = ({ data, padding }) => {
               </TouchableOpacity>
             </View>
             <LinearGradient
-              style={{ height: 130, justifyContent: 'flex-end', padding: 15 }}
+              style={{ height: 130, justifyContent: "flex-end", padding: 15 }}
               end={{ x: 0.5, y: 0 }}
               start={{ x: 0.5, y: 1 }}
-              colors={['rgba(0,0,0,0.9)', 'transparent']}
+              colors={["rgba(0,0,0,0.9)", "transparent"]}
             ></LinearGradient>
           </ImageBackground>
         </View>
       </Pressable>
-    )
+    );
   } else {
     return (
-      <Pressable
+      <View
         // onPress={() => setExpanded(true)}
         style={{
           backgroundColor: Color.mytreeClarito,
           left: 0,
           top: padding && padding !== false ? 15 : 5,
-          height: Dimensions.get('screen').height / 1.8,
+          height: Dimensions.get("screen").height / 1.8,
           marginBottom: 30,
           borderRadius: 20,
           marginHorizontal: padding && padding !== false && 15,
-          overflow: 'hidden'
+          overflow: "hidden",
         }}
       >
         <PagerView
+          onPageSelected={(event) => setCurrentPage(event.nativeEvent.position)}
           style={{
-            height: Dimensions.get('screen').height / 1.8,
-            width:"100%",
+            height: Dimensions.get("screen").height / 1.8,
+            width: "100%",
           }}
-          renderToHardwareTextureAndroid
           initialPage={0}
-
-        
         >
-          {data.photos && data.photos.map((e)=> (
-            <Image  contentFit='cover'  style={{height:"100%",width:"100%"}} source={{uri:e}}></Image>
-          ))}
-
+          {data.photos &&
+            data.photos.map((e) => (
+              <Image
+                contentFit="cover"
+                style={{ height: "100%", width: "100%" }}
+                source={{ uri: e }}
+              ></Image>
+            ))}
         </PagerView>
 
-          <TouchableOpacity
-            onPress={() => {
-              setSelectedPost(data)
-              setSelectedPostTags(data.tags || [])
-              setShowTaggedsModal(true)
+        <TouchableOpacity
+          onPress={() => {
+            setSelectedPost(data);
+            setSelectedPostTags(data.tags || []);
+            setShowTaggedsModal(true);
+          }}
+          style={{ position: "absolute", left: 15, top: 15 }}
+        >
+          <LinearGradient
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              width: 64,
+              height: 64,
+              borderRadius: 25,
+              zIndex: 0,
             }}
-            style={{ position: 'absolute', left: 15, top: 15 }}
+            locations={[0, 1]}
+            colors={["#7ec18c", "#dee274"]}
           >
-            <LinearGradient
+            <View
               style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: 64,
-                height: 64,
-                borderRadius: 25,
-                zIndex: 0
+                justifyContent: "center",
+                alignItems: "center",
+                width: 59,
+                borderRadius: 23,
+                backgroundColor: "#c5eacd",
+                height: 59,
               }}
-              locations={[0, 1]}
-              colors={['#7ec18c', '#dee274']}
             >
               <View
                 style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 59,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: 53,
                   borderRadius: 23,
-                  backgroundColor: '#c5eacd',
-                  height: 59
+                  backgroundColor: "#b7e4c0",
+                  height: 53,
                 }}
               >
-                <View
+                <Image
+                  contentFit={data?.user?.profilePicture ? "cover" : "contain"}
                   style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: 53,
-                    borderRadius: 23,
-                    backgroundColor: '#b7e4c0',
-                    height: 53
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: 20,
+                    zIndex: 999999999999,
                   }}
-                >
-                  <Image
-                    contentFit={
-                      data?.user?.profilePicture ? 'cover' : 'contain'
-                    }
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      borderRadius: 20,
-                      zIndex: 999999999999
-                    }}
-                    source={
-                      data?.user?.profilePicture
-                        ? {
-                            uri: data?.user?.profilePicture
-                          }
-                        : require('../assets/logoo.png')
-                    }
-                  />
-                </View>
+                  source={
+                    data?.user?.profilePicture
+                      ? {
+                          uri: data?.user?.profilePicture,
+                        }
+                      : require("../assets/logoo.png")
+                  }
+                />
               </View>
-            </LinearGradient>
-          </TouchableOpacity>
+            </View>
+          </LinearGradient>
+        </TouchableOpacity>
 
-          <View
-            style={{
-              gap: 40,
-              position: 'absolute',
-              right: 24,
-              height: '100%',
-              justifyContent: 'center'
+        <View
+          style={{
+            gap: scaleFont(25),
+            position: "absolute",
+            right: "5%",
+            height: "100%",
+            justifyContent: "center",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              setSelectedPost(data.id);
+              dispatch(getAllCommentsByPostId(data.id));
+              setShowCommentsModal(true);
             }}
           >
-            <TouchableOpacity
-              onPress={() => {
-                setSelectedPost(data.id)
-                dispatch(getAllCommentsByPostId(data.id))
-                setShowCommentsModal(true)
-              }}
-            >
-              <Image
-                style={{ width: 40, height: 40 }}
-                source={require('../assets/iconlyboldchat.png')}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('OpenedChat', {
-                  receiverId: data.user.id,
-                  receiverName: data.nameUser
-                })
-              }}
-            >
-              <EnviarMensajeSVG />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ zIndex: 999999999999999 }}
-              onPress={() => {
-                onShare(
-                  `¡Da un vistazo al diario de ${data?.user?.username} ${data?.user?.apellido}!. Si aún no te bajaste la app descargala en Google Play https://play.google.com/store/apps/details?id=com.aythenapps.mytree`
-                )
-              }}
-            >
-              <CompartirSVG />
-            </TouchableOpacity>
-          </View>
-          <LinearGradient
-            style={{ paddingHorizontal: 10, height: 130 ,width:"100%",position:"absolute",bottom:0}}
-            end={{ x: 0.5, y: 0 }}
-            start={{ x: 0.5, y: 1 }}
-            colors={['rgba(0,0,0,0.9)', 'transparent']}
+            <Image
+              contentFit="contain"
+              style={{ width: scaleFont(25), height: 40 }}
+              source={require("../assets/iconlyboldchat.png")}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("OpenedChat", {
+                receiverId: data.user.id,
+                receiverName: data.nameUser,
+              });
+            }}
           >
-            <View>
-              <Text
-                numberOfLines={2}
-                style={styles.camila}
-              >{`${data?.user?.username} ${data?.user?.apellido}`}</Text>
-              <Text
-                numberOfLines={1}
-                ellipsizeMode="tail"
-                style={styles.yendoALa}
-              >
-                {data.description}
-              </Text>
-            </View>
-            <Pressable
-              style={{ position: 'absolute', bottom: 10, left: 10 }}
-              onPress={() => setExpanded(true)}
+            <EnviarMensajeSVG />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ zIndex: 999999999999999 }}
+            onPress={() => {
+              onShare(
+                `¡Da un vistazo al diario de ${data?.user?.username} ${data?.user?.apellido}!. Si aún no te bajaste la app descargala en Google Play https://play.google.com/store/apps/details?id=com.aythenapps.mytree`,
+              );
+            }}
+          >
+            <CompartirSVG />
+          </TouchableOpacity>
+        </View>
+        <LinearGradient
+          style={{
+            paddingHorizontal: 10,
+            height: 130,
+            width: "100%",
+            position: "absolute",
+            bottom: 0,
+          }}
+          end={{ x: 0.5, y: 0 }}
+          start={{ x: 0.5, y: 1 }}
+          colors={["rgba(0,0,0,0.9)", "transparent"]}
+        >
+          <View>
+            <Text
+              numberOfLines={2}
+              style={styles.camila}
+            >{`${data?.user?.username} ${data?.user?.apellido}`}</Text>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={styles.yendoALa}
             >
-              <Text
-                style={{
-                  fontSize: FontSize.size_base,
-                  textAlign: 'left',
-                  fontFamily: FontFamily.lato,
-                  color: Color.white
-                }}
-              >
-                Ver más...
-              </Text>
-            </Pressable>
-          </LinearGradient>
-      </Pressable>
-    )
+              {data.description}
+            </Text>
+          </View>
+          <Pressable
+            style={{ position: "absolute", bottom: 10, left: 10 }}
+            onPress={() => setExpanded(true)}
+          >
+            <Text
+              style={{
+                fontSize: scaleFont(12),
+                textAlign: "left",
+                fontFamily: FontFamily.lato,
+                color: Color.white,
+              }}
+            >
+              Ver más...
+            </Text>
+          </Pressable>
+          {data.photos.length > 1 && (
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                marginBottom: 10,
+              }}
+            >
+              {data.photos.map((_, index) => (
+                <View
+                  key={index}
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: 4,
+                    marginHorizontal: 2,
+                    backgroundColor:
+                      index === currentPage ? Color.mytreeClarito : "gray",
+                  }}
+                />
+              ))}
+            </View>
+          )}
+        </LinearGradient>
+      </View>
+    );
   }
-}
+};
 
 const Post = ({ padding, posts }) => {
-  const [showTagged, setShowTagged] = useState(false)
-  const [showIcons, setShowIcons] = useState(false)
-  const { allPosts } = useSelector((state) => state.posts)
-  const dispatch = useDispatch()
-
-  const toggleModal = () => {
-    setShowTagged(!showTagged)
-  }
+  const [showIcons, setShowIcons] = useState(false);
+  const { allPosts } = useSelector((state) => state.posts);
+  const dispatch = useDispatch();
 
   const toggleIcons = () => {
-    setShowIcons((prevShowIcons) => !prevShowIcons)
-  }
+    setShowIcons((prevShowIcons) => !prevShowIcons);
+  };
 
   useEffect(() => {
-    dispatch(getAllPosts())
-  }, [])
+    dispatch(getAllPosts());
+  }, []);
 
   if (posts?.length === 0)
     return (
-      <View style={{ width: '100%', alignItems: 'center', paddingTop: 50 }}>
-        <Text style={{ fontSize: 14, fontWeight: 500, color: '#202020' }}>
+      <View style={{ width: "100%", alignItems: "center", paddingTop: 50 }}>
+        <Text style={{ fontSize: 14, fontWeight: 500, color: "#202020" }}>
           No se han encontrado resultados!
         </Text>
       </View>
-    )
+    );
   return (
-    <Pressable style={styles.rectangleParent} onPress={toggleIcons}>
+    <View style={styles.rectangleParent} onPress={toggleIcons}>
       {posts
         ? [...posts]
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0,10)
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .slice(0, 10)
             .map((e, i) => <Posteo padding={padding} data={e} key={i}></Posteo>)
         : allPosts &&
           [...allPosts]
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0,10)
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .slice(0, 10)
             .map((e, i) => (
               <Posteo padding={padding} data={e} key={i}></Posteo>
             ))}
-    </Pressable>
-  )
-}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   vectorIconLayout: {
     height: 45,
     width: 45,
     left: 60,
-    top: 50
+    top: 50,
   },
   frameChild: {
     backgroundColor: Color.mytreeClarito,
@@ -561,36 +595,36 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     borderRadius: 20,
     marginHorizontal: 15,
-    overflow: 'hidden'
+    overflow: "hidden",
   },
   vectorIcon: {
     marginTop: -29,
     marginLeft: -40,
     width: 78,
-    left: '50%',
-    top: '50%'
+    left: "50%",
+    top: "50%",
   },
   rectangleParent: {
-    height: '85%',
-    paddingBottom: 5
+    height: "85%",
+    paddingBottom: 5,
   },
   camila: {
-    fontSize: FontSize.size_5xl,
+    fontSize: scaleFont(20),
     color: Color.white,
-    fontWeight: '700',
-    width: '100%'
+    fontWeight: "700",
+    width: "100%",
   },
   yendoALa: {
     marginTop: 20,
-    fontSize: FontSize.size_base,
-    textAlign: 'left',
+    fontSize: scaleFont(15),
+    textAlign: "left",
     fontFamily: FontFamily.lato,
     color: Color.white,
-    width: '70%'
+    width: "70%",
   },
   textContainer: {
     padding: 15,
-    top: '35%'
+    top: "35%",
   },
   tagged: {
     borderWidth: 1,
@@ -598,19 +632,19 @@ const styles = StyleSheet.create({
     height: 60,
     width: 60,
     borderRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     top: 15,
-    left: 15
+    left: 15,
   },
   iconsContainer: {
-    left: '5%',
+    left: "5%",
     gap: 50,
-    top: '30%'
+    top: "30%",
   },
   iconsContainerEmpty: {
-    height: 124
-  }
-})
+    height: 124,
+  },
+});
 
-export default Post
+export default Post;

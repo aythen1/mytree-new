@@ -132,6 +132,11 @@ export class UserController {
     return this.userService.removeFriend(userId, friendId);
   }
 
+  @Post('search')
+  async searchUsers(@Body('query') query: string): Promise<User[]> {
+    return this.userService.searchUsers(query);
+  }
+
   // AGREGAR O ELIMINAR UN POST FAVORITO DE UN USUARIO
   @Post(':userId/add-favorite/:postId')
   addToFavorites(
@@ -172,7 +177,6 @@ export class UserController {
       console.log(
         `Inicio de sesión exitoso para el usuario con email: ${emailValue}.`,
       );
-      const { id, username, email } = user;
       return {
         statusCode: HttpStatus.OK,
         message: 'Login successful',

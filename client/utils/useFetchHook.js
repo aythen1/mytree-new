@@ -1,36 +1,33 @@
-import React, { useEffect } from 'react'
-import axiosInstance from '../apiBackend';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from "react";
+import axiosInstance from "../apiBackend";
+import { useSelector } from "react-redux";
 
-const useFetchHook = ({url}) => {
+const useFetchHook = ({ url }) => {
+  const [data, setData] = React.useState(null);
+  const [loading, setLoading] = React.useState(null);
+  const [error, setError] = React.useState(null);
+  const { allUsers } = useSelector((state) => state.users);
 
+  const fetch = async () => {
+    console.log("pasa");
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get(url);
+      console.log(response.data.usersInfo, "daaaaaaaaaaaaaaaaa");
 
-    const [data, setData] = React.useState(null);
-    const [loading, setLoading] = React.useState(null);
-    const [error, setError] = React.useState(null);
-const {allUsers} = useSelector((state)=> state.users)
-    
-    const fetch = async ()=> {
-        try{
-            setLoading(true);
-            const response = await axiosInstance.post(url);
-            if(response.data[0].message){
-                return []
-            }
-            setData(response?.data);
-        } catch(err){
-            setError(err.message);
-        } finally{
-            setLoading(false);
-        }
+      setData(response?.data?.usersInfo);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    useEffect(()=>{
-        fetch()
-    },[url,allUsers ])
+  useEffect(() => {
+    fetch();
+  }, [url, allUsers]);
 
+  return { data, error, loading };
+};
 
-    return {data , error ,loading}
-}
-
-export default useFetchHook
+export default useFetchHook;

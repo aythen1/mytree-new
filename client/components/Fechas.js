@@ -20,7 +20,7 @@ const Fechas = ({ selectedDate, dates, user }) => {
       setDatesFechas(nuevasDates);
     };
     searchDate();
-  }, [selectedDate]);
+  }, [selectedDate, dates]);
 
   const navigation = useNavigation();
 

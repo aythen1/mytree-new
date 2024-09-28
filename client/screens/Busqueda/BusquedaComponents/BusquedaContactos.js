@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, ScrollView, Text } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import { FontFamily, FontSize, Color } from "../../../GlobalStyles";
 import { useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 
 const BusquedaContactos = ({ searchOnContacts }) => {
   const { userData, allUsers } = useSelector((state) => state.users);
@@ -12,6 +19,7 @@ const BusquedaContactos = ({ searchOnContacts }) => {
   const [userFriends, setUserFriends] = useState(
     allUsers.filter((user) => user.id === userData.id)[0]?.friendsIds,
   );
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (searchOnContacts?.length > 0) {
@@ -68,37 +76,47 @@ const BusquedaContactos = ({ searchOnContacts }) => {
                 style={{ maxHeight: 100 }}
                 contentContainerStyle={{ gap: 5 }}
               >
-                {userFamily.map((familyMember, index) => (
-                  <View key={index} style={styles.frameParent1}>
-                    <Image
-                      style={styles.frameItem}
-                      contentFit="cover"
-                      source={require("../../../assets/frame-1547754875.png")}
-                    />
-                    <Text
-                      numberOfLines={1}
-                      style={{
-                        color: Color.grisDiscord,
-                        textAlign: "justify",
-                        marginLeft: 13,
-                        fontSize: FontSize.size_base,
-                        lineHeight: 19,
-                        fontFamily: FontFamily.lato,
-                        fontWeight: "700",
-                        letterSpacing: 0,
-                        width: "80%",
-                      }}
+                {userFamily.map((familyMember, index) => {
+                  const user = allUsers.find(
+                    (user) => user.id.toString() === familyMember,
+                  );
+
+                  return (
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate("OtherUserProfile", user)
+                      }
+                      key={index}
+                      style={styles.frameParent1}
                     >
-                      {allUsers.filter(
-                        (user) => user.id.toString() === familyMember,
-                      )[0]?.username +
-                        " " +
-                        allUsers.filter(
-                          (user) => user.id.toString() === familyMember,
-                        )[0]?.apellido}
-                    </Text>
-                  </View>
-                ))}
+                      <Image
+                        style={styles.frameItem}
+                        contentFit="cover"
+                        source={
+                          user?.profilePicture
+                            ? { uri: user.profilePicture }
+                            : require("../../../assets/frame-1547754875.png")
+                        }
+                      />
+                      <Text
+                        numberOfLines={1}
+                        style={{
+                          color: Color.grisDiscord,
+                          textAlign: "justify",
+                          marginLeft: 13,
+                          fontSize: FontSize.size_base,
+                          lineHeight: 19,
+                          fontFamily: FontFamily.lato,
+                          fontWeight: "700",
+                          letterSpacing: 0,
+                          width: "80%",
+                        }}
+                      >
+                        {user?.username + " " + user?.apellido}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
               </ScrollView>
             ) : (
               <Text
@@ -130,37 +148,47 @@ const BusquedaContactos = ({ searchOnContacts }) => {
                   style={{ maxHeight: 100 }}
                   contentContainerStyle={{ gap: 5 }}
                 >
-                  {userFriends.map((friendMember, index) => (
-                    <View key={index} style={styles.frameParent1}>
-                      <Image
-                        style={styles.frameItem}
-                        contentFit="cover"
-                        source={require("../../../assets/frame-1547754875.png")}
-                      />
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          color: Color.grisDiscord,
-                          textAlign: "justify",
-                          marginLeft: 13,
-                          fontSize: FontSize.size_base,
-                          lineHeight: 19,
-                          fontFamily: FontFamily.lato,
-                          fontWeight: "700",
-                          letterSpacing: 0,
-                          width: "80%",
-                        }}
+                  {userFriends.map((friendMember, index) => {
+                    const user = allUsers.find(
+                      (user) => user.id.toString() === friendMember,
+                    );
+
+                    return (
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate("OtherUserProfile", user)
+                        }
+                        key={index}
+                        style={styles.frameParent1}
                       >
-                        {allUsers.filter(
-                          (user) => user.id.toString() === friendMember,
-                        )[0]?.username +
-                          " " +
-                          allUsers.filter(
-                            (user) => user.id.toString() === friendMember,
-                          )[0]?.apellido}
-                      </Text>
-                    </View>
-                  ))}
+                        <Image
+                          style={styles.frameItem}
+                          contentFit="cover"
+                          source={
+                            user?.profilePicture
+                              ? { uri: user.profilePicture }
+                              : require("../../../assets/frame-1547754875.png")
+                          }
+                        />
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            color: Color.grisDiscord,
+                            textAlign: "justify",
+                            marginLeft: 13,
+                            fontSize: FontSize.size_base,
+                            lineHeight: 19,
+                            fontFamily: FontFamily.lato,
+                            fontWeight: "700",
+                            letterSpacing: 0,
+                            width: "80%",
+                          }}
+                        >
+                          {user?.username + " " + user?.apellido}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
                 </ScrollView>
               ) : (
                 <Text
@@ -233,6 +261,7 @@ const styles = StyleSheet.create({
   frameItem: {
     width: 30,
     height: 30,
+    borderRadius: 50,
   },
   brunoPham: {
     color: Color.grisDiscord,

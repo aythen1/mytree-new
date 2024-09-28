@@ -38,9 +38,8 @@ const Etiquetar = ({
         backgroundColor: Color.white,
         borderTopRightRadius: Border.br_11xl,
         borderTopLeftRadius: Border.br_11xl,
-        position: "absolute",
         bottom: 0,
-        paddingHorizontal: 30,
+        paddingHorizontal: 20,
         paddingBottom: 30,
         borderWidth: 1,
         borderColor: Color.primario1,
@@ -48,8 +47,6 @@ const Etiquetar = ({
     >
       <View
         style={{
-          paddingTop: 20,
-          paddingBottom: 50,
           width: "100%",
           alignItems: "center",
         }}
@@ -183,7 +180,7 @@ const Etiquetar = ({
                   letterSpacing: 0,
                   fontFamily: FontFamily.lato,
                   fontSize: FontSize.size_base,
-                  paddingVertical: 12,
+                  paddingTop: 12,
                   width: "100%",
                 }}
               >
@@ -304,7 +301,7 @@ const Etiquetar = ({
                   letterSpacing: 0,
                   fontFamily: FontFamily.lato,
                   fontSize: FontSize.size_base,
-                  paddingVertical: 10,
+                  paddingTop: 12,
                 }}
               >
                 Familia

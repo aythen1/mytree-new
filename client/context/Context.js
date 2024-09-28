@@ -8,6 +8,7 @@ import axiosInstance from "../apiBackend";
 import { addUserDiary } from "../redux/slices/diaries.slices";
 import { getUserData } from "../redux/actions/user";
 import { setAllChats } from "../redux/slices/chats.slices";
+import { getAllNotifications } from "../redux/actions/notifications";
 
 export const Context = createContext();
 
@@ -59,7 +60,7 @@ export const ContextProvider = ({ children }) => {
         description: "",
         privacyMode: "all",
         taggedUsers: [],
-      })
+      }),
     );
     setEditingDiary("preDiary");
   };
@@ -101,7 +102,7 @@ export const ContextProvider = ({ children }) => {
         {
           method: "post",
           body: profileImageForm,
-        }
+        },
       );
       const data = await response.json();
       const imageUrl = transformHttpToHttps(data.url);
@@ -140,7 +141,7 @@ export const ContextProvider = ({ children }) => {
             {
               method: "post",
               body: profileImageForm,
-            }
+            },
           )
             .then((res) => res.json())
             .then((data) => {
@@ -164,7 +165,7 @@ export const ContextProvider = ({ children }) => {
             {
               method: "post",
               body: coverImageForm,
-            }
+            },
           )
             .then((res) => res.json())
             .then((data) => {
@@ -286,8 +287,8 @@ export const ContextProvider = ({ children }) => {
       .map((conv) =>
         data[conv].filter(
           (message) =>
-            message.senderId !== userData.id && message.isReaded === false
-        )
+            message.senderId !== userData.id && message.isReaded === false,
+        ),
       )
       .flat();
 
@@ -297,8 +298,8 @@ export const ContextProvider = ({ children }) => {
         (conv) =>
           data[conv].filter(
             (message) =>
-              message.senderId !== userData.id && message.isReaded === false
-          ).length
+              message.senderId !== userData.id && message.isReaded === false,
+          ).length,
       )
       .reduce((acc, curr) => acc + curr, 0);
     setNotReaded(notReaded);
@@ -311,14 +312,14 @@ export const ContextProvider = ({ children }) => {
 
         const userInfo = allUsers.filter((user) => user.id === otherUserId)[0];
         const lastMessage = data[key].sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
         )[0];
         return { room: key, ...userInfo, lastMessage };
       });
       //fix
       const res = finalInfo.sort(
         (a, b) =>
-          new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt)
+          new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt),
       );
       dispatch(setAllChats(res));
       setUsersWithMessages(res);
@@ -327,19 +328,25 @@ export const ContextProvider = ({ children }) => {
 
   const socket = io(
     "http://6f651255-2a5d-4271-a8c7-35730a2de342.pub.instances.scw.cloud:3010",
+    // "http://192.168.0.77:3010",
+
     {
       transports: ["websocket"],
+      query: {
+        userId: userData?.id, // Enviar userId al conectar
+      },
       // auth: {
       //   autoConnect: true,
       //   forceNew: true,
       //   addTrailingSlash: false,
       //   withCredentials: true
       // }
-    }
+    },
   );
 
   socket.on("connect", () => {
-    // console.log('Connected to server')
+    console.log("Connected to server");
+    socket.emit("join", userData?.id);
   });
 
   socket.on("disconnect", () => {
@@ -349,6 +356,18 @@ export const ContextProvider = ({ children }) => {
 
   socket.on("error", (error) => {
     console.error("Socket connection error:", error);
+  });
+
+  socket.on("notification", (data) => {
+    console.log("New notification:", data);
+    dispatch(getAllNotifications()).then((w) => console.log(w, "w"));
+
+    // Manejar la actualización de notificaciones en la app
+  });
+
+  socket.on("post-update", (data) => {
+    console.log("New post update:", data);
+    // Aquí puedes actualizar la lista de posts
   });
 
   socket.on("joinedRoom", (room) => {

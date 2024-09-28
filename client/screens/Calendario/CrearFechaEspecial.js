@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import {
   Text,
   StyleSheet,
@@ -6,150 +6,153 @@ import {
   Pressable,
   Modal,
   ScrollView,
-  TextInput
-} from 'react-native'
-import { Image } from 'expo-image'
-import { LinearGradient } from 'expo-linear-gradient'
-import { useFocusEffect, useNavigation } from '@react-navigation/native'
+  TextInput,
+} from "react-native";
+import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import {
   FontFamily,
   Padding,
   FontSize,
   Color,
-  Border
-} from '../../GlobalStyles'
-import ENTRADACREADA from '../../components/ENTRADACREADA'
-import PopUpCalendario from '../../components/PopUpCalendario'
-import UbicacionSVG from '../../components/svgs/UbicacionSVG'
-import AñadirUsuarioSVG from '../../components/svgs/AñadirUsuarioSVG'
-import Etiquetar from '../../components/Etiquetar'
-import OpcionesCaategora from '../../components/OpcionesCaategora'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useDispatch } from 'react-redux'
-import { createEvent, getAllUserEvents } from '../../redux/actions/events'
-import Privacidad from '../Privacidad'
-import ImagePickerModal from '../Modals/ImagePickerModal'
-import Maps from '../../components/Maps'
-import { setScreen } from '../../redux/slices/user.slices'
+  Border,
+} from "../../GlobalStyles";
+import ENTRADACREADA from "../../components/ENTRADACREADA";
+import PopUpCalendario from "../../components/PopUpCalendario";
+import UbicacionSVG from "../../components/svgs/UbicacionSVG";
+import AñadirUsuarioSVG from "../../components/svgs/AñadirUsuarioSVG";
+import Etiquetar from "../../components/Etiquetar";
+import OpcionesCaategora from "../../components/OpcionesCaategora";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from "react-redux";
+import { createEvent, getAllUserEvents } from "../../redux/actions/events";
+import Privacidad from "../Privacidad";
+import ImagePickerModal from "../Modals/ImagePickerModal";
+import Maps from "../../components/Maps";
+import { setScreen } from "../../redux/slices/user.slices";
+import ScrollableModal from "../../components/modals/ScrollableModal";
+import { lugaresDeEspaña } from "../utils/Lugares";
 
 const CrearFechaEspecial = () => {
-  const [user, setUser] = useState()
-  const navigation = useNavigation()
-  const [description, setDescription] = useState('')
-  const [selectedDate, setSelectedDate] = useState('')
-  const [location, setLocation] = useState('')
-  const [invitedUsers, setInvitedUsers] = useState([])
-  const [selectedCategory, setSelectedCategory] = useState()
-  const [showLocation, setShowLocation] = useState(false)
+  const [user, setUser] = useState();
+  const navigation = useNavigation();
+  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState("");
 
-  const [modalCreate, setModalCreate] = useState(false)
-  const [programar, setProgramar] = useState(false)
-  const [calendario, setCalendario] = useState(false)
-  const [showTagUsers, setShowTagUsers] = useState(false)
-  const [showCategoryModal, setShowCategoryModal] = useState(false)
-  const [showPrivacidad, setShowPrivacidad] = useState(false)
-  const [privacy, setPrivacy] = useState('Todos')
-  const [showPickImage, setShowPickImage] = useState(false)
-  const [pickedImage, setPickedImage] = useState([])
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const fecha = new Date();
+    const dia = fecha.getDate().toString().padStart(2, "0");
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
+    const año = fecha.getFullYear();
+    return `${año}-${mes}-${dia}`;
+  });
+  const [location, setLocation] = useState("");
+  const [invitedUsers, setInvitedUsers] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState();
+  const [showLocation, setShowLocation] = useState(false);
+
+  const [modalCreate, setModalCreate] = useState(false);
+  const [programar, setProgramar] = useState(false);
+  const [calendario, setCalendario] = useState(false);
+  const [showTagUsers, setShowTagUsers] = useState(false);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [showPrivacidad, setShowPrivacidad] = useState(false);
+  const [privacy, setPrivacy] = useState("Todos");
+  const [showPickImage, setShowPickImage] = useState(false);
+  const [pickedImage, setPickedImage] = useState([]);
 
   const getUser = async () => {
-    const usuario = await AsyncStorage.getItem('user')
-    const user = JSON.parse(usuario)
-    setUser(user)
-  }
+    const usuario = await AsyncStorage.getItem("user");
+    const user = JSON.parse(usuario);
+    setUser(user);
+  };
 
-  useFocusEffect(()=> {
-    dispatch(setScreen("Crear evento"))
-
-  })
+  useFocusEffect(() => {
+    dispatch(setScreen("Crear evento"));
+  });
 
   useEffect(() => {
-    getUser()
-  }, [])
+    getUser();
+  }, []);
 
   const onCloseModalCreate = () => {
-    setModalCreate(false)
-  }
+    setModalCreate(false);
+  };
 
   const openCalendario = () => {
-    setCalendario(true)
-  }
+    setCalendario(true);
+  };
 
   const closeCalendario = () => {
-    setCalendario(false)
-  }
-  const dispatch = useDispatch()
+    setCalendario(false);
+  };
+  const dispatch = useDispatch();
 
   const getFileName = (filePath) => {
-    const parts = filePath.split('/')
-    const fileName = parts[parts.length - 1]
-    return fileName
-  }
+    const parts = filePath.split("/");
+    const fileName = parts[parts.length - 1];
+    return fileName;
+  };
 
   const handleCreateEvent = async () => {
-    setModalCreate(true)
+    setModalCreate(true);
 
-    if (
-      description.length > 0 &&
-      selectedCategory &&
-      selectedDate 
-
-    ) {
+    if (description.length > 0 && selectedDate && title) {
       const event = {
-        type: 'special',
+        type: "special",
         creatorId: user?.id.toString(),
         description,
-        title: selectedCategory,
+        title: title,
         location,
         shared: false,
         images: [],
         privacyMode: privacy,
         wishList: [],
         date: new Date(selectedDate),
-        invitedUsers
-      }
-      const cloudinaryUrls = []
+        invitedUsers,
+      };
+      const cloudinaryUrls = [];
 
       for (const image of pickedImage) {
-        const formData = new FormData()
-        formData.append('file', {
+        const formData = new FormData();
+        formData.append("file", {
           uri: image.uri,
-          type: 'image/jpeg',
-          name: image.filename ? image.filename : getFileName(image.uri)
-        })
-        formData.append('upload_preset', 'cfbb_profile_pictures')
-        formData.append('cloud_name', 'dnewfuuv0')
+          type: "image/jpeg",
+          name: image.filename ? image.filename : getFileName(image.uri),
+        });
+        formData.append("upload_preset", "cfbb_profile_pictures");
+        formData.append("cloud_name", "dnewfuuv0");
 
         const response = await fetch(
-          'https://api.cloudinary.com/v1_1/dnewfuuv0/image/upload',
+          "https://api.cloudinary.com/v1_1/dnewfuuv0/image/upload",
           {
-            method: 'POST',
-            body: formData
-          }
-        )
+            method: "POST",
+            body: formData,
+          },
+        );
 
-        const data = await response.json()
+        const data = await response.json();
         if (response.ok) {
-          cloudinaryUrls.push(data.secure_url)
+          cloudinaryUrls.push(data.secure_url);
         } else {
-          console.error('Error uploading image:', data)
+          console.error("Error uploading image:", data);
         }
       }
 
-      event.coverImage = cloudinaryUrls[0]
+      event.coverImage = cloudinaryUrls[0];
 
-      dispatch(createEvent(event)).then(()=> {
-        
-        dispatch(getAllUserEvents(user.id))})
+      dispatch(createEvent(event)).then(() => {
+        dispatch(getAllUserEvents(user.id));
+      });
     }
-  }
+  };
 
   return (
     <>
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
         <View style={[styles.crearEvento]}>
           <View>
-       
             <View style={[styles.backParent, styles.buttonBarFlexBox]}>
               <Pressable
                 style={styles.backLayout}
@@ -158,7 +161,7 @@ const CrearFechaEspecial = () => {
                 <Image
                   style={styles.iconLayout}
                   contentFit="cover"
-                  source={require('../../assets/back.png')}
+                  source={require("../../assets/back.png")}
                 />
               </Pressable>
               <Text style={[styles.crearEventoText, styles.titleTypo]}>
@@ -167,7 +170,7 @@ const CrearFechaEspecial = () => {
             </View>
           </View>
 
-          <View>
+          {/* <View>
             <View style={styles.titleBase}>
               <Text style={[styles.title, styles.titleTypo]}>Categoría</Text>
             </View>
@@ -175,24 +178,46 @@ const CrearFechaEspecial = () => {
               onPress={() => setShowCategoryModal(true)}
               style={{
                 paddingVertical: 13,
-                paddingLeft:10,
+                paddingLeft: 10,
                 backgroundColor: Color.fAFAFA,
                 borderRadius: Border.br_3xs,
-                flexDirection: 'row',
-                width: '100%',
-                justifyContent: 'space-between'
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "space-between",
               }}
             >
-              <Text style={{ color: selectedCategory ? '#000' : '#606060' }}>
-                {selectedCategory || 'Selecione la categoría'}
+              <Text style={{ color: selectedCategory ? "#000" : "#606060" }}>
+                {selectedCategory || "Selecione la categoría"}
               </Text>
 
               <Image
                 contentFit="cover"
                 style={{ width: 20, height: 20, marginRight: 10 }}
-                source={require('../../assets/downArrow.png')}
+                source={require("../../assets/downArrow.png")}
               />
             </Pressable>
+          </View> */}
+          <View>
+            <View style={styles.titleBase}>
+              <Text style={[styles.title, styles.titleTypo]}>
+                Título del evento
+              </Text>
+            </View>
+            <TextInput
+              value={title}
+              onChangeText={(text) => setTitle(text)}
+              style={{
+                paddingVertical: Padding.p_smi,
+                paddingHorizontal: 10,
+                backgroundColor: Color.fAFAFA,
+                borderRadius: Border.br_3xs,
+                flexDirection: "row",
+                width: "100%",
+                alignItems: "center",
+                gap: 20,
+              }}
+              placeholder="Título del evento"
+            />
           </View>
 
           <View>
@@ -205,14 +230,14 @@ const CrearFechaEspecial = () => {
               value={description}
               onChangeText={(text) => setDescription(text)}
               style={{
-                paddingLeft:10,
+                paddingLeft: 10,
 
-                textAlignVertical: 'top',
+                textAlignVertical: "top",
                 paddingVertical: Padding.p_smi,
                 backgroundColor: Color.fAFAFA,
                 borderRadius: Border.br_3xs,
-                flexDirection: 'row',
-                width: '100%'
+                flexDirection: "row",
+                width: "100%",
               }}
               placeholder="Descripción de la fecha especial"
             />
@@ -229,19 +254,24 @@ const CrearFechaEspecial = () => {
                 paddingVertical: 13,
                 backgroundColor: Color.fAFAFA,
                 borderRadius: Border.br_3xs,
-                flexDirection: 'row',
-                width: '100%',
-                justifyContent: 'space-between'
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "space-between",
               }}
             >
-              <Text style={{ paddingLeft:10,color: selectedDate ? '#000' : '#606060' }}>
-                {selectedDate || 'Selecciona una fecha'}
+              <Text
+                style={{
+                  paddingLeft: 10,
+                  color: selectedDate ? "#000" : "#606060",
+                }}
+              >
+                {selectedDate || "Selecciona una fecha"}
               </Text>
 
               <Image
                 contentFit="cover"
                 style={{ width: 22, height: 22, marginRight: 13 }}
-                source={require('../../assets/vector14.png')}
+                source={require("../../assets/vector14.png")}
               />
             </Pressable>
           </View>
@@ -255,22 +285,22 @@ const CrearFechaEspecial = () => {
             <Pressable
               onPress={() => setShowPickImage(true)}
               style={{
-                paddingLeft:10,
+                paddingLeft: 10,
 
                 paddingVertical: 13,
                 backgroundColor: Color.fAFAFA,
                 borderRadius: Border.br_3xs,
-                flexDirection: 'row',
-                width: '100%',
-                justifyContent: 'space-between'
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "space-between",
               }}
             >
               <Text
-                style={{ color: invitedUsers.length > 0 ? '#000' : '#606060' }}
+                style={{ color: invitedUsers.length > 0 ? "#000" : "#606060" }}
               >
                 {pickedImage && pickedImage.length > 0
-                  ? 'Cambiar foto'
-                  : 'Seleccionar foto'}
+                  ? "Cambiar foto"
+                  : "Seleccionar foto"}
               </Text>
               {pickedImage.length > 0 ? (
                 <Image
@@ -278,7 +308,7 @@ const CrearFechaEspecial = () => {
                     width: 23,
                     height: 24,
                     marginRight: 13,
-                    borderRadius: 5
+                    borderRadius: 5,
                   }}
                   contentFit="cover"
                   source={{ uri: pickedImage[0]?.uri }}
@@ -287,7 +317,7 @@ const CrearFechaEspecial = () => {
                 <Image
                   style={{ width: 23, height: 24, marginRight: 13 }}
                   contentFit="cover"
-                  source={require('../../assets/image3.png')}
+                  source={require("../../assets/image3.png")}
                 />
               )}
             </Pressable>
@@ -302,8 +332,13 @@ const CrearFechaEspecial = () => {
               onPress={() => setShowLocation(true)}
               style={styles.fieldSpaceBlock2}
             >
-              <Text style={{ color: location.length > 0 ? '#000' : '#606060' ,paddingLeft:10}}>
-                {location.length > 0 ? location : 'Ubicación'}
+              <Text
+                style={{
+                  color: location.length > 0 ? "#000" : "#606060",
+                  paddingLeft: 10,
+                }}
+              >
+                {location.length > 0 ? location : "Ubicación"}
               </Text>
               <Pressable>
                 <UbicacionSVG />
@@ -321,21 +356,21 @@ const CrearFechaEspecial = () => {
             <Pressable
               onPress={() => setShowTagUsers(true)}
               style={{
-                paddingLeft:10,
+                paddingLeft: 10,
                 paddingVertical: 13,
                 backgroundColor: Color.fAFAFA,
                 borderRadius: Border.br_3xs,
-                flexDirection: 'row',
-                width: '100%',
-                justifyContent: 'space-between'
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "space-between",
               }}
             >
               <Text
-                style={{ color: invitedUsers.length > 0 ? '#000' : '#606060' }}
+                style={{ color: invitedUsers.length > 0 ? "#000" : "#606060" }}
               >
                 {invitedUsers.length === 0
-                  ? 'Agrega invitados'
-                  : 'Ver invitados'}
+                  ? "Agrega invitados"
+                  : "Ver invitados"}
               </Text>
               <AñadirUsuarioSVG />
             </Pressable>
@@ -344,11 +379,11 @@ const CrearFechaEspecial = () => {
           <Pressable
             onPress={() => setShowPrivacidad(true)}
             style={{
-              width: '100%',
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingRight:4
+              width: "100%",
+              justifyContent: "space-between",
+              flexDirection: "row",
+              alignItems: "center",
+              paddingRight: 4,
             }}
           >
             <View style={styles.titleBase}>
@@ -359,14 +394,14 @@ const CrearFechaEspecial = () => {
             <Image
               contentFit="contain"
               style={{ width: 18, height: 18, marginRight: 10 }}
-              source={require('../../assets/lock3.png')}
+              source={require("../../assets/lock3.png")}
             />
           </Pressable>
 
           <View style={styles.button2}>
             <Pressable
               style={[styles.button, styles.buttonSpaceBlock]}
-              onPress={() => navigation.navigate('CALENDARIO')}
+              onPress={() => navigation.navigate("CALENDARIO")}
             >
               <Text style={[styles.signIn, styles.signTypo]}>Cancelar</Text>
             </Pressable>
@@ -374,12 +409,12 @@ const CrearFechaEspecial = () => {
           <LinearGradient
             style={styles.button2}
             locations={[0, 1]}
-            colors={['#dee274', '#7ec18c']}
+            colors={["#dee274", "#7ec18c"]}
           >
             <Pressable
               style={[styles.pressable1, styles.pressableFlexBox]}
               onPress={() => {
-                handleCreateEvent()
+                handleCreateEvent();
               }}
             >
               <Text style={[styles.signIn2, styles.signTypo]}>Enviar</Text>
@@ -397,8 +432,8 @@ const CrearFechaEspecial = () => {
             />
             <ENTRADACREADA
               onClose={onCloseModalCreate}
-              message={'¡Enviado!'}
-              isNavigate={'CALENDARIO'}
+              message={"¡Enviado!"}
+              isNavigate={"CALENDARIO"}
             />
           </View>
         </Modal>
@@ -433,13 +468,11 @@ const CrearFechaEspecial = () => {
         <Modal animationType="fade" transparent visible={showTagUsers}>
           <View
             style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%'
+              flex: 1,
             }}
           >
             <Pressable
-              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              style={{ flex: 1 }}
               onPress={() => setShowTagUsers(false)}
             />
             <Etiquetar
@@ -452,13 +485,11 @@ const CrearFechaEspecial = () => {
         <Modal animationType="fade" transparent visible={showCategoryModal}>
           <View
             style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%'
+              flex: 1,
             }}
           >
             <Pressable
-              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              style={{ flex: 1 }}
               onPress={() => setShowCategoryModal(false)}
             />
             <OpcionesCaategora
@@ -471,13 +502,13 @@ const CrearFechaEspecial = () => {
         <Modal animationType="fade" transparent visible={showPrivacidad}>
           <View
             style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%'
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
             }}
           >
             <Pressable
-              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              style={{ width: "100%", height: "100%", left: 0, top: 0 }}
               onPress={() => setShowPrivacidad(false)}
             />
             <Privacidad
@@ -490,11 +521,11 @@ const CrearFechaEspecial = () => {
         <Modal animationType="fade" transparent visible={showPickImage}>
           <View
             style={{
-              height: '100%'
+              height: "100%",
             }}
           >
             <Pressable
-              style={{ width: '100%', height: '100%', left: 0, top: 0 }}
+              style={{ width: "100%", height: "100%", left: 0, top: 0 }}
               onPress={() => setShowPickImage(false)}
             />
             <ImagePickerModal
@@ -506,26 +537,25 @@ const CrearFechaEspecial = () => {
           </View>
         </Modal>
       </ScrollView>
-      <Modal animationType="fade" transparent visible={showLocation}>
+      {/* <Modal animationType="fade" transparent visible={showLocation}>
         <View
           style={{
             flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(113, 113, 113, 0.3)',
-
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(113, 113, 113, 0.3)",
           }}
         >
           <Pressable
             style={{
-              position: 'absolute',
-              width: '100%',
-              height: '100%',
+              position: "absolute",
+              width: "100%",
+              height: "100%",
               left: 0,
-              top: 0
+              top: 0,
             }}
             onPress={() => {
-              setShowLocation(false)
+              setShowLocation(false);
             }}
           />
           <Maps
@@ -533,78 +563,84 @@ const CrearFechaEspecial = () => {
             setLocation={setLocation}
           />
         </View>
-      </Modal>
+      </Modal> */}
+      <ScrollableModal
+        options={lugaresDeEspaña}
+        closeModal={() => setShowLocation(false)}
+        visible={showLocation}
+        onSelectItem={setLocation}
+      ></ScrollableModal>
     </>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   titleTypo: {
-    textAlign: 'left',
+    textAlign: "left",
     letterSpacing: 0,
-    fontFamily: FontFamily.lato
+    fontFamily: FontFamily.lato,
   },
   buttonSpaceBlock: {
     paddingBottom: Padding.p_5xs,
     paddingTop: Padding.p_6xs,
-    flex: 1
+    flex: 1,
   },
   signTypo: {
-    textAlign: 'center',
-    fontFamily: FontFamily.lato
+    textAlign: "center",
+    fontFamily: FontFamily.lato,
   },
   pressableFlexBox: {
     backgroundColor: Color.linearBoton,
     borderRadius: Border.br_11xl,
-    justifyContent: 'center',
-    flexDirection: 'row',
-    alignItems: 'center'
+    justifyContent: "center",
+    flexDirection: "row",
+    alignItems: "center",
   },
   title: {
-    color: '#242424',
-    fontWeight: '500',
+    color: "#242424",
+    fontWeight: "500",
     lineHeight: 19,
     fontSize: FontSize.size_base,
-    textAlign: 'center',
-    letterSpacing: 0
+    textAlign: "center",
+    letterSpacing: 0,
   },
   fieldSpaceBlock: {
     paddingVertical: Padding.p_smi,
     backgroundColor: Color.fAFAFA,
     borderRadius: Border.br_3xs,
     paddingHorizontal: Padding.p_xl,
-    flexDirection: 'row',
-    width: '100%',
-    alignItems: 'center',
-    gap: 20
+    flexDirection: "row",
+    width: "100%",
+    alignItems: "center",
+    gap: 20,
   },
   fieldSpaceBlock2: {
     paddingVertical: 10,
     backgroundColor: Color.fAFAFA,
     borderRadius: Border.br_3xs,
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-between',
-    alignItems:"center"
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   descriptionField: {
     paddingVertical: Padding.p_smi,
     backgroundColor: Color.fAFAFA,
     borderRadius: Border.br_3xs,
     paddingHorizontal: Padding.p_xl,
-    flexDirection: 'row',
-    width: '100%',
-    height: 100
+    flexDirection: "row",
+    width: "100%",
+    height: 100,
   },
   signIn: {
     lineHeight: 21,
     fontSize: FontSize.size_sm,
-    textAlign: 'center',
+    textAlign: "center",
     letterSpacing: 0,
-    color: '#dee274'
+    color: "#dee274",
   },
   button: {
-    borderStyle: 'solid',
+    borderStyle: "solid",
     borderColor: Color.colorKhaki_100,
     borderWidth: 1,
     height: 52,
@@ -612,39 +648,39 @@ const styles = StyleSheet.create({
     paddingBottom: Padding.p_5xs,
     paddingTop: Padding.p_6xs,
     paddingHorizontal: Padding.p_base,
-    justifyContent: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Color.white
+    justifyContent: "center",
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Color.white,
   },
   signIn2: {
     letterSpacing: 1,
     color: Color.white,
     lineHeight: 24,
     fontSize: FontSize.size_base,
-    flex: 1
+    flex: 1,
   },
   pressable1: {
     paddingHorizontal: Padding.p_5xl,
     paddingVertical: Padding.p_sm,
-    width: '100%'
+    width: "100%",
   },
   button2: {
-    marginTop: '5%',
-    borderRadius: Border.br_11xl
+    marginTop: "5%",
+    borderRadius: Border.br_11xl,
   },
   frameChild: {
     padding: Padding.p_3xs,
     height: 105,
     marginTop: 8,
-    backgroundColor: Color.white
+    backgroundColor: Color.white,
   },
   back: {
     height: 24,
-    width: 24
+    width: 24,
   },
   backParent: {
-    marginBottom: 15
+    marginBottom: 15,
   },
   crearEvento: {
     flex: 1,
@@ -652,64 +688,64 @@ const styles = StyleSheet.create({
     paddingHorizontal: Padding.p_xl,
     gap: 10,
     marginBottom: -10,
-    paddingTop:15,
+    paddingTop: 15,
   },
   titleBase: {
     paddingBottom: Padding.p_7xs,
-    flexDirection: 'row',
-    alignItems:"center"
+    flexDirection: "row",
+    alignItems: "center",
   },
   image6Icon: {
     width: 87,
-    height: 55
+    height: 55,
   },
   image6Wrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 3
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 3,
   },
   buttonBarFlexBox: {
-    flexDirection: 'row',
-    alignItems: 'center'
+    flexDirection: "row",
+    alignItems: "center",
   },
   backLayout: {
     height: 24,
-    width: 24
+    width: 24,
   },
   crearEventoText: {
     fontSize: FontSize.size_5xl,
-    fontWeight: '700',
+    fontWeight: "700",
     color: Color.negro,
-    marginLeft: 20
+    marginLeft: 20,
   },
   iconLayout: {
-    height: '100%',
-    width: '100%'
+    height: "100%",
+    width: "100%",
   },
   buttonContainer2Overlay: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(113, 113, 113, 0.3)'
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(113, 113, 113, 0.3)",
   },
   buttonContainer2Bg: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
+    position: "absolute",
+    width: "100%",
+    height: "100%",
     left: 0,
-    top: 0
+    top: 0,
   },
   iconlyLightOutlineCalendarOverlay: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   iconlyLightOutlineCalendarBg: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     left: 0,
-    top: 0
-  }
-})
+    top: 0,
+  },
+});
 
-export default CrearFechaEspecial
+export default CrearFechaEspecial;
