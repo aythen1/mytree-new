@@ -74,17 +74,50 @@ const BOTONInvitarAmigos1 = () => {
     if (type !== selectedRelationType) setSelectedRelationShip();
   };
 
+  const relacionIngles = () => {
+    switch (selectedRelationShip) {
+      case "Amigos íntimos":
+        return "closeFriend";
+      case "Colegio":
+        return "schoolFriend";
+      case "Trabajo":
+        return "workFriend";
+      case "Universidad":
+        return "universityFriend";
+      case "Afición":
+        return "hobbyFriend";
+      // Valor por defecto en caso de que no se encuentre la relación
+      case "Sobrino/a":
+        return "nephew";
+      case "Hermano":
+        return "brother";
+      case "Primo/a":
+        return "cousin";
+      case "Hijo/a":
+        return "children";
+      case "Tío/a":
+        return "uncle";
+      case "Nieto/a":
+        return "grandchildren";
+      default:
+        return "family"; // Valor por defecto para relaciones familiares
+    }
+  };
+
   const handleSendInvitation = () => {
+    console.log(selectedRelationShip, "relation");
     const body = {
       title: `Solicitud de ${selectedRelationType === "Familiar" ? "familia" : "amistad"}`,
       message: `${userData.username} ${userData.apellido} te ha enviado una solicitud de ${selectedRelationType === "Familiar" ? "familia" : "amistad"}`,
       senderId: userData?.id?.toString(),
       receiverId: selectedUserToInvite?.id?.toString(),
       type: `${selectedRelationType === "Familiar" ? "family request" : "friend request"}`,
+      relationship: relacionIngles(),
       readed: false,
       extraData: {},
       photos: [],
     };
+
     dispatch(postNotification(body)).then(() =>
       dispatch(getAllNotifications()),
     );
@@ -347,7 +380,7 @@ const BOTONInvitarAmigos1 = () => {
                           "Sobrino/a",
                           "Hijo/a",
                           "Nieto/a",
-                          "Tio/a",
+                          "Tío/a",
                         ]
                   }
                 />

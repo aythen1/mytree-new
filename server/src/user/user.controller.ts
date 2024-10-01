@@ -132,6 +132,30 @@ export class UserController {
     return this.userService.removeFriend(userId, friendId);
   }
 
+  @Post(':userId/family/:familiarId')
+  async addFamilyMemberr(
+    @Param('userId') userId: string,
+    @Param('familiarId') familiarId: string,
+    @Body('relationship')
+    relationship: 'brother' | 'cousin' | 'child' | 'uncle' | 'grandchild',
+  ): Promise<void> {
+    await this.userService.addFamilyMemberr(userId, familiarId, relationship);
+  }
+
+  @Delete(':userId/family/:familiarId')
+  async removeFamilyMemberr(
+    @Param('userId') userId: string,
+    @Param('familiarId') familiarId: string,
+    @Body('relationship')
+    relationship: 'brother' | 'cousin' | 'child' | 'uncle' | 'grandchild',
+  ): Promise<void> {
+    await this.userService.removeFamilyMemberr(
+      userId,
+      familiarId,
+      relationship,
+    );
+  }
+
   @Post('search')
   async searchUsers(@Body('query') query: string): Promise<User[]> {
     return this.userService.searchUsers(query);
@@ -410,5 +434,47 @@ export class UserController {
     } catch (error) {
       throw new NotFoundException(error.message);
     }
+  }
+
+  @Post(':userId/relation/:relationId')
+  async addRelation(
+    @Param('userId') userId: string,
+    @Param('relationId') relationId: string,
+    @Body('relationship')
+    relationship:
+      | 'brother'
+      | 'cousin'
+      | 'child'
+      | 'uncle'
+      | 'grandchild'
+      | 'closeFriend'
+      | 'schoolFriend'
+      | 'workFriend'
+      | 'universityFriend'
+      | 'hobbyFriend'
+      | 'nephew',
+  ): Promise<void> {
+    await this.userService.addRelation(userId, relationId, relationship);
+  }
+
+  @Delete(':userId/relation/:relationId')
+  async removeRelation(
+    @Param('userId') userId: string,
+    @Param('relationId') relationId: string,
+    @Body('relationship')
+    relationship:
+      | 'brother'
+      | 'cousin'
+      | 'child'
+      | 'uncle'
+      | 'grandchild'
+      | 'closeFriend'
+      | 'schoolFriend'
+      | 'workFriend'
+      | 'universityFriend'
+      | 'hobbyFriend'
+      | 'nephew',
+  ): Promise<void> {
+    await this.userService.removeRelation(userId, relationId, relationship);
   }
 }

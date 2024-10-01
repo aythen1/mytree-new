@@ -7,18 +7,9 @@ import { useSelector } from "react-redux";
 const NotificationsMuroSVG = ({ isNavigation }) => {
   const navigation = useNavigation();
   const { userData } = useSelector((state) => state.users);
-  const { allNotifications } = useSelector((state) => state.notifications);
-
-  const [userNotifications, setUserNotifications] = useState([]);
-
-  useEffect(() => {
-    const userNotifications = allNotifications.filter(
-      (notification) =>
-        notification?.receiverId === userData?.id?.toString() &&
-        notification?.readed === false,
-    );
-    setUserNotifications(userNotifications);
-  }, [allNotifications]);
+  const { allNotifications, userNotifications } = useSelector(
+    (state) => state.notifications,
+  );
 
   return (
     <Pressable

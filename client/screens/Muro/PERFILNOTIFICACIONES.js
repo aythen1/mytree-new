@@ -25,114 +25,57 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   deleteNotificationById,
   getAllNotifications,
+  getAllUserNotifications,
 } from "../../redux/actions/notifications";
 import { Context } from "../../context/Context";
-import { getAllUsers, updateUser } from "../../redux/actions/user";
+import { getAllUsers, getUserData, updateUser } from "../../redux/actions/user";
 import TopBar from "../../components/TopBar";
+import axiosInstance from "../../apiBackend";
+import relacionIngles from "../../utils/relationshipTraduccion";
 
 const PERFILNOTIFICACIONES = () => {
   const { formatDate } = useContext(Context);
   const { allUsers, userData } = useSelector((state) => state.users);
-  const { allNotifications } = useSelector((state) => state.notifications);
+  const { allNotifications, userNotifications } = useSelector(
+    (state) => state.notifications,
+  );
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [showInvitationModal, setShowInvitationModal] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState();
-  const [nots, setNots] = useState([]);
 
   useEffect(() => {
-    dispatch(getAllNotifications());
+    dispatch(getAllUserNotifications(userData?.id));
   }, []);
 
-  const handleAcceptFamilyRequest = (requestUserId) => {
-    const actualUserFamilyIds = userData.familyIds || [];
-    const newUserFamilyArray = [...actualUserFamilyIds, requestUserId];
-    const actualRequestUserFamilyArray =
-      allUsers.filter((user) => user.id === requestUserId)[0].familyIds || [];
-    const newRuquestUserFamilyArray = actualRequestUserFamilyArray.includes(
-      userData.id,
-    )
-      ? actualRequestUserFamilyArray
-      : [...actualRequestUserFamilyArray, userData.id];
-  };
-
-  const userNotifications = allNotifications.filter(
-    (notification) => notification.receiverId === userData.id.toString(),
-  );
-
-  const handleAcceptFamilyOrFriendRequest = (
+  const handleAcceptFamilyOrFriendRequest = async (
     notificationId,
     senderId,
     receiverId,
     requestType,
+    relationship,
   ) => {
-    const actualUserFamilyIds = userData.familyIds || [];
-    const actualUserFriendsIds = userData.friendsId || [];
-
-    const newUserFamilyArray = actualUserFamilyIds.includes(senderId.toString())
-      ? actualUserFamilyIds
-      : [...actualUserFamilyIds, senderId.toString()];
-    const newUserFriendsArray = actualUserFriendsIds.includes(
-      senderId.toString(),
-    )
-      ? actualUserFriendsIds
-      : [...actualUserFriendsIds, senderId.toString()];
-    const actualRequestUserFamilyArray =
-      allUsers.filter((user) => user.id.toString() === senderId.toString())[0]
-        .familyIds || [];
-    const actualRequestUserFriendsArray =
-      allUsers.filter((user) => user.id.toString() === senderId.toString())[0]
-        .friendsId || [];
-    const newRequestUserFamilyArray = actualRequestUserFamilyArray.includes(
-      userData.id.toString(),
-    )
-      ? actualRequestUserFamilyArray
-      : [...actualRequestUserFamilyArray, userData.id.toString()];
-    const newRequestUserFriendsArray = actualRequestUserFriendsArray.includes(
-      userData.id.toString(),
-    )
-      ? actualRequestUserFriendsArray
-      : [...actualRequestUserFriendsArray, userData.id.toString()];
-
     if (requestType === "family request") {
-      dispatch(
-        updateUser({
-          userId: senderId.toString(),
-          userData: receiverId.toString(),
-          property: "familyIds",
-        }),
-      );
-      dispatch(
-        updateUser({
-          userId: receiverId.toString(),
-          userData: senderId.toString(),
-          property: "familyIds",
-        }),
-      );
-      dispatch(deleteNotificationById(notificationId)).then(() => {
-        dispatch(getAllNotifications());
-        dispatch(getAllUsers());
-      });
+      await axiosInstance
+        .post(`user/${userData.id}/relation/${senderId}`, { relationship })
+        .then(() => {
+          dispatch(deleteNotificationById(notificationId)).then(() => {
+            dispatch(getAllUserNotifications(userData?.id));
+
+            dispatch(getUserData(userData?.id));
+          });
+        });
     }
     if (requestType === "friend request") {
-      dispatch(
-        updateUser({
-          userId: senderId.toString(),
-          userData: receiverId.toString(),
-          property: "friendsIds",
-        }),
-      );
-      dispatch(
-        updateUser({
-          userId: receiverId.toString(),
-          userData: senderId.toString(),
-          property: "friendsIds",
-        }),
-      );
-      dispatch(deleteNotificationById(notificationId)).then(() => {
-        dispatch(getAllNotifications());
-        dispatch(getAllUsers());
-      });
+      await axiosInstance
+        .post(`user/${userData.id}/relation/${senderId}`, { relationship })
+        .then(() => {
+          dispatch(deleteNotificationById(notificationId)).then(() => {
+            dispatch(getAllUserNotifications(userData?.id));
+
+            dispatch(getUserData(userData?.id));
+          });
+        });
     }
     dispatch(getAllNotifications());
     dispatch(getAllUsers());
@@ -153,67 +96,67 @@ const PERFILNOTIFICACIONES = () => {
           {/* =============== NOTIFICATIONS RENDERED =============== */}
           {userNotifications.length > 0 ? (
             <ScrollView showsVerticalScrollIndicator={false}>
-              {allNotifications &&
-                allNotifications
-                  .filter(
-                    (notification) =>
-                      notification.receiverId === userData.id.toString(),
-                  )
-                  ?.map((notification, index) => (
-                    <Pressable
-                      onPress={async () => {
-                        await setSelectedNotification(notification);
-                        setShowInvitationModal(true);
-                      }}
-                      key={index}
-                    >
-                      <View style={[styles.frameView, styles.frameViewFlexBox]}>
-                        <View
-                          style={{ flexDirection: "row", alignItems: "center" }}
-                        >
-                          <Image
-                            style={styles.frameChild}
-                            contentFit="cover"
-                            source={
-                              allUsers.find(
-                                (e) => e?.id === notification?.senderId,
-                              )
-                                ? {
-                                    uri: allUsers.find(
-                                      (e) => e?.id === notification?.senderId,
-                                    ).profilePicture,
-                                  }
-                                : require("../../assets/logoo.png")
-                            }
-                          />
-                          <Text style={styles.hasRecibidoUnaLayout}>
-                            <Text style={styles.brunoTeHaContainer1}>
-                              <Text
-                                style={styles.bruno}
-                              >{`${notification.message.split(" ").slice(0, 2).join(" ")} `}</Text>
-                              <Text style={styles.teHaInvitadoTypo}>
-                                {`${notification.message.split(" ").slice(2).join(" ")}.`}
-                              </Text>
+              {userNotifications &&
+                userNotifications?.map((notification, index) => (
+                  <Pressable
+                    onPress={async () => {
+                      await setSelectedNotification(notification);
+                      setShowInvitationModal(true);
+                    }}
+                    key={index}
+                  >
+                    <View style={[styles.frameView, styles.frameViewFlexBox]}>
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        <Image
+                          style={styles.frameChild}
+                          contentFit="cover"
+                          source={
+                            notification?.user?.profilePicture
+                              ? { uri: notification?.user?.profilePicture }
+                              : require("../../assets/logoo.png")
+                          }
+                        />
+                        <Text style={styles.hasRecibidoUnaLayout}>
+                          <Text style={styles.brunoTeHaContainer1}>
+                            <Text
+                              style={styles.bruno}
+                            >{`${notification.message.split(" ").slice(0, 2).join(" ")} `}</Text>
+                            <Text style={styles.teHaInvitadoTypo}>
+                              {`${notification.message.split(" ").slice(2).join(" ")}. `}
+                            </Text>
+                            <Text
+                              style={{
+                                ...styles.teHaInvitadoTypo,
+                                color: "gray",
+                              }}
+                            >
+                              {relacionIngles(notification?.relationship)}
                             </Text>
                           </Text>
-                        </View>
+                        </Text>
                       </View>
-                      <Text
-                        style={{
-                          alignSelf: "flex-end",
-                          fontSize: 10,
-                          color: "gray",
-                        }}
-                      >
-                        {formatDate(notification.createdAt)}
-                      </Text>
-                      <Image
-                        style={styles.frameItem}
-                        contentFit="cover"
-                        source={require("../../assets/line-78.png")}
-                      />
-                    </Pressable>
-                  ))}
+                    </View>
+                    <Text
+                      style={{
+                        alignSelf: "flex-end",
+                        fontSize: 10,
+                        color: "gray",
+                      }}
+                    >
+                      {formatDate(
+                        notification.createdAt,
+                        Intl.DateTimeFormat().resolvedOptions().timeZone,
+                      )}
+                    </Text>
+                    <Image
+                      style={styles.frameItem}
+                      contentFit="cover"
+                      source={require("../../assets/line-78.png")}
+                    />
+                  </Pressable>
+                ))}
             </ScrollView>
           ) : (
             <Text
@@ -245,12 +188,16 @@ const PERFILNOTIFICACIONES = () => {
                 selectedNotification.senderId,
                 selectedNotification.receiverId,
                 selectedNotification.type,
+                selectedNotification.relationship,
               );
               setShowInvitationModal(false);
             }}
             cancelHandler={() => {
-              dispatch(deleteNotificationById(selectedNotification.id));
-              dispatch(getAllNotifications());
+              dispatch(deleteNotificationById(selectedNotification.id)).then(
+                () => {
+                  dispatch(getAllUserNotifications(userData?.id));
+                },
+              );
               setShowInvitationModal(false);
             }}
             onClose={() => setShowInvitationModal(false)}

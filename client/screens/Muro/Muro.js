@@ -29,7 +29,10 @@ import { Context } from "../../context/Context";
 import Compartir from "../../components/Compartir";
 import Etiquetados from "../../components/Etiquetados";
 import { getAllUsers, getUserData } from "../../redux/actions/user";
-import { getAllNotifications } from "../../redux/actions/notifications";
+import {
+  getAllNotifications,
+  getAllUserNotifications,
+} from "../../redux/actions/notifications";
 import {
   getAllEvents,
   getAllUserEvents,
@@ -80,11 +83,10 @@ const Muro = () => {
   const dispatches = async (id) => {
     dispatch(getAllUsers()).finally(() => {
       getUsersMessages();
-      dispatch(getAllNotifications());
+      dispatch(getAllUserNotifications(id));
       dispatch(getAllPosts());
       dispatch(chatGroups(id));
       dispatch(getAllUserAlbums(id));
-      dispatch(getUserData(id));
       dispatch(getAllUserEvents(id));
       dispatch(getAllEvents());
       dispatch(getAllUserInvitations(id));

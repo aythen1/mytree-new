@@ -84,7 +84,7 @@ const Aadir1 = ({ setShowSelectEventTypeModal }) => {
                 style={{ ...styles.iconlylightOutline3User, marginLeft: -4 }}
                 contentFit="contain"
                 source={
-                  screen == "MiDiario"
+                  screen === "MiDiario"
                     ? require("../assets/documentbtnhover.png")
                     : require("../assets/documentbtn.png")
                 }

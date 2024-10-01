@@ -30,17 +30,17 @@ export const getNotificationById = createAsyncThunk(
 );
 
 // Get all user notifications
-// export const getAllUserNotifications = createAsyncThunk(
-//     'getAllUserNotifications/notifications',
-//     async (userId) => {
-//       try {
-//         const {data} = await axiosInstance.get(`/notification/user/${userId}`);
-//         return data
-//       } catch (error) {
-//         throw new Error(error)
-//       }
-//     }
-//   )
+export const getAllUserNotifications = createAsyncThunk(
+  "getAllUserNotifications/notifications",
+  async (userId) => {
+    try {
+      const { data } = await axiosInstance.get(`/notification/user/${userId}`);
+      return data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+);
 
 // Post notification
 export const postNotification = createAsyncThunk(

@@ -115,6 +115,26 @@ export class User {
   @JoinTable()
   brothers: User[];
 
+  @ManyToMany(() => User)
+  @JoinTable()
+  cousins: User[];
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  childrens: User[];
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  uncles: User[];
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  grandchildrens: User[];
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  nephews: User[]; // Relación para los sobrinos
+
   // @OneToMany(() => Comment, (comments) => comments.user)
   // comments: Comment[];
 
@@ -143,4 +163,24 @@ export class User {
 
   @Column({ nullable: true, default: null })
   badge: string;
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  closeFriends: User[]; // Amigos íntimos
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  schoolFriends: User[]; // Amigos de colegio
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  workFriends: User[]; // Amigos del trabajo
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  universityFriends: User[]; // Amigos de universidad
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  hobbyFriends: User[]; // Amigos por afición
 }

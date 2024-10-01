@@ -23,6 +23,12 @@ export class NotificationService {
     const notification = this.notificationRepository.create(
       createNotificationDto,
     );
+    const user = await this.userRepository.findOne({
+      where: { id: createNotificationDto.senderId },
+    });
+    notification.user = user;
+    await this.notificationRepository.save(notification);
+
     this.chatGateway.sendNotificationToUser(
       createNotificationDto.receiverId,
       'notification',
@@ -30,7 +36,7 @@ export class NotificationService {
         message: 'Hello!',
       },
     );
-    return await this.notificationRepository.save(notification);
+    return notification;
   }
 
   async update(
@@ -119,6 +125,14 @@ export class NotificationService {
   async findByReceiverId(receiverId: string): Promise<Notification[]> {
     return await this.notificationRepository.find({
       where: { receiverId: receiverId },
+    });
+  }
+
+  async getNotificationsByUserId(userId: string): Promise<Notification[]> {
+    return this.notificationRepository.find({
+      where: { receiverId: userId },
+      relations: ['user'],
+      order: { createdAt: 'DESC' }, // Ordenar por fecha de creación descendente
     });
   }
 }

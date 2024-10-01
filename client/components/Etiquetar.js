@@ -6,6 +6,7 @@ import { FontFamily, FontSize, Color, Padding, Border } from "../GlobalStyles";
 import Checkbox from "./Checkbox";
 import { useSelector } from "react-redux";
 import reactotron from "reactotron-react-native";
+import filterFriendsFamily from "../screens/utils/arrayUsuarios";
 
 const Etiquetar = ({
   onClose,
@@ -16,10 +17,15 @@ const Etiquetar = ({
 }) => {
   const { allUsers, userData } = useSelector((state) => state.users);
 
-  const userFamily =
-    allUsers.filter((user) => user.id === userData.id)[0]?.familyIds || [];
-  const userFriends =
-    allUsers.filter((user) => user.id === userData.id)[0]?.friendsIds || [];
+  const [friends, setFriends] = React.useState([]);
+  const [family, setFamily] = React.useState([]);
+
+  React.useEffect(() => {
+    const { friends, family } = filterFriendsFamily(userData);
+    setFriends(friends);
+    setFamily(family);
+  }, []);
+
   const handleToggleTag = (userId) => {
     if (taggedUsers.includes(userId.toString())) {
       const newArray = taggedUsers.filter(
@@ -30,7 +36,9 @@ const Etiquetar = ({
       setTaggedUsers([...taggedUsers, userId.toString()]);
     }
   };
+
   reactotron.log("dataaa", invites);
+
   return (
     <View
       style={{
@@ -203,7 +211,7 @@ const Etiquetar = ({
                 alignItems: "center",
               }}
             >
-              {userFriends.length === 0 && (
+              {friends.length === 0 && (
                 <Text
                   style={{
                     color: "#000",
@@ -216,8 +224,8 @@ const Etiquetar = ({
                   ¡Aún no tienes ningún contacto agregado a amigos!
                 </Text>
               )}
-              {userFriends.length > 0 &&
-                userFriends.map((friendMember, index) => {
+              {friends.length > 0 &&
+                friends.map((friendMember, index) => {
                   const is = invites?.find((a) => a.userId === friendMember);
                   if (!is)
                     return (
@@ -238,13 +246,8 @@ const Etiquetar = ({
                             style={{ width: 30, height: 30, borderRadius: 50 }}
                             contentFit="cover"
                             source={
-                              allUsers.filter(
-                                (user) => user.id.toString() === friendMember,
-                              )[0]?.profilePicture
-                                ? allUsers.filter(
-                                    (user) =>
-                                      user.id.toString() === friendMember,
-                                  )[0]?.profilePicture
+                              friendMember.profilePicture
+                                ? { uri: friendMember.profilePicture }
                                 : require("../assets/frame-1547754875.png")
                             }
                           />
@@ -260,13 +263,9 @@ const Etiquetar = ({
                               fontSize: FontSize.size_base,
                             }}
                           >
-                            {allUsers.filter(
-                              (user) => user.id.toString() === friendMember,
-                            )[0]?.username +
+                            {friendMember?.username +
                               " " +
-                              allUsers.filter(
-                                (user) => user.id.toString() === friendMember,
-                              )[0]?.apellido}
+                              friendMember?.apellido}
                           </Text>
                         </View>
                         <Checkbox
@@ -311,6 +310,7 @@ const Etiquetar = ({
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={{
+                minHeight: 150,
                 maxHeight: 150,
                 borderColor: Color.secundario,
                 borderTopWidth: 1,
@@ -323,7 +323,7 @@ const Etiquetar = ({
                 alignItems: "center",
               }}
             >
-              {userFamily.length === 0 && (
+              {family.length === 0 && (
                 <Text
                   style={{
                     color: "#000",
@@ -336,8 +336,8 @@ const Etiquetar = ({
                   ¡Aún no tienes ningún contacto agregado a familiares!
                 </Text>
               )}
-              {userFamily.length > 0 &&
-                userFamily.map((familyMember, index) => {
+              {family.length > 0 &&
+                family.map((familyMember, index) => {
                   const is = invites?.find((a) => a.userId === familyMember);
                   if (!is)
                     return (
@@ -358,13 +358,8 @@ const Etiquetar = ({
                             style={{ width: 30, height: 30, borderRadius: 50 }}
                             contentFit="cover"
                             source={
-                              allUsers.filter(
-                                (user) => user.id.toString() === familyMember,
-                              )[0]?.profilePicture
-                                ? allUsers.filter(
-                                    (user) =>
-                                      user.id.toString() === familyMember,
-                                  )[0]?.profilePicture
+                              familyMember?.profilePicture
+                                ? { uri: familyMember?.profilePicture }
                                 : require("../assets/frame-1547754875.png")
                             }
                           />
@@ -380,13 +375,9 @@ const Etiquetar = ({
                               fontSize: FontSize.size_base,
                             }}
                           >
-                            {allUsers.filter(
-                              (user) => user.id.toString() === familyMember,
-                            )[0]?.username +
+                            {familyMember?.username +
                               " " +
-                              allUsers.filter(
-                                (user) => user.id.toString() === familyMember,
-                              )[0]?.apellido}
+                              familyMember?.apellido}
                           </Text>
                         </View>
                         <Checkbox

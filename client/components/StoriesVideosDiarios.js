@@ -13,27 +13,30 @@ import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Padding, Border } from "../GlobalStyles";
 import useFetchHook from "../utils/useFetchHook";
 import { useSelector } from "react-redux";
+import useSortedUsers from "../screens/utils/ordenarUsuarios";
+import sortedUsers from "../screens/utils/ordenarUsuarios";
 
 const StoriesVideosDiarios = () => {
   const [users, setUsers] = React.useState();
   const { userData, allUsers } = useSelector((state) => state.users);
 
-  const { data, loading, error } = useFetchHook({
-    url: `/user/${userData?.id}/friendsAndFamilyLength`,
-  });
+  // const { data, loading, error } = useFetchHook({
+  //   url: `/user/${userData?.id}/friendsAndFamilyLength`,
+  // });
 
   const navigation = useNavigation();
 
   React.useEffect(() => {
-    console.log("efect ", data);
-    if (data) {
-      const uniqueData = data.filter(
-        (item, index, self) =>
-          index === self.findIndex((t) => t.id === item.id),
-      );
-      setUsers(uniqueData);
-    }
-  }, [data]);
+    // console.log("efect ", data);
+    // if (data) {
+    //   const uniqueData = data.filter(
+    //     (item, index, self) =>
+    //       index === self.findIndex((t) => t.id === item.id),
+    //   );
+    //   setUsers(uniqueData);
+    // }
+    setUsers(sortedUsers(userData));
+  }, [userData]);
 
   const onShare = async (eventLink) => {
     try {

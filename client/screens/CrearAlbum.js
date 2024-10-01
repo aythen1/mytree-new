@@ -37,6 +37,8 @@ import { getUserPosts } from "../redux/slices/user.slices";
 import Maps from "../components/Maps";
 import { getAllUserAlbums } from "../redux/actions/albums";
 import ImagePickerModal from "./Modals/ImagePickerModal";
+import ScrollableModal from "../components/modals/ScrollableModal";
+import { lugaresDeEspaña } from "./utils/Lugares";
 
 const CrearAlbum = () => {
   const dispatch = useDispatch();
@@ -87,16 +89,17 @@ const CrearAlbum = () => {
     getUser();
   }, []);
 
-  const [uploadRecuerdo, setUploadRecuerdo] = useState(false);
-  const [cancion, setCancion] = useState(false);
-  const [ischecked, setIschecked] = useState(false);
-  const [buttonContainer1Visible, setButtonContainer1Visible] = useState(false);
-  const [frameContainer5Visible, setFrameContainer5Visible] = useState(false);
   const [showPrivacidad, setShowPrivacidad] = useState(false);
   const [privacy, setPrivacy] = useState();
   const [location, setLocation] = useState();
   const [showImagesModal, setShowImagesModal] = useState(false);
-  const [selectedDate, setSelectedDate] = useState();
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const fecha = new Date();
+    const dia = fecha.getDate().toString().padStart(2, "0");
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
+    const año = fecha.getFullYear();
+    return `${año}-${mes}-${dia}`;
+  });
   const [pickedImages, setPickedImages] = useState([]);
 
   const closeSubmit = () => {
@@ -272,18 +275,6 @@ const CrearAlbum = () => {
               width: "100%",
             }}
           >
-            {/* <Pressable onPress={() => navigation.openDrawer()}>
-              <Image
-                style={{
-                  top: 5,
-                  width: 26,
-                  height: 20,
-                  overflow: 'hidden'
-                }}
-                contentFit="cover"
-                source={require('../assets/ionmenu2.png')}
-              />
-            </Pressable> */}
             <Text
               style={{
                 fontSize: FontSize.size_5xl,
@@ -330,7 +321,7 @@ const CrearAlbum = () => {
                     paddingHorizontal: 5,
                     fontFamily: FontFamily.lato,
                   }}
-                  placeholder=" Describe lo que sientes..."
+                  placeholder="Nombre del álbum"
                   onChangeText={(des) =>
                     setDataToSend({ ...dataToSend, ["description"]: des })
                   }
@@ -816,30 +807,13 @@ const CrearAlbum = () => {
           </View>
         </Modal>
       </ScrollView>
-      <Modal animationType="fade" transparent visible={lugar}>
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: "rgba(113, 113, 113, 0.3)",
-          }}
-        >
-          <Pressable
-            style={{
-              position: "absolute",
-              width: "100%",
-              height: "100%",
-              left: 0,
-              top: 0,
-            }}
-            onPress={() => {
-              setLugar(false);
-            }}
-          />
-          <Maps onClose={() => setLugar(false)} setLocation={setLocation} />
-        </View>
-      </Modal>
+
+      <ScrollableModal
+        options={lugaresDeEspaña}
+        closeModal={() => setLugar(false)}
+        visible={lugar}
+        onSelectItem={setLocation}
+      ></ScrollableModal>
     </LinearGradient>
   );
 };

@@ -4,12 +4,15 @@ import { Image } from "expo-image";
 import { FontFamily, Color, Border, FontSize } from "../../GlobalStyles";
 import { useSelector } from "react-redux";
 import axiosInstance from "../../apiBackend";
+import useRelationsLength from "../utils/lenghtUsuarios";
 
 const PERFILMIINFO = ({ setSelectedComponent, usuario }) => {
   // const { familyLength, usersLength } = useSelector((state) => state.users);
   console.log(usuario.id, "usuario");
   const [usersLength, setUsersLength] = useState();
   const [familyLength, setFamilyLength] = useState();
+
+  const { totalFamilyLength, totalFriendsLength } = useRelationsLength(usuario);
 
   useEffect(() => {
     const get = async () => {
@@ -42,7 +45,7 @@ const PERFILMIINFO = ({ setSelectedComponent, usuario }) => {
             </Text>
             <View style={styles.parent}>
               <Text style={[styles.text1, styles.text1Typo]}>
-                {familyLength || 0}
+                {totalFamilyLength || 0}
               </Text>
               <View style={styles.ellipseGroup}>
                 <Image
@@ -57,7 +60,7 @@ const PERFILMIINFO = ({ setSelectedComponent, usuario }) => {
             <Text style={[styles.familiares, styles.text1Typo]}>Amigos</Text>
             <View style={styles.parent}>
               <Text style={[styles.text1, styles.text1Typo]}>
-                {usersLength || 0}
+                {totalFriendsLength || 0}
               </Text>
               <View style={styles.ellipseGroup}>
                 <Image

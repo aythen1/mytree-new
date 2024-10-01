@@ -8,7 +8,11 @@ import axiosInstance from "../apiBackend";
 import { addUserDiary } from "../redux/slices/diaries.slices";
 import { getUserData } from "../redux/actions/user";
 import { setAllChats } from "../redux/slices/chats.slices";
-import { getAllNotifications } from "../redux/actions/notifications";
+import {
+  getAllNotifications,
+  getAllUserNotifications,
+} from "../redux/actions/notifications";
+import { format, formatInTimeZone, toZonedTime } from "date-fns-tz";
 
 export const Context = createContext();
 
@@ -186,41 +190,86 @@ export const ContextProvider = ({ children }) => {
     return formattedDate;
   };
 
-  function formatDate(dateString) {
-    // Parse the input date string into a Date object
-    const date = new Date(dateString);
+  function formatDate(dateString, userTimezone) {
+    // Convertir la fecha de la base de datos (ahora correctamente almacenada) a un objeto Date
+    const dbDateUTC = new Date(dateString);
 
-    // Get the current date and time
-    const now = new Date();
+    // Usar Intl.DateTimeFormat para ajustar dbDateUTC a la zona horaria del usuario
+    const dbDateInUserTimezoneStr = new Intl.DateTimeFormat("en-US", {
+      timeZone: userTimezone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      fractionalSecondDigits: 3,
+      hour12: false,
+    }).format(dbDateUTC);
 
-    // Calculate the difference in milliseconds between now and the provided date
-    const diffMilliseconds = now - date;
+    // Convertir el string formateado a un objeto Date usando formato ISO (YYYY-MM-DDTHH:mm:ss.sssZ)
+    const [month, day, year, hour, minute, second] =
+      dbDateInUserTimezoneStr.match(/\d+/g);
+    const dbDateInUserTimezone = new Date(
+      `${year}-${month}-${day}T${hour}:${minute}:${second}.000`,
+    );
 
-    // Convert the difference to seconds
+    // Obtener la fecha y hora actual en la zona horaria del usuario
+    const nowInUserTimezoneStr = new Intl.DateTimeFormat("en-US", {
+      timeZone: userTimezone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      fractionalSecondDigits: 3,
+      hour12: false,
+    }).format(new Date());
+
+    const [nMonth, nDay, nYear, nHour, nMinute, nSecond] =
+      nowInUserTimezoneStr.match(/\d+/g);
+    const nowInUserTimezone = new Date(
+      `${nYear}-${nMonth}-${nDay}T${nHour}:${nMinute}:${nSecond}.000`,
+    );
+
+    // Calcular la diferencia en milisegundos entre la fecha de la base de datos y la fecha actual
+    const diffMilliseconds = nowInUserTimezone - dbDateInUserTimezone;
+
+    // Verificar si la diferencia es NaN o si hubo un error
+    if (isNaN(diffMilliseconds)) {
+      console.error("Error al calcular la diferencia de tiempo.");
+      return null;
+    }
+
+    // Convertir la diferencia a segundos
     const diffSeconds = Math.floor(diffMilliseconds / 1000);
 
-    // Calculate time units
+    // Calcular unidades de tiempo
     const seconds = diffSeconds % 60;
     const minutes = Math.floor(diffSeconds / 60) % 60;
     const hours = Math.floor(diffSeconds / (60 * 60)) % 24;
     const days = Math.floor(diffSeconds / (60 * 60 * 24));
 
-    // Determine the appropriate response based on the time elapsed
+    // Determinar la respuesta adecuada
     if (days > 0) {
-      // More than a day ago
-      const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-      return formattedDate;
+      return `${days} día${days > 1 ? "s" : ""} hace`;
     } else if (hours > 0) {
-      // Less than a day but more than an hour ago
-      return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+      return `${hours} hora${hours > 1 ? "s" : ""} hace`;
     } else if (minutes > 0) {
-      // Less than an hour but more than a minute ago
-      return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+      return `${minutes} minuto${minutes > 1 ? "s" : ""} hace`;
     } else {
-      // Less than a minute ago
-      return `${seconds} second${seconds !== 1 ? "s" : ""} ago`;
+      return `${seconds} segundo${seconds !== 1 ? "s" : ""} hace`;
     }
   }
+
+  // Ejemplo de uso
+
+  // Ejemplo de uso
+
+  // Ejemplo de uso
+
+  // Ejemplo de uso
 
   function getTimeFromDate(dateString) {
     // Create a new Date object from the UTC string
@@ -360,7 +409,14 @@ export const ContextProvider = ({ children }) => {
 
   socket.on("notification", (data) => {
     console.log("New notification:", data);
-    dispatch(getAllNotifications()).then((w) => console.log(w, "w"));
+    return dispatch(getAllUserNotifications(userData?.id));
+
+    // Manejar la actualización de notificaciones en la app
+  });
+
+  socket.on("relationship", (data) => {
+    console.log("New relationship:", data);
+    return dispatch(getUserData(userData?.id));
 
     // Manejar la actualización de notificaciones en la app
   });
