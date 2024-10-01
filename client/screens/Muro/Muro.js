@@ -21,7 +21,7 @@ import Post from "../../components/Post";
 import RetosModal from "../Retos/RetosModal";
 import VotacionDeRetos from "../VotacionDeRetos";
 import MenuPrincipal from "../../components/MenuPrincipal";
-import { useRoute } from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { setPanel } from "../../redux/slices/panel.slices";
 import StoriesVideosDiarios from "../../components/StoriesVideosDiarios";
 import { LinearGradient } from "expo-linear-gradient";
@@ -29,7 +29,10 @@ import { Context } from "../../context/Context";
 import Compartir from "../../components/Compartir";
 import Etiquetados from "../../components/Etiquetados";
 import { getAllUsers, getUserData } from "../../redux/actions/user";
-import { getAllNotifications } from "../../redux/actions/notifications";
+import {
+  getAllNotifications,
+  getAllUserNotifications,
+} from "../../redux/actions/notifications";
 import {
   getAllEvents,
   getAllUserEvents,
@@ -43,6 +46,7 @@ import { chatGroups } from "../../redux/actions/chat";
 import { getAllPosts } from "../../redux/actions/posts";
 import GestureRecognizer from "react-native-swipe-gestures";
 import { getAllUserAlbums } from "../../redux/actions/albums";
+import { setScreen } from "../../redux/slices/user.slices";
 
 const Muro = () => {
   const {
@@ -79,11 +83,10 @@ const Muro = () => {
   const dispatches = async (id) => {
     dispatch(getAllUsers()).finally(() => {
       getUsersMessages();
-      dispatch(getAllNotifications());
+      dispatch(getAllUserNotifications(id));
       dispatch(getAllPosts());
       dispatch(chatGroups(id));
       dispatch(getAllUserAlbums(id));
-      dispatch(getUserData(id));
       dispatch(getAllUserEvents(id));
       dispatch(getAllEvents());
       dispatch(getAllUserInvitations(id));
@@ -95,6 +98,10 @@ const Muro = () => {
       dispatches(userData.id);
     }
   }, []);
+
+  useFocusEffect(() => {
+    dispatch(setScreen("Muro"));
+  });
 
   const handleAceptInvitation = async () => {
     try {

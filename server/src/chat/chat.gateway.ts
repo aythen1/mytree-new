@@ -6,7 +6,7 @@ import {
   OnGatewayDisconnect,
   OnGatewayInit,
   MessageBody,
-  ConnectedSocket
+  ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
@@ -18,44 +18,48 @@ export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   constructor(
-    private messageService: MessageService,
-    private chatService: ChatService
+    private readonly messageService: MessageService,
+    private chatService: ChatService,
   ) {}
 
   @WebSocketServer()
   server: Server;
 
-  private connectedUsers: number = 0;
+  private connectedUsers: Map<string, string> = new Map();
   // eslint-disable-next-line
   afterInit(server: any) {
     console.log('inicio');
   }
   // eslint-disable-next-line
   handleConnection(client: Socket) {
-    this.connectedUsers++;
-    this.server.emit('users online', this.connectedUsers);
-    console.log('users online', this.connectedUsers);
-    console.log('Cliente conectado:', client.handshake.headers.userid);
+    const userId = client.handshake.query.userId;
+    if (userId) {
+      this.connectedUsers.set(userId.toLocaleString(), client.id);
+      console.log(`Usuario ${userId} conectado`);
+    }
   }
 
   handleDisconnect(client: Socket) {
-    this.connectedUsers--;
-    this.server.emit('users online', this.connectedUsers);
-    console.log('users online', this.connectedUsers);
-    console.log(`Cliente desconectado: ${client.id}`);
+    const userId = Array.from(this.connectedUsers.keys()).find(
+      (key) => this.connectedUsers.get(key) === client.id,
+    );
+    if (userId) {
+      this.connectedUsers.delete(userId);
+      console.log(`Usuario ${userId} desconectado`);
+    }
   }
 
   @SubscribeMessage('message')
   async handleMessage(
     @ConnectedSocket() client: Socket,
-    @MessageBody() data: { sender: string; receiver: string; message: string }
+    @MessageBody() data: { sender: string; receiver: string; message: string },
   ): Promise<any> {
     const room = this.chatService.roomIdGenerator(data.sender, data.receiver);
     const newMessage = await this.messageService.saveMessage(
       data.sender,
       data.receiver,
       room,
-      data.message
+      data.message,
     );
     this.server.to(room).emit('message-server', newMessage);
     console.log('message', room);
@@ -78,7 +82,6 @@ export class ChatGateway
     console.log('leaveRoom', room);
   }
 
-
   // @SubscribeMessage('groupMessage')
   // async handleGroupMessage(
   //   @ConnectedSocket() client: Socket,
@@ -96,10 +99,25 @@ export class ChatGateway
   //   return ;
   // }
 
+  sendNotificationToUser(userId: string, event: string, data: any) {
+    const socketId = this.connectedUsers.get(userId);
+    if (socketId) {
+      this.server.to(socketId).emit(event, data);
+    }
+  }
+
+  @SubscribeMessage('sendNotification')
+  handleNotification(
+    @MessageBody() notification: { receiverId: string; content: string },
+  ) {
+    const { receiverId, content } = notification;
+    this.sendNotificationToUser(receiverId, 'notification', { content });
+  }
+
   @SubscribeMessage('joinGroup')
   async handleGroupJoin(
     @ConnectedSocket() client: Socket,
-    @MessageBody() data: { room: string }
+    @MessageBody() data: { room: string },
   ) {
     const { room } = data;
     client.join(room);
@@ -110,7 +128,7 @@ export class ChatGateway
   @SubscribeMessage('leaveGroup')
   handleGroupLeave(
     @ConnectedSocket() client: Socket,
-    @MessageBody() data: { room: string }
+    @MessageBody() data: { room: string },
   ) {
     const { room } = data;
     client.leave(room);
@@ -118,5 +136,4 @@ export class ChatGateway
     console.log('Client left group:', room);
   }
   //----------------
-
 }

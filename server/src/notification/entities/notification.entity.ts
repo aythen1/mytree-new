@@ -25,17 +25,18 @@ export class Notification {
   @Column()
   readed: boolean;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @Column("simple-array")
+  @Column('simple-array', { nullable: true })
   photos: string[];
 
-  @ManyToOne(() => User, user => user.notifications)
+  @ManyToOne(() => User, (user) => user.notifications)
   user: User;
 
   @Column({ type: 'json', default: '{}' })
   extraData: Record<string, any> = {};
 
-
+  @Column({ nullable: true })
+  relationship: string; // Propiedad opcional para la relación
 }

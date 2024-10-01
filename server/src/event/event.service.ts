@@ -30,65 +30,110 @@ export class EventService {
   }
 
   async findOne(id: string): Promise<Event> {
-    return await this.eventRepository.findOne({where: {id:id} ,relations:['invites','wishListItems']});
+    return await this.eventRepository.findOne({
+      where: { id: id },
+      relations: ['invites', 'wishListItems'],
+    });
   }
 
   async findByCreator(creatorId: string): Promise<Event[]> {
-    return await this.eventRepository.find({ where: { creatorId },relations:['invites','wishListItems'] });
+    return await this.eventRepository.find({
+      where: { creatorId },
+      relations: ['invites', 'wishListItems'],
+    });
   }
 
   async remove(id: string): Promise<Event> {
-    const event = await this.eventRepository.findOne({where: {id:id}});
+    const event = await this.eventRepository.findOne({
+      where: { id: id },
+      relations: ['invites', 'wishListItems'],
+    });
     if (!event) {
       throw new Error('Evento no encontrado');
     }
+
+    // Eliminar invitaciones
+    await this.inviteRepository.remove(event.invites);
+
+    // Eliminar items de la lista de deseos
+    await this.wishListItemRepository.remove(event.wishListItems);
+
+    // Eliminar evento
     return await this.eventRepository.remove(event);
   }
-
   async removeAll(): Promise<void> {
     await this.eventRepository.delete({});
   }
 
   async update(id: string, updateEventDto: CreateEventDto): Promise<Event> {
-    const event = await this.eventRepository.findOne({where: {id:id}});
+    const event = await this.eventRepository.findOne({ where: { id: id } });
     if (!event) {
       throw new Error('Evento no encontrado');
     }
     return await this.eventRepository.save({ ...event, ...updateEventDto });
   }
 
-
-  async findInvitedByStatus(leida: boolean, aceptada: boolean): Promise<string[]> {
-    const events = await this.eventRepository.find({ relations: ['invitedUsers'] });
-    const invitedUsers = events.reduce((acc, curr) => [...acc, ...curr.invitedUsers], []);
-    const filteredInvitedUsers = invitedUsers.filter(user => user.leida === leida && user.aceptada === aceptada);
-    return filteredInvitedUsers.map(user => user.idUsuario);
+  async findInvitedByStatus(
+    leida: boolean,
+    aceptada: boolean,
+  ): Promise<string[]> {
+    const events = await this.eventRepository.find({
+      relations: ['invitedUsers'],
+    });
+    const invitedUsers = events.reduce(
+      (acc, curr) => [...acc, ...curr.invitedUsers],
+      [],
+    );
+    const filteredInvitedUsers = invitedUsers.filter(
+      (user) => user.leida === leida && user.aceptada === aceptada,
+    );
+    return filteredInvitedUsers.map((user) => user.idUsuario);
   }
 
-//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||NUEVO|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+  //|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||NUEVO|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
   async inviteUser(eventId: string, userId: string): Promise<Invitations> {
-    const event = await this.eventRepository.findOne({where:{id:eventId}});
-    const invite = this.inviteRepository.create({ event, userId, status: 'pending' });
+    const event = await this.eventRepository.findOne({
+      where: { id: eventId },
+    });
+    const invite = this.inviteRepository.create({
+      event,
+      userId,
+      status: 'pending',
+    });
     return this.inviteRepository.save(invite);
-}
+  }
 
-async respondToInvite(inviteId: string, response: 'accepted' | 'rejected'): Promise<Invitations> {
-    const invite = await this.inviteRepository.findOne({where:{id:inviteId}});
+  async respondToInvite(
+    inviteId: string,
+    response: 'accepted' | 'rejected',
+  ): Promise<Invitations> {
+    const invite = await this.inviteRepository.findOne({
+      where: { id: inviteId },
+    });
     invite.status = response;
     return this.inviteRepository.save(invite);
-}
+  }
 
-async addWishListItem(eventId: string, description: string): Promise<WishListItems> {
-    const event = await this.eventRepository.findOne({where:{id:eventId}});
+  async addWishListItem(
+    eventId: string,
+    description: string,
+  ): Promise<WishListItems> {
+    const event = await this.eventRepository.findOne({
+      where: { id: eventId },
+    });
     const item = this.wishListItemRepository.create({ event, description });
     return this.wishListItemRepository.save(item);
-}
+  }
 
-async takeWishListItem(itemId: string, userId: string): Promise<WishListItems> {
-    const item = await this.wishListItemRepository.findOne({where:{id:itemId}});
+  async takeWishListItem(
+    itemId: string,
+    userId: string,
+  ): Promise<WishListItems> {
+    const item = await this.wishListItemRepository.findOne({
+      where: { id: itemId },
+    });
     item.takenBy = userId;
     return this.wishListItemRepository.save(item);
-}
-
+  }
 }

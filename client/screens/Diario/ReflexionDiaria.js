@@ -51,6 +51,7 @@ const ReflexionDiaria = ({
   const [edition, setEdition] = useState(false);
 
   const [isEditingAll, setIsEditingAll] = useState(false);
+  const [previousIsEditingAll, setPreviousIsEditingAll] = useState(false);
   const [editedDiaries, setEditedDiaries] = useState(userDiaries);
 
   const [diaryImages, setDiaryImages] = useState(selected?.images || []);
@@ -59,12 +60,21 @@ const ReflexionDiaria = ({
     useContext(Context);
 
   // Mantén un estado para el valor anterior de isEditingAll
-  const [previousIsEditingAll, setPreviousIsEditingAll] =
-    useState(isEditingAll);
 
+  // Mantén un estado para el valor anterior de isEditingAll
   useEffect(() => {
-    setPreviousIsEditingAll(isEditingAll);
-  }, [isEditingAll]);
+    if (!edition) {
+      const obj = {
+        creatorId: userData.id,
+        category: selectedSection,
+      };
+      if (selectedDate) {
+        obj.date = selectedDate;
+      }
+
+      dispatch(getUserDiariesByDateOrCategory(obj));
+    }
+  }, [edition]);
 
   useEffect(() => {
     if (selected) {
@@ -72,6 +82,43 @@ const ReflexionDiaria = ({
       setTitle(selected?.title);
     }
   }, [selected]);
+
+  useEffect(() => {
+    if (!isEditingAll && previousIsEditingAll) {
+      editedDiaries.forEach((diary) => {
+        const updatedData = {
+          description: diary.description,
+          title: diary.title,
+        };
+        dispatch(
+          updateDiaryById({ diaryId: diary.id, diaryData: updatedData }),
+        );
+      });
+      const obj = {
+        creatorId: userData.id,
+        category: selectedSection,
+      };
+      if (selectedDate) {
+        obj.date = selectedDate;
+      }
+      dispatch(getUserDiariesByDateOrCategory(obj));
+    }
+  }, [
+    isEditingAll,
+    previousIsEditingAll,
+    editedDiaries,
+    dispatch,
+    selectedDate,
+    selectedSection,
+    userData.id,
+  ]);
+
+  // useEffect(() => {
+  //   if (selected) {
+  //     setText(selected?.description);
+  //     setTitle(selected?.title);
+  //   }
+  // }, [selected]);
 
   return (
     <View
@@ -305,7 +352,7 @@ const ReflexionDiaria = ({
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
-              <Text style={{ fontSize: 20 }}>
+              <Text style={{ fontSize: 24, fontWeight: 500 }}>
                 {selected?.title || "Sin título"}
               </Text>
               <Pressable
@@ -330,7 +377,7 @@ const ReflexionDiaria = ({
               </Pressable>
             </View>
           )}
-          {selected.id == editingDiary ? (
+          {selected.id === editingDiary ? (
             <TextInput
               style={{
                 fontSize: 18,
@@ -456,14 +503,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.lato,
     letterSpacing: 0,
   },
-  hoyLoHeFlexBox: {
-    textAlign: "left",
-    alignSelf: "stretch",
-    color: Color.negro,
-    marginTop: 20,
-    fontFamily: FontFamily.lato,
-    letterSpacing: 0,
-  },
+
   groupIconLayout: {
     width: 30,
     marginLeft: 30,

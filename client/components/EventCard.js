@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 import CalendarCheckSVG from "./svgs/CalendarCheckSVG";
 import { Border, Color } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
@@ -22,15 +22,29 @@ const EventCard = ({ event }) => {
       onPress={() => navigation.navigate("Eventos", event)}
     >
       <View style={{ flexDirection: "column", gap: 10, width: "90%" }}>
-        <Text
-          style={{ color: Color.primario1, fontWeight: "600", fontSize: 15 }}
-        >
-          {event.title}
-        </Text>
-        <View>
-          <Text numberOfLines={1} style={{ color: Color.gris }}>
-            {event.description}
-          </Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+          <Image
+            style={{ width: 40, height: 40, borderRadius: 50 }}
+            source={
+              event.coverImage
+                ? { uri: event.coverImage }
+                : require("../assets/logoo.png")
+            }
+          ></Image>
+          <View>
+            <Text
+              style={{
+                color: Color.primario1,
+                fontWeight: "600",
+                fontSize: 15,
+              }}
+            >
+              {event.title}
+            </Text>
+            <Text numberOfLines={1} style={{ color: Color.gris }}>
+              {event.description}
+            </Text>
+          </View>
         </View>
       </View>
       <CalendarCheckSVG />

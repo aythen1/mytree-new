@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "MyTree",
-    "slug": "spotsport",
+    "slug": "nuevappp",
     "version": "1.0.0",
     "scheme": "mytree",
     "orientation": "portrait",
@@ -48,15 +48,12 @@
       "bundler": "metro"
     },
     "extra": {
-   
-        "storybookEnabled": true,
-    
+      "storybookEnabled": true,
       "eas": {
-        "projectId": "4f6d3b77-0567-441d-8b63-8d0d9373c7dd"
+        "projectId": "9120196b-3c17-4afd-a7f1-26a9758f23ae"
       }
     },
     "plugins": [
-      "expo-community-flipper",
       "expo-font",
       [
         "expo-build-properties",
@@ -70,6 +67,6 @@
         "@react-native-google-signin/google-signin"
       ]
     ],
-    "owner": "azulschiaffino2"
+    "owner": "azschiaffino"
   }
 }

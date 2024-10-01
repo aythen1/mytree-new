@@ -6,6 +6,7 @@ import { FontFamily, FontSize, Color, Padding, Border } from "../GlobalStyles";
 import Checkbox from "./Checkbox";
 import { useSelector } from "react-redux";
 import reactotron from "reactotron-react-native";
+import filterFriendsFamily from "../screens/utils/arrayUsuarios";
 
 const Etiquetar = ({
   onClose,
@@ -16,10 +17,15 @@ const Etiquetar = ({
 }) => {
   const { allUsers, userData } = useSelector((state) => state.users);
 
-  const userFamily =
-    allUsers.filter((user) => user.id === userData.id)[0]?.familyIds || [];
-  const userFriends =
-    allUsers.filter((user) => user.id === userData.id)[0]?.friendsIds || [];
+  const [friends, setFriends] = React.useState([]);
+  const [family, setFamily] = React.useState([]);
+
+  React.useEffect(() => {
+    const { friends, family } = filterFriendsFamily(userData);
+    setFriends(friends);
+    setFamily(family);
+  }, []);
+
   const handleToggleTag = (userId) => {
     if (taggedUsers.includes(userId.toString())) {
       const newArray = taggedUsers.filter(
@@ -30,7 +36,9 @@ const Etiquetar = ({
       setTaggedUsers([...taggedUsers, userId.toString()]);
     }
   };
+
   reactotron.log("dataaa", invites);
+
   return (
     <View
       style={{
@@ -38,9 +46,8 @@ const Etiquetar = ({
         backgroundColor: Color.white,
         borderTopRightRadius: Border.br_11xl,
         borderTopLeftRadius: Border.br_11xl,
-        position: "absolute",
         bottom: 0,
-        paddingHorizontal: 30,
+        paddingHorizontal: 20,
         paddingBottom: 30,
         borderWidth: 1,
         borderColor: Color.primario1,
@@ -48,8 +55,6 @@ const Etiquetar = ({
     >
       <View
         style={{
-          paddingTop: 20,
-          paddingBottom: 50,
           width: "100%",
           alignItems: "center",
         }}
@@ -166,8 +171,14 @@ const Etiquetar = ({
           </View>
         )}
         {!invitado && (
-          <View>
-            <View style={{ alignSelf: "flex-start", alignItems: "center" }}>
+          <View style={{ width: "100%" }}>
+            <View
+              style={{
+                alignSelf: "flex-start",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
               <Text
                 style={{
                   fontWeight: "500",
@@ -177,7 +188,8 @@ const Etiquetar = ({
                   letterSpacing: 0,
                   fontFamily: FontFamily.lato,
                   fontSize: FontSize.size_base,
-                  paddingVertical: 12,
+                  paddingTop: 12,
+                  width: "100%",
                 }}
               >
                 Amigos
@@ -199,7 +211,7 @@ const Etiquetar = ({
                 alignItems: "center",
               }}
             >
-              {userFriends.length === 0 && (
+              {friends.length === 0 && (
                 <Text
                   style={{
                     color: "#000",
@@ -212,63 +224,61 @@ const Etiquetar = ({
                   ¡Aún no tienes ningún contacto agregado a amigos!
                 </Text>
               )}
-              {userFriends.length > 0 &&
-                userFriends.map((friendMember, index) => (
-                  <View
-                    key={-index}
-                    style={{
-                      marginTop: 15,
-                      justifyContent: "space-between",
-                      flexDirection: "row",
-                      width: "100%",
-                      alignItems: "center",
-                    }}
-                  >
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
-                      <Image
-                        style={{ width: 30, height: 30, borderRadius: 50 }}
-                        contentFit="cover"
-                        source={
-                          allUsers.filter(
-                            (user) => user.id.toString() === friendMember,
-                          )[0]?.profilePicture
-                            ? allUsers.filter(
-                                (user) => user.id.toString() === friendMember,
-                              )[0]?.profilePicture
-                            : require("../assets/frame-1547754875.png")
-                        }
-                      />
-                      <Text
+              {friends.length > 0 &&
+                friends.map((friendMember, index) => {
+                  const is = invites?.find((a) => a.userId === friendMember);
+                  if (!is)
+                    return (
+                      <View
+                        key={-index}
                         style={{
-                          fontWeight: "700",
-                          color: Color.grisDiscord,
-                          textAlign: "justify",
-                          marginLeft: 13,
-                          lineHeight: 19,
-                          letterSpacing: 0,
-                          fontFamily: FontFamily.lato,
-                          fontSize: FontSize.size_base,
+                          marginTop: 15,
+                          justifyContent: "space-between",
+                          flexDirection: "row",
+                          width: "100%",
+                          alignItems: "center",
                         }}
                       >
-                        {allUsers.filter(
-                          (user) => user.id.toString() === friendMember,
-                        )[0]?.username +
-                          " " +
-                          allUsers.filter(
-                            (user) => user.id.toString() === friendMember,
-                          )[0]?.apellido}
-                      </Text>
-                    </View>
-                    <Checkbox
-                      checked={taggedUsers.includes(friendMember.toString())}
-                      setChecked={() =>
-                        handleToggleTag(friendMember.toString())
-                      }
-                    />
-                  </View>
-                ))}
+                        <View
+                          style={{ flexDirection: "row", alignItems: "center" }}
+                        >
+                          <Image
+                            style={{ width: 30, height: 30, borderRadius: 50 }}
+                            contentFit="cover"
+                            source={
+                              friendMember.profilePicture
+                                ? { uri: friendMember.profilePicture }
+                                : require("../assets/frame-1547754875.png")
+                            }
+                          />
+                          <Text
+                            style={{
+                              fontWeight: "700",
+                              color: Color.grisDiscord,
+                              textAlign: "justify",
+                              marginLeft: 13,
+                              lineHeight: 19,
+                              letterSpacing: 0,
+                              fontFamily: FontFamily.lato,
+                              fontSize: FontSize.size_base,
+                            }}
+                          >
+                            {friendMember?.username +
+                              " " +
+                              friendMember?.apellido}
+                          </Text>
+                        </View>
+                        <Checkbox
+                          checked={taggedUsers.includes(
+                            friendMember.toString(),
+                          )}
+                          setChecked={() =>
+                            handleToggleTag(friendMember.toString())
+                          }
+                        />
+                      </View>
+                    );
+                })}
             </ScrollView>
           </View>
         )}
@@ -290,7 +300,7 @@ const Etiquetar = ({
                   letterSpacing: 0,
                   fontFamily: FontFamily.lato,
                   fontSize: FontSize.size_base,
-                  paddingVertical: 10,
+                  paddingTop: 12,
                 }}
               >
                 Familia
@@ -300,6 +310,7 @@ const Etiquetar = ({
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={{
+                minHeight: 150,
                 maxHeight: 150,
                 borderColor: Color.secundario,
                 borderTopWidth: 1,
@@ -312,7 +323,7 @@ const Etiquetar = ({
                 alignItems: "center",
               }}
             >
-              {userFamily.length === 0 && (
+              {family.length === 0 && (
                 <Text
                   style={{
                     color: "#000",
@@ -325,63 +336,61 @@ const Etiquetar = ({
                   ¡Aún no tienes ningún contacto agregado a familiares!
                 </Text>
               )}
-              {userFamily.length > 0 &&
-                userFamily.map((familyMember, index) => (
-                  <View
-                    key={index}
-                    style={{
-                      marginTop: 15,
-                      justifyContent: "space-between",
-                      flexDirection: "row",
-                      width: "100%",
-                      alignItems: "center",
-                    }}
-                  >
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
-                      <Image
-                        style={{ width: 30, height: 30, borderRadius: 50 }}
-                        contentFit="cover"
-                        source={
-                          allUsers.filter(
-                            (user) => user.id.toString() === familyMember,
-                          )[0]?.profilePicture
-                            ? allUsers.filter(
-                                (user) => user.id.toString() === familyMember,
-                              )[0]?.profilePicture
-                            : require("../assets/frame-1547754875.png")
-                        }
-                      />
-                      <Text
+              {family.length > 0 &&
+                family.map((familyMember, index) => {
+                  const is = invites?.find((a) => a.userId === familyMember);
+                  if (!is)
+                    return (
+                      <View
+                        key={index}
                         style={{
-                          fontWeight: "700",
-                          color: Color.grisDiscord,
-                          textAlign: "justify",
-                          marginLeft: 13,
-                          lineHeight: 19,
-                          letterSpacing: 0,
-                          fontFamily: FontFamily.lato,
-                          fontSize: FontSize.size_base,
+                          marginTop: 15,
+                          justifyContent: "space-between",
+                          flexDirection: "row",
+                          width: "100%",
+                          alignItems: "center",
                         }}
                       >
-                        {allUsers.filter(
-                          (user) => user.id.toString() === familyMember,
-                        )[0]?.username +
-                          " " +
-                          allUsers.filter(
-                            (user) => user.id.toString() === familyMember,
-                          )[0]?.apellido}
-                      </Text>
-                    </View>
-                    <Checkbox
-                      checked={taggedUsers.includes(familyMember.toString())}
-                      setChecked={() =>
-                        handleToggleTag(familyMember.toString())
-                      }
-                    />
-                  </View>
-                ))}
+                        <View
+                          style={{ flexDirection: "row", alignItems: "center" }}
+                        >
+                          <Image
+                            style={{ width: 30, height: 30, borderRadius: 50 }}
+                            contentFit="cover"
+                            source={
+                              familyMember?.profilePicture
+                                ? { uri: familyMember?.profilePicture }
+                                : require("../assets/frame-1547754875.png")
+                            }
+                          />
+                          <Text
+                            style={{
+                              fontWeight: "700",
+                              color: Color.grisDiscord,
+                              textAlign: "justify",
+                              marginLeft: 13,
+                              lineHeight: 19,
+                              letterSpacing: 0,
+                              fontFamily: FontFamily.lato,
+                              fontSize: FontSize.size_base,
+                            }}
+                          >
+                            {familyMember?.username +
+                              " " +
+                              familyMember?.apellido}
+                          </Text>
+                        </View>
+                        <Checkbox
+                          checked={taggedUsers.includes(
+                            familyMember.toString(),
+                          )}
+                          setChecked={() =>
+                            handleToggleTag(familyMember.toString())
+                          }
+                        />
+                      </View>
+                    );
+                })}
             </ScrollView>
           </View>
         )}

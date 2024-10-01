@@ -1,126 +1,126 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
   Pressable,
   Text,
   Image,
-  ScrollView
-} from 'react-native'
-import { LinearGradient } from 'expo-linear-gradient'
-import { useNavigation } from '@react-navigation/native'
-import { Color, FontFamily, FontSize } from '../../GlobalStyles'
-import { Path, Svg } from 'react-native-svg'
-import NameRegister from '../../components/NameRegister'
-import CheckRegister from '../../components/CheckRegister'
-import AcceptRegister from '../../components/AcceptRegister'
-import axios from 'axios'
-import { BACKURL } from '../../apiBackend'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+  ScrollView,
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { useNavigation } from "@react-navigation/native";
+import { Color, FontFamily, FontSize } from "../../GlobalStyles";
+import { Path, Svg } from "react-native-svg";
+import NameRegister from "../../components/NameRegister";
+import CheckRegister from "../../components/CheckRegister";
+import AcceptRegister from "../../components/AcceptRegister";
+import axios from "axios";
+import { BACKURL } from "../../apiBackend";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const Register = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
-  const [nextField, setNextField] = useState(1)
+  const [nextField, setNextField] = useState(1);
 
-  const [name, setsetName] = useState('')
-  const [text, setText] = useState('')
-  const [mail, setMail] = useState('')
-  const [error, setError] = useState('')
-  const [isChecked, setChecked] = useState(false)
+  const [name, setsetName] = useState("");
+  const [text, setText] = useState("");
+  const [mail, setMail] = useState("");
+  const [error, setError] = useState("");
+  const [isChecked, setChecked] = useState(false);
 
-  const [birthDate, setBIrthDate] = useState('')
-  const [isEmailValid, setEmailValid] = useState(false)
+  const [birthDate, setBIrthDate] = useState("");
+  const [isEmailValid, setEmailValid] = useState(false);
 
   const [dataToSend, setDataToSend] = useState({
-    username: '',
-    apellido: '',
-    birthDate: '',
-    city: '',
-    address: '',
-    phone: '',
-    email: '',
-    password: '',
-    confirm_password: ''
-  })
-
- 
+    username: "",
+    apellido: "",
+    birthDate: "",
+    city: "",
+    address: "",
+    phone: "",
+    email: "",
+    password: "",
+    confirm_password: "",
+  });
 
   const next = async () => {
-    const { username, apellido, email, password, confirm_password } = dataToSend
+    const { username, apellido, email, password, confirm_password } =
+      dataToSend;
 
     // Expresión regular para validar el formato del email
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     // Expresión regular para validar la contraseña
-    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?.])[A-Za-z\d@$!%*?.]{4,}$/
-
-
+    const passwordPattern =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?.])[A-Za-z\d@$!%*?.]{4,}$/;
 
     if (nextField == 1) {
       if (
-        username.trim() !== '' &&
-        apellido.trim() !== '' &&
-        email.trim() !== '' &&
+        username.trim() !== "" &&
+        apellido.trim() !== "" &&
+        email.trim() !== "" &&
         isEmailValid && // Verificación del formato del email
-        password.trim() !== '' &&
-        confirm_password.trim() !== '' &&
+        password.trim() !== "" &&
+        confirm_password.trim() !== "" &&
         passwordPattern.test(password.trim()) &&
         password === confirm_password
       ) {
-        setError('')
-        setNextField((prev) => prev + 1)
+        setError("");
+        setNextField((prev) => prev + 1);
       } else {
         if (!emailPattern.test(email)) {
-          return setError('Ingrese un email válido')
+          return setError("Ingrese un email válido");
         }
         if (password !== confirm_password) {
-          return setError('Las contraseñas no coinciden')
+          return setError("Las contraseñas no coinciden");
         }
         if (!passwordPattern.test(password.trim())) {
-          return setError('La contraseñas debe contener una Mayúscula , una minúscula , un número y un símbolo')
+          return setError(
+            "La contraseñas debe contener una Mayúscula , una minúscula , un número y un símbolo"
+          );
         }
-        setError('Verifica los datos ingresados')
+        setError("Verifica los datos ingresados");
       }
     }
     if (nextField == 2 && isChecked) {
-      setNextField((prev) => prev + 1)
+      setNextField((prev) => prev + 1);
     }
 
     if (nextField == 3) {
       try {
-        navigation.navigate('LOGIN')
-        const res = await axios.post(`${BACKURL}/user`, dataToSend)
+        navigation.navigate("LOGIN");
+        const res = await axios.post(`${BACKURL}/user`, dataToSend);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
-  }
+  };
 
   const previous = () => {
     if (nextField > 1) {
-      setNextField((prev) => prev - 1)
+      setNextField((prev) => prev - 1);
     } else {
-      navigation.navigate('Splash')
+      navigation.navigate("Splash");
     }
-  }
+  };
 
   return (
     <ScrollView
       style={styles.registroNombre}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.scrollViewContent}
-      keyboardShouldPersistTaps={'always'}
+      keyboardShouldPersistTaps={"always"}
     >
       <LinearGradient
         style={styles.frameChild}
         locations={[0, 1]}
-        colors={['#7ec18c', '#dee274']}
+        colors={["#7ec18c", "#dee274"]}
       >
         <View style={[styles.rectangleGroup, styles.groupIconPosition]}>
           <Pressable style={styles.back} onPress={() => previous()}>
             <Image
               contentFit="cover"
-              source={require('../../assets/Back Button.png')}
+              source={require("../../assets/Back Button.png")}
             />
           </Pressable>
         </View>
@@ -140,14 +140,14 @@ const Register = () => {
           <Image
             style={styles.frameInner}
             contentFit="cover"
-            source={require('../../assets/line-711.png')}
+            source={require("../../assets/line-711.png")}
           />
           <View
             style={{
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-              width: '100%',
-              top: 10
+              justifyContent: "space-between",
+              flexDirection: "row",
+              width: "100%",
+              top: 10,
             }}
           >
             <View style={styles.icons}>
@@ -165,9 +165,9 @@ const Register = () => {
                   nextField >= 2 ? Color.secundario : Color.grisHome,
                 width: 36,
                 height: 36,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 21
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 21,
               }}
             >
               <Svg width="20" height="13" viewBox="0 0 24 17" fill="none">
@@ -183,9 +183,9 @@ const Register = () => {
                   nextField >= 3 ? Color.secundario : Color.grisHome,
                 width: 36,
                 height: 36,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 21
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 21,
               }}
             >
               <Svg width="14" height="16" viewBox="0 0 18 20" fill="none">
@@ -236,9 +236,9 @@ const Register = () => {
           <Text
             style={{
               fontSize: 12,
-              color: 'red',
-              width: '100%',
-              textAlign: 'center'
+              color: "red",
+              width: "100%",
+              textAlign: "center",
             }}
           >
             {error}
@@ -246,125 +246,125 @@ const Register = () => {
         )}
         <Pressable style={styles.labelled1} onPress={() => next()}>
           <Text style={[styles.continuar, styles.labelledTypo]}>
-            {'Continuar >'}
+            {"Continuar >"}
           </Text>
         </Pressable>
       </View>
     </ScrollView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   groupIconPosition: {
-    zIndex: 100
+    zIndex: 100,
   },
   registrateTypo: {
-    textAlign: 'center',
+    textAlign: "center",
     color: Color.white,
-    fontFamily: FontFamily.lato
+    fontFamily: FontFamily.lato,
   },
   ellipseParentShadowBox: {
     shadowOpacity: 1,
     shadowOffset: {
       width: 0,
-      height: 0
+      height: 0,
     },
-    shadowColor: 'rgba(244, 105, 76, 0.15)'
+    shadowColor: "rgba(244, 105, 76, 0.15)",
   },
   labelledTypo: {
-    textAlign: 'left',
-    fontFamily: FontFamily.lato
+    textAlign: "left",
+    fontFamily: FontFamily.lato,
   },
   frameChild: {
-    width: '100%',
+    width: "100%",
     height: 270,
-    zIndex: 0
+    zIndex: 0,
   },
   rectangleGroup: {
     top: 26,
-    left: 15
+    left: 15,
   },
   registrate: {
     lineHeight: 24,
-    fontWeight: '900',
+    fontWeight: "900",
     fontSize: FontSize.size_5xl,
-    textAlign: 'center',
+    textAlign: "center",
     color: Color.white,
-    fontFamily: FontFamily.lato
+    fontFamily: FontFamily.lato,
   },
   laFamiliaEs: {
     fontSize: FontSize.size_lg,
-    fontWeight: '500',
+    fontWeight: "500",
     paddingHorizontal: 15,
-    justifyContent: 'center',
-    alignSelf: 'center',
+    justifyContent: "center",
+    alignSelf: "center",
     marginTop: 16,
-    zIndex: 5
+    zIndex: 5,
   },
   registrateParent: {
     top: 30,
-    zIndex: 2
+    zIndex: 2,
   },
   frameInner: {
     top: 30,
     height: 1,
-    width: '90%'
+    width: "90%",
   },
   ellipseGroup: {
     left: 267,
-    flexDirection: 'row',
+    flexDirection: "row",
     elevation: 25,
     shadowRadius: 25,
     shadowOpacity: 1,
     shadowOffset: {
       width: 0,
-      height: 0
+      height: 0,
     },
-    shadowColor: 'rgba(244, 105, 76, 0.15)',
+    shadowColor: "rgba(244, 105, 76, 0.15)",
     top: 0,
-    position: 'absolute'
+    position: "absolute",
   },
   lineParent: {
-    width: '100%',
+    width: "100%",
     height: 40,
-    marginBottom: 10
+    marginBottom: 10,
   },
   continuar: {
     color: Color.primario1,
     lineHeight: 41,
-    fontWeight: '900',
-    fontSize: FontSize.size_5xl
+    fontWeight: "900",
+    fontSize: FontSize.size_5xl,
   },
   labelled1: {
-    alignSelf: 'center'
+    alignSelf: "center",
   },
   frameGroup: {
     marginTop: 10,
-    justifyContent: 'space-between',
-    paddingHorizontal: 15
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
   },
   registroNombre: {
     backgroundColor: Color.white,
-    flex: 1
+    flex: 1,
   },
   scrollViewContent: {
     flexGrow: 1,
-    paddingBottom: 80
+    paddingBottom: 80,
   },
   back: {
     height: 50,
     width: 50,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   icons: {
     backgroundColor: Color.secundario,
     width: 36,
     height: 36,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 21
-  }
-})
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 21,
+  },
+});
 
-export default Register
+export default Register;

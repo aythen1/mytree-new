@@ -47,7 +47,8 @@ const SingleDiary = ({
   const [showEmojisModal, setShowEmojisModal] = useState(false);
   const dispatch = useDispatch();
   const [title, setTitle] = useState(diary?.title);
-  const [upd, setUpd] = useState(0);
+  const [save, setSave] = useState(false);
+  const [vermas, setVermas] = useState(false);
 
   const { editingDiary, setEditingDiary } = useContext(Context);
 
@@ -60,40 +61,86 @@ const SingleDiary = ({
     const fileName = parts[parts.length - 1];
     return fileName;
   };
+
   useEffect(() => {
-    if (multiEditing) {
-      setEditedDiaries((prevState) => {
-        return prevState.map((d) =>
-          d.id === diary.id ? { ...d, title, description: text } : d,
-        );
+    if (
+      text.length !== diary?.description ||
+      title.length !== diary?.title.length
+    ) {
+      setSave(true);
+    } else {
+      setSave(false);
+    }
+  }, [text, title]);
+
+  const handleUno = async () => {
+    setSave(false);
+    const preDiary = { ...diary };
+    preDiary.description = text;
+    const cloudinaryUrls = [];
+
+    for (const image of pickedImages) {
+      const formData = new FormData();
+      formData.append("file", {
+        uri: image.uri,
+        type: "image/jpeg",
+        name: image.filename ? image.filename : getFileName(image.uri),
+      });
+      formData.append("upload_preset", "cfbb_profile_pictures");
+      formData.append("cloud_name", "dnewfuuv0");
+
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dnewfuuv0/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        cloudinaryUrls.push(data.secure_url);
+      } else {
+        console.error("Error uploading image:", data);
+      }
+    }
+    if (preDiary.id === "preDiary") {
+      delete preDiary.id;
+      dispatch(postDiary(preDiary)).then((res) => {
+        const obj = {
+          creatorId: userData.id,
+          category: selectedSection,
+        };
+        obj.images = cloudinaryUrls;
+
+        if (selectedDate) {
+          obj.date = selectedDate;
+        }
+        dispatch(getUserDiariesByDateOrCategory(obj));
+      });
+    } else {
+      const updatedData = { description: preDiary.description };
+      updatedData.images = [...diaryImages, ...cloudinaryUrls];
+      dispatch(
+        updateDiaryById({
+          diaryId: preDiary.id,
+          diaryData: updatedData,
+        }),
+      ).then((res) => {
+        const obj = {
+          creatorId: userData.id,
+          category: selectedSection,
+        };
+        if (selectedDate) {
+          obj.date = selectedDate;
+        }
+
+        // dispatch(getUserDiariesByDateOrCategory(obj));
       });
     }
-  }, [title, text, multiEditing, diary.id, setEditedDiaries]);
-
-  // useEffect(() => {
-  //   if (multiEditing) {
-  //     const updatedData = {
-  //       description: text,
-  //       title,
-  //     };
-  //     dispatch(
-  //       updateDiaryById({
-  //         diaryId: diary.id,
-  //         diaryData: updatedData,
-  //       }),
-  //     ).then((res) => {
-  //       const obj = {
-  //         creatorId: userData.id,
-  //         category: selectedSection,
-  //       };
-  //       if (selectedDate) {
-  //         obj.date = selectedDate;
-  //       }
-
-  //       dispatch(getUserDiariesByDateOrCategory(obj));
-  //     });
-  //   }
-  // }, [upd]);
+    setPickedImages([]);
+    setEditingDiary(false);
+  };
 
   return (
     <TouchableOpacity
@@ -103,33 +150,88 @@ const SingleDiary = ({
         borderBottomWidth: last ? 1 : 0,
         borderBottomColor: last && "#B7E4C0",
         borderTopColor: "#B7E4C0",
-        height: 70,
-        marginBottom: 5,
+        minHeight: 70,
       }}
     >
       {multiEditing ? (
-        <Text style={{ fontSize: 16, fontWeight: 500 }}>
+        <Text numberOfLines={1} style={{ fontSize: 16, fontWeight: 500 }}>
           {diary?.title || "Sin título"}
         </Text>
       ) : (
         <TextInput
-          multiline
-          style={{ fontSize: 16 }}
+          maxLength={30}
+          style={{ fontSize: 16, width: "78%" }}
           onChangeText={setTitle}
           value={title}
         ></TextInput>
       )}
       {multiEditing ? (
-        <Text style={{ width: "78%", height: "100%" }}>
+        <Text numberOfLines={1} style={{ width: "78%" }}>
           {diary.description}
         </Text>
       ) : (
         <TextInput
-          multiline
+          multiline={vermas && !multiEditing}
           style={{ fontSize: 16 }}
           onChangeText={setText}
           value={text}
         ></TextInput>
+      )}
+      {save && !multiEditing && (
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingVertical: 10,
+          }}
+        >
+          <TouchableOpacity onPress={handleUno} style={{}}>
+            <LinearGradient
+              style={{
+                borderRadius: 50,
+                height: 25,
+                width: 60,
+              }}
+              locations={[0, 1]}
+              colors={["#dee274", "#7ec18c"]}
+            >
+              <Text
+                style={{
+                  fontSize: FontSize.size_sm,
+                  lineHeight: 21,
+                  textAlign: "center",
+                  color: Color.white,
+                  fontFamily: FontFamily.lato,
+                  letterSpacing: 0,
+                }}
+              >
+                Guardar
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+          {text.length > 40 && (
+            <TouchableOpacity onPress={() => setVermas(!vermas)} style={{}}>
+              <LinearGradient
+                style={{ borderRadius: 50, height: 25, width: 60 }}
+                locations={[0, 1]}
+                colors={["#dee274", "#7ec18c"]}
+              >
+                <Text
+                  style={{
+                    fontSize: FontSize.size_sm,
+                    lineHeight: 21,
+                    textAlign: "center",
+                    color: Color.white,
+                    fontFamily: FontFamily.lato,
+                    letterSpacing: 0,
+                  }}
+                >
+                  Ver más
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          )}
+        </View>
       )}
 
       {!notEditable && editingDiary === diary.id && (
@@ -329,75 +431,7 @@ const SingleDiary = ({
                     paddingBottom: Padding.p_5xs,
                     backgroundColor: Color.linearBoton,
                   }}
-                  onPress={async () => {
-                    const preDiary = { ...diary };
-                    preDiary.description = text;
-                    const cloudinaryUrls = [];
-
-                    for (const image of pickedImages) {
-                      const formData = new FormData();
-                      formData.append("file", {
-                        uri: image.uri,
-                        type: "image/jpeg",
-                        name: image.filename
-                          ? image.filename
-                          : getFileName(image.uri),
-                      });
-                      formData.append("upload_preset", "cfbb_profile_pictures");
-                      formData.append("cloud_name", "dnewfuuv0");
-
-                      const response = await fetch(
-                        "https://api.cloudinary.com/v1_1/dnewfuuv0/image/upload",
-                        {
-                          method: "POST",
-                          body: formData,
-                        },
-                      );
-
-                      const data = await response.json();
-                      if (response.ok) {
-                        cloudinaryUrls.push(data.secure_url);
-                      } else {
-                        console.error("Error uploading image:", data);
-                      }
-                    }
-                    if (preDiary.id === "preDiary") {
-                      delete preDiary.id;
-                      dispatch(postDiary(preDiary)).then((res) => {
-                        const obj = {
-                          creatorId: userData.id,
-                          category: selectedSection,
-                        };
-                        obj.images = cloudinaryUrls;
-
-                        if (selectedDate) {
-                          obj.date = formatDateToNormal(selectedDate);
-                        }
-                        dispatch(getUserDiariesByDateOrCategory(obj));
-                      });
-                    } else {
-                      const updatedData = { description: preDiary.description };
-                      updatedData.images = [...diaryImages, ...cloudinaryUrls];
-                      dispatch(
-                        updateDiaryById({
-                          diaryId: preDiary.id,
-                          diaryData: updatedData,
-                        }),
-                      ).then((res) => {
-                        const obj = {
-                          creatorId: userData.id,
-                          category: selectedSection,
-                        };
-                        if (selectedDate) {
-                          obj.date = formatDateToNormal(selectedDate);
-                        }
-
-                        dispatch(getUserDiariesByDateOrCategory(obj));
-                      });
-                    }
-                    setPickedImages([]);
-                    setEditingDiary(false);
-                  }}
+                  onPress={handleUno}
                 >
                   <Text
                     style={{
@@ -405,7 +439,6 @@ const SingleDiary = ({
                       lineHeight: 21,
                       textAlign: "center",
                       color: Color.white,
-                      textAlign: "center",
                       fontFamily: FontFamily.lato,
                       letterSpacing: 0,
                     }}
@@ -427,6 +460,7 @@ const SingleDiary = ({
             paddingBottom: 5,
             position: "absolute",
             paddingTop: 5,
+            gap: 6,
             right: 0,
           }}
         >

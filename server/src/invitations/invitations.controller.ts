@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { InvitationsService } from './invitations.service';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
@@ -24,7 +32,10 @@ export class InvitationsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateInvitationDto: UpdateInvitationDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateInvitationDto: UpdateInvitationDto,
+  ) {
     return this.invitationsService.update(id, updateInvitationDto);
   }
 
@@ -37,5 +48,4 @@ export class InvitationsController {
   findByUserId(@Param('userId') userId: string): Promise<Invitations[]> {
     return this.invitationsService.findByUserId(userId);
   }
-
 }

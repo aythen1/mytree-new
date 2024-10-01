@@ -15,7 +15,10 @@ import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
 import ENTRADACREADA from "../components/ENTRADACREADA";
 import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "../apiBackend";
-import { getAllUserInvitations } from "../redux/actions/events";
+import {
+  getAllUserEvents,
+  getAllUserInvitations,
+} from "../redux/actions/events";
 import TopBar from "../components/TopBar";
 
 const Invitacin = ({ route }) => {
@@ -26,14 +29,9 @@ const Invitacin = ({ route }) => {
 
   const [event, setEvent] = useState({});
 
-  // const event = route?.params?.date
-  // const event_location = route?.params?.date.location
-  // const event_images = route?.params?.date.images
-  // const event_wishList = route?.params?.date.wishListItems
-  // const event_description = route?.params?.date.description
-  // const event_date = route?.params?.date?.date.slice(0, 10)
-
   const inv = userInvitations.find((e) => e.event.id === event.id);
+
+  console.log(inv, "inv");
 
   const handleGetEvent = async () => {
     const res = await axiosInstance.get(`/events/${route?.params?.date?.id}`);
@@ -65,6 +63,13 @@ const Invitacin = ({ route }) => {
       .then(() => handleGetEvent());
   };
 
+  const handleDelete = async () => {
+    await axiosInstance.delete(`events/${event?.id}`).then(() => {
+      dispatch(getAllUserEvents(userData.id));
+      navigation.goBack();
+    });
+  };
+
   return (
     <ScrollView
       style={[styles.invitacin, styles.iconLayout]}
@@ -86,14 +91,14 @@ const Invitacin = ({ route }) => {
               />
             </Pressable>
             <Text style={[styles.invitacin1, styles.cdigoTypo]}>
-              {event.type == "normal" &&
-                event.creatorId == userData.id &&
+              {event.type === "normal" &&
+                event.creatorId === userData.id &&
                 "Evento"}
-              {event.type == "normal" &&
+              {event.type === "normal" &&
                 event.creatorId !== userData.id &&
                 "Invitación"}
 
-              {event.type == "special" && "Fecha especial"}
+              {event.type === "special" && "Fecha especial"}
             </Text>
           </View>
           <View style={styles.lineParent}>
@@ -146,6 +151,40 @@ const Invitacin = ({ route }) => {
             <Text style={[styles.cdigo, styles.cdigoTypo]}>
               {event?.description}
             </Text>
+            <Text style={{ ...styles.hsTypo, marginTop: 10 }}>Invitados</Text>
+            {event.invitedUsers && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  gap: 5,
+                  marginTop: 10,
+                }}
+              >
+                {event?.invitedUsers &&
+                  event?.invitedUsers.map((usuario) => {
+                    const user = allUsers.find((u) => u.id == usuario);
+
+                    return (
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate("OtherUserProfile", user)
+                        }
+                        style={{}}
+                      >
+                        <Image
+                          style={{ width: 40, height: 40, borderRadius: 50 }}
+                          source={
+                            user?.profilePicture
+                              ? { uri: user?.profilePicture }
+                              : require("../assets/logoo.png")
+                          }
+                        ></Image>
+                      </TouchableOpacity>
+                    );
+                  })}
+              </View>
+            )}
             <View style={styles.fieldWithTitle}>
               {event?.images &&
                 event?.images.map((e) => {
@@ -156,10 +195,55 @@ const Invitacin = ({ route }) => {
                     ></Image>
                   );
                 })}
-              {/* <Text style={styles.hsTypo}>Observaciones</Text>
-              <View style={[styles.field, styles.parentPosition]} /> */}
             </View>
           </View>
+
+          {event.creatorId === userData.id && (
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                gap: 10,
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => handleDelete()}
+                style={{
+                  ...styles.button,
+                  width: "40%",
+                  paddingHorizontal: 20,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  alignSelf: "center",
+                  backgroundColor: "#F00E0E",
+                }}
+              >
+                <Image
+                  contentFit="cover"
+                  style={{ width: 22, height: 22, opacity: 0.7 }}
+                  source={require("../assets/trashbtnwhite.png")}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                // onPress={() => handleDelete()}
+                style={{
+                  ...styles.button,
+                  width: "40%",
+                  paddingHorizontal: 20,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  alignSelf: "center",
+                  backgroundColor: Color.colorDarkseagreen_100,
+                }}
+              >
+                <Image
+                  contentFit="cover"
+                  style={{ width: 22, height: 22 }}
+                  source={require("../assets/lapizgris.png")}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
           {inv?.status === "pending" && (
             <View style={styles.buttonParent}>
               <TouchableOpacity
@@ -333,7 +417,7 @@ const styles = StyleSheet.create({
   hsTypo: {
     lineHeight: 19,
     fontSize: FontSize.size_base,
-    textAlign: "left",
+    textAlign: "center",
     color: Color.gris,
     fontFamily: FontFamily.lato,
     fontWeight: "500",
@@ -404,7 +488,7 @@ const styles = StyleSheet.create({
     height: 25,
   },
   lugarDelEvento: {
-    marginLeft: 16,
+    marginLeft: 8,
   },
   iconlybulklocationParent: {
     marginTop: 20,

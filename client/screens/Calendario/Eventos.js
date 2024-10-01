@@ -33,13 +33,10 @@ import {
   getAllUserInvitations,
 } from "../../redux/actions/events";
 import axiosInstance from "../../apiBackend";
-import CreateWishListModal from "../../components/CreateWishListModal";
+import CreateWishListModal from "../../components/CreateWishModal/CreateWishListModal";
 import Etiquetar from "../../components/Etiquetar";
 
 const Eventos = ({ route }) => {
-  // const event_name = route?.params?.title;
-  // const event_desc = route?.params?.description;
-  // const event_invites = route?.params?.invites;
   const event_wishList = route?.params?.wishListItems;
   const event_id = route?.params?.id;
   const event_images = route?.params?.images;
@@ -60,8 +57,6 @@ const Eventos = ({ route }) => {
   const [pickedImage, setPickedImage] = useState([]);
   const [wishList, setWishList] = useState(event?.wishListItems || []);
 
-  // const [, setSelectedImage] = useState(null);
-  // const { pickImage } = useContext(Context);
   const inv = userInvitations.find((e) => e.event.id === event?.id);
   const [selectedUsers, setSelectedUsers] = useState([]);
 
@@ -75,8 +70,8 @@ const Eventos = ({ route }) => {
 
   const handleGetEvent = async () => {
     const res = await axiosInstance.get(`/events/${event_id}`);
-    console.log(res.data, "datitaa", event_wishList);
-    setEvent(res.data);
+    setWishList(res?.data?.wishListItems);
+    setEvent(res?.data);
   };
   useEffect(() => {
     handleGetEvent();
@@ -94,6 +89,11 @@ const Eventos = ({ route }) => {
       .then(() => handleGetEvent());
   };
 
+  const handleDelete = async () => {
+    axiosInstance.delete(`events/${event?.id}`);
+    dispatch(getAllUserEvents(userData.id));
+    navigation.goBack();
+  };
   // const cameraReff = useRef(null);
 
   useEffect(() => {
@@ -101,19 +101,6 @@ const Eventos = ({ route }) => {
       const { status } = await Camera.requestCameraPermissionsAsync();
     })();
   }, []);
-
-  // const takePicture = async () => {
-  //   if (cameraReff) {
-  //     const photo = await cameraReff.current.takePictureAsync();
-  //     setSelectedImage(photo);
-  //     pickImage("profile", photo?.uri);
-  //     setShowCamera(false);
-  //   }
-  // };
-
-  // const changePictureMode = async () => {
-  //   setFacing((prev) => (prev === "back" ? "front" : "back"));
-  // };
 
   function transformHttpToHttps(url) {
     if (url.startsWith("http://")) {
@@ -185,7 +172,7 @@ const Eventos = ({ route }) => {
 
     for (let index = 0; index < invitedUsers.length; index++) {
       const id = invitedUsers[index];
-      const find = invitedUsers.find((e) => e.id == id.id);
+      const find = invitedUsers.find((e) => e.id === id);
       if (!find) {
         axiosInstance.post(`/events/${event_id}/invite`, { userId: id });
       }
@@ -221,6 +208,14 @@ const Eventos = ({ route }) => {
             style={styles.boxContainer}
           >
             <View style={styles.textContainer}>
+              <Image
+                style={{ width: 40, height: 40, borderRadius: 50 }}
+                source={
+                  event.coverImage
+                    ? { uri: event.coverImage }
+                    : require("../../assets/logoo.png")
+                }
+              ></Image>
               <Text style={{ ...styles.subTitle, fontSize: 20 }}>
                 {event?.title}
               </Text>
@@ -338,7 +333,7 @@ const Eventos = ({ route }) => {
             <View
               style={{
                 flexDirection: "row",
-                paddingBottom: 100,
+                paddingBottom: 20,
                 justifyContent: "flex-start",
                 gap: 3,
                 flexWrap: "wrap",
@@ -371,28 +366,42 @@ const Eventos = ({ route }) => {
                   );
                 })}
               {!event?.invites?.find((e) => e.userId === userData.id) ? (
-                <TouchableOpacity
-                  onPress={() => submit()}
-                  style={{
-                    width: "100%",
-                    paddingHorizontal: 20,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    alignSelf: "center",
-                    position: "absolute",
-                    bottom: 40,
-                  }}
-                >
-                  <LinearGradient
-                    style={{ ...styles.button, alignSelf: "center" }}
-                    locations={[0, 1]}
-                    colors={["#7ec18c", "#dee274"]}
-                    start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
-                    end={{ x: 1, y: 0 }}
+                <View style={{ width: "100%", gap: 20 }}>
+                  <TouchableOpacity
+                    onPress={() => submit()}
+                    style={{
+                      width: "100%",
+                      paddingHorizontal: 20,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      alignSelf: "center",
+                    }}
                   >
-                    <Text style={styles.save}>Guardar</Text>
-                  </LinearGradient>
-                </TouchableOpacity>
+                    <LinearGradient
+                      style={{ ...styles.button, alignSelf: "center" }}
+                      locations={[0, 1]}
+                      colors={["#7ec18c", "#dee274"]}
+                      start={{ x: 0, y: 0 }} // Inicio del gradiente (izquierda)
+                      end={{ x: 1, y: 0 }}
+                    >
+                      <Text style={styles.save}>Guardar</Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleDelete()}
+                    style={{
+                      ...styles.button,
+                      width: "91%",
+                      paddingHorizontal: 20,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      alignSelf: "center",
+                      backgroundColor: "#F00E0E",
+                    }}
+                  >
+                    <Text style={styles.save}>Eliminar</Text>
+                  </TouchableOpacity>
+                </View>
               ) : (
                 inv.status === "pending" && (
                   <View
@@ -575,14 +584,6 @@ const Eventos = ({ route }) => {
                         gap: 8,
                       }}
                     >
-                      {/* <Image
-                        style={{ width: 40, height: 40, borderRadius: 100 }}
-                        source={
-                          e.profilePicture
-                            ? { uri: e.profilePicture }
-                            : require('../../assets/aatar6.png')
-                        }
-                      /> */}
                       <Text>{e.description}</Text>
                     </View>
                     {e.takeBy && (
@@ -609,6 +610,9 @@ const Eventos = ({ route }) => {
             onPress={() => setShowWishList(false)}
           />
           <CreateWishListModal
+            event={event}
+            setEvent={setEvent}
+            invitado={event?.invites?.find((e) => e.userId === userData.id)}
             wishList={wishList}
             setWishList={setWishList}
             onClose={() => setShowWishList(false)}
@@ -693,6 +697,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.colorWhitesmoke_200,
     borderRadius: Border.br_base,
     marginTop: 10,
+    flex: 1,
   },
   boxContainer: {
     height: 100,
@@ -711,7 +716,8 @@ const styles = StyleSheet.create({
     marginTop: -20,
   },
   textContainer: {
-    flexDirection: "column",
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
   },
   subTitle: {

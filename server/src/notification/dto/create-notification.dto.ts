@@ -22,6 +22,10 @@ export class CreateNotificationDto {
   type?: string;
 
   @IsOptional()
+  @IsString()
+  relationship?: string;
+
+  @IsOptional()
   @IsBoolean()
   readed?: boolean;
 

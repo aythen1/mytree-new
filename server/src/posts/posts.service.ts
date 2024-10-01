@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Post } from './entities/post.entity';
@@ -17,19 +17,36 @@ export class PostsService {
 
   async createPost(createPostDto: CreatePostDto): Promise<Post> {
     try {
-      const { nameUser, description, photos, etiquets, fecha, hashtags, userId , tags , albums , privacyMode} = createPostDto;
+      const {
+        nameUser,
+        description,
+        photos,
+        etiquets,
+        fecha,
+        hashtags,
+        userId,
+        tags,
+        albums,
+        privacyMode,
+      } = createPostDto;
 
-      const userEntity = await this.userRepository.findOne({where:{id:userId}});
+      const userEntity = await this.userRepository.findOne({
+        where: { id: userId },
+      });
 
       if (!userEntity) {
         throw new NotFoundException('Usuario no encontrado');
       }
 
+      const etiquetEntities = await this.userRepository.findBy({
+        id: In(etiquets),
+      });
+
       const post = new Post();
       post.nameUser = nameUser;
       post.description = description;
       post.photos = photos;
-      post.etiquets = etiquets;
+      post.etiquets = etiquetEntities;
       post.fecha = fecha;
       post.hashtags = hashtags;
       post.user = userEntity;
@@ -40,27 +57,28 @@ export class PostsService {
     } catch (error) {
       throw error;
     }
-
   }
 
   async findAll(): Promise<Post[]> {
-    return await this.postRepository.find({relations:['user']});
+    return await this.postRepository.find({ relations: ['user', 'etiquets'] });
   }
 
   async findOne(id: number): Promise<Post> {
-    
-    const post = await this.postRepository.findOne({where:{id:id}});
+    const post = await this.postRepository.findOne({
+      where: { id: id },
+      relations: ['user', 'etiquets'],
+    });
     if (!post) {
       throw new NotFoundException(`Post con ID ${id} no encontrado`);
     }
 
     return post;
-
   }
 
   async update(id: number, updatePostDto: UpdatePostDto): Promise<Post> {
-    const { nameUser, description, photos, etiquets, fecha, hashtags } = updatePostDto;
-    let post = await this.postRepository.findOne({where:{id:id}});
+    const { nameUser, description, photos, etiquets, fecha, hashtags } =
+      updatePostDto;
+    let post = await this.postRepository.findOne({ where: { id: id } });
 
     if (!post) {
       throw new NotFoundException(`Post con ID ${id} no encontrado`);
@@ -77,7 +95,7 @@ export class PostsService {
   }
 
   async remove(id: number): Promise<void> {
-    const post = await this.postRepository.findOne({where:{id:id}});
+    const post = await this.postRepository.findOne({ where: { id: id } });
 
     if (!post) {
       throw new NotFoundException(`Post con ID ${id} no encontrado`);
@@ -96,12 +114,14 @@ export class PostsService {
 
     // Construir objeto de opciones para la consulta
     const options: any = { where: { id: postId }, relations: validRelations };
-console.log("options es", options)
+    console.log('options es', options);
     // Realizar la consulta del post con las relaciones especificadas
     const post = await this.postRepository.findOne(options);
 
     if (!post) {
-      throw new NotFoundException(`No se encontró ningún post con el ID ${postId}.`);
+      throw new NotFoundException(
+        `No se encontró ningún post con el ID ${postId}.`,
+      );
     }
 
     return post;
@@ -114,7 +134,7 @@ console.log("options es", options)
     const allowedRelations = ['comments', 'etiquets', 'user']; // Agregar más según sea necesario
 
     // Filtrar relaciones válidas
-    relations.forEach(relation => {
+    relations.forEach((relation) => {
       if (allowedRelations.includes(relation)) {
         validRelations.push(relation);
       }
@@ -122,6 +142,4 @@ console.log("options es", options)
 
     return validRelations;
   }
-
-  
 }

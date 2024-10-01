@@ -77,4 +77,10 @@ export class NotificationController {
   ): Promise<Notification[]> {
     return this.notificationService.findByReceiverId(receiverId);
   }
+  @Get('user/:userId')
+  async getNotificationsByUserId(
+    @Param('userId') userId: string,
+  ): Promise<Notification[]> {
+    return this.notificationService.getNotificationsByUserId(userId);
+  }
 }

@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Notification } from './entities/notification.entity';
 import { Repository } from 'typeorm';
+import { ChatGateway } from 'src/chat/chat.gateway';
 
 @Injectable()
 export class NotificationService {
@@ -13,6 +14,7 @@ export class NotificationService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Notification)
     private readonly notificationRepository: Repository<Notification>,
+    private chatGateway: ChatGateway,
   ) {}
 
   async create(
@@ -21,7 +23,20 @@ export class NotificationService {
     const notification = this.notificationRepository.create(
       createNotificationDto,
     );
-    return await this.notificationRepository.save(notification);
+    const user = await this.userRepository.findOne({
+      where: { id: createNotificationDto.senderId },
+    });
+    notification.user = user;
+    await this.notificationRepository.save(notification);
+
+    this.chatGateway.sendNotificationToUser(
+      createNotificationDto.receiverId,
+      'notification',
+      {
+        message: 'Hello!',
+      },
+    );
+    return notification;
   }
 
   async update(
@@ -110,6 +125,14 @@ export class NotificationService {
   async findByReceiverId(receiverId: string): Promise<Notification[]> {
     return await this.notificationRepository.find({
       where: { receiverId: receiverId },
+    });
+  }
+
+  async getNotificationsByUserId(userId: string): Promise<Notification[]> {
+    return this.notificationRepository.find({
+      where: { receiverId: userId },
+      relations: ['user'],
+      order: { createdAt: 'DESC' }, // Ordenar por fecha de creación descendente
     });
   }
 }
