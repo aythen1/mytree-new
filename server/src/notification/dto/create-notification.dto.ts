@@ -1,4 +1,5 @@
 import { IsOptional, IsString, IsBoolean, IsArray } from 'class-validator';
+import { Post } from 'src/posts/entities/post.entity';
 
 export class CreateNotificationDto {
   @IsOptional()
@@ -12,6 +13,9 @@ export class CreateNotificationDto {
   @IsOptional()
   @IsString()
   senderId?: string;
+
+  @IsOptional()
+  post?: Post;
 
   @IsOptional()
   @IsString()

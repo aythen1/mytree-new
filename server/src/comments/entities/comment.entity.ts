@@ -5,10 +5,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Exclude, Transform } from 'class-transformer';
 
 @Entity()
 export class Comment {
@@ -21,8 +26,18 @@ export class Comment {
   @Column()
   creatorId: string;
 
-  @Column('jsonb', { nullable: true, default: '[]' })
-  responses: object[];
+  // Relación con comentario padre
+  @ManyToOne(() => Comment, (comment) => comment.responses)
+  @JoinColumn({ name: 'parentCommentId' })
+  @Transform(({ value }) => value?.id) // Serializa solo el ID del comentario padre
+  parentComment: Comment;
+
+  // Relación con respuestas del comentario
+  @OneToMany(() => Comment, (comment) => comment.parentComment)
+  @Transform(({ value }) =>
+    value?.map((c) => ({ id: c.id, content: c.content })),
+  ) // Serializa solo algunos campos de las respuestas
+  responses: Comment[];
 
   @Column('simple-array', { nullable: true })
   likes: string[];
@@ -39,8 +54,8 @@ export class Comment {
   @Column({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
-  // @ManyToOne(() => User, user => user.comments)
-  // user: User;
+  @ManyToOne(() => User, (user) => user.comments)
+  user: User;
 
   @ManyToOne(() => Post, (post) => post.comments)
   post: Post;

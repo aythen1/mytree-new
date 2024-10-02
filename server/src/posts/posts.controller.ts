@@ -26,6 +26,11 @@ export class PostsController {
     return this.postsService.findAll();
   }
 
+  @Get('feed/:userId')
+  async getUserFeed(@Param('userId') userId: string) {
+    return this.postsService.getRelatedUserPosts(userId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.postsService.findOne(+id);

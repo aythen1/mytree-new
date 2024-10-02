@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Image } from "expo-image";
 import {
@@ -24,6 +24,7 @@ import {
   getAllNotifications,
   postNotification,
 } from "../redux/actions/notifications";
+import axiosInstance from "../apiBackend";
 
 const BOTONInvitarAmigos1 = () => {
   const navigation = useNavigation();
@@ -42,7 +43,7 @@ const BOTONInvitarAmigos1 = () => {
   const [relationtypeModalVisible, setRelationtypeModalVisible] =
     useState(false);
   const { allUsers } = useSelector((state) => state.users);
-  const [filteredUsers, setFilteredUsers] = useState([...allUsers]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [relationshipTop, setRelationshipTop] = useState(0);
   const [relationtypeTop, setRelationtypeTop] = useState(0);
   const [scrolledHeight, setScrolledHeight] = useState(0);
@@ -52,22 +53,50 @@ const BOTONInvitarAmigos1 = () => {
   const { userData } = useSelector((state) => state.users);
 
   const [value, setValue] = useState("");
+  const ref = useRef(null);
 
-  useEffect(() => {
-    const filterUsers = () => {
-      const filtered = allUsers.filter((user) => {
-        const apellido = user.apellido.toLowerCase();
-        const username = user.username.toLowerCase();
-        const searchValue = value.toLowerCase();
+  const handleChange = (value) => {
+    const valueLow = value;
 
-        return apellido.includes(searchValue) || username.includes(searchValue);
-      });
+    setValue(value);
 
-      setFilteredUsers(filtered);
-    };
+    if (value === "") return;
+    if (ref.current) {
+      clearTimeout(ref.current);
+    }
 
-    filterUsers();
-  }, [value, allUsers]);
+    ref.current = setTimeout(() => {
+      handleSearch(valueLow);
+    }, 300); // 1000ms = 1 segundo
+  };
+
+  const handleSearch = async (value) => {
+    try {
+      const res = await axiosInstance.post("/user/search", { query: value });
+      if (res?.data) {
+        const filter = res?.data.filter((e) => e.id !== userData.id);
+        setFilteredUsers(filter);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // useEffect(() => {
+  //   const filterUsers = () => {
+  //     const filtered = allUsers.filter((user) => {
+  //       const apellido = user.apellido.toLowerCase();
+  //       const username = user.username.toLowerCase();
+  //       const searchValue = value.toLowerCase();
+
+  //       return apellido.includes(searchValue) || username.includes(searchValue);
+  //     });
+
+  //     setFilteredUsers(filtered);
+  //   };
+
+  //   filterUsers();
+  // }, [value, allUsers]);
 
   const handleChangeRelationType = (type) => {
     setSelectedRelationType(type);
@@ -108,7 +137,7 @@ const BOTONInvitarAmigos1 = () => {
     console.log(selectedRelationShip, "relation");
     const body = {
       title: `Solicitud de ${selectedRelationType === "Familiar" ? "familia" : "amistad"}`,
-      message: `${userData.username} ${userData.apellido} te ha enviado una solicitud de ${selectedRelationType === "Familiar" ? "familia" : "amistad"}`,
+      message: `te envió una solicitud de ${selectedRelationType === "Familiar" ? "familia" : "amistad"}`,
       senderId: userData?.id?.toString(),
       receiverId: selectedUserToInvite?.id?.toString(),
       type: `${selectedRelationType === "Familiar" ? "family request" : "friend request"}`,
@@ -210,7 +239,7 @@ const BOTONInvitarAmigos1 = () => {
                 placeholder="Búsqueda"
                 value={value}
                 onChangeText={(text) => {
-                  setValue(text);
+                  handleChange(text);
                 }}
               />
             </View>

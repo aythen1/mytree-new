@@ -62,8 +62,18 @@ const OtherUserProfile = () => {
 
   const [selectedComponent, setSelectedComponent] = useState("MiLegado");
   const [search, setSearch] = useState(false);
+  const [userData, setUserData] = useState(false);
+
   const route = useRoute();
-  const userData = route.params;
+  const user = route.params;
+
+  const getUser = async (id) => {
+    await axiosInstance.get(`user/${id}`).then((usr) => setUserData(usr.data));
+  };
+
+  useEffect(() => {
+    getUser(user?.id);
+  }, [user]);
 
   const renderSelectedComponent = () => {
     switch (selectedComponent) {

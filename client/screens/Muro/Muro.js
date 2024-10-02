@@ -84,7 +84,7 @@ const Muro = () => {
     dispatch(getAllUsers()).finally(() => {
       getUsersMessages();
       dispatch(getAllUserNotifications(id));
-      dispatch(getAllPosts());
+      dispatch(getAllPosts(id));
       dispatch(chatGroups(id));
       dispatch(getAllUserAlbums(id));
       dispatch(getAllUserEvents(id));

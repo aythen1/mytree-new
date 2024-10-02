@@ -1,14 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
 @Controller('comments')
 export class CommentsController {
-  constructor(private readonly commentsService: CommentsService) { }
+  constructor(private readonly commentsService: CommentsService) {}
 
   @Post(':postId/:userId')
-  async create(@Param('postId') postId: number, @Param('userId') userId: number, @Body() createCommentDto: CreateCommentDto) {
+  async create(
+    @Param('postId') postId: number,
+    @Param('userId') userId: number,
+    @Body() createCommentDto: CreateCommentDto,
+  ) {
     return this.commentsService.create(postId, userId, createCommentDto);
   }
 
@@ -26,21 +38,36 @@ export class CommentsController {
     return this.commentsService.findOne(id);
   }
 
-
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateCommentDto: CreateCommentDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateCommentDto: CreateCommentDto,
+  ) {
     return this.commentsService.update(id, updateCommentDto);
   }
   @Patch(':id/response')
-  async updateResponse(@Param('id') id: string, @Body() updateCommentDto: CreateCommentDto) {
-    return this.commentsService.updateResponses(id, updateCommentDto);
+  async updateResponse(
+    @Param('id') parentCommentId: string,
+
+    @Body() createCommentDto: CreateCommentDto,
+  ) {
+    return this.commentsService.updateResponses(
+      parentCommentId,
+      createCommentDto,
+    );
   }
   @Patch(':id/like')
-  async updateLike(@Param('id') id: string, @Body() updateCommentDto: CreateCommentDto) {
+  async updateLike(
+    @Param('id') id: string,
+    @Body() updateCommentDto: CreateCommentDto,
+  ) {
     return this.commentsService.updateLikes(id, updateCommentDto);
   }
   @Patch(':id/dislike')
-  async updateDislike(@Param('id') id: string, @Body() updateCommentDto: CreateCommentDto) {
+  async updateDislike(
+    @Param('id') id: string,
+    @Body() updateCommentDto: CreateCommentDto,
+  ) {
     return this.commentsService.updateDislikes(id, updateCommentDto);
   }
 
@@ -52,13 +79,15 @@ export class CommentsController {
   @Post(':commentId/info-relation')
   async findInfoRelation(
     @Param('commentId') commentId: number,
-    @Body() requestBody: { relations: string }
+    @Body() requestBody: { relations: string },
   ): Promise<any[]> {
     // Verificar si se proporcionaron relaciones
     if (!requestBody.relations || typeof requestBody.relations !== 'string') {
-      throw new Error('Debe proporcionar al menos una relación como una cadena de texto.');
+      throw new Error(
+        'Debe proporcionar al menos una relación como una cadena de texto.',
+      );
     }
-    console.log(requestBody.relations)
+    console.log(requestBody.relations);
     // Convertir las relaciones en un array
     const relationsArray = requestBody.relations.split(',');
 

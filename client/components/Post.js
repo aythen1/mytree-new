@@ -572,7 +572,6 @@ const Post = ({ padding, posts }) => {
         : allPosts &&
           [...allPosts]
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-            .slice(0, 10)
             .map((e, i) => (
               <Posteo padding={padding} data={e} key={i}></Posteo>
             ))}

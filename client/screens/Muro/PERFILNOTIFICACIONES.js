@@ -32,6 +32,7 @@ import { getAllUsers, getUserData, updateUser } from "../../redux/actions/user";
 import TopBar from "../../components/TopBar";
 import axiosInstance from "../../apiBackend";
 import relacionIngles from "../../utils/relationshipTraduccion";
+import { getAllPosts } from "../../redux/actions/posts";
 
 const PERFILNOTIFICACIONES = () => {
   const { formatDate } = useContext(Context);
@@ -42,7 +43,7 @@ const PERFILNOTIFICACIONES = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [showInvitationModal, setShowInvitationModal] = useState(false);
-  const [selectedNotification, setSelectedNotification] = useState();
+  const [selectedNotification, setSelectedNotification] = useState({});
 
   useEffect(() => {
     dispatch(getAllUserNotifications(userData?.id));
@@ -63,6 +64,7 @@ const PERFILNOTIFICACIONES = () => {
             dispatch(getAllUserNotifications(userData?.id));
 
             dispatch(getUserData(userData?.id));
+            dispatch(getAllPosts(userData?.id));
           });
         });
     }
@@ -74,6 +76,7 @@ const PERFILNOTIFICACIONES = () => {
             dispatch(getAllUserNotifications(userData?.id));
 
             dispatch(getUserData(userData?.id));
+            dispatch(getAllPosts(userData?.id));
           });
         });
     }
@@ -82,60 +85,97 @@ const PERFILNOTIFICACIONES = () => {
   };
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <View style={styles.perfilNotificaciones}>
-        <View>
+        <>
           <View style={styles.frameViewFlexBox}>
             <TopBar screen={"notificaciones"}></TopBar>
           </View>
           <View style={[styles.notificacionesWrapper, styles.frameViewFlexBox]}>
             <Text style={styles.notificaciones}>Notificaciones</Text>
           </View>
-        </View>
+        </>
         <View style={styles.frameContainer}>
           {/* =============== NOTIFICATIONS RENDERED =============== */}
           {userNotifications.length > 0 ? (
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView
+              contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}
+              style={{ flex: 1 }}
+              showsVerticalScrollIndicator={false}
+            >
               {userNotifications &&
                 userNotifications?.map((notification, index) => (
                   <Pressable
                     onPress={async () => {
+                      if (
+                        notification.type === "friend request" ||
+                        notification.type === "family request"
+                      ) {
+                        setShowInvitationModal(true);
+                      }
                       await setSelectedNotification(notification);
-                      setShowInvitationModal(true);
                     }}
                     key={index}
                   >
                     <View style={[styles.frameView, styles.frameViewFlexBox]}>
                       <View
-                        style={{ flexDirection: "row", alignItems: "center" }}
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          flex: 1,
+                        }}
                       >
-                        <Image
-                          style={styles.frameChild}
-                          contentFit="cover"
-                          source={
-                            notification?.user?.profilePicture
-                              ? { uri: notification?.user?.profilePicture }
-                              : require("../../assets/logoo.png")
-                          }
-                        />
-                        <Text style={styles.hasRecibidoUnaLayout}>
-                          <Text style={styles.brunoTeHaContainer1}>
-                            <Text
-                              style={styles.bruno}
-                            >{`${notification.message.split(" ").slice(0, 2).join(" ")} `}</Text>
-                            <Text style={styles.teHaInvitadoTypo}>
-                              {`${notification.message.split(" ").slice(2).join(" ")}. `}
-                            </Text>
-                            <Text
-                              style={{
-                                ...styles.teHaInvitadoTypo,
-                                color: "gray",
-                              }}
-                            >
-                              {relacionIngles(notification?.relationship)}
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "flex-start",
+                            flex: 1,
+                          }}
+                        >
+                          <Image
+                            style={styles.frameChild}
+                            contentFit="cover"
+                            source={
+                              notification?.user?.profilePicture
+                                ? { uri: notification?.user?.profilePicture }
+                                : require("../../assets/logoo.png")
+                            }
+                          />
+                          <Text style={styles.hasRecibidoUnaLayout}>
+                            <Text style={styles.brunoTeHaContainer1}>
+                              <Text style={styles.bruno}>
+                                {notification.user.username}{" "}
+                                {notification.user.apellido + " "}
+                              </Text>
+                              <Text style={styles.teHaInvitadoTypo}>
+                                {notification.message + " "}
+                              </Text>
+                              <Text
+                                style={{
+                                  ...styles.teHaInvitadoTypo,
+                                  color: "gray",
+                                }}
+                              >
+                                {relacionIngles(notification?.relationship)}
+                              </Text>
                             </Text>
                           </Text>
-                        </Text>
+                        </View>
+                        {notification?.post && (
+                          <Image
+                            style={{
+                              width: 40,
+                              height: 40,
+                              borderRadius: 10,
+                              marginLeft: "3%",
+                              marginBottom: "1%",
+                            }}
+                            source={{
+                              uri: notification?.post?.photos[0],
+                            }}
+                          ></Image>
+                        )}
                       </View>
                     </View>
                     <Text
@@ -204,7 +244,7 @@ const PERFILNOTIFICACIONES = () => {
           />
         </View>
       </Modal>
-    </>
+    </View>
   );
 };
 
@@ -312,8 +352,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   hasRecibidoUnaLayout: {
-    width: 273,
-    display: "flex",
+    maxWidth: "80%",
     color: Color.black1,
     lineHeight: 19,
     fontSize: FontSize.size_base,
@@ -332,7 +371,7 @@ const styles = StyleSheet.create({
   },
   frameView: {
     justifyContent: "space-between",
-    width: "100%",
+    flex: 1,
   },
   frameItem: {
     maxHeight: "100%",
@@ -381,9 +420,9 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   frameContainer: {
-    height: 604,
+    flex: 1,
     paddingVertical: 0,
-    marginTop: 23,
+    paddingTop: 23,
     paddingHorizontal: Padding.p_xl,
   },
   frameParent: {

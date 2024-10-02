@@ -5,12 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Post } from 'src/posts/entities/post.entity';
 import { Notification } from './entities/notification.entity';
-import { ChatGateway } from 'src/chat/chat.gateway';
 import { ChatModule } from 'src/chat/chat.module';
+import { InvitationsModule } from 'src/invitations/invitations.module';
 @Module({
   imports: [TypeOrmModule.forFeature([User, Post, Notification]), ChatModule],
   controllers: [NotificationController],
   providers: [NotificationService],
-  exports: [TypeOrmModule.forFeature([NotificationModule])],
+  exports: [NotificationService],
 })
 export class NotificationModule {}

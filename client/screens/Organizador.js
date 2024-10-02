@@ -186,12 +186,13 @@ const Organizador = ({ route }) => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     uploadImages(route.params.data).then(async (e) => {
-      setLoading(true);
+      const filterUsers = taggedUsers.map((e) => (e.id ? e.id : null));
       try {
         const finalData = {};
-        finalData.tags = taggedUsers;
-        finalData.etiquets = taggedUsers;
+        finalData.tags = filterUsers;
+        finalData.etiquets = filterUsers;
         finalData.hashtags = selectedHashtags;
         finalData.albums = albums;
         finalData.userId = userData.id;
@@ -429,10 +430,7 @@ const Organizador = ({ route }) => {
                       maxWidth: "85%",
                     }}
                   >
-                    {allUsers
-                      .filter((user) => taggedUsers.includes(user.id))
-                      .map((user) => `${user.username} ${user.apellido}`)
-                      .join(", ")}
+                    Etiquetados
                   </Text>
                 )}
               </Pressable>

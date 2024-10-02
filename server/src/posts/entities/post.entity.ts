@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { Comment } from 'src/comments/entities/comment.entity';
+import { Notification } from 'src/notification/entities/notification.entity';
 
 @Entity()
 export class Post {
@@ -47,8 +48,12 @@ export class Post {
 
   @ManyToOne(() => User, (user) => user.posts)
   user: User;
+
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[]; // Relación One-to-Many con los comentarios del post
+
+  @OneToMany(() => Notification, (notification) => notification.post)
+  notifications: Notification[];
 
   @CreateDateColumn()
   createdAt: Date;

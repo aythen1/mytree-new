@@ -27,6 +27,9 @@ export class NotificationService {
       where: { id: createNotificationDto.senderId },
     });
     notification.user = user;
+    if (createNotificationDto.post) {
+      notification.post = createNotificationDto.post;
+    }
     await this.notificationRepository.save(notification);
 
     this.chatGateway.sendNotificationToUser(
@@ -131,7 +134,7 @@ export class NotificationService {
   async getNotificationsByUserId(userId: string): Promise<Notification[]> {
     return this.notificationRepository.find({
       where: { receiverId: userId },
-      relations: ['user'],
+      relations: ['user', 'post'],
       order: { createdAt: 'DESC' }, // Ordenar por fecha de creación descendente
     });
   }

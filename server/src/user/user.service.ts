@@ -68,16 +68,17 @@ export class UserService {
 
   // CREA CREA USUARIO
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { email } = createUserDto;
-    const { phone } = createUserDto;
+    try {
+      const { email } = createUserDto;
+      const { phone } = createUserDto;
 
-    const existingUser = await this.userRepository.findOne({
-      where: { email: email },
-    });
-    if (existingUser) {
-      throw new ConflictException('Email already exists');
-    }
-    const html = `
+      const existingUser = await this.userRepository.findOne({
+        where: { email: email },
+      });
+      if (existingUser) {
+        throw new ConflictException('Email already exists');
+      }
+      const html = `
       <!DOCTYPE html>
       <html lang="es">
       <head>
@@ -135,9 +136,12 @@ export class UserService {
       </html>
     `;
 
-    this.sendMail(email, 'SportsMatch', html);
-    const user = this.userRepository.create(createUserDto);
-    return await this.userRepository.save(user);
+      // this.sendMail(email, 'SportsMatch', html);
+      const user = this.userRepository.create(createUserDto);
+      return await this.userRepository.save(user);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   // TRAE TODOS LOS USUARUIS

@@ -111,16 +111,9 @@ const CommentsModal = ({ onClose }) => {
       sendResponseToCommentById({
         commentId: selectedComment,
         commentData: {
-          responses: {
-            id: uuid.v1(),
-            response: comment,
-            creatorId: userData?.id,
-            email: userData.email,
-            likes: [],
-            dislikes: [],
-            userName: `${userData?.username} ${userData?.apellido}`,
-            createdAt: new Date(),
-          },
+          content: comment,
+          creatorId: userData?.id,
+          postId: selectedPost,
         },
       }),
     ).then((res) => {
@@ -207,33 +200,27 @@ const CommentsModal = ({ onClose }) => {
             }}
           >
             {selectedPostComments &&
-              filteredComments &&
-              sortByDate(filteredComments).map((comment, index) => (
-                <SingleComment
-                  key={index}
-                  commentId={comment?.id}
-                  image={
-                    allUsers.filter(
-                      (user) => user?.id.toString() === comment.creatorId,
-                    )[0]?.profilePicture
-                  }
-                  createdAt={comment.createdAt || new Date()}
-                  creatorId={comment.creatorId}
-                  dislikes={comment.dislikes || []}
-                  likes={comment.likes || []}
-                  comment={comment.content}
-                  author={
-                    allUsers.filter(
-                      (user) => user?.id.toString() === comment.creatorId,
-                    )[0]?.username +
-                    " " +
-                    allUsers.filter(
-                      (user) => user?.id.toString() === comment.creatorId,
-                    )[0]?.apellido
-                  }
-                  responses={comment?.responses || []}
-                />
-              ))}
+              selectedPostComments &&
+              sortByDate(selectedPostComments).map((comment, index) => {
+                if (!comment.parentComment) {
+                  return (
+                    <SingleComment
+                      key={index}
+                      commentId={comment?.id}
+                      image={comment?.user?.profilePicture}
+                      createdAt={comment.createdAt || new Date()}
+                      creatorId={comment.creatorId}
+                      dislikes={comment.dislikes || []}
+                      likes={comment.likes || []}
+                      comment={comment.content}
+                      author={
+                        comment?.user?.username + " " + comment?.user?.apellido
+                      }
+                      responses={comment?.responses || []}
+                    />
+                  );
+                }
+              })}
           </ScrollView>
         ) : (
           <Text

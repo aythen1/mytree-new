@@ -5,6 +5,7 @@ import { Event } from './entities/event.entity';
 import { CreateEventDto } from './dto/create-event.dto';
 import { Invitations } from 'src/invitations/entities/invitation.entity';
 import { WishListItems } from 'src/whish-list-items/entities/whish-list-item.entity';
+import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()
 export class EventService {
@@ -15,6 +16,7 @@ export class EventService {
     private inviteRepository: Repository<Invitations>,
     @InjectRepository(WishListItems)
     private wishListItemRepository: Repository<WishListItems>,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async create(createEventDto: CreateEventDto): Promise<Event> {
@@ -22,31 +24,36 @@ export class EventService {
   }
 
   async findAll(): Promise<Event[]> {
-    return await this.eventRepository.find();
+    return await this.eventRepository.find({
+      relations: ['invites', 'wishListItems', 'invites.user'],
+    });
   }
 
   async findByUser(creatorId: string): Promise<Event[]> {
-    return this.eventRepository.find({ where: { creatorId } });
+    return this.eventRepository.find({
+      where: { creatorId },
+      relations: ['invites', 'wishListItems', 'invites.user'],
+    });
   }
 
   async findOne(id: string): Promise<Event> {
     return await this.eventRepository.findOne({
       where: { id: id },
-      relations: ['invites', 'wishListItems'],
+      relations: ['invites', 'wishListItems', 'invites.user'],
     });
   }
 
   async findByCreator(creatorId: string): Promise<Event[]> {
     return await this.eventRepository.find({
       where: { creatorId },
-      relations: ['invites', 'wishListItems'],
+      relations: ['invites', 'invites.user', 'wishListItems'],
     });
   }
 
   async remove(id: string): Promise<Event> {
     const event = await this.eventRepository.findOne({
       where: { id: id },
-      relations: ['invites', 'wishListItems'],
+      relations: ['invites', 'wishListItems', 'invites.user'],
     });
     if (!event) {
       throw new Error('Evento no encontrado');
@@ -101,7 +108,16 @@ export class EventService {
       userId,
       status: 'pending',
     });
-    return this.inviteRepository.save(invite);
+    const save = await this.inviteRepository.save(invite);
+    await this.notificationService.create({
+      title: 'Nueva Invitación',
+      message: `te ha invitado a ${event.type === 'special' ? 'una fecha especial' : 'un evento'}: ${event.title}`,
+      senderId: event.creatorId, // El creador del evento como emisor de la notificación
+      receiverId: userId, // El usuario invitado como receptor de la notificación
+      type: 'invitation',
+      readed: false,
+    });
+    return save;
   }
 
   async respondToInvite(

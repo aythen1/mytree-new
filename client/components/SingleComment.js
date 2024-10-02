@@ -200,17 +200,13 @@ const SingleComment = ({
               key={index}
               commentId={comment?.id || ""}
               response={true}
-              image={
-                allUsers.filter(
-                  (user) => user?.id.toString() === comment.creatorId,
-                )[0]?.profilePicture
-              }
+              image={comment?.user?.profilePicture}
               createdAt={comment?.createdAt || new Date()}
               creatorId={comment?.creatorId || ""}
               dislikes={comment?.dislikes || []}
               likes={comment?.likes || []}
-              comment={comment?.response || "asd"}
-              author={comment?.userName || "User Test"}
+              comment={comment?.content}
+              author={comment?.user?.username + " " + comment?.user?.apellido}
             />
           ))}
       </View>
