@@ -63,10 +63,19 @@ const CALENDARIO = () => {
       dispatch(setScreen("Calendario"));
 
       dispatch(getAllUserEvents(userData?.id));
-      dispatch(getAllUserInvitations(userData?.id)).then(() => {
-        if (userInvitations) {
-          const inv = userInvitations.map((e) => e.event);
-          setEventInvited(inv);
+      dispatch(getAllUserInvitations(userData?.id)).then((e) => {
+        console.log(e, "eee");
+        if (e.payload) {
+          let eventos = [];
+          for (let index = 0; index < e.payload.length; index++) {
+            const element = e.payload[index];
+            if (element.status !== "rejected") {
+              eventos.push(element.event);
+            }
+          }
+
+          console.log(eventos, "INVITE");
+          setEventInvited(eventos);
         }
       });
       // Establecer la fecha actual como valor por defecto al enfocar el componente
@@ -87,65 +96,7 @@ const CALENDARIO = () => {
       contentContainerStyle={styles.scrollViewContent}
       showsVerticalScrollIndicator={false}
     >
-      <View
-        style={{
-          alignItems: "center",
-          flexDirection: "row",
-          width: "100%",
-          justifyContent: "space-between",
-          paddingHorizontal: 10,
-          backgroundColor: Color.white,
-          marginTop: 5,
-        }}
-      >
-        <View
-          style={{
-            backgroundColor: Color.fAFAFA,
-            paddingHorizontal: Padding.p_sm,
-            paddingVertical: 6,
-            borderRadius: Border.br_3xs,
-            width: "87%",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Image
-            style={{ width: 20, height: 20 }}
-            contentFit="cover"
-            source={require("../../assets/iconlylightoutlinesearch4.png")}
-          />
-          <View
-            style={{
-              marginLeft: 6,
-              flexDirection: "row",
-              flex: 1,
-              width: "100%",
-            }}
-          >
-            <TextInput
-              style={{
-                fontSize: FontSize.size_sm,
-                lineHeight: 25,
-                fontStyle: "italic",
-                fontWeight: "200",
-                fontFamily: FontFamily.nunito,
-                color: Color.textPlaceholder,
-                letterSpacing: 0,
-                textAlign: "left",
-                width: "100%",
-              }}
-              value={search}
-              onChangeText={(text) => setSearch(text)}
-              placeholder="Buscar"
-              placeholderTextColor={Color.textPlaceholder}
-            />
-          </View>
-        </View>
-        <Pressable onPress={() => setShowSelectEventTypeModal(true)}>
-          <MasBusquedaSVG />
-        </Pressable>
-      </View>
+      <TopBar screen={"calendario"}></TopBar>
       <View style={{ paddingHorizontal: 5 }}>
         {dates ? (
           <Calendario

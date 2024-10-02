@@ -110,7 +110,6 @@ const CrearFechaEspecial = () => {
         shared: false,
         wishList,
         date: new Date(selectedDate),
-        invitedUsers,
       };
       const cloudinaryUrls = [];
 
@@ -142,19 +141,21 @@ const CrearFechaEspecial = () => {
 
       event.coverImage = cloudinaryUrls[0];
 
-      dispatch(createEvent(event)).then((e) => {
-        const users = e.payload.invitedUsers;
-
+      dispatch(createEvent(event)).then(async (e) => {
+        const users = invitedUsers;
+        console.log(invitedUsers, "invites");
         for (let index = 0; index < users.length; index++) {
-          const id = users[index];
-          axiosInstance.post(`/events/${e.payload.id}/invite`, { userId: id });
+          const id = users[index]?.id;
+          await axiosInstance.post(`/events/${e.payload.id}/invite`, {
+            userId: id,
+          });
         }
 
         const wishList = e.payload.wishList;
 
         for (let index = 0; index < wishList.length; index++) {
           const wish = wishList[index];
-          axiosInstance.post(`/events/${e.payload.id}/wishlist`, {
+          await axiosInstance.post(`/events/${e.payload.id}/wishlist`, {
             description: wish,
           });
         }
@@ -474,11 +475,11 @@ const CrearFechaEspecial = () => {
           style={{
             alignItems: "center",
             justifyContent: "center",
-            height: "100%",
+            flex: 1,
           }}
         >
           <Pressable
-            style={{ width: "100%", height: "100%", left: 0, top: 0 }}
+            style={{ flex: 1 }}
             onPress={() => setShowTagUsers(false)}
           />
           <Etiquetar

@@ -139,12 +139,23 @@ const StoriesVideosDiarios = () => {
                 }}
               >
                 <Image
-                  style={[styles.aatarIcon, styles.aatarIconPosition]}
+                  style={[
+                    styles.aatarIcon,
+                    styles.aatarIconPosition,
+                    {
+                      borderRadius: 50,
+                      borderWidth: 3,
+                      borderColor: Color.primario1,
+                    },
+                  ]}
                   contentFit="cover"
-                  source={require("../assets/aatar3.png")}
+                  source={require("../assets/logoo.png")}
                 />
                 <View style={[styles.youWrapper, styles.aatarIconPosition]}>
-                  <Text style={[styles.you1, styles.signTypo]}>You</Text>
+                  <Text style={[styles.you1, styles.signTypo]}>
+                    {" "}
+                    {userData.username}
+                  </Text>
                 </View>
               </Pressable>
             )}

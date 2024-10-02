@@ -27,17 +27,17 @@ const Etiquetar = ({
   }, []);
 
   const handleToggleTag = (userId) => {
-    if (taggedUsers.includes(userId.toString())) {
-      const newArray = taggedUsers.filter(
-        (id) => id.toString() !== userId.toString(),
-      );
+    console.log(taggedUsers, "otro");
+    const filter = taggedUsers.filter((u) => u?.id === userId?.id);
+    if (filter[0]) {
+      const newArray = taggedUsers.filter((u) => u.id !== userId?.id);
       setTaggedUsers(newArray);
     } else {
-      setTaggedUsers([...taggedUsers, userId.toString()]);
+      setTaggedUsers([...taggedUsers, userId]);
     }
   };
 
-  reactotron.log("dataaa", invites);
+  console.log("dataaa", invites);
 
   return (
     <View
@@ -123,14 +123,8 @@ const Etiquetar = ({
                         style={{ width: 30, height: 30, borderRadius: 50 }}
                         contentFit="cover"
                         source={
-                          allUsers.filter(
-                            (user) =>
-                              user.id.toString() === friendMember?.userId,
-                          )[0]?.profilePicture
-                            ? allUsers.filter(
-                                (user) =>
-                                  user.id.toString() === friendMember?.userId,
-                              )[0]?.profilePicture
+                          friendMember.user.profilePicture
+                            ? { uri: friendMember.user.profilePicture }
                             : require("../assets/frame-1547754875.png")
                         }
                       />
@@ -146,14 +140,9 @@ const Etiquetar = ({
                           fontSize: FontSize.size_base,
                         }}
                       >
-                        {allUsers.filter(
-                          (user) => user.id.toString() === friendMember?.userId,
-                        )[0]?.username +
+                        {friendMember.user?.username +
                           " " +
-                          allUsers.filter(
-                            (user) =>
-                              user.id.toString() === friendMember?.userId,
-                          )[0]?.apellido}
+                          friendMember.user?.apellido}
                       </Text>
                     </View>
                     <Text>
@@ -226,7 +215,9 @@ const Etiquetar = ({
               )}
               {friends.length > 0 &&
                 friends.map((friendMember, index) => {
-                  const is = invites?.find((a) => a.userId === friendMember);
+                  const is = invites?.find(
+                    (a) => a.userId === friendMember?.id,
+                  );
                   if (!is)
                     return (
                       <View
@@ -248,7 +239,7 @@ const Etiquetar = ({
                             source={
                               friendMember.profilePicture
                                 ? { uri: friendMember.profilePicture }
-                                : require("../assets/frame-1547754875.png")
+                                : require("../assets/logoo.png")
                             }
                           />
                           <Text
@@ -269,12 +260,10 @@ const Etiquetar = ({
                           </Text>
                         </View>
                         <Checkbox
-                          checked={taggedUsers.includes(
-                            friendMember.toString(),
+                          checked={taggedUsers.find(
+                            (u) => u.id === friendMember.id,
                           )}
-                          setChecked={() =>
-                            handleToggleTag(friendMember.toString())
-                          }
+                          setChecked={() => handleToggleTag(friendMember)}
                         />
                       </View>
                     );
@@ -338,7 +327,7 @@ const Etiquetar = ({
               )}
               {family.length > 0 &&
                 family.map((familyMember, index) => {
-                  const is = invites?.find((a) => a.userId === familyMember);
+                  const is = invites?.find((a) => a.userId === familyMember.id);
                   if (!is)
                     return (
                       <View
@@ -360,7 +349,7 @@ const Etiquetar = ({
                             source={
                               familyMember?.profilePicture
                                 ? { uri: familyMember?.profilePicture }
-                                : require("../assets/frame-1547754875.png")
+                                : require("../assets/logoo.png")
                             }
                           />
                           <Text
@@ -381,12 +370,10 @@ const Etiquetar = ({
                           </Text>
                         </View>
                         <Checkbox
-                          checked={taggedUsers.includes(
-                            familyMember.toString(),
+                          checked={taggedUsers.find(
+                            (u) => u.id === familyMember.id,
                           )}
-                          setChecked={() =>
-                            handleToggleTag(familyMember.toString())
-                          }
+                          setChecked={() => handleToggleTag(familyMember)}
                         />
                       </View>
                     );

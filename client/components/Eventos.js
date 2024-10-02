@@ -4,8 +4,8 @@ import { Color, FontFamily, Border } from "../GlobalStyles";
 import EventCard from "./EventCard";
 import { useSelector } from "react-redux";
 
-const Eventos = ({ search, selectedDate, invitations }) => {
-  const { userEvents: dates } = useSelector((state) => state.events);
+const Eventos = ({ search, selectedDate, invitations, dates }) => {
+  // const { userEvents: dates } = useSelector((state) => state.events);
   const { userData } = useSelector((state) => state.users);
 
   const [filteredEvents, setFilteredEvents] = useState([]);

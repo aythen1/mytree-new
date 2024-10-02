@@ -15,7 +15,7 @@ import NameRegister from "../../components/NameRegister";
 import CheckRegister from "../../components/CheckRegister";
 import AcceptRegister from "../../components/AcceptRegister";
 import axios from "axios";
-import { BACKURL } from "../../apiBackend";
+import axiosInstance, { BACKURL } from "../../apiBackend";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const Register = () => {
   const navigation = useNavigation();
@@ -43,6 +43,10 @@ const Register = () => {
     confirm_password: "",
   });
 
+  useEffect(() => {
+    setDataToSend((prev) => ({ ...prev, email: mail }));
+  }, [mail]);
+
   const next = async () => {
     const { username, apellido, email, password, confirm_password } =
       dataToSend;
@@ -54,11 +58,11 @@ const Register = () => {
     const passwordPattern =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?.])[A-Za-z\d@$!%*?.]{4,}$/;
 
-    if (nextField == 1) {
+    if (nextField === 1) {
       if (
         username.trim() !== "" &&
         apellido.trim() !== "" &&
-        email.trim() !== "" &&
+        mail.trim() !== "" &&
         isEmailValid && // Verificación del formato del email
         password.trim() !== "" &&
         confirm_password.trim() !== "" &&
@@ -68,7 +72,7 @@ const Register = () => {
         setError("");
         setNextField((prev) => prev + 1);
       } else {
-        if (!emailPattern.test(email)) {
+        if (!emailPattern.test(mail)) {
           return setError("Ingrese un email válido");
         }
         if (password !== confirm_password) {
@@ -76,20 +80,21 @@ const Register = () => {
         }
         if (!passwordPattern.test(password.trim())) {
           return setError(
-            "La contraseñas debe contener una Mayúscula , una minúscula , un número y un símbolo"
+            "La contraseñas debe contener una Mayúscula , una minúscula , un número y un símbolo",
           );
         }
         setError("Verifica los datos ingresados");
       }
     }
-    if (nextField == 2 && isChecked) {
+    if (nextField === 2 && isChecked) {
       setNextField((prev) => prev + 1);
     }
 
-    if (nextField == 3) {
+    if (nextField === 3) {
       try {
-        navigation.navigate("LOGIN");
-        const res = await axios.post(`${BACKURL}/user`, dataToSend);
+        await axiosInstance.post(`user`, dataToSend).then(() => {
+          return navigation.navigate("LOGIN");
+        });
       } catch (error) {
         console.log(error);
       }

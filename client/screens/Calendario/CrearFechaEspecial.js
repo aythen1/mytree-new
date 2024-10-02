@@ -33,6 +33,7 @@ import Maps from "../../components/Maps";
 import { setScreen } from "../../redux/slices/user.slices";
 import ScrollableModal from "../../components/modals/ScrollableModal";
 import { lugaresDeEspaña } from "../utils/Lugares";
+import axiosInstance from "../../apiBackend";
 
 const CrearFechaEspecial = () => {
   const [user, setUser] = useState();
@@ -110,7 +111,6 @@ const CrearFechaEspecial = () => {
         privacyMode: privacy,
         wishList: [],
         date: new Date(selectedDate),
-        invitedUsers,
       };
       const cloudinaryUrls = [];
 
@@ -142,7 +142,24 @@ const CrearFechaEspecial = () => {
 
       event.coverImage = cloudinaryUrls[0];
 
-      dispatch(createEvent(event)).then(() => {
+      dispatch(createEvent(event)).then(async (e) => {
+        const users = invitedUsers;
+        console.log(invitedUsers, "invites");
+        for (let index = 0; index < users.length; index++) {
+          const id = users[index]?.id;
+          await axiosInstance.post(`/events/${e.payload.id}/invite`, {
+            userId: id,
+          });
+        }
+
+        const wishList = e.payload.wishList;
+
+        for (let index = 0; index < wishList.length; index++) {
+          const wish = wishList[index];
+          await axiosInstance.post(`/events/${e.payload.id}/wishlist`, {
+            description: wish,
+          });
+        }
         dispatch(getAllUserEvents(user.id));
       });
     }

@@ -12,6 +12,7 @@ import { Notification } from '../../notification/entities/notification.entity';
 import { History } from 'src/histories/entities/history.entity';
 import { Comment } from 'src/comments/entities/comment.entity';
 import { GroupInfo } from 'src/chat/entities/group.entity';
+import { Invitations } from 'src/invitations/entities/invitation.entity';
 
 @Entity()
 export class User {
@@ -86,6 +87,9 @@ export class User {
   @OneToMany(() => History, (history) => history.user)
   histories: History[];
 
+  @OneToMany(() => Invitations, (invitation) => invitation.user)
+  invitations: Invitations[];
+
   // Nuevas propiedades para la familia
   @Column({ nullable: true })
   momId: string;
@@ -135,8 +139,8 @@ export class User {
   @JoinTable()
   nephews: User[]; // Relación para los sobrinos
 
-  // @OneToMany(() => Comment, (comments) => comments.user)
-  // comments: Comment[];
+  @OneToMany(() => Comment, (comments) => comments.user)
+  comments: Comment[];
 
   @ManyToMany(() => Post)
   @JoinTable()

@@ -40,7 +40,7 @@ const LOGIN = () => {
 
   const handleEmailChange = (text) => {
     setError("");
-    setEmail((prev) => text.toLowerCase());
+    setEmail((prev) => text);
   };
 
   const handleSubmit = async () => {

@@ -19,7 +19,7 @@ const sortedUsers = (userData) => {
   }, []);
 
   // Ordenamos los usuarios alfabéticamente por nombre
-  allUsers.sort((a, b) => a.name.localeCompare(b.name));
+  allUsers.sort((a, b) => a?.name?.localeCompare(b?.name));
 
   return allUsers;
 };

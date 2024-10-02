@@ -8,7 +8,7 @@ import useRelationsLength from "../utils/lenghtUsuarios";
 
 const PERFILMIINFO = ({ setSelectedComponent, usuario }) => {
   // const { familyLength, usersLength } = useSelector((state) => state.users);
-  console.log(usuario.id, "usuario");
+  console.log(usuario, "usuario");
   const [usersLength, setUsersLength] = useState();
   const [familyLength, setFamilyLength] = useState();
 

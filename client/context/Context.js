@@ -13,6 +13,7 @@ import {
   getAllUserNotifications,
 } from "../redux/actions/notifications";
 import { format, formatInTimeZone, toZonedTime } from "date-fns-tz";
+import { getAllPosts } from "../redux/actions/posts";
 
 export const Context = createContext();
 
@@ -376,7 +377,8 @@ export const ContextProvider = ({ children }) => {
   };
 
   const socket = io(
-    "http://6f651255-2a5d-4271-a8c7-35730a2de342.pub.instances.scw.cloud:3010",
+    process.env.EXPO_PUBLIC_LOCAL_SOCKET ||
+      "http://6f651255-2a5d-4271-a8c7-35730a2de342.pub.instances.scw.cloud:3010",
     // "http://192.168.0.77:3010",
 
     {
@@ -416,6 +418,7 @@ export const ContextProvider = ({ children }) => {
 
   socket.on("relationship", (data) => {
     console.log("New relationship:", data);
+    dispatch(getAllPosts(userData?.id));
     return dispatch(getUserData(userData?.id));
 
     // Manejar la actualización de notificaciones en la app

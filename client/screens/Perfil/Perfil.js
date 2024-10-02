@@ -142,9 +142,11 @@ const Perfil = () => {
 
   useEffect(() => {
     if (profileImage) {
-      axiosInstance.patch(`/user/${userData?.id}`, {
-        profilePicture: profileImage,
-      });
+      axiosInstance
+        .patch(`/user/${userData?.id}`, {
+          profilePicture: profileImage,
+        })
+        .then(() => dispatch(getUserData(userData?.id)));
     }
   }, [profileImage]);
 

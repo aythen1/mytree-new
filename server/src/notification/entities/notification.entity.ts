@@ -1,6 +1,13 @@
 // notification.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { User } from '../../user/entities/user.entity';
+import { Post } from 'src/posts/entities/post.entity';
 
 @Entity()
 export class Notification {
@@ -33,6 +40,10 @@ export class Notification {
 
   @ManyToOne(() => User, (user) => user.notifications)
   user: User;
+
+  @ManyToOne(() => Post, (post) => post.notifications)
+  @JoinColumn({ name: 'postId' })
+  post: Post;
 
   @Column({ type: 'json', default: '{}' })
   extraData: Record<string, any> = {};

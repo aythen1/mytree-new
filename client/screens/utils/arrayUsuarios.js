@@ -28,8 +28,8 @@ const filterFriendsFamily = (userData) => {
   }, []);
 
   // Ordenar ambos arrays alfabéticamente por nombre
-  familyUsers.sort((a, b) => a.name.localeCompare(b.name));
-  friendUsers.sort((a, b) => a.name.localeCompare(b.name));
+  familyUsers.sort((a, b) => a?.name?.localeCompare(b?.name));
+  friendUsers.sort((a, b) => a?.name?.localeCompare(b?.name));
 
   return {
     family: familyUsers,

@@ -35,6 +35,7 @@ const Invitacin = ({ route }) => {
 
   const handleGetEvent = async () => {
     const res = await axiosInstance.get(`/events/${route?.params?.date?.id}`);
+    console.log(res.data, "evento");
     setEvent(res.data);
   };
 
@@ -152,7 +153,7 @@ const Invitacin = ({ route }) => {
               {event?.description}
             </Text>
             <Text style={{ ...styles.hsTypo, marginTop: 10 }}>Invitados</Text>
-            {event.invitedUsers && (
+            {event?.invites && (
               <View
                 style={{
                   flexDirection: "row",
@@ -161,9 +162,9 @@ const Invitacin = ({ route }) => {
                   marginTop: 10,
                 }}
               >
-                {event?.invitedUsers &&
-                  event?.invitedUsers.map((usuario) => {
-                    const user = allUsers.find((u) => u.id == usuario);
+                {event?.invites &&
+                  event?.invites.map((usuario) => {
+                    const user = usuario?.user;
 
                     return (
                       <TouchableOpacity

@@ -23,6 +23,6 @@ export default function relacionEspanol(selectedRelationShip) {
     case "nephew":
       return "Sobrino";
     default:
-      return "Amigos"; // Valor por defecto para relaciones
+      return ""; // Valor por defecto para relaciones
   }
 }
