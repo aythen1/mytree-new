@@ -54,7 +54,7 @@ const CrearGrupo = () => {
   const navigation = useNavigation();
 
   const submit = async () => {
-    const res = axiosInstance
+    const res = await axiosInstance
       .post(`/chat/createGroup`, {
         room: "",
         photo: "exampple.com",
@@ -118,10 +118,7 @@ const CrearGrupo = () => {
               style={{ color: taggedUsers.length > 0 ? "#000" : "#bcbcbc" }}
             >
               {taggedUsers.length > 0
-                ? allUsers
-                    .filter((user) => taggedUsers.includes(user.id))
-                    .map((user) => `${user.username} ${user.apellido}`)
-                    .join(", ")
+                ? "Invitados"
                 : "Selecciona tus contactos"}
             </Text>
           </Pressable>

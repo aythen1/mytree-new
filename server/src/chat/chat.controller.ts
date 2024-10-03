@@ -9,6 +9,7 @@ import {
   Req,
   Patch,
   BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { ChatService } from './service/chat.service';
 import { MessageService } from './service/message.service';
@@ -17,14 +18,12 @@ import { MessageEntity } from './entities/message.entity';
 import { GroupInfo } from './entities/group.entity';
 import { UserService } from 'src/user/user.service';
 
-
 @Controller('chat')
 export class ChatController {
   constructor(
     private readonly chatService: ChatService,
     private readonly messageService: MessageService,
-    private readonly userService: UserService
-
+    private readonly userService: UserService,
   ) {}
 
   @Post('/deleteAllMessageChat')
@@ -59,7 +58,10 @@ export class ChatController {
   @Get('/receiver')
   public async getMessagesForReceiver(@Req() req: any) {
     const { receiverId, createdAt } = req.query;
-    return await this.messageService.getMessagesForReceiver(receiverId, createdAt);
+    return await this.messageService.getMessagesForReceiver(
+      receiverId,
+      createdAt,
+    );
   }
 
   @Put('readed/:id')
@@ -107,7 +109,7 @@ export class ChatController {
   //   }
   // }
 
-   //----------------
+  //----------------
   //  @Get('/group/:room')
   //  public async getGroupChat(@Param('room') room: string) {
   //    return await this.messageService.getMessagesForGroupRoom(room);
@@ -122,79 +124,73 @@ export class ChatController {
   //  public async getGroupChatDelete(@Param('room') room: string) {
   //    return await this.messageService.getMessagesForGroupRoom(room);
   //  }
-   //----------------
+  //----------------
 
+  //crear grupo --
+  @Post('/createGroup')
+  async createGroup(@Body() groupInfoData: Partial<GroupInfo>) {
+    try {
+      console.log('Datos recibidos:', groupInfoData);
 
+      // Verifica si membersIds está definido y tiene al menos dos elementos
+      if (!groupInfoData.membersIds || groupInfoData.membersIds.length < 2) {
+        throw new BadRequestException(
+          'Se requieren al menos dos IDs de miembros para generar la sala.',
+        );
+      }
 
-//crear grupo --
-@Post('/createGroup')
-async createGroup(@Body() groupInfoData: Partial<GroupInfo>) {
-  try {
-    console.log('Datos recibidos:', groupInfoData);
+      // Generar el ID de la sala usando los primeros dos IDs de miembros
+      const roomId = this.chatService.roomIdGenerator(
+        groupInfoData.membersIds[0], // Asegúrate de que estos IDs están disponibles
+        groupInfoData.membersIds[1], // Ajusta según sea necesario
+      );
 
-    // Verifica si membersIds está definido y tiene al menos dos elementos
-    if (!groupInfoData.membersIds || groupInfoData.membersIds.length < 2) {
-      throw new BadRequestException('Se requieren al menos dos IDs de miembros para generar la sala.');
+      console.log('roomId generado:', roomId);
+
+      // Agregar el ID de la sala al grupo
+      groupInfoData.room = roomId;
+
+      // Crear el grupo usando el servicio
+      const newGroup = await this.messageService.createGroupInfo(groupInfoData);
+
+      return {
+        statusCode: 201,
+        message: 'Grupo creado exitosamente',
+        data: newGroup,
+      };
+    } catch (error) {
+      console.error('Error al crear el grupo:', error);
+      throw new InternalServerErrorException({
+        statusCode: 500,
+        message: 'Error al crear el grupo.',
+      });
     }
-
-    // Generar el ID de la sala usando los primeros dos IDs de miembros
-    const roomId = this.chatService.roomIdGenerator(
-      groupInfoData.membersIds[0], // Asegúrate de que estos IDs están disponibles
-      groupInfoData.membersIds[1]  // Ajusta según sea necesario
-    );
-
-    console.log('roomId generado:', roomId);
-
-    // Agregar el ID de la sala al grupo
-    groupInfoData.room = roomId;
-
-    // Crear el grupo usando el servicio
-    const newGroup = await this.messageService.createGroupInfo(groupInfoData);
-
-    return {
-      statusCode: 201,
-      message: 'Grupo creado exitosamente',
-      data: newGroup,
-    };
-  } catch (error) {
-    console.error('Error al crear el grupo:', error);
-    throw new InternalServerErrorException({
-      statusCode: 500,
-      message: 'Error al crear el grupo.',
-    });
   }
-}
 
-
-
-
-// traer todos los usuarios de un grupo
-@Get('/usersGrup/:groupId')
-async getGroupMembers(@Param('groupId') groupId: string) {
-  try {
-    const members = await this.messageService.getGroupMembers(groupId);
-    return {
-      statusCode: 200,
-      message: 'Miembros del grupo obtenidos exitosamente',
-      data: members,
-    };
-  } catch (error) {
-    console.error('Error al obtener los miembros del grupo:', error);
-    throw new InternalServerErrorException({
-      statusCode: 500,
-      message: 'Error al traer los miembros de un grupo.',
-    });
+  // traer todos los usuarios de un grupo
+  @Get('/usersGrup/:groupId')
+  async getGroupMembers(@Param('groupId') groupId: string) {
+    try {
+      const members = await this.messageService.getGroupMembers(groupId);
+      return {
+        statusCode: 200,
+        message: 'Miembros del grupo obtenidos exitosamente',
+        data: members,
+      };
+    } catch (error) {
+      console.error('Error al obtener los miembros del grupo:', error);
+      throw new InternalServerErrorException({
+        statusCode: 500,
+        message: 'Error al traer los miembros de un grupo.',
+      });
+    }
   }
-}
-
-
 
   // traer todos los grupos de un usuario
   @Get('/grupsUser/:userId')
   async getUserGroups(@Param('userId') userId: string) {
-
     try {
-      console.log("entra")
+      console.log('entra');
       const groups = await this.messageService.getUserGroups(userId);
       return groups;
     } catch (error) {
@@ -206,36 +202,35 @@ async getGroupMembers(@Param('groupId') groupId: string) {
     }
   }
 
+  @Get('/group/:groupId')
+  async getGroupById(@Param('groupId') groupId: string) {
+    return this.messageService.getGroupWithMessages(groupId);
+  }
 
+  // // traer todos los grupos de un usuario
+  //    @Get(':userId')
+  //    async findAllGroupsOfUser(@Param('userId') userId: number): Promise<GroupInfo[]> {
+  //      return this.groupService.findAllGroupsOfUser(userId);
+  //    }
 
+  //    //traer todos los usuarios de un grupo
+  //    @Get('members/:groupId')
+  //    async findAllMembersOfGroup(@Param('groupId') groupId: number): Promise<User[]> {
+  //      return this.groupService.findAllMembersOfGroup(groupId);
+  //    }
 
-
-// // traer todos los grupos de un usuario
-//    @Get(':userId')
-//    async findAllGroupsOfUser(@Param('userId') userId: number): Promise<GroupInfo[]> {
-//      return this.groupService.findAllGroupsOfUser(userId);
-//    }
- 
-
-//    //traer todos los usuarios de un grupo
-//    @Get('members/:groupId')
-//    async findAllMembersOfGroup(@Param('groupId') groupId: number): Promise<User[]> {
-//      return this.groupService.findAllMembersOfGroup(groupId);
-//    }
-
-
- // crear mensaje para grupo
+  // crear mensaje para grupo
   //  @Post('group')
   //  async createGroupMessage(@Body() body: any): Promise<MessageEntity[]> {
   //    const { senderId, room, message, receiverIds } = body;
-   
+
   //    if (!senderId || !room || !message || !receiverIds || !Array.isArray(receiverIds) || receiverIds.length === 0 || receiverIds.some(id => typeof id !== 'string')) {
   //      throw new Error('Sender ID, room, message, and a non-empty array of receiver IDs are required.');
   //    }
-   
+
   //    return await this.messageService.saveGroupMessage(senderId, room, message, receiverIds);
   //  }
-   
+
   //  // marcar como leido los mensajes de un grupo
   // @Patch('group/:room/:userId')
   // async markGroupMessagesAsRead(@Param('room') room: string, @Param('userId') userId: string): Promise<void> {
@@ -265,4 +260,64 @@ async getGroupMembers(@Param('groupId') groupId: string) {
   // ): Promise<void> {
   //   await this.messageService.removeUsersFromGroup(room, userIds);
   // }
+  @Get('/user/:userId/chats')
+  async getUserChats(@Param('userId') userId: string) {
+    try {
+      const chats = await this.chatService.getChatsForUserr(userId);
+      return {
+        statusCode: 200,
+        message: 'Chats obtenidos exitosamente.',
+        data: chats,
+      };
+    } catch (error) {
+      console.error('Error al obtener los chats del usuario:', error);
+      throw new InternalServerErrorException({
+        statusCode: 500,
+        message: 'Error al obtener los chats del usuario.',
+      });
+    }
+  }
+  // En tu controlador de chat
+  @Get('/between-users/:userA/:userB')
+  public async getChatBetweenUsers(
+    @Param('userA') userA: string,
+    @Param('userB') userB: string,
+  ) {
+    try {
+      // Llama al servicio para obtener el chat
+      const chat = await this.chatService.findChatBetweenUsers(userA, userB);
+      if (!chat) {
+        throw new NotFoundException(
+          'No se encontró un chat entre los dos usuarios.',
+        );
+      }
+      return {
+        statusCode: 200,
+        message: 'Chat encontrado exitosamente.',
+        data: chat,
+      };
+    } catch (error) {
+      console.error('Error al obtener el chat entre usuarios:', error);
+      throw new InternalServerErrorException('Error interno del servidor.');
+    }
+  }
+
+  // Ruta para crear un nuevo chat entre dos usuarios
+  @Post('create')
+  async createChat(@Body() body: { userAId: string; userBId: string }) {
+    const { userAId, userBId } = body;
+
+    if (!userAId || !userBId) {
+      throw new BadRequestException('Los IDs de los usuarios son requeridos');
+    }
+
+    // Llama al servicio para crear el chat
+    const newChat = await this.chatService.createChatFun(userAId, userBId);
+
+    return {
+      statusCode: 201,
+      message: 'Chat creado exitosamente',
+      data: newChat,
+    };
+  }
 }

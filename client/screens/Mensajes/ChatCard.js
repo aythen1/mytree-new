@@ -7,67 +7,41 @@ import axiosInstance from "../../apiBackend";
 import { Context } from "../../context/Context";
 import { getUserData, updateUser } from "../../redux/actions/user";
 
-const ChatCard = ({ name, selectedUserId, value, userInfo, isGroup }) => {
+const ChatCard = ({
+  name,
+  selectedUserId,
+  value,
+  userInfo,
+  isGroup,
+  usuario,
+}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { getTimeFromDate, notReadedMessages, usersWithMessages } =
     useContext(Context);
   const [convMessages, setConvMessages] = useState([]);
-  const [lastMessage, setLastMessage] = useState();
+  const [lastMessage, setLastMessage] = useState({});
   const [loading, setLoading] = useState(true);
+
   const { user, allUsers, userData } = useSelector((state) => state.users);
-
-  const getChatMessages = async () => {
-    if (userData.id && selectedUserId) {
-      if (!isGroup) {
-        // console.log('getting messages from', user.user.id, 'and', selectedUserId)
-        const { data } = await axiosInstance.get(
-          `chat/room?senderId=${userData.id}&receiverId=${selectedUserId}`,
-        );
-        console.log(
-          `chat/room?senderId=${userData.id}&receiverId=${selectedUserId}`,
-        );
-        setConvMessages(data);
-      } else {
-        const { data } = await axiosInstance.get(
-          `chat/receiver?receiverId=${selectedUserId}`,
-        );
-        console.log(data, "datitaa");
-        setConvMessages(data);
-      }
-    }
-  };
-
-  useEffect(() => {
-    getChatMessages();
-  }, [usersWithMessages, value]);
 
   useEffect(() => {
     setLoading(true);
-    getChatMessages();
+    getLastMessage();
   }, []);
 
   const getLastMessage = (messages) => {
-    const received = messages[0].senderId === userData.id;
-    setLastMessage({ message: messages[0], received });
+    const copy = [...userInfo?.messages];
+    const sortedMessages = copy?.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+    );
+    const lastM = sortedMessages.slice(0, 1);
+    console.log(lastM, "LAST");
+    setLastMessage(lastM[0]);
+
     setLoading(false);
   };
-
-  useEffect(() => {
-    if (convMessages?.length > 0) {
-      getLastMessage(
-        convMessages.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
-        ),
-      );
-    } else {
-      setLastMessage("");
-      setLoading(false);
-    }
-  }, [convMessages]);
-
-  useEffect(() => {}, [lastMessage]);
-
+  console.log(usuario, "ususario");
   return (
     <Pressable
       style={{
@@ -104,10 +78,10 @@ const ChatCard = ({ name, selectedUserId, value, userInfo, isGroup }) => {
             ).then((res) => dispatch(getUserData(userData.id)));
           }
         }}
-        style={{ position: "absolute", top: 30, right: 15 }}
+        style={{ position: "absolute", bottom: 20, right: 15 }}
       >
         <Image
-          style={{ width: 23, height: 23, zIndex: 0 }}
+          style={{ width: 16, height: 16, zIndex: 0 }}
           contentFit="cover"
           source={
             userData.fixedChat === selectedUserId
@@ -116,7 +90,28 @@ const ChatCard = ({ name, selectedUserId, value, userInfo, isGroup }) => {
           }
         />
       </Pressable>
-      <View style={{ marginLeft: 16, width: "50%" }}>
+      {usuario ? (
+        <Image
+          style={{
+            width: 40,
+            height: 40,
+            objectFit: "contain",
+            borderRadius: 50,
+          }}
+          source={{ uri: usuario.profilePicture }}
+        ></Image>
+      ) : (
+        <Image
+          style={{
+            width: 40,
+            height: 40,
+            objectFit: "contain",
+            borderRadius: 50,
+          }}
+          source={require("../../assets/greenPerson.png")}
+        ></Image>
+      )}
+      <View style={{ marginLeft: 16, flex: 1 }}>
         <Text
           numberOfLines={1}
           style={{
@@ -144,10 +139,10 @@ const ChatCard = ({ name, selectedUserId, value, userInfo, isGroup }) => {
             fontSize: FontSize.size_sm,
           }}
         >
-          {lastMessage
-            ? lastMessage?.message?.message?.length >= 20
-              ? lastMessage?.message?.message.slice(0, 20).concat("...")
-              : lastMessage?.message?.message
+          {lastMessage?.message
+            ? lastMessage?.message?.length >= 20
+              ? lastMessage?.message.slice(0, 20).concat("...")
+              : lastMessage?.message
             : "Inicia una conversacion!"}
         </Text>
       </View>
@@ -169,7 +164,7 @@ const ChatCard = ({ name, selectedUserId, value, userInfo, isGroup }) => {
             letterSpacing: 0,
           }}
         >
-          {lastMessage ? getTimeFromDate(lastMessage?.message?.createdAt) : ""}
+          {lastMessage ? getTimeFromDate(lastMessage?.createdAt) : ""}
         </Text>
         {notReadedMessages?.some(
           (message) => message.senderId === selectedUserId,

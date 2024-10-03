@@ -8,6 +8,8 @@ import {
   ScrollView,
   TextInput,
   Dimensions,
+  Modal,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -22,22 +24,38 @@ import { LinearGradient } from "expo-linear-gradient";
 import SingleMessage from "./SingleMessage";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  chatGroups,
   emptyAllMessages,
   getChatHistory,
   getChatHistoryGroup,
+  getUserChat,
+  getUserChats,
+  getUserGroupChat,
 } from "../../redux/actions/chat";
-import { setAllConversationMessagesToRead } from "../../redux/slices/chats.slices";
+import {
+  setAllChats,
+  setAllConversationMessagesToRead,
+  setAllMessages,
+} from "../../redux/slices/chats.slices";
 import axiosInstance from "../../apiBackend";
+import Miembros from "../../components/Miembros";
 
-const OpenedChat = () => {
+const OpenedChat = ({ route }) => {
   const scrollViewRef = useRef();
-  const route = useRoute();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const { allUsers, userData } = useSelector((state) => state.users);
-  const { allMessages } = useSelector((state) => state.chats);
+  const {
+    allMessages,
+    userChats,
+    chat: chat2,
+  } = useSelector((state) => state.chats);
   const [selectedUserDetails, setSelectedUserDetails] = useState();
   const [message, setMessage] = useState("");
+  const [chat, setChat] = useState({});
+  const [usuario, setUsuario] = useState({});
+  const [showTaggedsModal, setShowTaggedsModal] = useState({});
+
   const isFocused = useIsFocused();
   const navigation = useNavigation();
   const {
@@ -50,134 +68,113 @@ const OpenedChat = () => {
   } = useContext(Context);
 
   const handleSendMessage = () => {
-    sendMessage(message, userData?.id, route?.params?.receiverId);
+    sendMessage(
+      message,
+      userData?.id,
+      route?.params?.receiverId,
+      route?.params.isGroup,
+    );
     setMessage();
   };
 
+  const { receiverId } = route?.params;
   useEffect(() => {
-    const userrr = allUsers.filter(
-      (user) => user?.id === route?.params?.receiverId,
-    )[0];
+    console.log(route?.params, "eeeeeeeeeeee2");
 
-    setSelectedUserDetails(userrr);
-  }, []);
-  useEffect(() => {
-    const isGroup = route?.params?.isGroup;
-    joinRoom(userData?.id, route?.params?.receiverId);
-    if (!isGroup) {
-      dispatch(
-        getChatHistory({
-          sender: userData?.id,
-          receiver: route?.params?.receiverId,
-        }),
+    if (!route.params.isGroup) {
+      dispatch(getUserChat({ userA: userData?.id, userB: receiverId })).then(
+        async (e) => {
+          if (!e.payload) {
+            const chatCreate = await axiosInstance.post(`/chat/create`, {
+              userAId: userData?.id,
+              userBId: receiverId,
+            });
+            setChat(chatCreate.data.data);
+            console.log(chatCreate, "eeeeeeeeeeee22");
+            const isGroup = route?.params?.isGroup;
+            const chat = chatCreate.data?.data;
+            const user =
+              chatCreate.data.data.userA.id === userData.id
+                ? chatCreate.data.data.userB
+                : chatCreate.data.data.userA;
+            setUsuario(user);
+            console.log(chatCreate.data.data, "eeeeeeeeeeee2");
+
+            joinRoom(chat?.id);
+          } else {
+            setChat(e?.payload?.data);
+            console.log(e, "eeeeeeeeeeee2");
+            const isGroup = route?.params?.isGroup;
+            const chat = e?.payload?.data;
+            const user =
+              e?.payload.data.userA.id === userData.id
+                ? e?.payload.data.userB
+                : e?.payload.data.userA;
+            setUsuario(user);
+            console.log(e?.payload.data, "eeeeeeeeeeee2");
+            const copy = [...chat?.messages];
+            const sortedMessages = copy?.sort(
+              (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+            );
+            joinRoom(chat?.id);
+            dispatch(setAllMessages(sortedMessages));
+          }
+        },
       );
     } else {
-      dispatch(
-        getChatHistoryGroup({
-          receiver: route?.params?.receiverId,
-        }),
-      );
+      console.log(receiverId, "demaaaaa");
+      dispatch(getUserGroupChat(receiverId)).then((e) => {
+        console.log(e, "demaaaaa");
+        setChat(e?.payload);
+        console.log(e, "eeeeeeeeeeee2");
+        const isGroup = route?.params?.isGroup;
+        const chat = e?.payload;
+
+        console.log(e?.payload.data, "eeeeeeeeeeee2");
+        const copy = [...chat?.messages];
+        const sortedMessages = copy?.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+        );
+        joinRoom(chat?.id);
+        dispatch(setAllMessages(sortedMessages));
+      });
     }
+
     return () => {
       dispatch(emptyAllMessages());
-      leaveRoom(userData?.id, route.params.receiverId);
+      leaveRoom(chat?.id);
     };
   }, []);
 
-  const setAllToRead = async () => {
-    const messagesToSetReaded = allMessages?.filter(
-      (message) =>
-        message.senderId !== userData?.id && message?.isReaded === false,
-    );
+  // const setAllToRead = async () => {
+  //   const messagesToSetReaded = allMessages?.filter(
+  //     (message) =>
+  //       message.senderId !== userData?.id && message?.isReaded === false,
+  //   );
 
-    if (messagesToSetReaded.length > 0) {
-      try {
-        const promises = messagesToSetReaded.map((message) =>
-          axiosInstance.put(`chat/readed/${message?.id}`),
-        );
-        await Promise.all(promises);
-        dispatch(setAllConversationMessagesToRead());
-        getUsersMessages();
-      } catch (error) {
-        console.error("Error setting messages to read", error);
-      }
-    }
-  };
+  //   if (messagesToSetReaded.length > 0) {
+  //     try {
+  //       const promises = messagesToSetReaded.map((message) =>
+  //         axiosInstance.put(`chat/readed/${message?.id}`),
+  //       );
+  //       await Promise.all(promises);
+  //       dispatch(setAllConversationMessagesToRead());
+  //       getUsersMessages();
+  //     } catch (error) {
+  //       console.error("Error setting messages to read", error);
+  //     }
+  //   }
+  // };
 
-  useEffect(() => {
-    if (allMessages && allMessages.length > 0) {
-      setAllToRead();
-    }
-  }, [allMessages]);
+  // useEffect(() => {
+  //   if (allMessages && allMessages.length > 0) {
+  //     setAllToRead();
+  //   }
+  // }, [allMessages]);
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 500);
   }, []);
-
-  const userFollowing = userData?.following || [];
-
-  const handleFollow = () => {
-    setShowOptionsModal(false);
-    let actualUser = _.cloneDeep(userData);
-    const actualFollowers =
-      allUsers.filter((user) => user?.id === selectedUserDetails?.id)[0]
-        .followers || [];
-    const newFollowers = actualFollowers.includes(userData?.id)
-      ? actualFollowers.filter((follower) => follower !== userData?.id)
-      : [...actualFollowers, userData?.id];
-
-    const newFollowingArray = userFollowing?.includes(selectedUserDetails?.id)
-      ? userFollowing.filter((followed) => followed !== selectedUserDetails?.id)
-      : [...userFollowing, selectedUserDetails?.id];
-    actualUser.user.following = newFollowingArray;
-
-    dispatch(
-      updateUserData({
-        id: selectedUserDetails?.id,
-        body: { followers: newFollowers },
-      }),
-    )
-      .then((data) => {
-        dispatch(
-          updateUserData({
-            id: userData?.id,
-            body: { following: newFollowingArray },
-          }),
-        );
-      })
-      .then((response) => {
-        if (newFollowers.includes(userData?.id)) {
-          dispatch(
-            sendNotification({
-              title: "Follow",
-              message: `${user.user.nickname} ha comenzado a seguirte`,
-              recipientId: selectedUserDetails?.id,
-              date: new Date(),
-              read: false,
-              prop1: {
-                userId: userData?.id,
-                userData: {
-                  ...userData,
-                },
-              },
-            }),
-          );
-        }
-        dispatch(getAllUsers());
-        dispatch(updateUser(actualUser));
-      });
-    return;
-  };
-
-  const handleRemoveChat = () => {
-    setShowDeletePopUp(false);
-    const body = {
-      senderId: userData?.id.toString(),
-      receiverId: route?.params?.receiverId?.toString(),
-      room: roomId,
-    };
-    axiosInstance.post("chat/marcarMensajesComoEliminados", body);
-  };
 
   return (
     <LinearGradient
@@ -220,7 +217,6 @@ const OpenedChat = () => {
         >
           <Pressable
             onPress={() => {
-              getUsersMessages();
               navigation.goBack();
             }}
           >
@@ -250,7 +246,7 @@ const OpenedChat = () => {
               }}
               numberOfLines={1}
             >
-              {route.params.receiverName}
+              {route?.params?.receiverName}
             </Text>
           </TouchableOpacity>
         </View>
@@ -304,14 +300,13 @@ const OpenedChat = () => {
           </Pressable>
 
           <Pressable
-            onPress={() =>
-              navigation.navigate(
-                "OtherUserProfile",
-                allUsers.filter(
-                  (user) => user.id.toString() === route?.params?.receiverId,
-                )[0],
-              )
-            }
+            onPress={() => {
+              if (!route.params.isGroup) {
+                return navigation.navigate("OtherUserProfile", usuario);
+              } else {
+                setShowTaggedsModal(true);
+              }
+            }}
           >
             <Image
               style={{
@@ -321,8 +316,8 @@ const OpenedChat = () => {
               }}
               contentFit="cover"
               source={
-                selectedUserDetails?.profilePicture
-                  ? { uri: selectedUserDetails?.profilePicture }
+                usuario?.profilePicture
+                  ? { uri: usuario?.profilePicture }
                   : require("../../assets/greenPerson.png")
               }
             />
@@ -358,16 +353,37 @@ const OpenedChat = () => {
             paddingLeft: 10,
           }}
         >
-          {allMessages?.map((chat) => (
-            <SingleMessage
-              user={allUsers.find((u) => u.id === chat.senderId)}
-              hour={getTimeFromDate(chat.createdAt)}
-              key={chat?.id}
-              text={chat?.message}
-              isMy={chat?.senderId.toString() === userData?.id.toString()}
-              read={chat?.isReaded}
-            />
-          ))}
+          {allMessages.length > 0 &&
+            allMessages?.map((msg, i) => {
+              if (chat2.members) {
+                const user = chat2.members.find((m) => m.id === msg?.senderId);
+                return (
+                  <SingleMessage
+                    userex={user}
+                    hour={getTimeFromDate(msg.createdAt)}
+                    key={i}
+                    text={msg?.message}
+                    isMy={msg?.senderId.toString() === userData?.id.toString()}
+                    read={msg?.isReaded}
+                  />
+                );
+              } else {
+                return (
+                  <SingleMessage
+                    userex={
+                      chat2?.userA?.id === userData?.id
+                        ? chat2?.userB
+                        : chat2?.userA
+                    }
+                    hour={getTimeFromDate(msg.createdAt)}
+                    key={i}
+                    text={msg?.message}
+                    isMy={msg?.senderId.toString() === userData?.id.toString()}
+                    read={msg?.isReaded}
+                  />
+                );
+              }
+            })}
         </View>
       </ScrollView>
       <View
@@ -421,6 +437,22 @@ const OpenedChat = () => {
           </LinearGradient>
         </Pressable>
       </View>
+      <Modal animationType="fade" transparent visible={showTaggedsModal}>
+        <TouchableWithoutFeedback onPress={() => setShowTaggedsModal(false)}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Miembros
+              members={chat2.members}
+              onClose={() => setShowTaggedsModal(false)}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </LinearGradient>
   );
 };

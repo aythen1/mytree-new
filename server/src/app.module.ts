@@ -29,6 +29,7 @@ import { WhishListItemsModule } from './whish-list-items/whish-list-items.module
 import { Invitations } from './invitations/entities/invitation.entity';
 import { WishListItems } from './whish-list-items/entities/whish-list-item.entity';
 import { GroupInfo } from './chat/entities/group.entity';
+import { ChatEntity } from './chat/entities/chat.entity';
 
 @Module({
   imports: [
@@ -43,7 +44,21 @@ import { GroupInfo } from './chat/entities/group.entity';
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASS'),
         database: configService.get<string>('DB_NAME'),
-        entities: [User, Post, Notification, History, Comment,Album, Event, MessageEntity,Diary ,Invitations,WishListItems,GroupInfo],
+        entities: [
+          User,
+          Post,
+          Notification,
+          History,
+          Comment,
+          Album,
+          Event,
+          MessageEntity,
+          Diary,
+          Invitations,
+          WishListItems,
+          GroupInfo,
+          ChatEntity,
+        ],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -68,11 +83,9 @@ import { GroupInfo } from './chat/entities/group.entity';
       }),
       inject: [ConfigService],
     }),
-
   ],
   controllers: [],
-  providers: [ MessageService, ChatService],
+  providers: [MessageService, ChatService],
   exports: [],
 })
-export class AppModule { }
-
+export class AppModule {}

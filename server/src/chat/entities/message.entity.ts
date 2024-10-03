@@ -1,4 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn ,CreateDateColumn, UpdateDateColumn} from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+} from 'typeorm';
+import { ChatEntity } from './chat.entity';
+import { GroupInfo } from './group.entity';
 
 export enum DeleteStatus {
   TRUE = 'true',
@@ -6,20 +15,16 @@ export enum DeleteStatus {
   NULL = 'null',
 }
 
-
 @Entity({ name: 'message' })
 export class MessageEntity {
-
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
 
   @CreateDateColumn({ type: 'timestamp', nullable: true })
   createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp', nullable: true })
   updatedAt: Date;
-
 
   @Column()
   senderId: string; // El ID del remitente del mensaje
@@ -39,6 +44,9 @@ export class MessageEntity {
   @Column({ nullable: true })
   type: string;
 
+  @ManyToOne(() => ChatEntity, (chat) => chat.messages)
+  chat: ChatEntity; // Relación con el chat
+
   @Column({ default: null, nullable: true })
   senderDelete: boolean; // Estado de eliminación del mensaje para el remitente
 
@@ -56,4 +64,7 @@ export class MessageEntity {
 
   @Column({ type: 'simple-array', nullable: true })
   prop4: string[] | null;
+
+  @ManyToOne(() => GroupInfo, (group) => group.messages)
+  group: GroupInfo;
 }

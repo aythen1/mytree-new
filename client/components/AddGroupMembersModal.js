@@ -5,18 +5,25 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FontFamily, FontSize, Color, Padding, Border } from "../GlobalStyles";
 import Checkbox from "./Checkbox";
 import { useSelector } from "react-redux";
+import filterFriendsFamily from "../screens/utils/arrayUsuarios";
 
 const AddGroupMembersModal = ({ onClose, taggedUsers, setTaggedUsers }) => {
   const { allUsers, userData } = useSelector((state) => state.users);
 
+  const [friends, setFriends] = React.useState([]);
+  const [familys, setFamilys] = React.useState([]);
+
+  React.useEffect(() => {
+    setFriends(filterFriendsFamily(userData).friends);
+    setFamilys(filterFriendsFamily(userData).family);
+  }, []);
+
   const handleToggleTag = (userId) => {
-    if (taggedUsers.includes(userId.toString())) {
-      const newArray = taggedUsers.filter(
-        (id) => id.toString() !== userId.toString(),
-      );
+    if (taggedUsers.includes(userId)) {
+      const newArray = taggedUsers.filter((id) => id.toString() !== userId);
       setTaggedUsers(newArray);
     } else {
-      setTaggedUsers([...taggedUsers, userId.toString()]);
+      setTaggedUsers([...taggedUsers, userId]);
     }
   };
 
@@ -86,8 +93,8 @@ const AddGroupMembersModal = ({ onClose, taggedUsers, setTaggedUsers }) => {
             alignItems: "center",
           }}
         >
-          {userFamily.length > 0 &&
-            userFamily.map((familyMember, index) => {
+          {familys.length > 0 &&
+            familys.map((familyMember, index) => {
               if (true)
                 return (
                   <View
@@ -107,12 +114,8 @@ const AddGroupMembersModal = ({ onClose, taggedUsers, setTaggedUsers }) => {
                         style={{ width: 30, height: 30, borderRadius: 50 }}
                         contentFit="cover"
                         source={
-                          allUsers.filter(
-                            (user) => user.id.toString() === familyMember,
-                          )[0]?.profilePicture
-                            ? allUsers.filter(
-                                (user) => user.id.toString() === familyMember,
-                              )[0]?.profilePicture
+                          familyMember?.profilePicture
+                            ? { uri: familyMember?.profilePicture }
                             : require("../assets/frame-1547754875.png")
                         }
                       />
@@ -128,19 +131,13 @@ const AddGroupMembersModal = ({ onClose, taggedUsers, setTaggedUsers }) => {
                           fontSize: FontSize.size_base,
                         }}
                       >
-                        {allUsers.filter(
-                          (user) => user.id.toString() === familyMember,
-                        )[0]?.username +
-                          " " +
-                          allUsers.filter(
-                            (user) => user.id.toString() === familyMember,
-                          )[0]?.apellido}
+                        {familyMember?.username + " " + familyMember?.apellido}
                       </Text>
                     </View>
                     <Checkbox
-                      checked={taggedUsers.includes(familyMember.toString())}
+                      checked={taggedUsers.includes(familyMember.id.toString())}
                       setChecked={() =>
-                        handleToggleTag(familyMember.toString())
+                        handleToggleTag(familyMember.id.toString())
                       }
                     />
                   </View>
@@ -192,8 +189,8 @@ const AddGroupMembersModal = ({ onClose, taggedUsers, setTaggedUsers }) => {
             alignItems: "center",
           }}
         >
-          {userFriends.length > 0 &&
-            userFriends.map((friendMember, index) => {
+          {friends.length > 0 &&
+            friends.map((friendMember, index) => {
               if (true)
                 return (
                   <View
@@ -213,12 +210,8 @@ const AddGroupMembersModal = ({ onClose, taggedUsers, setTaggedUsers }) => {
                         style={{ width: 30, height: 30, borderRadius: 50 }}
                         contentFit="cover"
                         source={
-                          allUsers.filter(
-                            (user) => user.id.toString() === friendMember,
-                          )[0]?.profilePicture
-                            ? allUsers.filter(
-                                (user) => user.id.toString() === friendMember,
-                              )[0]?.profilePicture
+                          friendMember?.profilePicture
+                            ? { uri: friendMember?.profilePicture }
                             : require("../assets/frame-1547754875.png")
                         }
                       />
@@ -234,19 +227,13 @@ const AddGroupMembersModal = ({ onClose, taggedUsers, setTaggedUsers }) => {
                           fontSize: FontSize.size_base,
                         }}
                       >
-                        {allUsers.filter(
-                          (user) => user.id.toString() === friendMember,
-                        )[0]?.username +
-                          " " +
-                          allUsers.filter(
-                            (user) => user.id.toString() === friendMember,
-                          )[0]?.apellido}
+                        {friendMember?.username + " " + friendMember?.apellido}
                       </Text>
                     </View>
                     <Checkbox
-                      checked={taggedUsers.includes(friendMember.toString())}
+                      checked={taggedUsers.includes(friendMember.id.toString())}
                       setChecked={() =>
-                        handleToggleTag(friendMember.toString())
+                        handleToggleTag(friendMember.id.toString())
                       }
                     />
                   </View>

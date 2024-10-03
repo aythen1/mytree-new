@@ -21,110 +21,105 @@ import { isLoading } from "expo-font";
 import axiosInstance from "../../apiBackend";
 import TopBar from "../../components/TopBar";
 import { setScreen } from "../../redux/slices/user.slices";
+import { chatGroups, getUserChats } from "../../redux/actions/chat";
+import filterFriendsFamily from "../utils/arrayUsuarios";
 
 const MENSAJERA = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
-  const { allMessages, groups, allChats } = useSelector((state) => state.chats);
+  const [userChats, setUserChats] = useState([]);
+  const [userGroups, setUserGroups] = useState([]);
+
+  const {
+    allMessages,
+    groups,
+    allChats,
+    userChats: Chaats,
+  } = useSelector((state) => state.chats);
+
+  useEffect(() => {
+    dispatch(getUserChats(userData?.id)).then((e) => {
+      setUserChats(e.payload.data);
+      dispatch(chatGroups(userData?.id)).then((a) => {
+        console.log(a.payload, "PAY");
+        const all = [...a.payload];
+        setUserChats(all.concat(e.payload.data));
+        setUserGroups(a.payload);
+      });
+    });
+  }, []);
+
   const { allUsers, userData: usuario } = useSelector((state) => state.users);
   const { usersWithMessages, userData, getUsersMessages } = useContext(Context);
   const [selectedFilter, setSelectedFilter] = useState("All");
-  const [filteredUsersWithMessages, setFilteredUsersWithMessages] = useState(
-    usersWithMessages || [],
-  );
-
-  const sortUsers = (userA, userB) => {
-    const isInMessagesA = filteredUsersWithMessages?.some(
-      (user) => user.id === userA.id,
-    );
-    const isInMessagesB = filteredUsersWithMessages?.some(
-      (user) => user.id === userB.id,
-    );
-
-    if (isInMessagesA && !isInMessagesB) {
-      return -1;
-    } else if (!isInMessagesA && isInMessagesB) {
-      return 1;
-    } else {
-      return 0;
-    }
-  };
 
   useFocusEffect(() => {
     dispatch(setScreen("Mensajería"));
   });
 
-  const filteredUsers = allUsers
-    ?.filter(
-      (user) =>
-        user?.username?.toLowerCase()?.includes(search?.toLowerCase()) ||
-        user?.apellido?.toLowerCase()?.includes(search?.toLowerCase()),
-    )
-    .sort(sortUsers);
-
-  const filterUsers = useCallback(() => {
-    if (!selectedFilter || !allUsers || !userData || !usersWithMessages) {
-      return;
-    }
+  const filterUsers = () => {
+    // dispatch(getUserChats(userData?.id));
 
     setLoading(true);
-
-    const user = allUsers.find((user) => user.id === userData.id);
-    const userFamily = user?.familyIds || [];
-    const userFriends = user?.friendsIds || [];
-
-    const filterAndSetUsers = (filteredUsers) => {
-      const uniqueUsers = [];
-      const seenUsernames = new Set();
-
-      for (const user of filteredUsers) {
-        if (!seenUsernames.has(user.id)) {
-          seenUsernames.add(user.id);
-          uniqueUsers.push(user);
-        }
-      }
-
-      setFilteredUsersWithMessages(uniqueUsers);
-      setLoading(false);
-    };
-
-    let filteredUsers = [];
-
+    console.log("entra");
+    const { family, friends } = filterFriendsFamily(userData);
+    console.log(family, friends, "entra");
+    const friendIds = friends.flatMap((friend) =>
+      friend.id ? [friend.id] : friend,
+    ); // Asegúrate de obtener los IDs de `friends`
+    const familyIds = family.flatMap((family) =>
+      family.id ? [family.id] : family,
+    ); // Asegúrate de obtener los IDs de `friends`
     switch (selectedFilter) {
       case "All":
-        filteredUsers = usersWithMessages.filter((e) => e.username);
-        filteredUsers = [...filteredUsers, ...groups];
+        setLoading(false);
+        const nww = [...Chaats];
+        setUserChats(userGroups.concat(nww));
+
         break;
       case "Friends":
-        filteredUsers = usersWithMessages.filter((user) =>
-          userFriends.includes(user.id),
-        );
+        const chats = Chaats.filter((c) => {
+          const user = c.userA.id === userData.id ? c.userB : c.userA;
+
+          // Comprueba si el ID del usuario está en el array de friends
+          if (friendIds.includes(user.id)) {
+            return c; // Mantén el chat en el filtrado si el ID está en `friends`
+          }
+        });
+
+        console.log(chats, "entra");
+        setUserChats(chats);
+        setLoading(false);
         break;
       case "Family":
-        filteredUsers = usersWithMessages.filter((user) =>
-          userFamily.includes(user.id),
-        );
+        const chatsFamily = Chaats.filter((c) => {
+          const user = c.userA.id === userData.id ? c.userB : c.userA;
+
+          // Comprueba si el ID del usuario está en el array de friends
+          if (familyIds.includes(user.id)) {
+            return c; // Mantén el chat en el filtrado si el ID está en `friends`
+          }
+        });
+
+        console.log(chats, "entra");
+        setUserChats(chatsFamily);
+        setLoading(false);
         break;
       case "Groups":
-        filteredUsers = groups;
+        console.log(chats, "entra");
+        setUserChats(groups);
+        setLoading(false);
         break;
       default:
         break;
     }
-
-    filterAndSetUsers(filteredUsers);
-  }, [selectedFilter, allUsers, userData, usersWithMessages, groups]);
-
-  useFocusEffect(filterUsers);
+  };
 
   useEffect(() => {
-    getUsersMessages(userData);
-    if (allUsers && userData && usersWithMessages) {
-      filterUsers();
-    }
-  }, [allUsers, userData]);
+    filterUsers();
+  }, [selectedFilter]);
 
   return (
     <LinearGradient
@@ -207,17 +202,40 @@ const MENSAJERA = () => {
             paddingTop: 10,
           }}
         >
-          {search !== "" && filteredUsers.length > 0
-            ? filteredUsers?.map((user) => (
-                <ChatCard
-                  value={search}
-                  key={user.id}
-                  name={user.username + " " + user.apellido}
-                  selectedUserId={user.id}
-                />
-              ))
+          {search !== "" && userChats.length > 0
+            ? userChats?.map((user, i) => {
+                if (user?.groupName) {
+                  return (
+                    <ChatCard
+                      key={i}
+                      name={user?.groupName}
+                      selectedUserId={user.id}
+                      isGroup={true}
+                      userInfo={user}
+                    />
+                  );
+                } else {
+                  let usuario;
+                  if (user?.userA?.id === userData?.id) {
+                    usuario = { ...user?.userB };
+                  } else {
+                    usuario = { ...user?.userA };
+                  }
+
+                  return (
+                    <ChatCard
+                      key={i}
+                      usuario={usuario}
+                      name={usuario?.username + " " + usuario?.apellido}
+                      selectedUserId={usuario?.id}
+                      isGroup={false}
+                      userInfo={user}
+                    />
+                  );
+                }
+              })
             : search !== "" &&
-              filteredUsers.length === 0 && (
+              userChats.length === 0 && (
                 <View
                   style={{
                     width: "100%",
@@ -232,23 +250,40 @@ const MENSAJERA = () => {
                   </Text>
                 </View>
               )}
-          {search === "" && filteredUsersWithMessages.length > 0
-            ? filteredUsersWithMessages?.map((user, i) => (
-                <ChatCard
-                  value={search}
-                  key={i}
-                  name={
-                    !user.groupName
-                      ? `${user?.username} ${user?.apellido}`
-                      : user?.groupName
+          {search === "" && userChats.length > 0
+            ? userChats?.map((user, i) => {
+                if (user?.groupName) {
+                  return (
+                    <ChatCard
+                      key={i}
+                      name={user?.groupName}
+                      selectedUserId={user.id}
+                      isGroup={true}
+                      userInfo={user}
+                    />
+                  );
+                } else {
+                  let usuario;
+                  if (user?.userA?.id === userData?.id) {
+                    usuario = { ...user?.userB };
+                  } else {
+                    usuario = { ...user?.userA };
                   }
-                  selectedUserId={user.id}
-                  isGroup={selectedFilter !== "Groups" ? false : true}
-                  userInfo={user}
-                />
-              ))
+                  console.log(usuario, "card");
+                  return (
+                    <ChatCard
+                      key={i}
+                      usuario={usuario}
+                      name={usuario?.username + " " + usuario?.apellido}
+                      selectedUserId={usuario?.id}
+                      isGroup={false}
+                      userInfo={user}
+                    />
+                  );
+                }
+              })
             : search === "" &&
-              filteredUsersWithMessages.length < 1 && (
+              userChats.length < 1 && (
                 <View
                   style={{
                     width: "100%",

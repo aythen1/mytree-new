@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository, } from '@nestjs/typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { getRepository, In, Repository } from 'typeorm';
 import { MessageEntity } from '../entities/message.entity';
 import { GroupInfo } from '../entities/group.entity';
@@ -15,21 +15,23 @@ export class MessageService {
     @InjectRepository(MessageEntity)
     private messageRepository: Repository<MessageEntity>,
     @InjectRepository(GroupInfo)
-    private groupInfoRepository: Repository<GroupInfo>
+    private groupInfoRepository: Repository<GroupInfo>,
   ) {}
 
   async saveMessage(
     senderId: string,
     receiverId: string,
     room: string,
-    message: string
+    message: string,
+    chat: any,
   ): Promise<MessageEntity> {
     const newMessage = this.messageRepository.create({
       senderId,
       receiverId,
       room,
       message,
-      isReaded: false
+      isReaded: false,
+      chat,
     });
     return await this.messageRepository.save(newMessage);
   }
@@ -38,7 +40,7 @@ export class MessageService {
     room: string,
     senderId: string,
     receiverId: string,
-    createdAt?: Date
+    createdAt?: Date,
   ): Promise<MessageEntity[]> {
     try {
       console.log('room:', room);
@@ -60,7 +62,7 @@ export class MessageService {
       if (createdAt) {
         const date = new Date(createdAt); // Convierte la cadena de texto en un objeto Date
         query = query.andWhere('message.createdAt < :createdAt', {
-          createdAt: date
+          createdAt: date,
         }); // Pasando createdAt como parámetro
         query = query.orderBy('message.createdAt', 'DESC'); // Re-ordenar por fecha de creación (descendente)
       }
@@ -76,7 +78,10 @@ export class MessageService {
     }
   }
 
-  async getMessagesForReceiver(receiverId: string, createdAt?: Date): Promise<MessageEntity[]> {
+  async getMessagesForReceiver(
+    receiverId: string,
+    createdAt?: Date,
+  ): Promise<MessageEntity[]> {
     try {
       console.log('receiverId:', receiverId);
       console.log('data from backend:', createdAt);
@@ -88,7 +93,9 @@ export class MessageService {
 
       if (createdAt) {
         const date = new Date(createdAt);
-        query = query.andWhere('message.createdAt < :createdAt', { createdAt: date });
+        query = query.andWhere('message.createdAt < :createdAt', {
+          createdAt: date,
+        });
         query = query.orderBy('message.createdAt', 'DESC');
       }
 
@@ -106,14 +113,14 @@ export class MessageService {
   async getMessagesBetweenUsers(
     senderId: string,
     receiverId: string,
-    room: string
+    room: string,
   ): Promise<MessageEntity[]> {
     try {
       const messageList = await this.messageRepository.find({
         where: [
           { senderId, receiverId, room },
-          { senderId: receiverId, receiverId: senderId, room }
-        ]
+          { senderId: receiverId, receiverId: senderId, room },
+        ],
       });
 
       return messageList;
@@ -146,7 +153,7 @@ export class MessageService {
 
   async getVisibleMessages(
     senderId: string,
-    receiverId: string
+    receiverId: string,
   ): Promise<MessageEntity[]> {
     try {
       const messages = await this.messageRepository.find({
@@ -154,8 +161,8 @@ export class MessageService {
           senderId,
           receiverId,
           senderDelete: null, // El mensaje no ha sido eliminado por el remitente
-          receiverDelete: null // El mensaje no ha sido eliminado por el receptor
-        }
+          receiverDelete: null, // El mensaje no ha sido eliminado por el receptor
+        },
       });
       return messages;
     } catch (error) {
@@ -166,14 +173,14 @@ export class MessageService {
   async marcarMensajesComoEliminados(
     senderId: string,
     receiverId: string,
-    room: string
+    room: string,
   ) {
     // Encuentra todos los mensajes entre los dos usuarios en la sala especificada
     const mensajes = await this.messageRepository.find({
       where: [
         { senderId, receiverId, room },
-        { senderId: receiverId, receiverId: senderId, room }
-      ]
+        { senderId: receiverId, receiverId: senderId, room },
+      ],
     });
 
     // Marca los mensajes como eliminados para el usuario que desea eliminarlos
@@ -189,7 +196,6 @@ export class MessageService {
     await this.messageRepository.save(mensajes);
   }
 
-  
   //----------------
   // async saveGroupMessages(
   //   senderId: string,
@@ -205,8 +211,6 @@ export class MessageService {
   //   });
   //   return await this.messageRepository.save(newMessage);
   // }
-
-
 
   // async getMessagesForGroupRoom(
   //   room: string
@@ -226,7 +230,6 @@ export class MessageService {
   // }
   //----------------
 
-
   // Crear grupo
   async createGroupInfo(groupInfoData: Partial<GroupInfo>): Promise<GroupInfo> {
     try {
@@ -238,94 +241,104 @@ export class MessageService {
         groupName: groupInfoData.groupName,
         membersIds: groupInfoData.membersIds,
       });
-  
+
       // Guardar el grupo en la base de datos
       const savedGroup = await this.groupInfoRepository.save(newGroup);
-  
+
       // Si hay miembros, actualiza la relación en cada usuario
       if (groupInfoData.membersIds && groupInfoData.membersIds.length > 0) {
         const memberIds = groupInfoData.membersIds;
-        
-     
-  
+
         // // Actualizar la relación de grupo en cada usuario
         // await Promise.all(users.map(async (user) => {
         //   user.groups = user.groups || []
         //   // Inicializar groups como un array vacío si es undefined
         //   user.groups = [...user.groups,savedGroup];
-  
+
         //   // Agregar el nuevo grupo solo si no está ya en la lista
-         
-          
+
         //     await this.userRepository.save(user);
-          
+
         // }));
-  
+
         // Actualizar la relación de miembros en el grupo
         savedGroup.members = await this.userRepository.find({
-          where: { id: In(memberIds) }
+          where: { id: In(memberIds) },
         });
-        console.log(savedGroup)
+        console.log(savedGroup);
         await this.groupInfoRepository.save(savedGroup);
       }
-  
+
       // Devolver el grupo con la relación de miembros
-      return savedGroup
+      return savedGroup;
     } catch (error) {
       console.error('Error al crear el grupo:', error);
       throw new Error('Error al crear el grupo.');
     }
   }
-  
 
   //traer todos los usuarios de un grupo
 
-  
   async getGroupMembers(groupId: string): Promise<GroupInfo[]> {
     try {
-      console.log("entra");
+      console.log('entra');
       const group = await this.groupInfoRepository.find({
         where: { id: groupId },
         relations: ['members'],
       });
-      console.log("group!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", group);
-  
+      console.log('group!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', group);
+
       if (!group) {
         throw new Error('Group not found');
       }
-  
+
       // Devolver los miembros del grupo (como objetos de usuario)
       return group;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
-     }
-
-
-//trae todos los grupos de un usuario
-async getUserGroups(userId: string): Promise<GroupInfo[]> {
-  try {
-    console.log("entra al servicio");
-
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-      relations: ['groups'] // Incluye la relación con los grupos
-    });
-
-    console.log("usuario con los grupos", user);
-
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    return user.groups; 
-  } catch (error) {
-    console.error('Error al obtener los grupos del usuario:', error);
-    throw ErrorManager.createSignatureError(error.message);
   }
-}
 
-    
+  async getGroupWithMessages(groupId: string): Promise<GroupInfo> {
+    try {
+      const group = await this.groupInfoRepository.findOne({
+        where: { id: groupId },
+        relations: ['members', 'messages'], // Asegúrate de incluir las relaciones necesarias
+      });
+
+      if (!group) {
+        throw new Error('Group not found');
+      }
+
+      return group;
+    } catch (error) {
+      console.error('Error al obtener el grupo con sus mensajes:', error);
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  //trae todos los grupos de un usuario
+  async getUserGroups(userId: string): Promise<GroupInfo[]> {
+    try {
+      console.log('entra al servicio');
+
+      const user = await this.userRepository.findOne({
+        where: { id: userId },
+        relations: ['groups', 'groups.messages', 'groups.members'], // Incluye la relación con los grupos
+      });
+
+      console.log('usuario con los grupos', user);
+
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      return user.groups;
+    } catch (error) {
+      console.error('Error al obtener los grupos del usuario:', error);
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
 
   // async saveGroupMessage(senderId: string, room: string, message: string, receiverIds: string[]): Promise<MessageEntity[]> {
   //   try {
@@ -339,10 +352,10 @@ async getUserGroups(userId: string): Promise<GroupInfo[]> {
   //         isReaded: false, // Por defecto no leído
   //         senderDelete: null,
   //         receiverDelete: null,
-  //         prop1: null, 
-  //         prop2: null, 
-  //         prop3: null, 
-  //         prop4: null, 
+  //         prop1: null,
+  //         prop2: null,
+  //         prop3: null,
+  //         prop4: null,
   //       });
   //       messages.push(await this.messageRepository.save(newMessage));
   //     }
@@ -351,7 +364,6 @@ async getUserGroups(userId: string): Promise<GroupInfo[]> {
   //     throw new Error(`Failed to save group message: ${error.message}`);
   //   }
   // }
-  
 
   // async markGroupMessagesAsRead(room: string, userId: string): Promise<void> {
   //   try {
@@ -363,7 +375,6 @@ async getUserGroups(userId: string): Promise<GroupInfo[]> {
   //     throw new Error(`Failed to mark group messages as read: ${error.message}`);
   //   }
   // }
-  
 
   // // async deleteGroupChat(room: string, userId: string): Promise<void> {
   // //   try {
@@ -373,10 +384,10 @@ async getUserGroups(userId: string): Promise<GroupInfo[]> {
   // //       { receiverDelete: true }
   // //     );
   // //     // Puedes hacer lo mismo para senderDelete si es necesario
-  
+
   // //     // Eliminar mensajes para los usuarios marcados como eliminados
   // //     await this.messageRepository.delete({ room, receiverDelete: true });
-  
+
   // //     // Actualizar información del grupo, como miembros
   // //     const groupInfo = await this.groupInfoRepository.findOne({ where: {room: room} });
   // //     if (groupInfo) {
@@ -387,7 +398,6 @@ async getUserGroups(userId: string): Promise<GroupInfo[]> {
   // //     throw new Error(`Failed to delete group chat: ${error.message}`);
   // //   }
   // // }
-  
 
   // // async addUsersToGroup(room: string, userIds: string[]): Promise<void> {
   // //   try {
@@ -400,7 +410,6 @@ async getUserGroups(userId: string): Promise<GroupInfo[]> {
   // //     throw new Error(`Failed to add users to group: ${error.message}`);
   // //   }
   // // }
-  
 
   // // async removeUsersFromGroup(room: string, userIds: string[]): Promise<void> {
   // //   try {
@@ -413,5 +422,24 @@ async getUserGroups(userId: string): Promise<GroupInfo[]> {
   // //     throw new Error(`Failed to remove users from group: ${error.message}`);
   // //   }
   // // }
-  
+
+  // message.service.ts
+  async saveMessageToGroup(
+    senderId: string,
+    groupId: string,
+    message: string,
+    group: GroupInfo,
+  ): Promise<MessageEntity> {
+    // Crear un nuevo mensaje relacionado al grupo
+    const newMessage = this.messageRepository.create({
+      senderId,
+      receiverId: groupId,
+      room: groupId, // Usar el ID del grupo como "room"
+      message,
+      group, // Relaciona el mensaje con el grupo
+    });
+
+    // Guardar el mensaje en la base de datos
+    return this.messageRepository.save(newMessage);
+  }
 }

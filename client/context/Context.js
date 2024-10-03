@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { useDispatch, useSelector } from "react-redux";
 import io from "socket.io-client";
-import { updateMessages } from "../redux/actions/chat";
+import { getUserChats, updateMessages, userChats } from "../redux/actions/chat";
 import axiosInstance from "../apiBackend";
 import { addUserDiary } from "../redux/slices/diaries.slices";
 import { getUserData } from "../redux/actions/user";
@@ -434,6 +434,11 @@ export const ContextProvider = ({ children }) => {
     setRoomId(room);
   });
 
+  socket.on("chats", (room) => {
+    console.log("ACTUALIZADA LO CHATS", room);
+    dispatch(getUserChats(userData?.id));
+  });
+
   socket.on("leaveRoom", (room) => {
     console.log("Leaving room: ", room);
     setRoomId();
@@ -444,24 +449,23 @@ export const ContextProvider = ({ children }) => {
     dispatch(updateMessages(msg));
   });
 
-  const joinRoom = (sender, receiver) => {
-    console.log("on joinRoom with id: ", sender, receiver);
-    socket.emit("joinRoom", { sender, receiver });
+  const joinRoom = (room) => {
+    console.log(room, "room");
+    socket.emit("joinGroup", { room: room });
   };
 
-  const leaveRoom = (sender, receiver) => {
-    console.log("on leaveRoom with id: ", sender, receiver);
-    socket.emit("leaveRoom", { sender, receiver });
+  const leaveRoom = (room) => {
+    socket.emit("leaveRoom", { room });
   };
 
-  const sendMessage = (message, sender, receiver) => {
+  const sendMessage = (message, sender, receiver, isGroup) => {
     console.log("=============SENDING MESSAGE=============");
     console.log("sending message", {
       message,
       sender,
       receiver,
     });
-    socket.emit("message", { message, sender, receiver });
+    socket.emit("message", { message, sender, receiver, isGroup });
   };
 
   const sortByDate = (array) => {

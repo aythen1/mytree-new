@@ -3,13 +3,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ErrorManager } from 'src/utils/error.manager';
 import { MessageEntity } from '../entities/message.entity';
 import { Repository } from 'typeorm';
+import { ChatEntity } from '../entities/chat.entity';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class ChatService {
   constructor(
-    
     @InjectRepository(MessageEntity)
-    private messageRepository: Repository<MessageEntity>
+    private messageRepository: Repository<MessageEntity>,
+    @InjectRepository(ChatEntity)
+    private chatRepository: Repository<ChatEntity>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
   create() {
     return 'This action adds a new socket';
@@ -27,57 +32,93 @@ export class ChatService {
     return `This action updates a #${id} socket`;
   }
 
-    // Método para obtener los mensajes de un usuario
-    async getChatsForUser(userId: string): Promise<MessageEntity[]> {
-      try {
-        const chats = await this.messageRepository
-          .createQueryBuilder('message')
-          .where('message.senderId = :userId AND message.senderDelete IS NULL OR message.receiverId = :userId AND message.receiverDelete IS NULL', { userId })
-          .orderBy('message.createdAt', 'DESC')
-          .getMany();
-  
-        return chats;
-      } catch (error) {
-        throw ErrorManager.createSignatureError(error.message);
-      }
-    }
-
-  
-
-    async getUserChats(userId: string): Promise<Record<string, MessageEntity[]>> {
-      const messages = await this.messageRepository
+  // Método para obtener los mensajes de un usuario
+  async getChatsForUser(userId: string): Promise<MessageEntity[]> {
+    try {
+      const chats = await this.messageRepository
         .createQueryBuilder('message')
-        .select([
-          'message.id',
-          'message.createdAt',
-          'message.updatedAt',
-          'message.senderId',
-          'message.receiverId',
-          'message.room',
-          'message.message',
-          'message.isReaded',
-          'message.senderDelete',
-          'message.receiverDelete',
-          'message.prop1',
-          'message.prop2',
-          'message.prop3',
-          'message.prop4',
-        ])
-        .where('message.senderId = :userId OR message.receiverId = :userId', { userId })
+        .where(
+          'message.senderId = :userId AND message.senderDelete IS NULL OR message.receiverId = :userId AND message.receiverDelete IS NULL',
+          { userId },
+        )
+        .orderBy('message.createdAt', 'DESC')
         .getMany();
-    
-      // Agrupar los mensajes por el campo "room"
-      const chats = messages.reduce((acc, message) => {
+
+      return chats;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  // Obtener todos los chats de un usuario
+  async getChatsForUserr(userId: string): Promise<ChatEntity[]> {
+    return this.chatRepository.find({
+      where: [{ userA: { id: userId } }, { userB: { id: userId } }],
+      relations: ['userA', 'userB', 'messages'], // Si deseas incluir la relación con los usuarios
+    });
+  }
+
+  // Encuentra si existe un chat entre los dos usuarios
+  async findChatBetweenUsers(
+    userAId: string,
+    userBId: string,
+  ): Promise<ChatEntity | null> {
+    return this.chatRepository.findOne({
+      where: [
+        { userA: { id: userAId }, userB: { id: userBId } },
+        { userA: { id: userBId }, userB: { id: userAId } },
+      ],
+      relations: ['messages', 'userA', 'userB'],
+    });
+  }
+
+  // Crea un nuevo chat entre los dos usuarios
+  async createChat(userAId: string, userBId: string): Promise<ChatEntity> {
+    const chat = this.chatRepository.create({
+      userA: { id: userAId },
+      userB: { id: userBId },
+    });
+    return this.chatRepository.save(chat);
+  }
+
+  async getUserChats(userId: string): Promise<Record<string, MessageEntity[]>> {
+    const messages = await this.messageRepository
+      .createQueryBuilder('message')
+      .select([
+        'message.id',
+        'message.createdAt',
+        'message.updatedAt',
+        'message.senderId',
+        'message.receiverId',
+        'message.room',
+        'message.message',
+        'message.isReaded',
+        'message.senderDelete',
+        'message.receiverDelete',
+        'message.prop1',
+        'message.prop2',
+        'message.prop3',
+        'message.prop4',
+      ])
+      .where('message.senderId = :userId OR message.receiverId = :userId', {
+        userId,
+      })
+      .getMany();
+
+    // Agrupar los mensajes por el campo "room"
+    const chats = messages.reduce(
+      (acc, message) => {
         if (!acc[message.room]) {
           acc[message.room] = [];
         }
         acc[message.room].push(message);
         return acc;
-      }, {} as Record<string, MessageEntity[]>);
-    
-      return chats;
-    }
-    
+      },
+      {} as Record<string, MessageEntity[]>,
+    );
+
+    return chats;
+  }
 
   public roomIdGenerator(senderId: string, receiverId: string): string {
     // Ordena los IDs alfabéticamente para asegurar la consistencia de la sala
@@ -85,6 +126,26 @@ export class ChatService {
     return sortedIds.join('_'); // Concatena los IDs con un guion bajo
   }
 
+  // Servicio para crear un nuevo chat
+  async createChatFun(userAId: string, userBId: string): Promise<ChatEntity> {
+    // Buscar los usuarios por su ID
+    const userA = await this.userRepository.findOne({ where: { id: userAId } });
+    const userB = await this.userRepository.findOne({ where: { id: userBId } });
+
+    if (!userA || !userB) {
+      throw new Error('Usuario no encontrado');
+    }
+
+    // Crear una nueva instancia de ChatEntity
+    const newChat = this.chatRepository.create({
+      userA,
+      userB,
+      createdAt: new Date(),
+    });
+
+    // Guardar el nuevo chat en la base de datos
+    return this.chatRepository.save(newChat);
+  }
 
   async getUsersInGroup(room: string): Promise<string[]> {
     try {
@@ -95,7 +156,7 @@ export class ChatService {
 
       // Utilizamos Set para mantener los receiverId únicos
       const uniqueReceiverIds = new Set<string>();
-      messages.forEach(message => uniqueReceiverIds.add(message.receiverId));
+      messages.forEach((message) => uniqueReceiverIds.add(message.receiverId));
 
       // Convertimos el Set a un arreglo de strings y lo devolvemos
       return Array.from(uniqueReceiverIds);
@@ -103,6 +164,4 @@ export class ChatService {
       throw ErrorManager.createSignatureError(error.message);
     }
   }
-
-  
 }

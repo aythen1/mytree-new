@@ -3,8 +3,7 @@ import React from "react";
 import { Image } from "expo-image";
 import { Color, FontFamily } from "../../GlobalStyles";
 
-const SingleMessage = ({ text, isMy, read, hour, user }) => {
-  console.log(user, "user");
+const SingleMessage = ({ text, isMy, read, hour, user, userex }) => {
   return (
     <View
       style={{
@@ -22,9 +21,9 @@ const SingleMessage = ({ text, isMy, read, hour, user }) => {
         <View style={{ flexDirection: "row", gap: 5, alignItems: "center" }}>
           <Image
             style={{ width: 20, height: 20, borderRadius: 50 }}
-            source={{ uri: user?.profilePicture }}
+            source={{ uri: userex?.profilePicture }}
           ></Image>
-          <Text style={{ fontSize: 10 }}>{user.username}</Text>
+          <Text style={{ fontSize: 10 }}>{userex?.username}</Text>
         </View>
       )}
       <Text

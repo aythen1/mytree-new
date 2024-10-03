@@ -52,17 +52,70 @@ export class ChatGateway
   @SubscribeMessage('message')
   async handleMessage(
     @ConnectedSocket() client: Socket,
-    @MessageBody() data: { sender: string; receiver: string; message: string },
+    @MessageBody()
+    data: {
+      sender: string;
+      receiver: string;
+      message: string;
+      isGroup?: boolean;
+    },
   ): Promise<any> {
-    const room = this.chatService.roomIdGenerator(data.sender, data.receiver);
-    const newMessage = await this.messageService.saveMessage(
-      data.sender,
-      data.receiver,
-      room,
-      data.message,
-    );
-    this.server.to(room).emit('message-server', newMessage);
-    console.log('message', room);
+    let newMessage;
+
+    if (data.isGroup) {
+      // Si es un mensaje para un grupo
+      const group = await this.messageService.getGroupWithMessages(
+        data.receiver,
+      );
+
+      if (!group) {
+        throw new Error('Group not found');
+      }
+
+      // Guardar el mensaje relacionado al grupo
+      newMessage = await this.messageService.saveMessageToGroup(
+        data.sender,
+        data.receiver, // ID del grupo como "room"
+        data.message,
+        group,
+      );
+
+      // Unir al cliente a la sala del grupo si no está unido
+      if (!client.rooms.has(group.id)) {
+        client.join(group.id);
+      }
+
+      // Emitir el mensaje a todos los miembros del grupo
+      client.to(group.id).emit('message-server', newMessage); // Emitir solo una vez a la sala
+    } else {
+      // Si es un mensaje entre usuarios (chat directo)
+      let chat = await this.chatService.findChatBetweenUsers(
+        data.sender,
+        data.receiver,
+      );
+
+      if (!chat) {
+        chat = await this.chatService.createChat(data.sender, data.receiver);
+      }
+
+      // Guardar el mensaje relacionado al chat
+      newMessage = await this.messageService.saveMessage(
+        data.sender,
+        data.receiver,
+        chat.id, // Usa el ID del chat como "room"
+        data.message,
+        chat,
+      );
+
+      // Asegurarse de que el cliente esté en la sala adecuada (chat.id)
+      if (!client.rooms.has(chat.id)) {
+        client.join(chat.id);
+      }
+
+      // Emitir el mensaje solo al receptor
+      client.to(chat.id).emit('message-server', newMessage); // Emitir solo una vez a la sala
+    }
+
     return newMessage;
   }
 
@@ -75,11 +128,10 @@ export class ChatGateway
   }
 
   @SubscribeMessage('leaveRoom')
-  handleRoomLeave(client: Socket, data: { sender: string; receiver: string }) {
-    const room = this.chatService.roomIdGenerator(data.sender, data.receiver);
-    client.leave(room);
-    client.emit('leaveRoom', room);
-    console.log('leaveRoom', room);
+  handleRoomLeave(client: Socket, data: { room: string }) {
+    client.leave(data.room);
+    client.emit('leaveRoom', data.room);
+    console.log('leaveRoom', data.room);
   }
 
   // @SubscribeMessage('groupMessage')

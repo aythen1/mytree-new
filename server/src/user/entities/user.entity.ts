@@ -13,6 +13,7 @@ import { History } from 'src/histories/entities/history.entity';
 import { Comment } from 'src/comments/entities/comment.entity';
 import { GroupInfo } from 'src/chat/entities/group.entity';
 import { Invitations } from 'src/invitations/entities/invitation.entity';
+import { ChatEntity } from 'src/chat/entities/chat.entity';
 
 @Entity()
 export class User {
@@ -187,4 +188,12 @@ export class User {
   @ManyToMany(() => User)
   @JoinTable()
   hobbyFriends: User[]; // Amigos por afición
+
+  // Relación con los chats donde el usuario es 'userA'
+  @OneToMany(() => ChatEntity, (chat) => chat.userA)
+  chatsAsUserA: ChatEntity[];
+
+  // Relación con los chats donde el usuario es 'userB'
+  @OneToMany(() => ChatEntity, (chat) => chat.userB)
+  chatsAsUserB: ChatEntity[];
 }

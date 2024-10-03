@@ -42,7 +42,7 @@ import axiosInstance from "../../apiBackend";
 import CommentsModal from "../../components/modals/CommentsModal";
 import { updateSelectedPostComments } from "../../redux/slices/comments.slices";
 import TopBar from "../../components/TopBar";
-import { chatGroups } from "../../redux/actions/chat";
+import { chatGroups, getUserChats, userChats } from "../../redux/actions/chat";
 import { getAllPosts } from "../../redux/actions/posts";
 import GestureRecognizer from "react-native-swipe-gestures";
 import { getAllUserAlbums } from "../../redux/actions/albums";
@@ -84,6 +84,7 @@ const Muro = () => {
     dispatch(getAllUsers()).finally(() => {
       getUsersMessages();
       dispatch(getAllUserNotifications(id));
+      dispatch(getUserChats(id));
       dispatch(getAllPosts(id));
       dispatch(chatGroups(id));
       dispatch(getAllUserAlbums(id));
