@@ -128,7 +128,7 @@ export class UserService {
     <div class="container">
       <h2 class="title">Bienvenido, ${createUserDto.username}!</h2>
       <p class="message">Gracias por registrarte en MyTree. Por favor, verifica tu correo electrónico haciendo clic en el botón de abajo.</p>
-      <a href="http://localhost:3000/user/verify-email/${user.id}" class="button">Verificar Correo</a>
+      <a href="http://6f651255-2a5d-4271-a8c7-35730a2de342.pub.instances.scw.cloud:3000/user/verify-email/${user.id}" class="button">Verificar Correo</a>
     </div>
   </body>
   </html>

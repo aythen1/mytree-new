@@ -20,7 +20,7 @@ export const updatePassword = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 // Inicio de sesión del usuario
@@ -33,7 +33,7 @@ export const login = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 // Inicia sesión con Google
@@ -46,7 +46,7 @@ export const googleSignIn = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 // Inicia sesión con Facebook
@@ -59,7 +59,7 @@ export const facebookSignIn = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 // Busca un usuario por número de teléfono
@@ -72,7 +72,7 @@ export const findUserByCellphone = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 // Busca un usuario por correo electrónico
@@ -85,7 +85,7 @@ export const findUserByEmail = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 // Agrega un amigo
@@ -94,13 +94,13 @@ export const addFriend = createAsyncThunk(
   async ({ userId, friendId }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `/user/${userId}/add-friend/${friendId}`,
+        `/user/${userId}/add-friend/${friendId}`
       );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 // Elimina un amigo
@@ -109,13 +109,13 @@ export const removeFriend = createAsyncThunk(
   async ({ userId, friendId }, { rejectWithValue }) => {
     try {
       const response = await axios.delete(
-        `/user/${userId}/remove-friend/${friendId}`,
+        `/user/${userId}/remove-friend/${friendId}`
       );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 // Agrega a favoritos
@@ -124,13 +124,13 @@ export const addToFavorites = createAsyncThunk(
   async ({ userId, postId }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `/user/${userId}/add-favorite/${postId}`,
+        `/user/${userId}/add-favorite/${postId}`
       );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 // Obtiene las notificaciones de usuario
@@ -143,7 +143,7 @@ export const getUserNotifications = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 // Obtiene las búsquedas recientes de usuario
@@ -156,7 +156,7 @@ export const getUserRecentSearches = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 // Agrega una búsqueda reciente
@@ -171,7 +171,7 @@ export const addRecentSearch = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 // Obtiene el feed de usuario
@@ -180,13 +180,13 @@ export const getUserFeed = createAsyncThunk(
   async ({ userId, option, param1, param2, param3 }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `/user/${userId}/feed?option=${option}&param1=${param1}&param2=${param2}&param3=${param3}`,
+        `/user/${userId}/feed?option=${option}&param1=${param1}&param2=${param2}&param3=${param3}`
       );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 // Obtiene los favoritos de usuario
@@ -199,7 +199,7 @@ export const getUserFavorites = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 // Obtiene los amigos de usuario
@@ -212,7 +212,7 @@ export const getUserFriends = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 // Obtiene los posts de usuario
@@ -225,7 +225,7 @@ export const getUserPosts = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 // Alterna el "me gusta" en un post
@@ -234,13 +234,13 @@ export const toggleLike = createAsyncThunk(
   async ({ userId, postId }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `/user/${userId}/post/${postId}/toggle-like`,
+        `/user/${userId}/post/${postId}/toggle-like`
       );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 // GESTION DE USUARIOS
@@ -253,7 +253,7 @@ export const createUser = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 export const getUsers = createAsyncThunk(
@@ -265,7 +265,7 @@ export const getUsers = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 export const getUserById = createAsyncThunk(
@@ -277,7 +277,7 @@ export const getUserById = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 export const updateUser = createAsyncThunk(
@@ -289,7 +289,7 @@ export const updateUser = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 export const deleteUser = createAsyncThunk(
@@ -301,7 +301,7 @@ export const deleteUser = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 // Slice del usuario
