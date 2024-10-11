@@ -14,6 +14,8 @@ import { Comment } from 'src/comments/entities/comment.entity';
 import { GroupInfo } from 'src/chat/entities/group.entity';
 import { Invitations } from 'src/invitations/entities/invitation.entity';
 import { ChatEntity } from 'src/chat/entities/chat.entity';
+import { Diary } from 'src/diary/entities/diary.entity';
+import { Album } from 'src/album/entities/album.entity';
 
 @Entity()
 export class User {
@@ -196,4 +198,10 @@ export class User {
   // Relación con los chats donde el usuario es 'userB'
   @OneToMany(() => ChatEntity, (chat) => chat.userB)
   chatsAsUserB: ChatEntity[];
+
+  @OneToMany(() => Diary, (diary) => diary.creator)
+  diaries: Diary[];
+
+  @OneToMany(() => Album, (album) => album.creator)
+  albums: Album[];
 }

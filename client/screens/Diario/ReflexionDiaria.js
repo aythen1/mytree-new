@@ -29,6 +29,59 @@ import {
 } from "../../redux/actions/diaries";
 import { LinearGradient } from "expo-linear-gradient";
 import Humor from "../../components/Humor";
+import { EditarDiario } from "./EditarDiario";
+
+const Diario = ({ selected, setEditingDiary, setSelected }) => {
+  const [text, setText] = useState(selected?.description || "");
+  const [title, setTitle] = useState(selected?.title || "");
+
+  return (
+    <View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Text style={{ fontSize: 24, fontWeight: 500 }}>
+          {selected?.title || "Sin título"}
+        </Text>
+        <Pressable
+          style={{
+            height: 18,
+            width: 18,
+            marginRight: 2,
+            alignSelf: "flex-end",
+          }}
+          onPress={() => {
+            setEditingDiary();
+            setSelected(null);
+            setText("");
+            setTitle("");
+          }}
+        >
+          <Image
+            style={{ height: "100%", width: "100%" }}
+            contentFit="cover"
+            source={require("../../assets/group-68463.png")}
+          />
+        </Pressable>
+      </View>
+      <Text
+        style={{
+          width: "100%",
+          marginTop: 10,
+          borderTopColor: Color.primario1,
+          borderTopWidth: 1,
+          paddingTop: 10,
+          fontSize: 18,
+        }}
+      >
+        {selected.description}
+      </Text>
+    </View>
+  );
+};
 
 const ReflexionDiaria = ({
   editing,
@@ -38,8 +91,9 @@ const ReflexionDiaria = ({
   selectedDate,
   pickedImages,
   setPickedImages,
+  diary,
 }) => {
-  const { userDiaries, selectedDiary, loading } = useSelector(
+  const { userDiaries, selectedDiary, loading, filterDiaries } = useSelector(
     (state) => state.diaries,
   );
   const { userData } = useSelector((state) => state.users);
@@ -52,16 +106,19 @@ const ReflexionDiaria = ({
 
   const [isEditingAll, setIsEditingAll] = useState(false);
   const [previousIsEditingAll, setPreviousIsEditingAll] = useState(false);
-  const [editedDiaries, setEditedDiaries] = useState(userDiaries);
+  const [editedDiaries, setEditedDiaries] = useState(filterDiaries);
 
   const [diaryImages, setDiaryImages] = useState(selected?.images || []);
   const dispatch = useDispatch();
   const { selectedSection, formatDateToNormal, editingDiary, setEditingDiary } =
     useContext(Context);
 
-  // Mantén un estado para el valor anterior de isEditingAll
+  useEffect(() => {
+    if (diary) {
+      setSelected(diary);
+    }
+  }, [diary]);
 
-  // Mantén un estado para el valor anterior de isEditingAll
   useEffect(() => {
     if (!edition) {
       const obj = {
@@ -113,13 +170,6 @@ const ReflexionDiaria = ({
     userData.id,
   ]);
 
-  // useEffect(() => {
-  //   if (selected) {
-  //     setText(selected?.description);
-  //     setTitle(selected?.title);
-  //   }
-  // }, [selected]);
-
   return (
     <View
       style={{
@@ -130,7 +180,7 @@ const ReflexionDiaria = ({
       <View
         style={{
           flexDirection: "row",
-          alignItems: "center",
+          alignItems: "baseline",
           justifyContent: "space-between",
         }}
       >
@@ -148,14 +198,28 @@ const ReflexionDiaria = ({
                     : "Personalizada"}
         </Text>
         <Pressable
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 5,
+          }}
           onPress={() => {
             setEdition(!edition);
             // setEditingDiary(diary.id)
             // setSelected(diary)
           }}
         >
+          <Text
+            style={{
+              textAlignVertical: "center",
+              color: !edition ? "#7EC18C" : "gray",
+            }}
+          >
+            Editar
+          </Text>
           <Image
-            style={{ width: 20, height: 20, marginTop: 10 }}
+            style={{ width: 20, height: 20 }}
             source={
               !edition
                 ? require("../../assets/lapizgris.png")
@@ -175,7 +239,7 @@ const ReflexionDiaria = ({
           size="xlarge"
           color={"#B7E4C0"}
         />
-      ) : userDiaries.length === 0 ? (
+      ) : filterDiaries.length === 0 && !selected?.id ? (
         <View
           style={{
             width: "100%",
@@ -189,220 +253,20 @@ const ReflexionDiaria = ({
         </View>
       ) : selected?.id ? (
         <ScrollView style={{ height: "100%", width: "100%" }}>
-          {selected.id == editingDiary ? (
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <TextInput
-                onChangeText={setTitle}
-                value={title}
-                maxLength={30}
-                style={{ fontSize: 19, width: "50%" }}
-              ></TextInput>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <Pressable
-                  style={{ height: 18, width: 18, marginRight: 15 }}
-                  onPress={() => {
-                    setEditingDiary();
-                    setSelected(null);
-                    setText("");
-                    setTitle("");
-                  }}
-                >
-                  <Image
-                    style={{ height: "100%", width: "100%" }}
-                    contentFit="cover"
-                    source={require("../../assets/group-68463.png")}
-                  />
-                </Pressable>
-                <Pressable
-                  style={{ height: 24, width: 24 }}
-                  onPress={() => setShowEmojisModal(true)}
-                >
-                  <Image
-                    style={{ height: "100%", width: "100%" }}
-                    contentFit="cover"
-                    source={require("../../assets/group2.png")}
-                  />
-                </Pressable>
-                <LinearGradient
-                  style={{ marginLeft: 20, borderRadius: 50 }}
-                  locations={[0, 1]}
-                  colors={["#dee274", "#7ec18c"]}
-                >
-                  <Pressable
-                    style={{
-                      paddingHorizontal: Padding.p_base,
-                      paddingTop: Padding.p_6xs,
-                      paddingBottom: Padding.p_5xs,
-                      backgroundColor: Color.linearBoton,
-                    }}
-                    onPress={async () => {
-                      const preDiary = { ...selected };
-                      preDiary.description = text;
-                      preDiary.title = title;
-
-                      const cloudinaryUrls = [];
-
-                      for (const image of pickedImages) {
-                        const formData = new FormData();
-                        formData.append("file", {
-                          uri: image.uri,
-                          type: "image/jpeg",
-                          name: image.filename
-                            ? image.filename
-                            : getFileName(image.uri),
-                        });
-                        formData.append(
-                          "upload_preset",
-                          "cfbb_profile_pictures",
-                        );
-                        formData.append("cloud_name", "dnewfuuv0");
-
-                        const response = await fetch(
-                          "https://api.cloudinary.com/v1_1/dnewfuuv0/image/upload",
-                          {
-                            method: "POST",
-                            body: formData,
-                          },
-                        );
-
-                        const data = await response.json();
-                        if (response.ok) {
-                          cloudinaryUrls.push(data.secure_url);
-                        } else {
-                          console.error("Error uploading image:", data);
-                        }
-                      }
-                      if (preDiary.id === "preDiary") {
-                        delete preDiary.id;
-                        dispatch(postDiary(preDiary)).then((res) => {
-                          const obj = {
-                            creatorId: userData.id,
-                            category: selectedSection,
-                          };
-                          obj.images = cloudinaryUrls;
-
-                          if (selectedDate) {
-                            obj.date = selectedDate;
-                          }
-                          dispatch(getUserDiariesByDateOrCategory(obj));
-                          setSelected({});
-                        });
-                      } else {
-                        console.log("updating diary...", preDiary);
-                        const updatedData = {
-                          description: preDiary.description,
-                          title,
-                        };
-                        updatedData.images = [
-                          ...diaryImages,
-                          ...cloudinaryUrls,
-                        ];
-                        dispatch(
-                          updateDiaryById({
-                            diaryId: preDiary.id,
-                            diaryData: updatedData,
-                          }),
-                        ).then((res) => {
-                          const obj = {
-                            creatorId: userData.id,
-                            category: selectedSection,
-                          };
-                          if (selectedDate) {
-                            obj.date = selectedDate;
-                          }
-
-                          dispatch(getUserDiariesByDateOrCategory(obj));
-                        });
-                      }
-                      setPickedImages([]);
-                      setEditingDiary();
-                      setSelected({});
-                      setText("");
-                      setTitle("");
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: FontSize.size_sm,
-                        lineHeight: 21,
-                        textAlign: "center",
-                        color: Color.white,
-                        fontFamily: FontFamily.lato,
-                        letterSpacing: 0,
-                      }}
-                    >
-                      Guardar
-                    </Text>
-                  </Pressable>
-                </LinearGradient>
-              </View>
-            </View>
-          ) : (
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <Text style={{ fontSize: 24, fontWeight: 500 }}>
-                {selected?.title || "Sin título"}
-              </Text>
-              <Pressable
-                style={{
-                  height: 18,
-                  width: 18,
-                  marginRight: 2,
-                  alignSelf: "flex-end",
-                }}
-                onPress={() => {
-                  setEditingDiary();
-                  setSelected(null);
-                  setText("");
-                  setTitle("");
-                }}
-              >
-                <Image
-                  style={{ height: "100%", width: "100%" }}
-                  contentFit="cover"
-                  source={require("../../assets/group-68463.png")}
-                />
-              </Pressable>
-            </View>
-          )}
           {selected.id === editingDiary ? (
-            <TextInput
-              style={{
-                fontSize: 18,
-                borderTopColor: Color.primario1,
-                borderTopWidth: 1,
-                paddingTop: 10,
-                marginTop: 10,
-              }}
-              multiline
-              onChangeText={setText}
-              value={text}
-            ></TextInput>
+            <EditarDiario
+              selected={selected}
+              selectedDate={selectedDate}
+              selectedSection={selectedSection}
+              setEditingDiary={setEditingDiary}
+              setSelected={setSelected}
+            ></EditarDiario>
           ) : (
-            <Text
-              style={{
-                width: "100%",
-                marginTop: 10,
-                borderTopColor: Color.primario1,
-                borderTopWidth: 1,
-                paddingTop: 10,
-                fontSize: 18,
-              }}
-            >
-              {selected.description}
-            </Text>
+            <Diario
+              selected={selected}
+              setEditingDiary={setEditingDiary}
+              setSelected={setSelected}
+            ></Diario>
           )}
         </ScrollView>
       ) : (
@@ -411,7 +275,7 @@ const ReflexionDiaria = ({
           contentContainerStyle={{ paddingBottom: 100 }}
           style={{ height: Dimensions.get("screen").height / 2 }}
         >
-          {userDiaries.map((diary, index) => (
+          {filterDiaries.map((diary, index) => (
             <SingleDiary
               setEditedDiaries={setEditedDiaries}
               multiEditing={!edition}
@@ -425,7 +289,7 @@ const ReflexionDiaria = ({
               setModalCreate={setModalCreate}
               modalCreate={modalCreate}
               openGroupIcon1={openGroupIcon1}
-              last={index === userDiaries.length - 1}
+              last={index === filterDiaries.length - 1}
             />
           ))}
         </ScrollView>

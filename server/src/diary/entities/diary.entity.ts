@@ -1,9 +1,11 @@
+import { User } from 'src/user/entities/user.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
 
 @Entity()
@@ -40,7 +42,11 @@ export class Diary {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
-  
+
   @Column('varchar') // or 'varchar', based on your preference
   creatorId: string;
+
+  // Relación con el usuario creador del diario
+  @ManyToOne(() => User, (user) => user.diaries)
+  creator: User;
 }

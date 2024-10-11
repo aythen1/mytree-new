@@ -12,6 +12,7 @@ import {
 import { User } from '../../user/entities/user.entity';
 import { Comment } from 'src/comments/entities/comment.entity';
 import { Notification } from 'src/notification/entities/notification.entity';
+import { Album } from 'src/album/entities/album.entity';
 
 @Entity()
 export class Post {
@@ -60,4 +61,7 @@ export class Post {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @ManyToOne(() => Album, (album) => album.posts)
+  album: Album;
 }

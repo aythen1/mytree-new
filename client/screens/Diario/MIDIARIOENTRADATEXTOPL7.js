@@ -38,51 +38,62 @@ import {
 import ImagePickerModal from "../Modals/ImagePickerModal";
 import TopBar from "../../components/TopBar";
 import { removeUserDiary } from "../../redux/slices/diaries.slices";
+import PopUpCalendarioDiary from "../../components/PopUpCalendarioDiary";
 
-const MIDIARIOENTRADATEXTOPL7 = () => {
+const monthsInSpanish = [
+  "enero",
+  "febrero",
+  "marzo",
+  "abril",
+  "mayo",
+  "junio",
+  "julio",
+  "agosto",
+  "septiembre",
+  "octubre",
+  "noviembre",
+  "diciembre",
+];
+
+const MIDIARIOENTRADATEXTOPL7 = ({ route }) => {
   const currentDate = new Date();
   const year = currentDate.getFullYear();
-  const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Los meses son 0-indexados
+  const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Asegura que el mes siempre tenga dos dígitos.
   const day = String(currentDate.getDate()).padStart(2, "0");
 
   const dispatch = useDispatch();
-  const { selectedSection, editingDiary, handleAddDiary } = useContext(Context);
+  const { pickImage, showCamera, setShowCamera, setEditingDiary } =
+    useContext(Context);
+  const { selectedSection, editingDiary, handleAddDiary, setSelectedSection } =
+    useContext(Context);
   const navigation = useNavigation();
   const [showEdit, setShowEdit] = useState(false);
   const [isSection, setIsSection] = useState("");
   const { userData } = useSelector((state) => state.users);
-  const { userDiaries } = useSelector((state) => state.diaries);
-
+  const { userDiaries: diarios } = useSelector((state) => state.diaries);
   const [modalCreate, setModalCreate] = useState(false);
-  const { pickImage, showCamera, setShowCamera, setEditingDiary } =
-    useContext(Context);
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedDate, setSelectedDate] = useState(`${year}-${month}-${day}`);
   const [showCalendar, setShowCalendar] = useState(false);
   const [showImagesModal, setShowImagesModal] = useState(false);
-  const [showEmojisModal, setShowEmojisModal] = useState(false);
+  const [userDiaries, setUserDiaries] = useState([]);
+  const [diaryParams, setDiaryParams] = useState({});
 
   const [pickedImages, setPickedImages] = useState([]);
   const [diaryImages, setDiaryImages] = useState([]);
 
-  const monthsInSpanish = [
-    "enero",
-    "febrero",
-    "marzo",
-    "abril",
-    "mayo",
-    "junio",
-    "julio",
-    "agosto",
-    "septiembre",
-    "octubre",
-    "noviembre",
-    "diciembre",
-  ];
-
   useEffect(() => {
     obtenerImagenesDeGaleria();
+    if (route?.params?.diary) {
+      setDiaryParams(route?.params?.diary);
+      const dateString = route?.params?.diary?.date;
+      if (dateString) {
+        const [year, month, day] = dateString.split("-"); // Divide la cadena de fecha en año, mes y día
+        setSelectedDate(`${year}-${month}-${day}`); // Asigna la fecha correctamente sin alterar el día
+      }
+      setSelectedSection(route?.params?.diary?.category);
+    }
   }, []);
 
   useEffect(() => {
@@ -91,7 +102,9 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
     if (selectedDate) {
       obj.date = selectedDate;
     }
-    dispatch(getUserDiariesByDateOrCategory(obj)).then((e) => {});
+    dispatch(getUserDiariesByDateOrCategory(obj)).then((e) => {
+      setUserDiaries(e.payload);
+    });
     // Aca cuando tenga la ruta desarrollo logica de get de diarios por categoria y selectedDate.
   }, [selectedDate, selectedSection]);
 
@@ -147,8 +160,9 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
   const [text, setText] = useState("");
   const [title, setTitle] = useState("");
 
-  const monthString = selectedDate?.slice(5, 7).split("0").join(""); // Elimina el "0" inicial si existe
+  const monthString = selectedDate?.slice(5, 7); // Elimina el "0" inicial si existe
   const monthNumber = parseInt(monthString, 10); // Convierte la cadena a un número
+  console.log(monthString, "NUMBER");
 
   return (
     <View
@@ -237,8 +251,8 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
         </CameraView>
       ) : (
         <View>
-          <View>
-            <TopBar></TopBar>
+          <View style={{ paddingTop: 20 }}>
+            {/* <TopBar></TopBar> */}
 
             <NavBarDiario setIsSection={setIsSection} isSection={isSection} />
 
@@ -289,6 +303,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
               {editingDiary === "preDiary" ? (
                 <ScrollView
                   style={{ width: "100%", height: "100%" }}
+                  showsVerticalScrollIndicator={false}
                   contentContainerStyle={{ paddingBottom: 500 }}
                 >
                   <Text style={[styles.reflexinDiaria, styles.hoyLoHeFlexBox]}>
@@ -304,7 +319,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                               ? "Descubriendo el mundo"
                               : "Personalizada"}
                   </Text>
-                  <View style={{}}>
+                  {/* <View style={{}}>
                     <View
                       style={{
                         width: "100%",
@@ -381,7 +396,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                           </View>
                         ))}
                     </View>
-                  </View>
+                  </View> */}
                   <View
                     style={{
                       flexDirection: "row",
@@ -421,7 +436,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                               }
                               setText("");
                               setTitle("");
-
+                              setDiaryParams(false);
                               setEditingDiary();
                               setPickedImages([]);
                             }}
@@ -479,16 +494,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                           </View>
                         </View>
                       )}
-                      <Pressable
-                        style={{ height: 24, width: 24 }}
-                        onPress={() => setShowEmojisModal(true)}
-                      >
-                        <Image
-                          style={{ height: "100%", width: "100%" }}
-                          contentFit="cover"
-                          source={require("../../assets/group2.png")}
-                        />
-                      </Pressable>
+
                       <LinearGradient
                         style={{ marginLeft: 20, borderRadius: 50 }}
                         locations={[0, 1]}
@@ -502,7 +508,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                             backgroundColor: Color.linearBoton,
                           }}
                           onPress={async () => {
-                            const ultimo = userDiaries[userDiaries.length - 1];
+                            const ultimo = diarios[diarios.length - 1];
                             const preDiary = { ...ultimo };
                             preDiary.description = text;
                             preDiary.title = title;
@@ -579,6 +585,12 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                                 if (selectedDate) {
                                   obj.date = selectedDate;
                                 }
+                                console.log(
+                                  res,
+                                  "ressssssssssss",
+                                  preDiary,
+                                  obj,
+                                );
 
                                 dispatch(getUserDiariesByDateOrCategory(obj));
                               });
@@ -586,6 +598,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                             setPickedImages([]);
                             setEditingDiary();
                             setText("");
+                            setDiaryParams(false);
                           }}
                         >
                           <Text
@@ -630,6 +643,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                 </ScrollView>
               ) : (
                 <ReflexionDiaria
+                  diary={diaryParams}
                   pickedImages={pickedImages}
                   setPickedImages={setPickedImages}
                   openGroupIcon1={openGroupIcon1}
@@ -657,7 +671,7 @@ const MIDIARIOENTRADATEXTOPL7 = () => {
                 style={{ width: "100%", height: "100%", left: 0, top: 0 }}
                 onPress={() => setShowCalendar(false)}
               />
-              <PopUpCalendario
+              <PopUpCalendarioDiary
                 fromDiary={true}
                 selectedDate={selectedDate}
                 setSelectedDate={setSelectedDate}

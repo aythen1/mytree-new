@@ -74,7 +74,7 @@ const Papers = () => {
                 <SingleDiary
                   setSelected={() =>
                     navigation.navigate("MIDIARIOENTRADATEXTOPL7", {
-                      date: diary,
+                      diary: diary,
                     })
                   }
                   multiEditing={true}

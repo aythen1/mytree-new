@@ -16,6 +16,6 @@ import { ChatModule } from 'src/chat/chat.module';
   ],
   controllers: [UserController],
   providers: [UserService], // Incluye UserRepository en la lista de proveedores
-  exports: [TypeOrmModule.forFeature([User])],
+  exports: [TypeOrmModule.forFeature([User]), UserService],
 })
 export class UserModule {}

@@ -44,6 +44,15 @@ export class DiaryController {
   findAllByUser(@Body('creatorId') creatorId: string) {
     return this.diaryService.findAllByUser(creatorId);
   }
+
+  // Endpoint para obtener los diarios de un usuario por año
+  @Get('user/:userId/year/:year')
+  getDiariesByYear(
+    @Param('userId') userId: string,
+    @Param('year') year: number, // Cambiado para aceptar el año como string
+  ) {
+    return this.diaryService.getDiariesByYear(userId, year);
+  }
   //filtra y trae todos de la misma categoria de un usuario
   @Post('/filter')
   async findByCategoryAndCreator(

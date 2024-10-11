@@ -27,8 +27,8 @@ export class UserService {
       port: 587,
       secure: false, // o true si usas SSL
       auth: {
-        user: 'azschiaffino@gmail.com',
-        pass: 'ccuk lafv fpmh bijv',
+        user: 'sportsmatchdigital.app@gmail.com',
+        pass: 'bwsg varr alfu cjsl',
       },
     });
   }
@@ -78,70 +78,80 @@ export class UserService {
       if (existingUser) {
         throw new ConflictException('Email already exists');
       }
-      const html = `
-      <!DOCTYPE html>
-      <html lang="es">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Bienvenido</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            padding: 20px;
-          }
-          
-          .container {
-            background-color: #fff;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          }
-          
-          .title {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 10px;
-          }
-          
-          .message {
-            font-size: 18px;
-            color: #666;
-            margin-bottom: 20px;
-          }
-          
-          .button {
-            background-color: #4CAF50;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-          }
-          
-          .button:hover {
-            background-color: #3e8e41;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <h2 class="title">Bienvenido, ${createUserDto.username}!</h2>
-          <p class="message">Gracias por utilizar SportsMatch.</p>
-          <button class="button">Comenzar</button>
-        </div>
-      </body>
-      </html>
-    `;
-
-      // this.sendMail(email, 'SportsMatch', html);
       const user = this.userRepository.create(createUserDto);
-      return await this.userRepository.save(user);
+      const savedUser = await this.userRepository.save(user);
+      const html = `
+  <!DOCTYPE html>
+  <html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifica tu correo</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        padding: 20px;
+      }
+      .container {
+        background-color: #fff;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .title {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 10px;
+      }
+      .message {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 20px;
+      }
+      .button {
+        background-color: #4CAF50;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+      }
+      .button:hover {
+        background-color: #3e8e41;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2 class="title">Bienvenido, ${createUserDto.username}!</h2>
+      <p class="message">Gracias por registrarte en MyTree. Por favor, verifica tu correo electrónico haciendo clic en el botón de abajo.</p>
+      <a href="http://localhost:3000/user/verify-email/${user.id}" class="button">Verificar Correo</a>
+    </div>
+  </body>
+  </html>
+`;
+
+      this.sendMail(email, 'MyTree', html);
+      return savedUser;
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  // Método para verificar el email
+  async verifyEmail(token: string): Promise<string> {
+    const user = await this.userRepository.findOne({ where: { id: token } });
+
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    user.emailVerified = true;
+    await this.userRepository.save(user);
+    return 'Correo electrónico verificado exitosamente';
   }
 
   // TRAE TODOS LOS USUARUIS
@@ -165,6 +175,8 @@ export class UserService {
         'universityFriends',
         'hobbyFriends',
         'nephews',
+        'diaries',
+        'posts',
       ], // Cargar todas las relacion
     });
     if (!user) {

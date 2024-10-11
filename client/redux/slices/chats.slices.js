@@ -6,6 +6,7 @@ import {
   getUserChat,
   getUserChats,
   getUserGroupChat,
+  updateChat,
   updateMessages,
   userChats,
 } from "../actions/chat";
@@ -32,6 +33,21 @@ const clubSlices = createSlice({
     },
     setAllChats: (state, action) => {
       state.allchats = action.payload;
+    },
+    updateChat: (state, action) => {
+      const copy = [...state.userChats];
+      const filter = copy.map((s) => {
+        if (s.id === action.payload.id) {
+          return {
+            ...s,
+            messages: action.payload.messages,
+          };
+        } else {
+          return s;
+        }
+      });
+      console.log(filter, "filterrrrr");
+      state.userChats = filter;
     },
     setAllConversationMessagesToRead: (state, action) => {
       const allToReaded = state.allMessages.map((message) => ({

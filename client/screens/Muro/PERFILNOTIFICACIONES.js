@@ -148,7 +148,12 @@ const PERFILNOTIFICACIONES = () => {
                                 {notification.user.username}{" "}
                                 {notification.user.apellido + " "}
                               </Text>
-                              <Text style={styles.teHaInvitadoTypo}>
+                              <Text
+                                style={{
+                                  ...styles.teHaInvitadoTypo,
+                                  fontSize: 14,
+                                }}
+                              >
                                 {notification.message + " "}
                               </Text>
                               <Text
@@ -163,7 +168,8 @@ const PERFILNOTIFICACIONES = () => {
                           </Text>
                         </View>
                         {notification?.post && (
-                          <Image
+                          <Image 
+                          
                             style={{
                               width: 40,
                               height: 40,
@@ -178,7 +184,8 @@ const PERFILNOTIFICACIONES = () => {
                         )}
                       </View>
                     </View>
-                    <Text
+                    <Text 
+                    
                       style={{
                         alignSelf: "flex-end",
                         fontSize: 10,

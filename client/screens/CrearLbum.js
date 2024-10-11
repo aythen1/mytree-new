@@ -8,14 +8,11 @@ import {
   Modal,
   ScrollView,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Compartir from "../components/Compartir";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
-import HeaderIcons from "../components/HeaderIcons";
-import TreeSVG from "../components/svgs/TreeSVG";
-import PlusSVG from "../components/svgs/PlusSVG";
-import SettingMuroSVG from "../components/svgs/SettingMuroSVG";
 import { FontAwesome } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import TopBar from "../components/TopBar";
@@ -28,20 +25,14 @@ const CrearLbum = () => {
   const { allPosts } = useSelector((state) => state.posts);
   const [relatedPosts, setRelatedPosts] = useState([]);
   const [selectedImage, setSelectedImage] = useState(
-    route?.params?.album?.images[0],
+    route?.params?.album?.posts[0]?.photos[0] || [],
   );
   const [vectorIcon1Visible, setVectorIcon1Visible] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
-    if (allPosts.length > 0 && route.params.album.id) {
-      setRelatedPosts(
-        allPosts
-          .filter((post) => post.user.id === userData.id)
-          .filter((post) => post.albums.includes(route.params.album.id))
-          .map((post) => post.photos)
-          .flat(),
-      );
+    if (route.params.album.id) {
+      setRelatedPosts(route?.params?.album?.posts);
     }
   }, []);
   const dispatch = useDispatch();
@@ -143,6 +134,7 @@ const CrearLbum = () => {
               source={{ uri: selectedImage }}
             />
           </View>
+
           <Text style={[styles.text, styles.textTypo, { fontSize: 12 }]}>
             {formatDate2(route?.params?.album?.date)}
           </Text>
@@ -156,13 +148,13 @@ const CrearLbum = () => {
               marginTop: 0,
             }}
           >
-            {route?.params?.album?.images?.map((image, index) => (
+            {route?.params?.album?.posts?.map((image, index) => (
               <Pressable
                 onLongPress={() => {
-                  setSelectedImage(image);
-                  handleUpdate(image);
+                  setSelectedImage(image?.photos[0]);
+                  handleUpdate(image?.photos[0]);
                 }}
-                onPress={() => setSelectedImage(image)}
+                onPress={() => setSelectedImage(image?.photos[0])}
                 key={index}
               >
                 <Image
@@ -172,9 +164,9 @@ const CrearLbum = () => {
                     width: (Dimensions.get("screen").width - 55) / 4,
                   }}
                   contentFit="cover"
-                  source={{ uri: image }}
+                  source={{ uri: image?.photos[0] }}
                 />
-                {selectedImage === image && (
+                {selectedImage === image?.photos[0] && (
                   <FontAwesome
                     style={{ position: "absolute", top: 2, right: 5 }}
                     size={20}
@@ -184,7 +176,7 @@ const CrearLbum = () => {
                 )}
               </Pressable>
             ))}
-            {relatedPosts.map((img, index) => (
+            {/* {relatedPosts.map((img, index) => (
               <Pressable
                 onPress={() => setSelectedImage(img)}
                 onLongPress={() => {
@@ -200,9 +192,9 @@ const CrearLbum = () => {
                     width: (Dimensions.get("screen").width - 55) / 4,
                   }}
                   contentFit="cover"
-                  source={{ uri: img }}
+                  source={{ uri: img?.photos[0] }}
                 />
-                {selectedImage === img && (
+                {selectedImage === img?.photos[0] && (
                   <FontAwesome
                     style={{ position: "absolute", top: 2, right: 5 }}
                     size={20}
@@ -223,7 +215,31 @@ const CrearLbum = () => {
                   D
                 </Text>
               </Pressable>
-            ))}
+            ))} */}
+          </View>
+          {route.params.album.taggedUsers && (
+            <Text style={{ fontWeight: 600 }}>Etiquetados</Text>
+          )}
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            {route.params.album.taggedUsers &&
+              route.params.album.taggedUsers.map((u) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("OtherUserProfile", u)}
+                  >
+                    <Image
+                      style={{
+                        marginVertical: 10,
+                        width: 40,
+                        height: 40,
+                        objectFit: "contain",
+                        borderRadius: 50,
+                      }}
+                      source={{ uri: u?.profilePicture }}
+                    ></Image>
+                  </TouchableOpacity>
+                );
+              })}
           </View>
         </View>
       </ScrollView>
@@ -353,7 +369,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   bienvenidosAMi: {
-    fontWeight: "500",
+    fontWeight: "700",
   },
   text: {
     fontWeight: "300",

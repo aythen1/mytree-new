@@ -128,6 +128,15 @@ export const updateMessages = createAsyncThunk(
   },
 );
 
+export const updateChat = createAsyncThunk("updateChat/chats", async (msg) => {
+  try {
+    console.log(msg, "esto da");
+    return msg;
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
 export const emptyAllMessages = () => async (dispatch) => {
   try {
     dispatch(setAllMessages([]));

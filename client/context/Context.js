@@ -3,7 +3,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { useDispatch, useSelector } from "react-redux";
 import io from "socket.io-client";
-import { getUserChats, updateMessages, userChats } from "../redux/actions/chat";
+import {
+  getUserChats,
+  updateChat,
+  updateMessages,
+  userChats,
+} from "../redux/actions/chat";
 import axiosInstance from "../apiBackend";
 import { addUserDiary } from "../redux/slices/diaries.slices";
 import { getUserData } from "../redux/actions/user";
@@ -63,7 +68,7 @@ export const ContextProvider = ({ children }) => {
         title: "",
         creatorId: userData.id,
         description: "",
-        privacyMode: "all",
+        privacyMode: "Todos",
         taggedUsers: [],
       }),
     );
@@ -397,7 +402,7 @@ export const ContextProvider = ({ children }) => {
 
   socket.on("connect", () => {
     console.log("Connected to server");
-    socket.emit("join", userData?.id);
+    socket.emit("joinGroup", { room: userData?.id });
   });
 
   socket.on("disconnect", () => {
@@ -434,10 +439,15 @@ export const ContextProvider = ({ children }) => {
     setRoomId(room);
   });
 
-  socket.on("chats", (room) => {
-    console.log("ACTUALIZADA LO CHATS", room);
-    dispatch(getUserChats(userData?.id));
-  });
+  // socket.on("chats", (room) => {
+  //   console.log("ACTUALIZADA LO CHATS", room);
+  //   return dispatch(getUserChats(userData?.id));
+  // });
+
+  // socket.on("chat", (chat) => {
+  //   console.log("ACTUALIZADA LO CHATS solo", chat);
+  //   return dispatch(updateChat(chat));
+  // });
 
   socket.on("leaveRoom", (room) => {
     console.log("Leaving room: ", room);

@@ -71,17 +71,13 @@ const MiLegado = ({ fromOther, otherId }) => {
               onPress={() => navigation.navigate("CrearLbum", { album })}
             >
               <Image
-                style={
-                  album.images[0]
-                    ? { width: 70, height: 70, borderRadius: 100 }
-                    : { width: 80, height: 80 }
-                }
+                style={{ width: 80, height: 80, borderRadius: 50 }}
                 contentFit="cover"
                 source={
                   album.coverPicture
-                    ? { uri: album.coverPicture }
-                    : album.images[0]
-                      ? { uri: album.images[0] }
+                    ? { uri: album?.coverPicture }
+                    : album?.posts[0]?.photos[0]
+                      ? { uri: album?.posts[0]?.photos[0] }
                       : require("../../assets/claire.png")
                 }
                 //
@@ -224,7 +220,12 @@ const MiLegado = ({ fromOther, otherId }) => {
         >
           {(fromOther ? otherUserDiaries : userDiaries)?.map((e, i) => {
             return (
-              <Pressable key={i}>
+              <Pressable
+                key={i}
+                onPress={() =>
+                  navigation.navigate("MIDIARIOENTRADATEXTOPL7", { diary: e })
+                }
+              >
                 <Image
                   style={{ ...styles.maskGroupIcon, borderRadius: 100 }}
                   contentFit="cover"

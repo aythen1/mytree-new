@@ -14,5 +14,6 @@ import { NotificationModule } from 'src/notification/notification.module';
   ],
   controllers: [PostsController],
   providers: [PostsService],
+  exports: [PostsService, TypeOrmModule.forFeature([Post])],
 })
 export class PostsModule {}

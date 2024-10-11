@@ -15,12 +15,11 @@ export class CreateNotificationDto {
   senderId?: string;
 
   @IsOptional()
-  post?: Post;
-
-  @IsOptional()
   @IsString()
   receiverId?: string;
 
+  @IsOptional()
+  post?: Post;
   @IsOptional()
   @IsString()
   type?: string;

@@ -33,6 +33,11 @@ export class UserController {
     return this.userService.getUsers();
   }
 
+  @Get('verify-email/:token')
+  async verifyEmail(@Param('token') token: string) {
+    return await this.userService.verifyEmail(token);
+  }
+
   @Get(':id')
   async getUserById(@Param('id') id: string) {
     return this.userService.getUserById(id);

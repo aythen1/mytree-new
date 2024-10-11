@@ -10,52 +10,35 @@ import {
 import { FontFamily, FontSize, Color } from "../../../GlobalStyles";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
+import filterFriendsFamily from "../../utils/arrayUsuarios";
 
 const BusquedaContactos = ({ searchOnContacts }) => {
   const { userData, allUsers } = useSelector((state) => state.users);
-  const [userFamily, setUserFamily] = useState(
-    allUsers.filter((user) => user.id === userData.id)[0]?.familyIds,
-  );
-  const [userFriends, setUserFriends] = useState(
-    allUsers.filter((user) => user.id === userData.id)[0]?.friendsIds,
-  );
+  const [family, setFamily] = useState(filterFriendsFamily(userData).family);
+  const [friends, setFriends] = useState(filterFriendsFamily(userData).friends);
   const navigation = useNavigation();
 
+  const [filteredFamily, setFilteredFamily] = useState(family);
+  const [filteredFriends, setFilteredFriends] = useState(friends);
+
   useEffect(() => {
-    if (searchOnContacts?.length > 0) {
-      const searchLower = searchOnContacts.toLowerCase();
-
-      const filterUsers = (userIds) => {
-        return userIds.filter((userId) => {
-          const user = allUsers.find((user) => user.id === userId);
-          if (user) {
-            const username = user.username?.toLowerCase() || "";
-            const fullname =
-              `${user.firstName || ""} ${user.lastName || ""}`.toLowerCase();
-            return (
-              username.includes(searchLower) || fullname.includes(searchLower)
-            );
-          }
-          return false;
-        });
-      };
-
-      setUserFamily(
-        filterUsers(allUsers.find((user) => user.id === userData.id).familyIds),
+    const filterContacts = (contacts, search) => {
+      return contacts.filter(
+        (contact) =>
+          contact.username.toLowerCase().includes(search.toLowerCase()) ||
+          contact.apellido.toLowerCase().includes(search.toLowerCase()) ||
+          contact.email.toLowerCase().includes(search.toLowerCase()),
       );
-      setUserFriends(
-        filterUsers(
-          allUsers.find((user) => user.id === userData.id).friendsIds,
-        ),
-      );
+    };
+
+    if (searchOnContacts !== "") {
+      setFilteredFamily(filterContacts(family, searchOnContacts));
+      setFilteredFriends(filterContacts(friends, searchOnContacts));
     } else {
-      const user = allUsers.find((user) => user.id === userData.id);
-      if (user) {
-        setUserFamily(user.familyIds || []);
-        setUserFriends(user.friendsIds || []);
-      }
+      setFilteredFamily(family);
+      setFilteredFriends(friends);
     }
-  }, [searchOnContacts]);
+  }, [searchOnContacts, family, friends]);
 
   return (
     <ScrollView
@@ -71,20 +54,16 @@ const BusquedaContactos = ({ searchOnContacts }) => {
             <View style={[styles.frameChild, styles.frameChildLayout]} />
           </View>
           <View style={{ marginTop: 15, maxHeight: 100 }}>
-            {userFamily?.length > 0 ? (
+            {filteredFamily?.length > 0 ? (
               <ScrollView
                 style={{ maxHeight: 100 }}
                 contentContainerStyle={{ gap: 5 }}
               >
-                {userFamily.map((familyMember, index) => {
-                  const user = allUsers.find(
-                    (user) => user.id.toString() === familyMember,
-                  );
-
+                {filteredFamily.map((familyMember, index) => {
                   return (
                     <TouchableOpacity
                       onPress={() =>
-                        navigation.navigate("OtherUserProfile", user)
+                        navigation.navigate("OtherUserProfile", familyMember)
                       }
                       key={index}
                       style={styles.frameParent1}
@@ -93,8 +72,8 @@ const BusquedaContactos = ({ searchOnContacts }) => {
                         style={styles.frameItem}
                         contentFit="cover"
                         source={
-                          user?.profilePicture
-                            ? { uri: user.profilePicture }
+                          familyMember?.profilePicture
+                            ? { uri: familyMember.profilePicture }
                             : require("../../../assets/frame-1547754875.png")
                         }
                       />
@@ -112,7 +91,7 @@ const BusquedaContactos = ({ searchOnContacts }) => {
                           width: "80%",
                         }}
                       >
-                        {user?.username + " " + user?.apellido}
+                        {familyMember?.username + " " + familyMember?.apellido}
                       </Text>
                     </TouchableOpacity>
                   );
@@ -143,20 +122,16 @@ const BusquedaContactos = ({ searchOnContacts }) => {
               <View style={[styles.frameChild, styles.frameChildLayout]} />
             </View>
             <View style={{ marginTop: 15, maxHeight: 100 }}>
-              {userFriends?.length > 0 ? (
+              {filteredFriends?.length > 0 ? (
                 <ScrollView
                   style={{ maxHeight: 100 }}
                   contentContainerStyle={{ gap: 5 }}
                 >
-                  {userFriends.map((friendMember, index) => {
-                    const user = allUsers.find(
-                      (user) => user.id.toString() === friendMember,
-                    );
-
+                  {filteredFriends.map((friendMember, index) => {
                     return (
                       <TouchableOpacity
                         onPress={() =>
-                          navigation.navigate("OtherUserProfile", user)
+                          navigation.navigate("OtherUserProfile", friendMember)
                         }
                         key={index}
                         style={styles.frameParent1}
@@ -165,8 +140,8 @@ const BusquedaContactos = ({ searchOnContacts }) => {
                           style={styles.frameItem}
                           contentFit="cover"
                           source={
-                            user?.profilePicture
-                              ? { uri: user.profilePicture }
+                            friendMember?.profilePicture
+                              ? { uri: friendMember.profilePicture }
                               : require("../../../assets/frame-1547754875.png")
                           }
                         />
@@ -184,7 +159,9 @@ const BusquedaContactos = ({ searchOnContacts }) => {
                             width: "80%",
                           }}
                         >
-                          {user?.username + " " + user?.apellido}
+                          {friendMember?.username +
+                            " " +
+                            friendMember?.apellido}
                         </Text>
                       </TouchableOpacity>
                     );

@@ -1,4 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Post } from 'src/posts/entities/post.entity';
+import { User } from 'src/user/entities/user.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 
 @Entity()
 export class Album {
@@ -34,6 +44,13 @@ export class Album {
   @Column({ type: 'varchar', length: 50, nullable: true })
   privacyMode: string;
 
-  @Column('simple-array', { nullable: true })
-  taggedUsers: string[];
+  @ManyToOne(() => User, (user) => user.albums)
+  creator: User;
+
+  @OneToMany(() => Post, (post) => post.album)
+  posts: Post[];
+
+  @ManyToMany(() => User)
+  @JoinTable() // Necesario para la tabla intermedia de relación
+  taggedUsers: User[];
 }

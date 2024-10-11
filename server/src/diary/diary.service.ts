@@ -4,12 +4,14 @@ import { Repository, Between } from 'typeorm';
 import { Diary } from '../diary/entities/diary.entity';
 import { CreateDiaryDto } from './dto/create-diary.dto';
 import { UpdateDiaryDto } from './dto/update-diary.dto';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class DiaryService {
   constructor(
     @InjectRepository(Diary)
     private readonly diaryRepository: Repository<Diary>,
+    private readonly userService: UserService,
   ) {}
 
   /**
@@ -18,8 +20,41 @@ export class DiaryService {
    * @returns La entrada de diario creada.
    */
   async create(createDiaryDto: CreateDiaryDto): Promise<Diary> {
+    // Busca el usuario a partir del creatorId en CreateDiaryDto
+    const user = await this.userService.findOne(createDiaryDto.creatorId);
+
+    // Si no se encuentra el usuario, lanza una excepción
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Crea el nuevo diario con los datos proporcionados
     const diary = this.diaryRepository.create(createDiaryDto);
+
+    // Asigna el usuario encontrado como creador del diario
+    diary.creator = user;
+
+    // Guarda y devuelve el diario
     return await this.diaryRepository.save(diary);
+  }
+
+  // Servicio para obtener los diarios de un usuario en un año específico
+  async getDiariesByYear(userId: string, year: number): Promise<Diary[]> {
+    // Verifica si el usuario existe
+    const user = await this.userService.findOne(userId);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Realiza la consulta para obtener los diarios del usuario en un año específico
+    const diaries = await this.diaryRepository
+      .createQueryBuilder('diary')
+      .where('diary.creatorId = :userId', { userId })
+      .andWhere('EXTRACT(YEAR FROM diary.date) = :year', { year }) // Usa EXTRACT para comparar el año
+      .getMany();
+
+    return diaries;
   }
 
   /**

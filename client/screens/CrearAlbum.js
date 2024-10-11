@@ -90,7 +90,7 @@ const CrearAlbum = () => {
   }, []);
 
   const [showPrivacidad, setShowPrivacidad] = useState(false);
-  const [privacy, setPrivacy] = useState();
+  const [privacy, setPrivacy] = useState("Todos");
   const [location, setLocation] = useState();
   const [showImagesModal, setShowImagesModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(() => {
@@ -186,9 +186,9 @@ const CrearAlbum = () => {
   const handleSubmit = async () => {
     try {
       setLoading(true); // Set loading state to true at the start of the upload process
-
+      const filter = taggedUsers.map((u) => u.id);
       const finalData = {};
-      finalData.taggedUsers = taggedUsers;
+      finalData.taggedUsers = filter;
       finalData.creatorId = userData.id;
       finalData.date = selectedDate ? new Date(selectedDate) : new Date();
       finalData.privacyMode = privacy;
@@ -227,7 +227,7 @@ const CrearAlbum = () => {
       }
 
       finalData.images = cloudinaryUrls;
-
+      console.log(finalData, "FINAL DATAA");
       const res = await axios.post(`${BACKURL}/albums`, finalData);
 
       if (res.data) {
@@ -491,10 +491,7 @@ const CrearAlbum = () => {
                       maxWidth: "85%",
                     }}
                   >
-                    {allUsers
-                      .filter((user) => taggedUsers.includes(user.id))
-                      .map((user) => `${user.username} ${user.apellido}`)
-                      .join(", ")}
+                    Etiquetados
                   </Text>
                 )}
               </Pressable>
